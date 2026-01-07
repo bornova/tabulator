@@ -1,44 +1,44 @@
-function generateParamsList(data, prefix){
-	var output = [];
+function generateParamsList(data, prefix) {
+	let output = []
 
-	prefix = prefix || "";
+	prefix = prefix || ''
 
-	if(Array.isArray(data)){
+	if (Array.isArray(data)) {
 		data.forEach((item, i) => {
-			output = output.concat(generateParamsList(item, prefix ? prefix + "[" + i + "]" : i));
-		});
-	}else if (typeof data === "object"){
-		for (var key in data){
-			output = output.concat(generateParamsList(data[key], prefix ? prefix + "[" + key + "]" : key));
+			output = output.concat(generateParamsList(item, prefix ? prefix + '[' + i + ']' : i))
+		})
+	} else if (typeof data === 'object') {
+		for (const key in data) {
+			output = output.concat(generateParamsList(data[key], prefix ? prefix + '[' + key + ']' : key))
 		}
-	}else{
-		output.push({key:prefix, value:data});
+	} else {
+		output.push({ key: prefix, value: data })
 	}
 
-	return output;
+	return output
 }
 
-function serializeParams(params){
-	var output = generateParamsList(params),
-	encoded = [];
+function serializeParams(params) {
+	const output = generateParamsList(params)
+	const encoded = []
 
-	output.forEach(function(item){
-		encoded.push(encodeURIComponent(item.key) + "=" + encodeURIComponent(item.value));
-	});
+	output.forEach(function (item) {
+		encoded.push(encodeURIComponent(item.key) + '=' + encodeURIComponent(item.value))
+	})
 
-	return encoded.join("&");
+	return encoded.join('&')
 }
 
-export default function(url, config, params){
-	if(url){
-		if(params && Object.keys(params).length){
-			if(!config.method || config.method.toLowerCase() == "get"){
-				config.method = "get";
+export default function (url, config, params) {
+	if (url) {
+		if (params && Object.keys(params).length) {
+			if (!config.method || config.method.toLowerCase() == 'get') {
+				config.method = 'get'
 
-				url += (url.includes("?") ? "&" : "?") + serializeParams(params);
+				url += (url.includes('?') ? '&' : '?') + serializeParams(params)
 			}
 		}
 	}
 
-	return url;
+	return url
 }

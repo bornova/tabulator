@@ -1,59 +1,59 @@
 export default class SheetComponent {
 	constructor(sheet) {
-		this._sheet = sheet;
+		this._sheet = sheet
 
 		return new Proxy(this, {
 			get: function (target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
+				if (typeof target[name] !== 'undefined') {
+					return target[name]
 				} else {
-					return target._sheet.table.componentFunctionBinder.handle("sheet", target._sheet, name);
+					return target._sheet.table.componentFunctionBinder.handle('sheet', target._sheet, name)
 				}
-			},
-		});
+			}
+		})
 	}
 
-	getTitle(){
-		return this._sheet.title;
+	getTitle() {
+		return this._sheet.title
 	}
 
-	getKey(){
-		return this._sheet.key;
+	getKey() {
+		return this._sheet.key
 	}
 
-	getDefinition(){
-		return this._sheet.getDefinition();
+	getDefinition() {
+		return this._sheet.getDefinition()
 	}
 
 	getData() {
-		return this._sheet.getData();
+		return this._sheet.getData()
 	}
 
 	setData(data) {
-		return this._sheet.setData(data);
+		return this._sheet.setData(data)
 	}
 
-	clear(){
-		return this._sheet.clear();
+	clear() {
+		return this._sheet.clear()
 	}
 
-	remove(){
-		return this._sheet.remove();
-	}
-	
-	active(){
-		return this._sheet.active();
+	remove() {
+		return this._sheet.remove()
 	}
 
-	setTitle(title){
-		return this._sheet.setTitle(title);
+	active() {
+		return this._sheet.active()
 	}
 
-	setRows(rows){
-		return this._sheet.setRows(rows);
+	setTitle(title) {
+		return this._sheet.setTitle(title)
 	}
 
-	setColumns(columns){
-		return this._sheet.setColumns(columns);
+	setRows(rows) {
+		return this._sheet.setRows(rows)
+	}
+
+	setColumns(columns) {
+		return this._sheet.setColumns(columns)
 	}
 }

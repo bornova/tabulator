@@ -1,1 +1,1 @@
-export { default }  from '../core/TabulatorFull.js';
+export { default } from '../core/TabulatorFull.js'

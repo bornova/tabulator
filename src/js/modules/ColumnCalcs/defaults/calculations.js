@@ -1,93 +1,91 @@
 export default {
-	"avg":function(values, data, calcParams){
-		var output = 0,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : 2;
+	avg: function (values, data, calcParams) {
+		let output = 0
+		const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : 2
 
-		if(values.length){
-			output = values.reduce(function(sum, value){
-				return Number(sum) + Number(value);
-			});
+		if (values.length) {
+			output = values.reduce(function (sum, value) {
+				return Number(sum) + Number(value)
+			})
 
-			output = output / values.length;
+			output = output / values.length
 
-			output = precision !== false ? output.toFixed(precision) : output;
+			output = precision !== false ? output.toFixed(precision) : output
 		}
 
-		return parseFloat(output).toString();
+		return parseFloat(output).toString()
 	},
-	"max":function(values, data, calcParams){
-		var output = null,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : false;
+	max: function (values, data, calcParams) {
+		let output = null
+		const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
 
-		values.forEach(function(value){
+		values.forEach(function (value) {
+			value = Number(value)
 
-			value = Number(value);
-
-			if(value > output || output === null){
-				output = value;
+			if (value > output || output === null) {
+				output = value
 			}
-		});
+		})
 
-		return output !== null ? (precision !== false ? output.toFixed(precision) : output) : "";
+		return output !== null ? (precision !== false ? output.toFixed(precision) : output) : ''
 	},
-	"min":function(values, data, calcParams){
-		var output = null,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : false;
+	min: function (values, data, calcParams) {
+		let output = null
+		const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
 
-		values.forEach(function(value){
+		values.forEach(function (value) {
+			value = Number(value)
 
-			value = Number(value);
-
-			if(value < output || output === null){
-				output = value;
+			if (value < output || output === null) {
+				output = value
 			}
-		});
+		})
 
-		return output !== null ? (precision !== false ? output.toFixed(precision) : output) : "";
+		return output !== null ? (precision !== false ? output.toFixed(precision) : output) : ''
 	},
-	"sum":function(values, data, calcParams){
-		var output = 0,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : false;
+	sum: function (values, data, calcParams) {
+		let output = 0
+		const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
 
-		if(values.length){
-			values.forEach(function(value){
-				value = Number(value);
+		if (values.length) {
+			values.forEach(function (value) {
+				value = Number(value)
 
-				output += !isNaN(value) ? Number(value) : 0;
-			});
+				output += !isNaN(value) ? Number(value) : 0
+			})
 		}
 
-		return precision !== false ? output.toFixed(precision) : output;
+		return precision !== false ? output.toFixed(precision) : output
 	},
-	"concat":function(values, data, calcParams){
-		var output = 0;
+	concat: function (values, data, calcParams) {
+		let output = 0
 
-		if(values.length){
-			output = values.reduce(function(sum, value){
-				return String(sum) + String(value);
-			});
+		if (values.length) {
+			output = values.reduce(function (sum, value) {
+				return String(sum) + String(value)
+			})
 		}
 
-		return output;
+		return output
 	},
-	"count":function(values, data, calcParams){
-		var output = 0;
+	count: function (values, data, calcParams) {
+		let output = 0
 
-		if(values.length){
-			values.forEach(function(value){
-				if(value){
-					output ++;
+		if (values.length) {
+			values.forEach(function (value) {
+				if (value) {
+					output++
 				}
-			});
+			})
 		}
 
-		return output;
+		return output
 	},
-	"unique":function(values, data, calcParams){
-		var unique = values.filter((value, index) => {
-			return (values || value === 0) && values.indexOf(value) === index;
-		});
+	unique: function (values, data, calcParams) {
+		const unique = values.filter((value, index) => {
+			return (values || value === 0) && values.indexOf(value) === index
+		})
 
-		return unique.length;
-	},
-};
+		return unique.length
+	}
+}

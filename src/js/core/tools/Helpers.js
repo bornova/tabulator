@@ -1,66 +1,69 @@
-export default class Helpers{
-
-	static elVisible(el){
-		return !(el.offsetWidth <= 0 && el.offsetHeight <= 0);
+export default class Helpers {
+	static elVisible(el) {
+		return !(el.offsetWidth <= 0 && el.offsetHeight <= 0)
 	}
 
-	static elOffset(el){
-		var box = el.getBoundingClientRect();
+	static elOffset(el) {
+		const box = el.getBoundingClientRect()
 
 		return {
 			top: box.top + window.pageYOffset - document.documentElement.clientTop,
 			left: box.left + window.pageXOffset - document.documentElement.clientLeft
-		};
+		}
 	}
 
-	static retrieveNestedData(separator, field, data){
-		var structure = separator ? field.split(separator) : [field],
-		length = structure.length,
-		output;
+	static retrieveNestedData(separator, field, data) {
+		const structure = separator ? field.split(separator) : [field]
+		const length = structure.length
+		let output
 
-		for(let i = 0; i < length; i++){
+		for (let i = 0; i < length; i++) {
+			data = data[structure[i]]
 
-			data = data[structure[i]];
+			output = data
 
-			output = data;
-
-			if(!data){
-				break;
+			if (!data) {
+				break
 			}
 		}
 
-		return output;
+		return output
 	}
 
-	static deepClone(obj, clone, list = []){
-		var objectProto = {}.__proto__,
-		arrayProto = [].__proto__;
+	static deepClone(obj, clone, list = []) {
+		const objectProto = {}.__proto__
+		const arrayProto = [].__proto__
 
-		if (!clone){
-			clone = Object.assign(Array.isArray(obj) ? [] : {}, obj);
+		if (!clone) {
+			clone = Object.assign(Array.isArray(obj) ? [] : {}, obj)
 		}
 
-		for(var i in obj) {
-			let subject = obj[i],
-			match, copy;
+		for (const i in obj) {
+			const subject = obj[i]
+			let match
+			let copy
 
-			if(subject != null && typeof subject === "object" && (subject.__proto__ === objectProto || subject.__proto__ === arrayProto)){
+			if (
+				subject != null &&
+				typeof subject === 'object' &&
+				(subject.__proto__ === objectProto || subject.__proto__ === arrayProto)
+			) {
 				match = list.findIndex((item) => {
-					return item.subject === subject;
-				});
+					return item.subject === subject
+				})
 
-				if(match > -1){
-					clone[i] = list[match].copy;
-				}else{
-					copy = Object.assign(Array.isArray(subject) ? [] : {}, subject);
+				if (match > -1) {
+					clone[i] = list[match].copy
+				} else {
+					copy = Object.assign(Array.isArray(subject) ? [] : {}, subject)
 
-					list.unshift({subject, copy});
+					list.unshift({ subject, copy })
 
-					clone[i] = this.deepClone(subject, copy, list);
+					clone[i] = this.deepClone(subject, copy, list)
 				}
 			}
 		}
 
-		return clone;
+		return clone
 	}
 }

@@ -1,27 +1,27 @@
-import Renderer from '../Renderer.js';
+import Renderer from '../Renderer.js'
 
-export default class BasicHorizontal extends Renderer{
-	constructor(table){
-		super(table);
+export default class BasicHorizontal extends Renderer {
+	constructor(table) {
+		super(table)
 	}
-	
+
 	renderRowCells(row, inFragment) {
-		const rowFrag = document.createDocumentFragment();
+		const rowFrag = document.createDocumentFragment()
 		row.cells.forEach((cell) => {
-			rowFrag.appendChild(cell.getElement());
-		});
-		row.element.appendChild(rowFrag);
-		
-		if(!inFragment){
+			rowFrag.appendChild(cell.getElement())
+		})
+		row.element.appendChild(rowFrag)
+
+		if (!inFragment) {
 			row.cells.forEach((cell) => {
-				cell.cellRendered();
-			});
+				cell.cellRendered()
+			})
 		}
 	}
-	
-	reinitializeColumnWidths(columns){
-		columns.forEach(function(column){
-			column.reinitializeWidth();
-		});
+
+	reinitializeColumnWidths(columns) {
+		columns.forEach(function (column) {
+			column.reinitializeWidth()
+		})
 	}
 }

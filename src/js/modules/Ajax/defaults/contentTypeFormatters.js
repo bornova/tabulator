@@ -1,45 +1,43 @@
-function generateParamsList(data, prefix){
-	var output = [];
+function generateParamsList(data, prefix) {
+	let output = []
 
-	prefix = prefix || "";
+	prefix = prefix || ''
 
-	if(Array.isArray(data)){
+	if (Array.isArray(data)) {
 		data.forEach((item, i) => {
-			output = output.concat(generateParamsList(item, prefix ? prefix + "[" + i + "]" : i));
-		});
-	}else if (typeof data === "object"){
-		for (var key in data){
-			output = output.concat(generateParamsList(data[key], prefix ? prefix + "[" + key + "]" : key));
+			output = output.concat(generateParamsList(item, prefix ? prefix + '[' + i + ']' : i))
+		})
+	} else if (typeof data === 'object') {
+		for (const key in data) {
+			output = output.concat(generateParamsList(data[key], prefix ? prefix + '[' + key + ']' : key))
 		}
-	}else{
-		output.push({key:prefix, value:data});
+	} else {
+		output.push({ key: prefix, value: data })
 	}
 
-	return output;
+	return output
 }
 
 export default {
-	"json":{
-		headers:{
-			'Content-Type': 'application/json',
+	json: {
+		headers: {
+			'Content-Type': 'application/json'
 		},
-		body:function(url, config, params){
-			return JSON.stringify(params);
-		},
+		body: function (url, config, params) {
+			return JSON.stringify(params)
+		}
 	},
-	"form":{
-		headers:{
-		},
-		body:function(url, config, params){
+	form: {
+		headers: {},
+		body: function (url, config, params) {
+			const output = generateParamsList(params)
+			const form = new FormData()
 
-			var output = generateParamsList(params),
-			form = new FormData();
+			output.forEach(function (item) {
+				form.append(item.key, item.value)
+			})
 
-			output.forEach(function(item){
-				form.append(item.key, item.value);
-			});
-
-			return form;
-		},
-	},
-};
+			return form
+		}
+	}
+}

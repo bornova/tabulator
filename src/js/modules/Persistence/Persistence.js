@@ -1,473 +1,487 @@
-import Module from '../../core/Module.js';
+import Module from '../../core/Module.js'
 
-import defaultReaders from './defaults/readers.js';
-import defaultWriters from './defaults/writers.js';
+import defaultReaders from './defaults/readers.js'
+import defaultWriters from './defaults/writers.js'
 
-export default class Persistence extends Module{
+export default class Persistence extends Module {
+	static moduleName = 'persistence'
 
-	static moduleName = "persistence";
+	static moduleInitOrder = -10
 
-	static moduleInitOrder = -10;
+	// load defaults
+	static readers = defaultReaders
+	static writers = defaultWriters
 
-	//load defaults
-	static readers = defaultReaders;
-	static writers = defaultWriters;
+	constructor(table) {
+		super(table)
 
-	constructor(table){
-		super(table);
-
-		this.mode = "";
-		this.id = "";
+		this.mode = ''
+		this.id = ''
 		// this.persistProps = ["field", "width", "visible"];
-		this.defWatcherBlock = false;
-		this.config = {};
-		this.readFunc = false;
-		this.writeFunc = false;
+		this.defWatcherBlock = false
+		this.config = {}
+		this.readFunc = false
+		this.writeFunc = false
 
-		this.registerTableOption("persistence", false);
-		this.registerTableOption("persistenceID", ""); //key for persistent storage
-		this.registerTableOption("persistenceMode", true); //mode for storing persistence information
-		this.registerTableOption("persistenceReaderFunc", false); //function for handling persistence data reading
-		this.registerTableOption("persistenceWriterFunc", false); //function for handling persistence data writing
+		this.registerTableOption('persistence', false)
+		this.registerTableOption('persistenceID', '') // key for persistent storage
+		this.registerTableOption('persistenceMode', true) // mode for storing persistence information
+		this.registerTableOption('persistenceReaderFunc', false) // function for handling persistence data reading
+		this.registerTableOption('persistenceWriterFunc', false) // function for handling persistence data writing
 	}
 
 	// Test for whether localStorage is available for use.
 	localStorageTest() {
-		var  testKey =  "_tabulator_test";
+		const testKey = '_tabulator_test'
 
 		try {
-			window.localStorage.setItem( testKey, testKey);
-			window.localStorage.removeItem( testKey );
-			return true;
-		} catch(e) {
-			return false;
+			window.localStorage.setItem(testKey, testKey)
+			window.localStorage.removeItem(testKey)
+			return true
+		} catch (e) {
+			return false
 		}
 	}
 
-	//setup parameters
-	initialize(){
-		if(this.table.options.persistence){
-			//determine persistent layout storage type
-			var mode = this.table.options.persistenceMode,
-			id = this.table.options.persistenceID,
-			retrievedData;
+	// setup parameters
+	initialize() {
+		if (this.table.options.persistence) {
+			// determine persistent layout storage type
+			const mode = this.table.options.persistenceMode
+			const id = this.table.options.persistenceID
+			let retrievedData
 
-			this.mode = mode !== true ?  mode : (this.localStorageTest() ? "local" : "cookie");
+			this.mode = mode !== true ? mode : this.localStorageTest() ? 'local' : 'cookie'
 
-			if(this.table.options.persistenceReaderFunc){
-				if(typeof this.table.options.persistenceReaderFunc === "function"){
-					this.readFunc = this.table.options.persistenceReaderFunc;
-				}else{
-					if(Persistence.readers[this.table.options.persistenceReaderFunc]){
-						this.readFunc = Persistence.readers[this.table.options.persistenceReaderFunc];
-					}else{
-						console.warn("Persistence Read Error - invalid reader set", this.table.options.persistenceReaderFunc);
+			if (this.table.options.persistenceReaderFunc) {
+				if (typeof this.table.options.persistenceReaderFunc === 'function') {
+					this.readFunc = this.table.options.persistenceReaderFunc
+				} else {
+					if (Persistence.readers[this.table.options.persistenceReaderFunc]) {
+						this.readFunc = Persistence.readers[this.table.options.persistenceReaderFunc]
+					} else {
+						console.warn('Persistence Read Error - invalid reader set', this.table.options.persistenceReaderFunc)
 					}
 				}
-			}else{
-				if(Persistence.readers[this.mode]){
-					this.readFunc = Persistence.readers[this.mode];
-				}else{
-					console.warn("Persistence Read Error - invalid reader set", this.mode);
+			} else {
+				if (Persistence.readers[this.mode]) {
+					this.readFunc = Persistence.readers[this.mode]
+				} else {
+					console.warn('Persistence Read Error - invalid reader set', this.mode)
 				}
 			}
 
-			if(this.table.options.persistenceWriterFunc){
-				if(typeof this.table.options.persistenceWriterFunc === "function"){
-					this.writeFunc = this.table.options.persistenceWriterFunc;
-				}else{
-					if(Persistence.writers[this.table.options.persistenceWriterFunc]){
-						this.writeFunc = Persistence.writers[this.table.options.persistenceWriterFunc];
-					}else{
-						console.warn("Persistence Write Error - invalid reader set", this.table.options.persistenceWriterFunc);
+			if (this.table.options.persistenceWriterFunc) {
+				if (typeof this.table.options.persistenceWriterFunc === 'function') {
+					this.writeFunc = this.table.options.persistenceWriterFunc
+				} else {
+					if (Persistence.writers[this.table.options.persistenceWriterFunc]) {
+						this.writeFunc = Persistence.writers[this.table.options.persistenceWriterFunc]
+					} else {
+						console.warn('Persistence Write Error - invalid reader set', this.table.options.persistenceWriterFunc)
 					}
 				}
-			}else{
-				if(Persistence.writers[this.mode]){
-					this.writeFunc = Persistence.writers[this.mode];
-				}else{
-					console.warn("Persistence Write Error - invalid writer set", this.mode);
+			} else {
+				if (Persistence.writers[this.mode]) {
+					this.writeFunc = Persistence.writers[this.mode]
+				} else {
+					console.warn('Persistence Write Error - invalid writer set', this.mode)
 				}
 			}
 
-			//set storage tag
-			this.id = "tabulator-" + (id || (this.table.element.getAttribute("id") || ""));
+			// set storage tag
+			this.id = 'tabulator-' + (id || this.table.element.getAttribute('id') || '')
 
 			this.config = {
-				sort:this.table.options.persistence === true || this.table.options.persistence.sort,
-				filter:this.table.options.persistence === true || this.table.options.persistence.filter,
-				headerFilter:this.table.options.persistence === true || this.table.options.persistence.headerFilter,
-				group:this.table.options.persistence === true || this.table.options.persistence.group,
-				page:this.table.options.persistence === true || this.table.options.persistence.page,
-				columns:this.table.options.persistence === true ? ["title", "width", "visible"] : this.table.options.persistence.columns,
-			};
-
-			//load pagination data if needed
-			if(this.config.page){
-				retrievedData = this.retrieveData("page");
-
-				if(retrievedData){
-					if(typeof retrievedData.paginationSize !== "undefined" && (this.config.page === true || this.config.page.size)){
-						this.table.options.paginationSize = retrievedData.paginationSize;
-					}
-
-					if(typeof retrievedData.paginationInitialPage !== "undefined" && (this.config.page === true || this.config.page.page)){
-						this.table.options.paginationInitialPage = retrievedData.paginationInitialPage;
-					}
-				}
+				sort: this.table.options.persistence === true || this.table.options.persistence.sort,
+				filter: this.table.options.persistence === true || this.table.options.persistence.filter,
+				headerFilter: this.table.options.persistence === true || this.table.options.persistence.headerFilter,
+				group: this.table.options.persistence === true || this.table.options.persistence.group,
+				page: this.table.options.persistence === true || this.table.options.persistence.page,
+				columns:
+					this.table.options.persistence === true
+						? ['title', 'width', 'visible']
+						: this.table.options.persistence.columns
 			}
 
-			//load group data if needed
-			if(this.config.group){
-				retrievedData = this.retrieveData("group");
+			// load pagination data if needed
+			if (this.config.page) {
+				retrievedData = this.retrieveData('page')
 
-				if(retrievedData){
-					if(typeof retrievedData.groupBy !== "undefined" && (this.config.group === true || this.config.group.groupBy)){
-						this.table.options.groupBy = retrievedData.groupBy;
+				if (retrievedData) {
+					if (
+						typeof retrievedData.paginationSize !== 'undefined' &&
+						(this.config.page === true || this.config.page.size)
+					) {
+						this.table.options.paginationSize = retrievedData.paginationSize
 					}
-					if(typeof retrievedData.groupStartOpen !== "undefined" && (this.config.group === true || this.config.group.groupStartOpen)){
-						this.table.options.groupStartOpen = retrievedData.groupStartOpen;
-					}
-					if(typeof retrievedData.groupHeader !== "undefined" && (this.config.group === true || this.config.group.groupHeader)){
-						this.table.options.groupHeader = retrievedData.groupHeader;
+
+					if (
+						typeof retrievedData.paginationInitialPage !== 'undefined' &&
+						(this.config.page === true || this.config.page.page)
+					) {
+						this.table.options.paginationInitialPage = retrievedData.paginationInitialPage
 					}
 				}
 			}
 
-			if(this.config.columns){
-				this.table.options.columns = this.load("columns", this.table.options.columns);
-				this.subscribe("column-init", this.initializeColumn.bind(this));
-				this.subscribe("column-show", this.save.bind(this, "columns"));
-				this.subscribe("column-hide", this.save.bind(this, "columns"));
-				this.subscribe("column-moved", this.save.bind(this, "columns"));
+			// load group data if needed
+			if (this.config.group) {
+				retrievedData = this.retrieveData('group')
+
+				if (retrievedData) {
+					if (
+						typeof retrievedData.groupBy !== 'undefined' &&
+						(this.config.group === true || this.config.group.groupBy)
+					) {
+						this.table.options.groupBy = retrievedData.groupBy
+					}
+					if (
+						typeof retrievedData.groupStartOpen !== 'undefined' &&
+						(this.config.group === true || this.config.group.groupStartOpen)
+					) {
+						this.table.options.groupStartOpen = retrievedData.groupStartOpen
+					}
+					if (
+						typeof retrievedData.groupHeader !== 'undefined' &&
+						(this.config.group === true || this.config.group.groupHeader)
+					) {
+						this.table.options.groupHeader = retrievedData.groupHeader
+					}
+				}
 			}
 
-			this.subscribe("table-built", this.tableBuilt.bind(this), 0);
+			if (this.config.columns) {
+				this.table.options.columns = this.load('columns', this.table.options.columns)
+				this.subscribe('column-init', this.initializeColumn.bind(this))
+				this.subscribe('column-show', this.save.bind(this, 'columns'))
+				this.subscribe('column-hide', this.save.bind(this, 'columns'))
+				this.subscribe('column-moved', this.save.bind(this, 'columns'))
+			}
 
-			this.subscribe("table-redraw", this.tableRedraw.bind(this));
+			this.subscribe('table-built', this.tableBuilt.bind(this), 0)
 
-			this.subscribe("filter-changed", this.eventSave.bind(this, "filter"));
-			this.subscribe("filter-changed", this.eventSave.bind(this, "headerFilter"));
-			this.subscribe("sort-changed", this.eventSave.bind(this, "sort"));
-			this.subscribe("group-changed", this.eventSave.bind(this, "group"));
-			this.subscribe("page-changed", this.eventSave.bind(this, "page"));
-			this.subscribe("column-resized", this.eventSave.bind(this, "columns"));
-			this.subscribe("column-width", this.eventSave.bind(this, "columns"));
-			this.subscribe("layout-refreshed", this.eventSave.bind(this, "columns"));
+			this.subscribe('table-redraw', this.tableRedraw.bind(this))
+
+			this.subscribe('filter-changed', this.eventSave.bind(this, 'filter'))
+			this.subscribe('filter-changed', this.eventSave.bind(this, 'headerFilter'))
+			this.subscribe('sort-changed', this.eventSave.bind(this, 'sort'))
+			this.subscribe('group-changed', this.eventSave.bind(this, 'group'))
+			this.subscribe('page-changed', this.eventSave.bind(this, 'page'))
+			this.subscribe('column-resized', this.eventSave.bind(this, 'columns'))
+			this.subscribe('column-width', this.eventSave.bind(this, 'columns'))
+			this.subscribe('layout-refreshed', this.eventSave.bind(this, 'columns'))
 		}
 
-		this.registerTableFunction("getColumnLayout", this.getColumnLayout.bind(this));
-		this.registerTableFunction("setColumnLayout", this.setColumnLayout.bind(this));
+		this.registerTableFunction('getColumnLayout', this.getColumnLayout.bind(this))
+		this.registerTableFunction('setColumnLayout', this.setColumnLayout.bind(this))
 	}
 
-	eventSave(type){
-		if(this.config[type]){
-			this.save(type);
+	eventSave(type) {
+		if (this.config[type]) {
+			this.save(type)
 		}
 	}
 
-	tableBuilt(){
-		var sorters, filters, headerFilters;
+	tableBuilt() {
+		let sorters, filters, headerFilters
 
-		if(this.config.sort){
-			sorters = this.load("sort");
+		if (this.config.sort) {
+			sorters = this.load('sort')
 
-			if(!sorters === false){
-				this.table.options.initialSort = sorters;
+			if (!sorters === false) {
+				this.table.options.initialSort = sorters
 			}
 		}
 
-		if(this.config.filter){
-			filters = this.load("filter");
+		if (this.config.filter) {
+			filters = this.load('filter')
 
-			if(!filters === false){
-				this.table.options.initialFilter = filters;
+			if (!filters === false) {
+				this.table.options.initialFilter = filters
 			}
 		}
-		if(this.config.headerFilter){
-			headerFilters = this.load("headerFilter");
+		if (this.config.headerFilter) {
+			headerFilters = this.load('headerFilter')
 
-			if(!headerFilters === false){
-				this.table.options.initialHeaderFilter = headerFilters;
+			if (!headerFilters === false) {
+				this.table.options.initialHeaderFilter = headerFilters
 			}
 		}
-		
 	}
 
-	tableRedraw(force){
-		if(force && this.config.columns){
-			this.save("columns");
+	tableRedraw(force) {
+		if (force && this.config.columns) {
+			this.save('columns')
 		}
 	}
 
-	///////////////////////////////////
-	///////// Table Functions /////////
-	///////////////////////////////////
+	/// ////////////////////////////////
+	/// ////// Table Functions /////////
+	/// ////////////////////////////////
 
-	getColumnLayout(){
-		return this.parseColumns(this.table.columnManager.getColumns());
+	getColumnLayout() {
+		return this.parseColumns(this.table.columnManager.getColumns())
 	}
 
-	setColumnLayout(layout){
-		this.table.columnManager.setColumns(this.mergeDefinition(this.table.options.columns, layout, true));
-		return true;
+	setColumnLayout(layout) {
+		this.table.columnManager.setColumns(this.mergeDefinition(this.table.options.columns, layout, true))
+		return true
 	}
 
-	///////////////////////////////////
-	///////// Internal Logic //////////
-	///////////////////////////////////
+	/// ////////////////////////////////
+	/// ////// Internal Logic //////////
+	/// ////////////////////////////////
 
-	initializeColumn(column){
-		var def, keys;
+	initializeColumn(column) {
+		let def, keys
 
-		if(this.config.columns){
-			this.defWatcherBlock = true;
+		if (this.config.columns) {
+			this.defWatcherBlock = true
 
-			def = column.getDefinition();
+			def = column.getDefinition()
 
-			keys = this.config.columns === true ? Object.keys(def) : this.config.columns;
+			keys = this.config.columns === true ? Object.keys(def) : this.config.columns
 
-			keys.forEach((key)=>{
-				var props = Object.getOwnPropertyDescriptor(def, key);
-				var value = def[key];
+			keys.forEach((key) => {
+				const props = Object.getOwnPropertyDescriptor(def, key)
+				let value = def[key]
 
-				if(props){
+				if (props) {
 					Object.defineProperty(def, key, {
 						set: (newValue) => {
-							value = newValue;
+							value = newValue
 
-							if(!this.defWatcherBlock){
-								this.save("columns");
+							if (!this.defWatcherBlock) {
+								this.save('columns')
 							}
 
-							if(props.set){
-								props.set(newValue);
+							if (props.set) {
+								props.set(newValue)
 							}
 						},
-						get:() => {
-							if(props.get){
-								props.get();
+						get: () => {
+							if (props.get) {
+								props.get()
 							}
-							return value;
+							return value
 						}
-					});
+					})
 				}
-			});
+			})
 
-			this.defWatcherBlock = false;
+			this.defWatcherBlock = false
 		}
 	}
 
-	//load saved definitions
-	load(type, current){
-		var data = this.retrieveData(type);
+	// load saved definitions
+	load(type, current) {
+		let data = this.retrieveData(type)
 
-		if(current){
-			data = data ? this.mergeDefinition(current, data) : current;
+		if (current) {
+			data = data ? this.mergeDefinition(current, data) : current
 		}
 
-		return data;
+		return data
 	}
 
-	//retrieve data from memory
-	retrieveData(type){
-		return this.readFunc ? this.readFunc(this.id, type) : false;
+	// retrieve data from memory
+	retrieveData(type) {
+		return this.readFunc ? this.readFunc(this.id, type) : false
 	}
 
-	//merge old and new column definitions
-	mergeDefinition(oldCols, newCols, mergeAllNew){
-		var output = [];
+	// merge old and new column definitions
+	mergeDefinition(oldCols, newCols, mergeAllNew) {
+		const output = []
 
-		newCols = newCols || [];
+		newCols = newCols || []
 
 		newCols.forEach((column, to) => {
-			var from = this._findColumn(oldCols, column),
-			keys;
+			const from = this._findColumn(oldCols, column)
+			let keys
 
-			if(from){
-				if(mergeAllNew){
-					keys = Object.keys(column);
-				}else if(this.config.columns === true || this.config.columns == undefined){
-					keys =  Object.keys(from);
-					keys.push("width");
-				}else{
-					keys = this.config.columns;
+			if (from) {
+				if (mergeAllNew) {
+					keys = Object.keys(column)
+				} else if (this.config.columns === true || this.config.columns == undefined) {
+					keys = Object.keys(from)
+					keys.push('width')
+				} else {
+					keys = this.config.columns
 				}
 
-				keys.forEach((key)=>{
-					if(key !== "columns" && typeof column[key] !== "undefined"){
-						from[key] = column[key];
+				keys.forEach((key) => {
+					if (key !== 'columns' && typeof column[key] !== 'undefined') {
+						from[key] = column[key]
 					}
-				});
+				})
 
-				if(from.columns){
-					from.columns = this.mergeDefinition(from.columns, column.columns);
+				if (from.columns) {
+					from.columns = this.mergeDefinition(from.columns, column.columns)
 				}
 
-				output.push(from);
+				output.push(from)
 			}
-		});
+		})
 
 		oldCols.forEach((column, i) => {
-			var from = this._findColumn(newCols, column);
+			const from = this._findColumn(newCols, column)
 
 			if (!from) {
-				if(output.length>i){
-					output.splice(i, 0, column);
-				}else{
-					output.push(column);
+				if (output.length > i) {
+					output.splice(i, 0, column)
+				} else {
+					output.push(column)
 				}
 			}
-		});
+		})
 
-		return output;
+		return output
 	}
 
-	//find matching columns
-	_findColumn(columns, subject){
-		var type = subject.columns ? "group" : (subject.field ? "field" : "object");
+	// find matching columns
+	_findColumn(columns, subject) {
+		const type = subject.columns ? 'group' : subject.field ? 'field' : 'object'
 
-		return columns.find(function(col){
-			switch(type){
-				case "group":
-					return col.title === subject.title && col.columns.length === subject.columns.length;
+		return columns.find(function (col) {
+			switch (type) {
+				case 'group':
+					return col.title === subject.title && col.columns.length === subject.columns.length
 
-				case "field":
-					return col.field === subject.field;
+				case 'field':
+					return col.field === subject.field
 
-				case "object":
-					return col === subject;
+				case 'object':
+					return col === subject
 			}
-		});
+		})
 	}
 
-	//save data
-	save(type){
-		var data = {};
+	// save data
+	save(type) {
+		let data = {}
 
-		switch(type){
-			case "columns":
-				data = this.parseColumns(this.table.columnManager.getColumns());
-				break;
+		switch (type) {
+			case 'columns':
+				data = this.parseColumns(this.table.columnManager.getColumns())
+				break
 
-			case "filter":
-				data = this.table.modules.filter.getFilters();
-				break;
+			case 'filter':
+				data = this.table.modules.filter.getFilters()
+				break
 
-			case "headerFilter":
-				data = this.table.modules.filter.getHeaderFilters();
-				break;
+			case 'headerFilter':
+				data = this.table.modules.filter.getHeaderFilters()
+				break
 
-			case "sort":
-				data = this.validateSorters(this.table.modules.sort.getSort());
-				break;
+			case 'sort':
+				data = this.validateSorters(this.table.modules.sort.getSort())
+				break
 
-			case "group":
-				data = this.getGroupConfig();
-				break;
+			case 'group':
+				data = this.getGroupConfig()
+				break
 
-			case "page":
-				data = this.getPageConfig();
-				break;
+			case 'page':
+				data = this.getPageConfig()
+				break
 		}
 
-		if(this.writeFunc){
-			this.writeFunc(this.id, type, data);
+		if (this.writeFunc) {
+			this.writeFunc(this.id, type, data)
 		}
-
 	}
 
-	//ensure sorters contain no function data
-	validateSorters(data){
-		data.forEach(function(item){
-			item.column = item.field;
-			delete item.field;
-		});
+	// ensure sorters contain no function data
+	validateSorters(data) {
+		data.forEach(function (item) {
+			item.column = item.field
+			delete item.field
+		})
 
-		return data;
+		return data
 	}
 
-	getGroupConfig(){
-		var data = {};
+	getGroupConfig() {
+		const data = {}
 
-		if(this.config.group){
-			if(this.config.group === true || this.config.group.groupBy){
-				data.groupBy = this.table.options.groupBy;
+		if (this.config.group) {
+			if (this.config.group === true || this.config.group.groupBy) {
+				data.groupBy = this.table.options.groupBy
 			}
 
-			if(this.config.group === true || this.config.group.groupStartOpen){
-				data.groupStartOpen = this.table.options.groupStartOpen;
+			if (this.config.group === true || this.config.group.groupStartOpen) {
+				data.groupStartOpen = this.table.options.groupStartOpen
 			}
 
-			if(this.config.group === true || this.config.group.groupHeader){
-				data.groupHeader = this.table.options.groupHeader;
-			}
-		}
-
-		return data;
-	}
-
-	getPageConfig(){
-		var data = {};
-
-		if(this.config.page){
-			if(this.config.page === true || this.config.page.size){
-				data.paginationSize = this.table.modules.page.getPageSize();
-			}
-
-			if(this.config.page === true || this.config.page.page){
-				data.paginationInitialPage = this.table.modules.page.getPage();
+			if (this.config.group === true || this.config.group.groupHeader) {
+				data.groupHeader = this.table.options.groupHeader
 			}
 		}
 
-		return data;
+		return data
 	}
 
+	getPageConfig() {
+		const data = {}
 
-	//parse columns for data to store
-	parseColumns(columns){
-		var definitions = [],
-		excludedKeys = ["headerContextMenu", "headerMenu", "contextMenu", "clickMenu"];
+		if (this.config.page) {
+			if (this.config.page === true || this.config.page.size) {
+				data.paginationSize = this.table.modules.page.getPageSize()
+			}
+
+			if (this.config.page === true || this.config.page.page) {
+				data.paginationInitialPage = this.table.modules.page.getPage()
+			}
+		}
+
+		return data
+	}
+
+	// parse columns for data to store
+	parseColumns(columns) {
+		const definitions = []
+		const excludedKeys = ['headerContextMenu', 'headerMenu', 'contextMenu', 'clickMenu']
 
 		columns.forEach((column) => {
-			var defStore = {},
-			colDef = column.getDefinition(),
-			keys;
+			const defStore = {}
+			const colDef = column.getDefinition()
+			let keys
 
-			if(column.isGroup){
-				defStore.title = colDef.title;
-				defStore.columns = this.parseColumns(column.getColumns());
-			}else{
-				defStore.field = column.getField();
+			if (column.isGroup) {
+				defStore.title = colDef.title
+				defStore.columns = this.parseColumns(column.getColumns())
+			} else {
+				defStore.field = column.getField()
 
-				if(this.config.columns === true || this.config.columns == undefined){
-					keys =  Object.keys(colDef);
-					keys.push("width");
-					keys.push("visible");
-				}else{
-					keys = this.config.columns;
+				if (this.config.columns === true || this.config.columns == undefined) {
+					keys = Object.keys(colDef)
+					keys.push('width')
+					keys.push('visible')
+				} else {
+					keys = this.config.columns
 				}
 
-				keys.forEach((key)=>{
-					switch(key){
-						case "width":
-							defStore.width = column.getWidth();
-							break;
-						case "visible":
-							defStore.visible = column.visible;
-							break;
+				keys.forEach((key) => {
+					switch (key) {
+						case 'width':
+							defStore.width = column.getWidth()
+							break
+						case 'visible':
+							defStore.visible = column.visible
+							break
 
 						default:
-							if(typeof colDef[key] !== "function" && excludedKeys.indexOf(key) === -1){
-								defStore[key] = colDef[key];
+							if (typeof colDef[key] !== 'function' && excludedKeys.indexOf(key) === -1) {
+								defStore[key] = colDef[key]
 							}
 					}
-				});
+				})
 			}
 
-			definitions.push(defStore);
-		});
+			definitions.push(defStore)
+		})
 
-		return definitions;
+		return definitions
 	}
 }

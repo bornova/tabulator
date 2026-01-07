@@ -1,11 +1,11 @@
 export default {
-	range:function(){
-		var columns = this.modules.selectRange.selectedColumns();
+	range: function () {
+		const columns = this.modules.selectRange.selectedColumns()
 
-		if(this.columnManager.rowHeader){
-			columns.unshift(this.columnManager.rowHeader);
+		if (this.columnManager.rowHeader) {
+			columns.unshift(this.columnManager.rowHeader)
 		}
 
-		return columns;
-	},
-};
+		return columns
+	}
+}

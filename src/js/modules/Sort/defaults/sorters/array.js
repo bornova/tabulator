@@ -1,82 +1,85 @@
-import Helpers from '../../../../core/tools/Helpers.js';
+import Helpers from '../../../../core/tools/Helpers.js'
 
-//sort if element contains any data
-export default function(a, b, aRow, bRow, column, dir, params){
-	var type = params.type || "length",
-	alignEmptyValues = params.alignEmptyValues,
-	emptyAlign = 0,
-	table = this.table,
-	valueMap;
+// sort if element contains any data
+export default function (a, b, aRow, bRow, column, dir, params) {
+	const type = params.type || 'length'
+	const alignEmptyValues = params.alignEmptyValues
+	let emptyAlign = 0
+	const table = this.table
+	let valueMap
 
-	if(params.valueMap){
-		if(typeof params.valueMap === "string"){
-			valueMap = function(value){
+	if (params.valueMap) {
+		if (typeof params.valueMap === 'string') {
+			valueMap = function (value) {
 				return value.map((item) => {
-					return Helpers.retrieveNestedData(table.options.nestedFieldSeparator, params.valueMap, item);
-				});
-			};
-		}else{
-			valueMap = params.valueMap;
+					return Helpers.retrieveNestedData(table.options.nestedFieldSeparator, params.valueMap, item)
+				})
+			}
+		} else {
+			valueMap = params.valueMap
 		}
 	}
 
-	function calc(value){
-		var result;
-		
-		if(valueMap){
-			value = valueMap(value);
+	function calc(value) {
+		let result
+
+		if (valueMap) {
+			value = valueMap(value)
 		}
 
-		switch(type){
-			case "length":
-				result = value.length;
-				break;
+		switch (type) {
+			case 'length':
+				result = value.length
+				break
 
-			case "sum":
-				result = value.reduce(function(c, d){
-					return c + d;
-				});
-				break;
+			case 'sum':
+				result = value.reduce(function (c, d) {
+					return c + d
+				})
+				break
 
-			case "max":
-				result = Math.max.apply(null, value) ;
-				break;
+			case 'max':
+				result = Math.max.apply(null, value)
+				break
 
-			case "min":
-				result = Math.min.apply(null, value) ;
-				break;
+			case 'min':
+				result = Math.min.apply(null, value)
+				break
 
-			case "avg":
-				result = value.reduce(function(c, d){
-					return c + d;
-				}) / value.length;
-				break;
+			case 'avg':
+				result =
+					value.reduce(function (c, d) {
+						return c + d
+					}) / value.length
+				break
 
-			case "string":
-				result = value.join("");
-				break;
+			case 'string':
+				result = value.join('')
+				break
 		}
 
-		return result;
+		return result
 	}
 
-	//handle non array values
-	if(!Array.isArray(a)){
-		emptyAlign = !Array.isArray(b) ? 0 : -1;
-	}else if(!Array.isArray(b)){
-		emptyAlign = 1;
-	}else{
-		if(type === "string"){
-			return String(calc(a)).toLowerCase().localeCompare(String(calc(b)).toLowerCase());
-		}else{
-			return calc(b) - calc(a);
+	// handle non array values
+	if (!Array.isArray(a)) {
+		emptyAlign = !Array.isArray(b) ? 0 : -1
+	} else if (!Array.isArray(b)) {
+		emptyAlign = 1
+	} else {
+		if (type === 'string') {
+			return String(calc(a))
+				.toLowerCase()
+				.localeCompare(String(calc(b)).toLowerCase())
+		} else {
+			return calc(b) - calc(a)
 		}
 	}
 
-	//fix empty values in position
-	if((alignEmptyValues === "top" && dir === "desc") || (alignEmptyValues === "bottom" && dir === "asc")){
-		emptyAlign *= -1;
+	// fix empty values in position
+	if ((alignEmptyValues === 'top' && dir === 'desc') || (alignEmptyValues === 'bottom' && dir === 'asc')) {
+		emptyAlign *= -1
 	}
 
-	return emptyAlign;
+	return emptyAlign
 }

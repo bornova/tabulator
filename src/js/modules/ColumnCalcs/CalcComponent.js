@@ -1,46 +1,46 @@
-export default class CalcComponent{
-	constructor (row){
-		this._row = row;
+export default class CalcComponent {
+	constructor(row) {
+		this._row = row
 
 		return new Proxy(this, {
-			get: function(target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
-				}else{
-					return target._row.table.componentFunctionBinder.handle("row", target._row, name);
+			get: function (target, name, receiver) {
+				if (typeof target[name] !== 'undefined') {
+					return target[name]
+				} else {
+					return target._row.table.componentFunctionBinder.handle('row', target._row, name)
 				}
 			}
-		});
+		})
 	}
 
-	getData(transform){
-		return this._row.getData(transform);
+	getData(transform) {
+		return this._row.getData(transform)
 	}
 
-	getElement(){
-		return this._row.getElement();
+	getElement() {
+		return this._row.getElement()
 	}
 
-	getTable(){
-		return this._row.table;
+	getTable() {
+		return this._row.table
 	}
 
-	getCells(){
-		var cells = [];
+	getCells() {
+		const cells = []
 
-		this._row.getCells().forEach(function(cell){
-			cells.push(cell.getComponent());
-		});
+		this._row.getCells().forEach(function (cell) {
+			cells.push(cell.getComponent())
+		})
 
-		return cells;
+		return cells
 	}
 
-	getCell(column){
-		var cell = this._row.getCell(column);
-		return cell ? cell.getComponent() : false;
+	getCell(column) {
+		const cell = this._row.getCell(column)
+		return cell ? cell.getComponent() : false
 	}
 
-	_getSelf(){
-		return this._row;
+	_getSelf() {
+		return this._row
 	}
 }

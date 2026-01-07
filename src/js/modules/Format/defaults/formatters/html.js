@@ -1,3 +1,3 @@
-export default function(cell, formatterParams, onRendered){
-	return cell.getValue();
+export default function (cell, formatterParams, onRendered) {
+	return cell.getValue()
 }

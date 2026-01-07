@@ -1,9 +1,9 @@
-import rowSelection from './formatters/rowSelection.js';
+import rowSelection from './formatters/rowSelection.js'
 
 export default {
-	format:{
-		formatters:{
-			rowSelection:rowSelection,
+	format: {
+		formatters: {
+			rowSelection
 		}
 	}
-};
+}
