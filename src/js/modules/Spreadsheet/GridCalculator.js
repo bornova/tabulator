@@ -1,64 +1,64 @@
 export default class GridCalculator {
-	constructor(columns, rows) {
-		this.columnCount = columns
-		this.rowCount = rows
+  constructor(columns, rows) {
+    this.columnCount = columns
+    this.rowCount = rows
 
-		this.columnString = []
-		this.columns = []
-		this.rows = []
-	}
+    this.columnString = []
+    this.columns = []
+    this.rows = []
+  }
 
-	genColumns(data) {
-		const colCount = Math.max(this.columnCount, Math.max(...data.map((item) => item.length)))
+  genColumns(data) {
+    const colCount = Math.max(this.columnCount, Math.max(...data.map((item) => item.length)))
 
-		this.columnString = []
-		this.columns = []
+    this.columnString = []
+    this.columns = []
 
-		for (let i = 1; i <= colCount; i++) {
-			this.incrementChar(this.columnString.length - 1)
-			this.columns.push(this.columnString.join(''))
-		}
+    for (let i = 1; i <= colCount; i++) {
+      this.incrementChar(this.columnString.length - 1)
+      this.columns.push(this.columnString.join(''))
+    }
 
-		return this.columns
-	}
+    return this.columns
+  }
 
-	genRows(data) {
-		const rowCount = Math.max(this.rowCount, data.length)
+  genRows(data) {
+    const rowCount = Math.max(this.rowCount, data.length)
 
-		this.rows = []
+    this.rows = []
 
-		for (let i = 1; i <= rowCount; i++) {
-			this.rows.push(i)
-		}
+    for (let i = 1; i <= rowCount; i++) {
+      this.rows.push(i)
+    }
 
-		return this.rows
-	}
+    return this.rows
+  }
 
-	incrementChar(i) {
-		const char = this.columnString[i]
+  incrementChar(i) {
+    const char = this.columnString[i]
 
-		if (char) {
-			if (char !== 'Z') {
-				this.columnString[i] = String.fromCharCode(this.columnString[i].charCodeAt(0) + 1)
-			} else {
-				this.columnString[i] = 'A'
+    if (char) {
+      if (char !== 'Z') {
+        this.columnString[i] = String.fromCharCode(this.columnString[i].charCodeAt(0) + 1)
+      } else {
+        this.columnString[i] = 'A'
 
-				if (i) {
-					this.incrementChar(i - 1)
-				} else {
-					this.columnString.push('A')
-				}
-			}
-		} else {
-			this.columnString.push('A')
-		}
-	}
+        if (i) {
+          this.incrementChar(i - 1)
+        } else {
+          this.columnString.push('A')
+        }
+      }
+    } else {
+      this.columnString.push('A')
+    }
+  }
 
-	setRowCount(count) {
-		this.rowCount = count
-	}
+  setRowCount(count) {
+    this.rowCount = count
+  }
 
-	setColumnCount(count) {
-		this.columnCount = count
-	}
+  setColumnCount(count) {
+    this.columnCount = count
+  }
 }

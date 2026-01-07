@@ -2,122 +2,122 @@ import Module from '../../core/Module.js'
 import Cell from '../../core/cell/Cell.js'
 
 export default class Tooltip extends Module {
-	static moduleName = 'tooltip'
+  static moduleName = 'tooltip'
 
-	constructor(table) {
-		super(table)
-		;((this.tooltipSubscriber = null), (this.headerSubscriber = null), (this.timeout = null))
-		this.popupInstance = null
+  constructor(table) {
+    super(table)
+    ;((this.tooltipSubscriber = null), (this.headerSubscriber = null), (this.timeout = null))
+    this.popupInstance = null
 
-		// this.registerTableOption("tooltipGenerationMode", undefined);  //deprecated
-		this.registerTableOption('tooltipDelay', 300)
+    // this.registerTableOption("tooltipGenerationMode", undefined);  //deprecated
+    this.registerTableOption('tooltipDelay', 300)
 
-		this.registerColumnOption('tooltip')
-		this.registerColumnOption('headerTooltip')
-	}
+    this.registerColumnOption('tooltip')
+    this.registerColumnOption('headerTooltip')
+  }
 
-	initialize() {
-		this.deprecatedOptionsCheck()
+  initialize() {
+    this.deprecatedOptionsCheck()
 
-		this.subscribe('column-init', this.initializeColumn.bind(this))
-	}
+    this.subscribe('column-init', this.initializeColumn.bind(this))
+  }
 
-	deprecatedOptionsCheck() {
-		// this.deprecationCheckMsg("tooltipGenerationMode", "This option is no longer needed as tooltips are always generated on hover now");
-	}
+  deprecatedOptionsCheck() {
+    // this.deprecationCheckMsg("tooltipGenerationMode", "This option is no longer needed as tooltips are always generated on hover now");
+  }
 
-	initializeColumn(column) {
-		if (column.definition.headerTooltip && !this.headerSubscriber) {
-			this.headerSubscriber = true
+  initializeColumn(column) {
+    if (column.definition.headerTooltip && !this.headerSubscriber) {
+      this.headerSubscriber = true
 
-			this.subscribe('column-mousemove', this.mousemoveCheck.bind(this, 'headerTooltip'))
-			this.subscribe('column-mouseout', this.mouseoutCheck.bind(this, 'headerTooltip'))
-		}
+      this.subscribe('column-mousemove', this.mousemoveCheck.bind(this, 'headerTooltip'))
+      this.subscribe('column-mouseout', this.mouseoutCheck.bind(this, 'headerTooltip'))
+    }
 
-		if (column.definition.tooltip && !this.tooltipSubscriber) {
-			this.tooltipSubscriber = true
+    if (column.definition.tooltip && !this.tooltipSubscriber) {
+      this.tooltipSubscriber = true
 
-			this.subscribe('cell-mousemove', this.mousemoveCheck.bind(this, 'tooltip'))
-			this.subscribe('cell-mouseout', this.mouseoutCheck.bind(this, 'tooltip'))
-		}
-	}
+      this.subscribe('cell-mousemove', this.mousemoveCheck.bind(this, 'tooltip'))
+      this.subscribe('cell-mouseout', this.mouseoutCheck.bind(this, 'tooltip'))
+    }
+  }
 
-	mousemoveCheck(action, e, component) {
-		const tooltip = action === 'tooltip' ? component.column.definition.tooltip : component.definition.headerTooltip
+  mousemoveCheck(action, e, component) {
+    const tooltip = action === 'tooltip' ? component.column.definition.tooltip : component.definition.headerTooltip
 
-		if (tooltip) {
-			this.clearPopup()
-			this.timeout = setTimeout(this.loadTooltip.bind(this, e, component, tooltip), this.table.options.tooltipDelay)
-		}
-	}
+    if (tooltip) {
+      this.clearPopup()
+      this.timeout = setTimeout(this.loadTooltip.bind(this, e, component, tooltip), this.table.options.tooltipDelay)
+    }
+  }
 
-	mouseoutCheck(action, e, component) {
-		if (!this.popupInstance) {
-			this.clearPopup()
-		}
-	}
+  mouseoutCheck(action, e, component) {
+    if (!this.popupInstance) {
+      this.clearPopup()
+    }
+  }
 
-	clearPopup(action, e, component) {
-		clearTimeout(this.timeout)
-		this.timeout = null
+  clearPopup(action, e, component) {
+    clearTimeout(this.timeout)
+    this.timeout = null
 
-		if (this.popupInstance) {
-			this.popupInstance.hide()
-		}
-	}
+    if (this.popupInstance) {
+      this.popupInstance.hide()
+    }
+  }
 
-	loadTooltip(e, component, tooltip) {
-		let contentsEl, renderedCallback, coords
+  loadTooltip(e, component, tooltip) {
+    let contentsEl, renderedCallback, coords
 
-		function onRendered(callback) {
-			renderedCallback = callback
-		}
+    function onRendered(callback) {
+      renderedCallback = callback
+    }
 
-		if (typeof tooltip === 'function') {
-			tooltip = tooltip(e, component.getComponent(), onRendered)
-		}
+    if (typeof tooltip === 'function') {
+      tooltip = tooltip(e, component.getComponent(), onRendered)
+    }
 
-		if (tooltip instanceof HTMLElement) {
-			contentsEl = tooltip
-		} else {
-			contentsEl = document.createElement('div')
+    if (tooltip instanceof HTMLElement) {
+      contentsEl = tooltip
+    } else {
+      contentsEl = document.createElement('div')
 
-			if (tooltip === true) {
-				if (component instanceof Cell) {
-					tooltip = component.value
-				} else {
-					if (component.definition.field) {
-						this.langBind('columns|' + component.definition.field, (value) => {
-							contentsEl.innerHTML = tooltip = value || component.definition.title
-						})
-					} else {
-						tooltip = component.definition.title
-					}
-				}
-			}
+      if (tooltip === true) {
+        if (component instanceof Cell) {
+          tooltip = component.value
+        } else {
+          if (component.definition.field) {
+            this.langBind('columns|' + component.definition.field, (value) => {
+              contentsEl.innerHTML = tooltip = value || component.definition.title
+            })
+          } else {
+            tooltip = component.definition.title
+          }
+        }
+      }
 
-			contentsEl.innerHTML = tooltip
-		}
+      contentsEl.innerHTML = tooltip
+    }
 
-		if (tooltip || tooltip === 0 || tooltip === false) {
-			contentsEl.classList.add('tabulator-tooltip')
+    if (tooltip || tooltip === 0 || tooltip === false) {
+      contentsEl.classList.add('tabulator-tooltip')
 
-			contentsEl.addEventListener('mousemove', (e) => e.preventDefault())
+      contentsEl.addEventListener('mousemove', (e) => e.preventDefault())
 
-			this.popupInstance = this.popup(contentsEl)
+      this.popupInstance = this.popup(contentsEl)
 
-			if (typeof renderedCallback === 'function') {
-				this.popupInstance.renderCallback(renderedCallback)
-			}
+      if (typeof renderedCallback === 'function') {
+        this.popupInstance.renderCallback(renderedCallback)
+      }
 
-			coords = this.popupInstance.containerEventCoords(e)
+      coords = this.popupInstance.containerEventCoords(e)
 
-			this.popupInstance.show(coords.x + 15, coords.y + 15).hideOnBlur(() => {
-				this.dispatchExternal('TooltipClosed', component.getComponent())
-				this.popupInstance = null
-			})
+      this.popupInstance.show(coords.x + 15, coords.y + 15).hideOnBlur(() => {
+        this.dispatchExternal('TooltipClosed', component.getComponent())
+        this.popupInstance = null
+      })
 
-			this.dispatchExternal('TooltipOpened', component.getComponent())
-		}
-	}
+      this.dispatchExternal('TooltipOpened', component.getComponent())
+    }
+  }
 }

@@ -1,40 +1,40 @@
 export default function (cell, onRendered, success, cancel, params) {
-	const column = cell._getSelf().column
-	let lookup
-	let editorFunc
-	let editorParams
+  const column = cell._getSelf().column
+  let lookup
+  let editorFunc
+  let editorParams
 
-	function defaultLookup(cell) {
-		const value = cell.getValue()
-		let editor = 'input'
+  function defaultLookup(cell) {
+    const value = cell.getValue()
+    let editor = 'input'
 
-		switch (typeof value) {
-			case 'number':
-				editor = 'number'
-				break
+    switch (typeof value) {
+      case 'number':
+        editor = 'number'
+        break
 
-			case 'boolean':
-				editor = 'tickCross'
-				break
+      case 'boolean':
+        editor = 'tickCross'
+        break
 
-			case 'string':
-				if (value.includes('\n')) {
-					editor = 'textarea'
-				}
-				break
-		}
+      case 'string':
+        if (value.includes('\n')) {
+          editor = 'textarea'
+        }
+        break
+    }
 
-		return editor
-	}
+    return editor
+  }
 
-	lookup = params.editorLookup ? params.editorLookup(cell) : defaultLookup(cell)
+  lookup = params.editorLookup ? params.editorLookup(cell) : defaultLookup(cell)
 
-	if (params.paramsLookup) {
-		editorParams =
-			typeof params.paramsLookup === 'function' ? params.paramsLookup(lookup, cell) : params.paramsLookup[lookup]
-	}
+  if (params.paramsLookup) {
+    editorParams =
+      typeof params.paramsLookup === 'function' ? params.paramsLookup(lookup, cell) : params.paramsLookup[lookup]
+  }
 
-	editorFunc = this.table.modules.edit.lookupEditor(lookup, column)
+  editorFunc = this.table.modules.edit.lookupEditor(lookup, column)
 
-	return editorFunc.call(this, cell, onRendered, success, cancel, editorParams || {})
+  return editorFunc.call(this, cell, onRendered, success, cancel, editorParams || {})
 }

@@ -1,65 +1,65 @@
 export default {
-	debugEventsExternal: false, // flag to console log events
-	debugEventsInternal: false, // flag to console log events
-	debugInvalidOptions: true, // allow toggling of invalid option warnings
-	debugInvalidComponentFuncs: true, // allow toggling of invalid component warnings
-	debugInitialization: true, // allow toggling of pre initialization function call warnings
-	debugDeprecation: true, // allow toggling of deprecation warnings
+  debugEventsExternal: false, // flag to console log events
+  debugEventsInternal: false, // flag to console log events
+  debugInvalidOptions: true, // allow toggling of invalid option warnings
+  debugInvalidComponentFuncs: true, // allow toggling of invalid component warnings
+  debugInitialization: true, // allow toggling of pre initialization function call warnings
+  debugDeprecation: true, // allow toggling of deprecation warnings
 
-	height: false, // height of tabulator
-	minHeight: false, // minimum height of tabulator
-	maxHeight: false, // maximum height of tabulator
+  height: false, // height of tabulator
+  minHeight: false, // minimum height of tabulator
+  maxHeight: false, // maximum height of tabulator
 
-	columnHeaderVertAlign: 'top', // vertical alignment of column headers
+  columnHeaderVertAlign: 'top', // vertical alignment of column headers
 
-	popupContainer: false,
+  popupContainer: false,
 
-	columns: [], // store for colum header info
-	columnDefaults: {}, // store column default props
-	rowHeader: false,
+  columns: [], // store for colum header info
+  columnDefaults: {}, // store column default props
+  rowHeader: false,
 
-	data: false, // default starting data
+  data: false, // default starting data
 
-	autoColumns: false, // build columns from data row structure
-	autoColumnsDefinitions: false,
+  autoColumns: false, // build columns from data row structure
+  autoColumnsDefinitions: false,
 
-	nestedFieldSeparator: '.', // separator for nested data
+  nestedFieldSeparator: '.', // separator for nested data
 
-	footerElement: false, // hold footer element
+  footerElement: false, // hold footer element
 
-	index: 'id', // filed for row index
+  index: 'id', // filed for row index
 
-	textDirection: 'auto',
+  textDirection: 'auto',
 
-	addRowPos: 'bottom', // position to insert blank rows, top|bottom
+  addRowPos: 'bottom', // position to insert blank rows, top|bottom
 
-	headerVisible: true, // hide header
+  headerVisible: true, // hide header
 
-	renderVertical: 'virtual',
-	renderHorizontal: 'basic',
-	renderVerticalBuffer: 0, // set virtual DOM buffer size
+  renderVertical: 'virtual',
+  renderHorizontal: 'basic',
+  renderVerticalBuffer: 0, // set virtual DOM buffer size
 
-	scrollToRowPosition: 'top',
-	scrollToRowIfVisible: true,
+  scrollToRowPosition: 'top',
+  scrollToRowIfVisible: true,
 
-	scrollToColumnPosition: 'left',
-	scrollToColumnIfVisible: true,
+  scrollToColumnPosition: 'left',
+  scrollToColumnIfVisible: true,
 
-	rowFormatter: false,
-	rowFormatterPrint: null,
-	rowFormatterClipboard: null,
-	rowFormatterHtmlOutput: null,
+  rowFormatter: false,
+  rowFormatterPrint: null,
+  rowFormatterClipboard: null,
+  rowFormatterHtmlOutput: null,
 
-	rowHeight: null,
+  rowHeight: null,
 
-	placeholder: false,
+  placeholder: false,
 
-	dataLoader: true,
-	dataLoaderLoading: false,
-	dataLoaderError: false,
-	dataLoaderErrorTimeout: 3000,
-	dataSendParams: {},
-	dataReceiveParams: {},
+  dataLoader: true,
+  dataLoaderLoading: false,
+  dataLoaderError: false,
+  dataLoaderErrorTimeout: 3000,
+  dataSendParams: {},
+  dataReceiveParams: {},
 
-	dependencies: {}
+  dependencies: {}
 }

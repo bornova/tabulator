@@ -2,6 +2,6 @@ import rows from './pageCounters/rows.js'
 import pages from './pageCounters/pages.js'
 
 export default {
-	rows,
-	pages
+  rows,
+  pages
 }

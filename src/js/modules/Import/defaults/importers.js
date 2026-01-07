@@ -4,8 +4,8 @@ import array from './importers/array.js'
 import xlsx from './importers/xlsx.js'
 
 export default {
-	csv,
-	json,
-	array,
-	xlsx
+  csv,
+  json,
+  array,
+  xlsx
 }

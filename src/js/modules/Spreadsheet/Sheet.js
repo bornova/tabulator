@@ -3,240 +3,240 @@ import GridCalculator from './GridCalculator'
 import SheetComponent from './SheetComponent'
 
 export default class Sheet extends CoreFeature {
-	constructor(spreadsheetManager, definition) {
-		super(spreadsheetManager.table)
+  constructor(spreadsheetManager, definition) {
+    super(spreadsheetManager.table)
 
-		this.spreadsheetManager = spreadsheetManager
-		this.definition = definition
+    this.spreadsheetManager = spreadsheetManager
+    this.definition = definition
 
-		this.title = this.definition.title || ''
-		this.key = this.definition.key || this.definition.title
-		this.rowCount = this.definition.rows
-		this.columnCount = this.definition.columns
-		this.data = this.definition.data || []
-		this.element = null
-		this.isActive = false
+    this.title = this.definition.title || ''
+    this.key = this.definition.key || this.definition.title
+    this.rowCount = this.definition.rows
+    this.columnCount = this.definition.columns
+    this.data = this.definition.data || []
+    this.element = null
+    this.isActive = false
 
-		this.grid = new GridCalculator(this.columnCount, this.rowCount)
+    this.grid = new GridCalculator(this.columnCount, this.rowCount)
 
-		this.defaultColumnDefinition = { width: 100, headerHozAlign: 'center', headerSort: false }
-		this.columnDefinition = Object.assign(this.defaultColumnDefinition, this.options('spreadsheetColumnDefinition'))
+    this.defaultColumnDefinition = { width: 100, headerHozAlign: 'center', headerSort: false }
+    this.columnDefinition = Object.assign(this.defaultColumnDefinition, this.options('spreadsheetColumnDefinition'))
 
-		this.columnDefs = []
-		this.rowDefs = []
-		this.columnFields = []
-		this.columns = []
-		this.rows = []
+    this.columnDefs = []
+    this.rowDefs = []
+    this.columnFields = []
+    this.columns = []
+    this.rows = []
 
-		this.scrollTop = null
-		this.scrollLeft = null
+    this.scrollTop = null
+    this.scrollLeft = null
 
-		this.initialize()
+    this.initialize()
 
-		this.dispatchExternal('sheetAdded', this.getComponent())
-	}
+    this.dispatchExternal('sheetAdded', this.getComponent())
+  }
 
-	/// ////////////////////////////////
-	/// ////// Initialization //////////
-	/// ////////////////////////////////
+  /// ////////////////////////////////
+  /// ////// Initialization //////////
+  /// ////////////////////////////////
 
-	initialize() {
-		this.initializeElement()
-		this.initializeColumns()
-		this.initializeRows()
-	}
+  initialize() {
+    this.initializeElement()
+    this.initializeColumns()
+    this.initializeRows()
+  }
 
-	reinitialize() {
-		this.initializeColumns()
-		this.initializeRows()
-	}
+  reinitialize() {
+    this.initializeColumns()
+    this.initializeRows()
+  }
 
-	initializeElement() {
-		this.element = document.createElement('div')
-		this.element.classList.add('tabulator-spreadsheet-tab')
-		this.element.innerText = this.title
+  initializeElement() {
+    this.element = document.createElement('div')
+    this.element.classList.add('tabulator-spreadsheet-tab')
+    this.element.innerText = this.title
 
-		this.element.addEventListener('click', () => {
-			this.spreadsheetManager.loadSheet(this)
-		})
-	}
+    this.element.addEventListener('click', () => {
+      this.spreadsheetManager.loadSheet(this)
+    })
+  }
 
-	initializeColumns() {
-		this.grid.setColumnCount(this.columnCount)
-		this.columnFields = this.grid.genColumns(this.data)
+  initializeColumns() {
+    this.grid.setColumnCount(this.columnCount)
+    this.columnFields = this.grid.genColumns(this.data)
 
-		this.columnDefs = []
+    this.columnDefs = []
 
-		this.columnFields.forEach((ref) => {
-			const def = Object.assign({}, this.columnDefinition)
-			def.field = ref
-			def.title = ref
+    this.columnFields.forEach((ref) => {
+      const def = Object.assign({}, this.columnDefinition)
+      def.field = ref
+      def.title = ref
 
-			this.columnDefs.push(def)
-		})
-	}
+      this.columnDefs.push(def)
+    })
+  }
 
-	initializeRows() {
-		let refs
+  initializeRows() {
+    let refs
 
-		this.grid.setRowCount(this.rowCount)
+    this.grid.setRowCount(this.rowCount)
 
-		refs = this.grid.genRows(this.data)
+    refs = this.grid.genRows(this.data)
 
-		this.rowDefs = []
+    this.rowDefs = []
 
-		refs.forEach((ref, i) => {
-			const def = { _id: ref }
-			const data = this.data[i]
+    refs.forEach((ref, i) => {
+      const def = { _id: ref }
+      const data = this.data[i]
 
-			if (data) {
-				data.forEach((val, j) => {
-					const field = this.columnFields[j]
+      if (data) {
+        data.forEach((val, j) => {
+          const field = this.columnFields[j]
 
-					if (field) {
-						def[field] = val
-					}
-				})
-			}
+          if (field) {
+            def[field] = val
+          }
+        })
+      }
 
-			this.rowDefs.push(def)
-		})
-	}
+      this.rowDefs.push(def)
+    })
+  }
 
-	unload() {
-		this.isActive = false
-		this.scrollTop = this.table.rowManager.scrollTop
-		this.scrollLeft = this.table.rowManager.scrollLeft
-		this.data = this.getData(true)
-		this.element.classList.remove('tabulator-spreadsheet-tab-active')
-	}
+  unload() {
+    this.isActive = false
+    this.scrollTop = this.table.rowManager.scrollTop
+    this.scrollLeft = this.table.rowManager.scrollLeft
+    this.data = this.getData(true)
+    this.element.classList.remove('tabulator-spreadsheet-tab-active')
+  }
 
-	load() {
-		const wasInactive = !this.isActive
+  load() {
+    const wasInactive = !this.isActive
 
-		this.isActive = true
-		this.table.blockRedraw()
-		this.table.setData([])
-		this.table.setColumns(this.columnDefs)
-		this.table.setData(this.rowDefs)
-		this.table.restoreRedraw()
+    this.isActive = true
+    this.table.blockRedraw()
+    this.table.setData([])
+    this.table.setColumns(this.columnDefs)
+    this.table.setData(this.rowDefs)
+    this.table.restoreRedraw()
 
-		if (wasInactive && this.scrollTop !== null) {
-			this.table.rowManager.element.scrollLeft = this.scrollLeft
-			this.table.rowManager.element.scrollTop = this.scrollTop
-		}
+    if (wasInactive && this.scrollTop !== null) {
+      this.table.rowManager.element.scrollLeft = this.scrollLeft
+      this.table.rowManager.element.scrollTop = this.scrollTop
+    }
 
-		this.element.classList.add('tabulator-spreadsheet-tab-active')
+    this.element.classList.add('tabulator-spreadsheet-tab-active')
 
-		this.dispatchExternal('sheetLoaded', this.getComponent())
-	}
+    this.dispatchExternal('sheetLoaded', this.getComponent())
+  }
 
-	/// ////////////////////////////////
-	/// ///// Helper Functions /////////
-	/// ////////////////////////////////
+  /// ////////////////////////////////
+  /// ///// Helper Functions /////////
+  /// ////////////////////////////////
 
-	getComponent() {
-		return new SheetComponent(this)
-	}
+  getComponent() {
+    return new SheetComponent(this)
+  }
 
-	getDefinition() {
-		return {
-			title: this.title,
-			key: this.key,
-			rows: this.rowCount,
-			columns: this.columnCount,
-			data: this.getData()
-		}
-	}
+  getDefinition() {
+    return {
+      title: this.title,
+      key: this.key,
+      rows: this.rowCount,
+      columns: this.columnCount,
+      data: this.getData()
+    }
+  }
 
-	getData(full) {
-		let output = []
-		let rowWidths
-		let outputWidth
-		let outputHeight
+  getData(full) {
+    let output = []
+    let rowWidths
+    let outputWidth
+    let outputHeight
 
-		// map data to array format
-		this.rowDefs.forEach((rowData) => {
-			const row = []
+    // map data to array format
+    this.rowDefs.forEach((rowData) => {
+      const row = []
 
-			this.columnFields.forEach((field) => {
-				row.push(rowData[field])
-			})
+      this.columnFields.forEach((field) => {
+        row.push(rowData[field])
+      })
 
-			output.push(row)
-		})
+      output.push(row)
+    })
 
-		// trim output
-		if (!full && !this.options('spreadsheetOutputFull')) {
-			// calculate used area of data
-			rowWidths = output.map((row) => row.findLastIndex((val) => typeof val !== 'undefined') + 1)
-			outputWidth = Math.max(...rowWidths)
-			outputHeight = rowWidths.findLastIndex((width) => width > 0) + 1
+    // trim output
+    if (!full && !this.options('spreadsheetOutputFull')) {
+      // calculate used area of data
+      rowWidths = output.map((row) => row.findLastIndex((val) => typeof val !== 'undefined') + 1)
+      outputWidth = Math.max(...rowWidths)
+      outputHeight = rowWidths.findLastIndex((width) => width > 0) + 1
 
-			output = output.slice(0, outputHeight)
-			output = output.map((row) => row.slice(0, outputWidth))
-		}
+      output = output.slice(0, outputHeight)
+      output = output.map((row) => row.slice(0, outputWidth))
+    }
 
-		return output
-	}
+    return output
+  }
 
-	setData(data) {
-		this.data = data
-		this.reinitialize()
+  setData(data) {
+    this.data = data
+    this.reinitialize()
 
-		this.dispatchExternal('sheetUpdated', this.getComponent())
+    this.dispatchExternal('sheetUpdated', this.getComponent())
 
-		if (this.isActive) {
-			this.load()
-		}
-	}
+    if (this.isActive) {
+      this.load()
+    }
+  }
 
-	clear() {
-		this.setData([])
-	}
+  clear() {
+    this.setData([])
+  }
 
-	setTitle(title) {
-		this.title = title
-		this.element.innerText = title
+  setTitle(title) {
+    this.title = title
+    this.element.innerText = title
 
-		this.dispatchExternal('sheetUpdated', this.getComponent())
-	}
+    this.dispatchExternal('sheetUpdated', this.getComponent())
+  }
 
-	setRows(rows) {
-		this.rowCount = rows
-		this.initializeRows()
+  setRows(rows) {
+    this.rowCount = rows
+    this.initializeRows()
 
-		this.dispatchExternal('sheetUpdated', this.getComponent())
+    this.dispatchExternal('sheetUpdated', this.getComponent())
 
-		if (this.isActive) {
-			this.load()
-		}
-	}
+    if (this.isActive) {
+      this.load()
+    }
+  }
 
-	setColumns(columns) {
-		this.columnCount = columns
-		this.reinitialize()
+  setColumns(columns) {
+    this.columnCount = columns
+    this.reinitialize()
 
-		this.dispatchExternal('sheetUpdated', this.getComponent())
+    this.dispatchExternal('sheetUpdated', this.getComponent())
 
-		if (this.isActive) {
-			this.load()
-		}
-	}
+    if (this.isActive) {
+      this.load()
+    }
+  }
 
-	remove() {
-		this.spreadsheetManager.removeSheet(this)
-	}
+  remove() {
+    this.spreadsheetManager.removeSheet(this)
+  }
 
-	destroy() {
-		if (this.element.parentNode) {
-			this.element.parentNode.removeChild(this.element)
-		}
+  destroy() {
+    if (this.element.parentNode) {
+      this.element.parentNode.removeChild(this.element)
+    }
 
-		this.dispatchExternal('sheetRemoved', this.getComponent())
-	}
+    this.dispatchExternal('sheetRemoved', this.getComponent())
+  }
 
-	active() {
-		this.spreadsheetManager.loadSheet(this)
-	}
+  active() {
+    this.spreadsheetManager.loadSheet(this)
+  }
 }

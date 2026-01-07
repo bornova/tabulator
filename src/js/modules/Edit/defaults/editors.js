@@ -12,16 +12,16 @@ import tickCross from './editors/tickCross.js'
 import adaptable from './editors/adaptable.js'
 
 export default {
-	input,
-	textarea,
-	number,
-	range,
-	date,
-	time,
-	datetime,
-	list,
-	star,
-	progress,
-	tickCross,
-	adaptable
+  input,
+  textarea,
+  number,
+  range,
+  date,
+  time,
+  datetime,
+  list,
+  star,
+  progress,
+  tickCross,
+  adaptable
 }

@@ -6,10 +6,10 @@ import html from './downloaders/html.js'
 import jsonLines from './downloaders/jsonLines.js'
 
 export default {
-	csv,
-	json,
-	jsonLines,
-	pdf,
-	xlsx,
-	html
+  csv,
+  json,
+  jsonLines,
+  pdf,
+  xlsx,
+  html
 }

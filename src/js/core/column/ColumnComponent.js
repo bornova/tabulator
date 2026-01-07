@@ -1,151 +1,151 @@
 // public column object
 export default class ColumnComponent {
-	constructor(column) {
-		this._column = column
-		this.type = 'ColumnComponent'
+  constructor(column) {
+    this._column = column
+    this.type = 'ColumnComponent'
 
-		return new Proxy(this, {
-			get: function (target, name, receiver) {
-				if (typeof target[name] !== 'undefined') {
-					return target[name]
-				} else {
-					return target._column.table.componentFunctionBinder.handle('column', target._column, name)
-				}
-			}
-		})
-	}
+    return new Proxy(this, {
+      get: function (target, name, receiver) {
+        if (typeof target[name] !== 'undefined') {
+          return target[name]
+        } else {
+          return target._column.table.componentFunctionBinder.handle('column', target._column, name)
+        }
+      }
+    })
+  }
 
-	getElement() {
-		return this._column.getElement()
-	}
+  getElement() {
+    return this._column.getElement()
+  }
 
-	getDefinition() {
-		return this._column.getDefinition()
-	}
+  getDefinition() {
+    return this._column.getDefinition()
+  }
 
-	getField() {
-		return this._column.getField()
-	}
+  getField() {
+    return this._column.getField()
+  }
 
-	getTitleDownload() {
-		return this._column.getTitleDownload()
-	}
+  getTitleDownload() {
+    return this._column.getTitleDownload()
+  }
 
-	getCells() {
-		const cells = []
+  getCells() {
+    const cells = []
 
-		this._column.cells.forEach(function (cell) {
-			cells.push(cell.getComponent())
-		})
+    this._column.cells.forEach(function (cell) {
+      cells.push(cell.getComponent())
+    })
 
-		return cells
-	}
+    return cells
+  }
 
-	isVisible() {
-		return this._column.visible
-	}
+  isVisible() {
+    return this._column.visible
+  }
 
-	show() {
-		if (this._column.isGroup) {
-			this._column.columns.forEach(function (column) {
-				column.show()
-			})
-		} else {
-			this._column.show()
-		}
-	}
+  show() {
+    if (this._column.isGroup) {
+      this._column.columns.forEach(function (column) {
+        column.show()
+      })
+    } else {
+      this._column.show()
+    }
+  }
 
-	hide() {
-		if (this._column.isGroup) {
-			this._column.columns.forEach(function (column) {
-				column.hide()
-			})
-		} else {
-			this._column.hide()
-		}
-	}
+  hide() {
+    if (this._column.isGroup) {
+      this._column.columns.forEach(function (column) {
+        column.hide()
+      })
+    } else {
+      this._column.hide()
+    }
+  }
 
-	toggle() {
-		if (this._column.visible) {
-			this.hide()
-		} else {
-			this.show()
-		}
-	}
+  toggle() {
+    if (this._column.visible) {
+      this.hide()
+    } else {
+      this.show()
+    }
+  }
 
-	delete() {
-		return this._column.delete()
-	}
+  delete() {
+    return this._column.delete()
+  }
 
-	getSubColumns() {
-		const output = []
+  getSubColumns() {
+    const output = []
 
-		if (this._column.columns.length) {
-			this._column.columns.forEach(function (column) {
-				output.push(column.getComponent())
-			})
-		}
+    if (this._column.columns.length) {
+      this._column.columns.forEach(function (column) {
+        output.push(column.getComponent())
+      })
+    }
 
-		return output
-	}
+    return output
+  }
 
-	getParentColumn() {
-		return this._column.getParentComponent()
-	}
+  getParentColumn() {
+    return this._column.getParentComponent()
+  }
 
-	_getSelf() {
-		return this._column
-	}
+  _getSelf() {
+    return this._column
+  }
 
-	scrollTo(position, ifVisible) {
-		return this._column.table.columnManager.scrollToColumn(this._column, position, ifVisible)
-	}
+  scrollTo(position, ifVisible) {
+    return this._column.table.columnManager.scrollToColumn(this._column, position, ifVisible)
+  }
 
-	getTable() {
-		return this._column.table
-	}
+  getTable() {
+    return this._column.table
+  }
 
-	move(to, after) {
-		const toColumn = this._column.table.columnManager.findColumn(to)
+  move(to, after) {
+    const toColumn = this._column.table.columnManager.findColumn(to)
 
-		if (toColumn) {
-			this._column.table.columnManager.moveColumn(this._column, toColumn, after)
-		} else {
-			console.warn('Move Error - No matching column found:', toColumn)
-		}
-	}
+    if (toColumn) {
+      this._column.table.columnManager.moveColumn(this._column, toColumn, after)
+    } else {
+      console.warn('Move Error - No matching column found:', toColumn)
+    }
+  }
 
-	getNextColumn() {
-		const nextCol = this._column.nextColumn()
+  getNextColumn() {
+    const nextCol = this._column.nextColumn()
 
-		return nextCol ? nextCol.getComponent() : false
-	}
+    return nextCol ? nextCol.getComponent() : false
+  }
 
-	getPrevColumn() {
-		const prevCol = this._column.prevColumn()
+  getPrevColumn() {
+    const prevCol = this._column.prevColumn()
 
-		return prevCol ? prevCol.getComponent() : false
-	}
+    return prevCol ? prevCol.getComponent() : false
+  }
 
-	updateDefinition(updates) {
-		return this._column.updateDefinition(updates)
-	}
+  updateDefinition(updates) {
+    return this._column.updateDefinition(updates)
+  }
 
-	getWidth() {
-		return this._column.getWidth()
-	}
+  getWidth() {
+    return this._column.getWidth()
+  }
 
-	setWidth(width) {
-		let result
+  setWidth(width) {
+    let result
 
-		if (width === true) {
-			result = this._column.reinitializeWidth(true)
-		} else {
-			result = this._column.setWidth(width)
-		}
+    if (width === true) {
+      result = this._column.reinitializeWidth(true)
+    } else {
+      result = this._column.setWidth(width)
+    }
 
-		this._column.table.columnManager.rerenderColumns(true)
+    this._column.table.columnManager.rerenderColumns(true)
 
-		return result
-	}
+    return result
+  }
 }

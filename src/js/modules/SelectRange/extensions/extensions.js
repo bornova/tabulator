@@ -6,16 +6,16 @@ import columnLookups from './export/columnLookups.js'
 import rowLookups from './export/rowLookups.js'
 
 export default {
-	keybindings: {
-		bindings,
-		actions
-	},
-	clipboard: {
-		pasteActions,
-		pasteParsers
-	},
-	export: {
-		columnLookups,
-		rowLookups
-	}
+  keybindings: {
+    bindings,
+    actions
+  },
+  clipboard: {
+    pasteActions,
+    pasteParsers
+  },
+  export: {
+    columnLookups,
+    rowLookups
+  }
 }

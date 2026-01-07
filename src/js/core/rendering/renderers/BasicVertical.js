@@ -2,104 +2,104 @@ import Renderer from '../Renderer.js'
 import Helpers from '../../tools/Helpers.js'
 
 export default class BasicVertical extends Renderer {
-	constructor(table) {
-		super(table)
+  constructor(table) {
+    super(table)
 
-		this.verticalFillMode = 'fill'
+    this.verticalFillMode = 'fill'
 
-		this.scrollTop = 0
-		this.scrollLeft = 0
+    this.scrollTop = 0
+    this.scrollLeft = 0
 
-		this.scrollTop = 0
-		this.scrollLeft = 0
-	}
+    this.scrollTop = 0
+    this.scrollLeft = 0
+  }
 
-	clearRows() {
-		const element = this.tableElement
+  clearRows() {
+    const element = this.tableElement
 
-		// element.children.detach();
-		while (element.firstChild) element.removeChild(element.firstChild)
+    // element.children.detach();
+    while (element.firstChild) element.removeChild(element.firstChild)
 
-		element.scrollTop = 0
-		element.scrollLeft = 0
+    element.scrollTop = 0
+    element.scrollLeft = 0
 
-		element.style.minWidth = ''
-		element.style.minHeight = ''
-		element.style.display = ''
-		element.style.visibility = ''
-	}
+    element.style.minWidth = ''
+    element.style.minHeight = ''
+    element.style.display = ''
+    element.style.visibility = ''
+  }
 
-	renderRows() {
-		const element = this.tableElement
-		let onlyGroupHeaders = true
-		const tableFrag = document.createDocumentFragment()
-		const rows = this.rows()
+  renderRows() {
+    const element = this.tableElement
+    let onlyGroupHeaders = true
+    const tableFrag = document.createDocumentFragment()
+    const rows = this.rows()
 
-		rows.forEach((row, index) => {
-			this.styleRow(row, index)
-			row.initialize(false, true)
+    rows.forEach((row, index) => {
+      this.styleRow(row, index)
+      row.initialize(false, true)
 
-			if (row.type !== 'group') {
-				onlyGroupHeaders = false
-			}
+      if (row.type !== 'group') {
+        onlyGroupHeaders = false
+      }
 
-			tableFrag.appendChild(row.getElement())
-		})
+      tableFrag.appendChild(row.getElement())
+    })
 
-		element.appendChild(tableFrag)
+    element.appendChild(tableFrag)
 
-		rows.forEach((row) => {
-			row.rendered()
+    rows.forEach((row) => {
+      row.rendered()
 
-			if (!row.heightInitialized) {
-				row.calcHeight(true)
-			}
-		})
+      if (!row.heightInitialized) {
+        row.calcHeight(true)
+      }
+    })
 
-		rows.forEach((row) => {
-			if (!row.heightInitialized) {
-				row.setCellHeight()
-			}
-		})
+    rows.forEach((row) => {
+      if (!row.heightInitialized) {
+        row.setCellHeight()
+      }
+    })
 
-		if (onlyGroupHeaders) {
-			element.style.minWidth = this.table.columnManager.getWidth() + 'px'
-		} else {
-			element.style.minWidth = ''
-		}
-	}
+    if (onlyGroupHeaders) {
+      element.style.minWidth = this.table.columnManager.getWidth() + 'px'
+    } else {
+      element.style.minWidth = ''
+    }
+  }
 
-	rerenderRows(callback) {
-		this.clearRows()
+  rerenderRows(callback) {
+    this.clearRows()
 
-		if (callback) {
-			callback()
-		}
+    if (callback) {
+      callback()
+    }
 
-		this.renderRows()
+    this.renderRows()
 
-		if (!this.rows().length) {
-			this.table.rowManager.tableEmpty()
-		}
-	}
+    if (!this.rows().length) {
+      this.table.rowManager.tableEmpty()
+    }
+  }
 
-	scrollToRowNearestTop(row) {
-		const rowTop = Helpers.elOffset(row.getElement()).top
+  scrollToRowNearestTop(row) {
+    const rowTop = Helpers.elOffset(row.getElement()).top
 
-		return !(
-			Math.abs(this.elementVertical.scrollTop - rowTop) >
-			Math.abs(this.elementVertical.scrollTop + this.elementVertical.clientHeight - rowTop)
-		)
-	}
+    return !(
+      Math.abs(this.elementVertical.scrollTop - rowTop) >
+      Math.abs(this.elementVertical.scrollTop + this.elementVertical.clientHeight - rowTop)
+    )
+  }
 
-	scrollToRow(row) {
-		const rowEl = row.getElement()
+  scrollToRow(row) {
+    const rowEl = row.getElement()
 
-		this.elementVertical.scrollTop =
-			Helpers.elOffset(rowEl).top - Helpers.elOffset(this.elementVertical).top + this.elementVertical.scrollTop
-	}
+    this.elementVertical.scrollTop =
+      Helpers.elOffset(rowEl).top - Helpers.elOffset(this.elementVertical).top + this.elementVertical.scrollTop
+  }
 
-	visibleRows(includingBuffer) {
-		return this.rows()
-	}
+  visibleRows(includingBuffer) {
+    return this.rows()
+  }
 }
