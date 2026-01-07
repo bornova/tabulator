@@ -46,23 +46,6 @@ function cssConfig(minify) {
 function jsConfig() {
   console.log('- Generating JS Bundles')
 
-  const esmConfig = {
-    input: 'src/js/builds/esm.js',
-    output: [
-      {
-        format: 'esm',
-        file: 'dist/js/esm/tabulator.js',
-        plugins: [beautifyTerser]
-      },
-      {
-        format: 'esm',
-        file: 'dist/js/esm/tabulator.min.js',
-        plugins: [minifyTerser]
-      }
-    ],
-    plugins: [resolverPlugin]
-  }
-
   const browserConfig = {
     input: 'src/js/builds/browser.js',
     output: [
@@ -83,9 +66,28 @@ function jsConfig() {
     plugins: [resolverPlugin]
   }
 
-  return [esmConfig, browserConfig]
+  const esmConfig = {
+    input: 'src/js/builds/esm.js',
+    output: [
+      {
+        format: 'esm',
+        file: 'dist/js/esm/tabulator.js',
+        plugins: [beautifyTerser]
+      },
+      {
+        format: 'esm',
+        file: 'dist/js/esm/tabulator.min.js',
+        plugins: [minifyTerser]
+      }
+    ],
+    plugins: [resolverPlugin]
+  }
+
+  return [browserConfig, esmConfig]
 }
 
-export default [...cssConfig(false), ...cssConfig(true), ...jsConfig()]
+const bundles = [...cssConfig(false), ...cssConfig(true), ...jsConfig()]
 
 console.log('Starting Rollup Build...')
+
+export default bundles
