@@ -273,7 +273,6 @@ export default class ColumnCalcs extends Module {
     const fragment = document.createDocumentFragment()
 
     if (!this.topInitialized) {
-      fragment.appendChild(document.createElement('br'))
       fragment.appendChild(this.topElement)
 
       this.table.columnManager

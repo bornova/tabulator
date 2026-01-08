@@ -2,6 +2,20 @@
   <head>
     <title>Tabulator Test</title>
     <link href="../dist/css/tabulator.min.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+
     <script type="text/javascript" src="../dist/js/browser/tabulator.min.js"></script>
   </head>
   <body>
@@ -9,52 +23,53 @@
 
     <script>
       const tabledata = [
-        { id: 1, name: 'Oli Bob', progress: 12, gender: 'male', rating: 1, col: 'red', dob: '19/02/1984', car: 1 },
         {
-          id: 2,
-          name: 'Mary May',
-          progress: 1,
-          gender: 'female',
-          rating: 2,
-          col: 'blue',
-          dob: '14/05/1982',
-          car: true
-        },
-        {
-          id: 3,
-          name: 'Christine Lobowski',
-          progress: 42,
-          gender: 'female',
-          rating: 0,
-          col: 'green',
-          dob: '22/05/1982',
-          car: 'true'
-        },
-        { id: 4, name: 'Brendon Philips', progress: 100, gender: 'male', rating: 1, col: 'orange', dob: '01/08/1980' },
-        {
-          id: 5,
-          name: 'Margret Marmajuke',
-          progress: 16,
-          gender: 'female',
-          rating: 5,
-          col: 'yellow',
-          dob: '31/01/1999'
-        },
-        {
-          id: 6,
-          name: 'Frank Harbours',
-          progress: 38,
+          name: 'Oli Bob',
+          location: 'United Kingdom',
           gender: 'male',
-          rating: 4,
           col: 'red',
-          dob: '12/05/1966',
-          car: 1
-        }
+          dob: '14/04/1984',
+          _children: [
+            { name: 'Mary May', location: 'Germany', gender: 'female', col: 'blue', dob: '14/05/1982' },
+            { name: 'Christine Lobowski', location: 'France', gender: 'female', col: 'green', dob: '22/05/1982' },
+            {
+              name: 'Brendon Philips',
+              location: 'USA',
+              gender: 'male',
+              col: 'orange',
+              dob: '01/08/1980',
+              _children: [
+                { name: 'Margret Marmajuke', location: 'Canada', gender: 'female', col: 'yellow', dob: '31/01/1999' },
+                { name: 'Frank Harbours', location: 'Russia', gender: 'male', col: 'red', dob: '12/05/1966' }
+              ]
+            }
+          ]
+        },
+        { name: 'Jamie Newhart', location: 'India', gender: 'male', col: 'green', dob: '14/05/1985' },
+        {
+          name: 'Gemma Jane',
+          location: 'China',
+          gender: 'female',
+          col: 'red',
+          dob: '22/05/1982',
+          _children: [
+            { name: 'Emily Sykes', location: 'South Korea', gender: 'female', col: 'maroon', dob: '11/11/1970' }
+          ]
+        },
+        { name: 'James Newman', location: 'Japan', gender: 'male', col: 'red', dob: '22/03/1998' }
       ]
 
       const table = new Tabulator('#example-table', {
         data: tabledata, //assign data to table
-        autoColumns: true //create columns from data field names
+        dataTree: true,
+        dataTreeStartExpanded: true,
+        columns: [
+          { title: 'Name', field: 'name', width: 200, responsive: 0 }, //never hide this column
+          { title: 'Location', field: 'location', width: 150 },
+          { title: 'Gender', field: 'gender', width: 150, responsive: 2 }, //hide this column first
+          { title: 'Favourite Color', field: 'col', width: 150 },
+          { title: 'Date Of Birth', field: 'dob', hozAlign: 'center', sorter: 'date', width: 150 }
+        ]
       })
     </script>
   </body>

@@ -6,10 +6,10 @@ $borderColor: rgba(9, 9, 11, 0.15) !default; //border to tabulator
 $textSize: 0.875rem !default; //table text size
 
 //header theming
-$headerBackgroundColor: #fff !default; //border to tabulator
-$headerTextColor: rgb(161, 161, 170) !default; //header text color
+$headerBackgroundColor: #f9fafb !default; //border to tabulator
+$headerTextColor: #6c7280 !default; //header text color
 $headerBorderColor: rgba(9, 9, 11, 0.075) !default; //header border color
-$headerSeparatorColor: rgba(9, 9, 11, 0.075) !default; //header bottom separator color
+$headerSeparatorColor: rgba(9, 9, 11, 0.15) !default; //header bottom separator color
 $headerMargin: 4px !default; //padding round header
 
 //column header arrows
@@ -33,11 +33,11 @@ $editBoxColor: #1d68cd !default; //border color for edit boxes
 $errorColor: #dd0000 !default; //error indication
 
 //footer theming
-$footerBackgroundColor: #e6e6e6 !default; //border to tabulator
-$footerTextColor: #555 !default; //footer text color
-$footerBorderColor: rgba(9, 9, 11, 0.075) !default; //footer border color
-$footerSeparatorColor: #999 !default; //footer bottom separator color
-$footerActiveColor: #d00 !default; //footer bottom active text color
+$footerBackgroundColor: #f9fafb !default; //border to tabulator
+$footerTextColor: #6c7280 !default; //footer text color
+$footerBorderColor: rgba(9, 9, 11, 0.15) !default; //footer border color
+$footerSeparatorColor: rgba(9, 9, 11, 0.075) !default; //footer bottom separator color
+$footerActiveColor: #3d4044 !default; //footer bottom active text color
 
 $spreadsheetActiveTabColor: #fff !default; //color for the active spreadsheet tab
 
@@ -67,6 +67,10 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
   -ms-transform: translateZ(0);
   -o-transform: translateZ(0);
   transform: translateZ(0);
+
+  & * {
+    font-family: inherit;
+  }
 
   &[tabulator-layout='fitDataFill'] {
     .tabulator-tableholder {
@@ -101,7 +105,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
     width: 100%;
     overflow: hidden;
     color: $headerTextColor;
-    font-weight: bold;
+    font-weight: 600;
 
     white-space: nowrap;
 
@@ -250,7 +254,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       .tabulator-header-filter {
         position: relative;
         box-sizing: border-box;
-        margin-top: 2px;
+        margin-top: 8px;
         width: 100%;
         text-align: center;
 
@@ -261,6 +265,10 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 
         svg {
           margin-top: 3px;
+        }
+
+        input {
+          border: 1px solid $headerSeparatorColor;
         }
 
         input {
@@ -390,11 +398,11 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       z-index: 11;
 
       &.tabulator-frozen-left {
-        border-right: 2px solid $rowBorderColor;
+        border-right: 1px solid $rowBorderColor;
       }
 
       &.tabulator-frozen-right {
-        border-left: 2px solid $rowBorderColor;
+        border-left: 1px solid $rowBorderColor;
       }
     }
 
@@ -403,14 +411,12 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       box-sizing: border-box;
 
       border-top: 1px solid $rowBorderColor;
-      border-bottom: 1px solid $headerBorderColor;
-
-      background: color.adjust($headerBackgroundColor, $lightness: -5%) !important;
 
       // overflow: hidden;
 
       .tabulator-row {
-        background: color.adjust($headerBackgroundColor, $lightness: -5%) !important;
+        border: none;
+        background: $headerBackgroundColor;
 
         .tabulator-col-resize-handle {
           display: none;
@@ -458,7 +464,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
         padding: 10px;
 
         color: #ccc;
-        font-weight: bold;
+        font-weight: 600;
         font-size: 20px;
         text-align: center;
 
@@ -478,16 +484,8 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       //row element
       .tabulator-row {
         &.tabulator-calcs {
-          background: color.adjust($rowAltBackgroundColor, $lightness: -5%) !important;
-          font-weight: bold;
-
-          &.tabulator-calcs-top {
-            border-bottom: 2px solid $rowBorderColor;
-          }
-
-          &.tabulator-calcs-bottom {
-            border-top: 2px solid $rowBorderColor;
-          }
+          background: $headerBackgroundColor;
+          font-weight: 600;
         }
       }
     }
@@ -525,11 +523,11 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 
   //footer element
   .tabulator-footer {
-    border-top: 1px solid $footerSeparatorColor;
+    border-top: 1px solid $footerBorderColor;
     background-color: $footerBackgroundColor;
 
     color: $footerTextColor;
-    font-weight: bold;
+    font-weight: 600;
     user-select: none;
     white-space: nowrap;
 
@@ -544,7 +542,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       justify-content: space-between;
       align-items: center;
 
-      padding: 5px 10px;
+      padding: 10px;
 
       &:empty {
         display: none;
@@ -580,10 +578,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 
     .tabulator-calcs-holder {
       box-sizing: border-box;
-      border-top: 1px solid $rowBorderColor;
-      border-bottom: 1px solid $rowBorderColor;
-
-      background: color.adjust($footerBackgroundColor, $lightness: -5%) !important;
+      border-bottom: 1px solid $footerSeparatorColor;
       width: 100%;
 
       overflow: hidden;
@@ -592,7 +587,9 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 
       .tabulator-row {
         display: inline-block;
-        background: color.adjust($footerBackgroundColor, $lightness: -5%) !important;
+
+        border-bottom: none;
+        background: $footerBackgroundColor;
 
         .tabulator-col-resize-handle {
           display: none;
@@ -624,6 +621,11 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       text-align: right;
     }
 
+    & label {
+      font-weight: normal;
+      font-size: 0.825em;
+    }
+
     //pagination container element
     .tabulator-page-size {
       display: inline-block;
@@ -632,7 +634,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 
       border: 1px solid $footerBorderColor;
       border-radius: 3px;
-      padding: 2px 5px;
+      padding: 5px;
     }
 
     .tabulator-pages {
@@ -649,10 +651,12 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       border-radius: 3px;
 
       background: rgba(255, 255, 255, 0.2);
-      padding: 2px 5px;
+      padding: 5px 10px;
 
       &.active {
+        background-color: rgba(0, 0, 0, 0.1);
         color: $footerActiveColor;
+        font-weight: 600;
       }
 
       &:disabled {
@@ -663,8 +667,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
         @media (hover: hover) and (pointer: fine) {
           &:hover {
             cursor: pointer;
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
+            background: rgba(0, 0, 0, 0.1);
           }
         }
       }
@@ -742,7 +745,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 
       background: #fff;
       padding: 10px 20px;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 16px;
 
       //loading message
@@ -764,6 +767,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 .tabulator-row {
   position: relative;
   box-sizing: border-box;
+  border-bottom: 1px solid $rowBorderColor;
   background-color: $rowBackgroundColor;
 
   &.tabulator-row-even {
@@ -885,8 +889,6 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
     white-space: nowrap;
 
     &.tabulator-row-header {
-      border-right: 1px solid $borderColor;
-      border-bottom: 1px solid $rowBorderColor;
       background: $headerBackgroundColor;
     }
 
@@ -901,11 +903,11 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       background-color: inherit;
 
       &.tabulator-frozen-left {
-        border-right: 2px solid $rowBorderColor;
+        border-right: 1px solid $rowBorderColor;
       }
 
       &.tabulator-frozen-right {
-        border-left: 2px solid $rowBorderColor;
+        border-left: 1px solid $rowBorderColor;
       }
     }
 
@@ -1072,7 +1074,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
       height: 15px;
 
       color: $rowBackgroundColor;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 1.1em;
       user-select: none;
 
@@ -1114,15 +1116,13 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
   //row grouping element
   &.tabulator-group {
     box-sizing: border-box;
-    border-top: 1px solid #999;
     border-right: 1px solid $rowBorderColor;
-    border-bottom: 1px solid #999;
-    background: #ccc;
+    background: $headerBackgroundColor;
     padding: 5px;
     padding-left: 10px;
 
     min-width: 100%;
-    font-weight: bold;
+    font-weight: 600;
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -1340,7 +1340,7 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
     padding-top: 6px;
 
     color: $rowTextColor;
-    font-weight: bold;
+    font-weight: 600;
   }
 
   .tabulator-edit-list-item,
@@ -1443,11 +1443,11 @@ $rangeHeaderTextHighlightBackground: #000000 !default; //header text color when 
 
       &.tabulator-frozen {
         &.tabulator-frozen-left {
-          border-left: 2px solid $rowBorderColor;
+          border-left: 1px solid $rowBorderColor;
         }
 
         &.tabulator-frozen-right {
-          border-right: 2px solid $rowBorderColor;
+          border-right: 1px solid $rowBorderColor;
         }
       }
     }
@@ -1514,7 +1514,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     padding-left: 10px;
 
     min-width: 100%;
-    font-weight: bold;
+    font-weight: 600;
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
