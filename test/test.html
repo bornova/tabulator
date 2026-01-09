@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Tabulator Test</title>
-    <link href="../dist/css/tabulator.min.css" rel="stylesheet" />
+    <link href="../dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,54 +22,30 @@
     <div id="example-table"></div>
 
     <script>
-      const tabledata = [
-        {
-          name: 'Oli Bob',
-          location: 'United Kingdom',
-          gender: 'male',
-          col: 'red',
-          dob: '14/04/1984',
-          _children: [
-            { name: 'Mary May', location: 'Germany', gender: 'female', col: 'blue', dob: '14/05/1982' },
-            { name: 'Christine Lobowski', location: 'France', gender: 'female', col: 'green', dob: '22/05/1982' },
-            {
-              name: 'Brendon Philips',
-              location: 'USA',
-              gender: 'male',
-              col: 'orange',
-              dob: '01/08/1980',
-              _children: [
-                { name: 'Margret Marmajuke', location: 'Canada', gender: 'female', col: 'yellow', dob: '31/01/1999' },
-                { name: 'Frank Harbours', location: 'Russia', gender: 'male', col: 'red', dob: '12/05/1966' }
-              ]
-            }
-          ]
-        },
-        { name: 'Jamie Newhart', location: 'India', gender: 'male', col: 'green', dob: '14/05/1985' },
-        {
-          name: 'Gemma Jane',
-          location: 'China',
-          gender: 'female',
-          col: 'red',
-          dob: '22/05/1982',
-          _children: [
-            { name: 'Emily Sykes', location: 'South Korea', gender: 'female', col: 'maroon', dob: '11/11/1970' }
-          ]
-        },
-        { name: 'James Newman', location: 'Japan', gender: 'male', col: 'red', dob: '22/03/1998' }
+      const tableData = [
+        [9937, '', '', 7749, 9816, 4355, 8279, '', ''],
+        [2380, '', 6977, 8896, 4012, 3803, 5408, 3415, 3056],
+        [9180, '', 39, 9445, 3917, '', 18, 5239, 2516],
+        [1924, 8734, 1819, 1838, 2330, 7921, 9219, '', 3537],
+        ['', 8665, 5875, 9732, 1926, '', 9743, 8388, ''],
+        [7040, 4861, 2988, 5584, 2344, 9749, 8872, 9177, 6246],
+        [6334, 1674, 2967, '', 9353, 396, 6006, 8572, ''],
+        [6359, '', 2580, 5723, 9801, 554, 1044, 5266, 8532],
+        [7278, 6971, 2232, 5720, 5665, 7231, 1165, '', 168]
       ]
 
       const table = new Tabulator('#example-table', {
-        data: tabledata, //assign data to table
-        dataTree: true,
-        dataTreeStartExpanded: true,
-        columns: [
-          { title: 'Name', field: 'name', width: 200, responsive: 0 }, //never hide this column
-          { title: 'Location', field: 'location', width: 150 },
-          { title: 'Gender', field: 'gender', width: 150, responsive: 2 }, //hide this column first
-          { title: 'Favourite Color', field: 'col', width: 150 },
-          { title: 'Date Of Birth', field: 'dob', hozAlign: 'center', sorter: 'date', width: 150 }
-        ]
+        height: '311px',
+
+        spreadsheet: true,
+        spreadsheetRows: 10,
+        spreadsheetColumns: 10,
+        spreadsheetColumnDefinition: { editor: 'input' },
+        spreadsheetData: tableData,
+
+        rowHeader: { field: '_id', hozAlign: 'center', headerSort: false, frozen: true },
+
+        editorEmptyValue: undefined
       })
     </script>
   </body>

@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Tabulator Test</title>
-    <link href="../dist/css/tabulator.min.css" rel="stylesheet" />
+    <link href="../dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,6 +12,7 @@
 
     <style>
       body {
+        font-size: 0.75em;
         font-family: 'Inter', sans-serif;
       }
     </style>
@@ -37,7 +38,7 @@
           data.push({
             id: i,
             name: faker.person.fullName(),
-            age: faker.number.int({ min: 0, max: 100 }),
+            age: faker.number.int({ min: 18, max: 100 }),
             gender: faker.person.sex(), // Generates 'male' or 'female'
             rating: faker.number.int({ min: 1, max: 5 }),
             col: faker.color.human(), // Generates human-readable colors like 'red', 'blue'
@@ -54,34 +55,23 @@
 
       const table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
-        layout: 'fitDataFill',
-        minHeight: '400px',
-        maxHeight: '600px',
+        layout: 'fitDataStretch',
+        height: 600,
+        columnHeaderVertAlign: 'bottom',
         columns: [
           { title: 'Id', field: 'id', headerSortTristate: true },
-          { title: 'Name', field: 'name', sorter: 'string', width: 200, editor: true, headerFilter: true },
-          {
-            title: 'Age',
-            field: 'age',
-            sorter: 'number',
-            hozAlign: 'right'
-          },
-          {
-            title: 'Gender',
-            field: 'gender',
-            sorter: 'string',
-            cellClick: function (e, cell) {
-              console.log('cell click')
-            }
-          },
+          { title: 'Name', field: 'name', sorter: 'string', width: 200, editor: true },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right', bottomCalc: 'avg', topCalc: 'max' },
+          { title: 'Gender', field: 'gender', sorter: 'string' },
           { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
           { title: 'Color', field: 'col', sorter: 'string' },
           { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
           { title: 'Car', field: 'car', sorter: 'boolean', hozAlign: 'center', formatter: 'tickCross' }
         ],
+        groupBy: 'gender',
         pagination: 'local',
-        paginationSize: 50,
-        paginationSizeSelector: [5, 10, 50, 100]
+        paginationSize: 20,
+        paginationCounter: 'rows'
       })
     </script>
   </body>
