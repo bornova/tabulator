@@ -1,0 +1,154 @@
+@use 'colors' as *;
+
+//footer element
+.tabulator-footer {
+  border-top: 1px solid $color-slate-200;
+  background-color: $color-white;
+  color: $color-gray-500;
+  font-weight: 600;
+  user-select: none;
+  white-space: nowrap;
+
+  .tabulator-footer-contents {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .tabulator-spreadsheet-tabs {
+    margin-top: -5px;
+    overflow-x: auto;
+
+    .tabulator-spreadsheet-tab {
+      display: inline-block;
+      border: $color-slate-200 1px solid;
+      border-top: none;
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      padding: 5px;
+      font-size: 0.9em;
+
+      &:hover {
+        opacity: 0.7;
+        cursor: pointer;
+      }
+
+      &.tabulator-spreadsheet-tab-active {
+        background: $color-white;
+      }
+    }
+  }
+
+  .tabulator-calcs-holder {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+    text-align: left;
+
+    .tabulator-row {
+      display: inline-block;
+      border-bottom: 1px solid $color-slate-100;
+      background: $color-white;
+
+      .tabulator-col-resize-handle {
+        display: none;
+      }
+    }
+
+    &:only-child {
+      margin-bottom: -5px;
+      border-bottom: none;
+    }
+  }
+
+  & > * + .tabulator-page-counter {
+    margin-left: 10px;
+  }
+
+  .tabulator-page-counter {
+    font-weight: normal;
+  }
+
+  .tabulator-paginator {
+    flex: 1;
+    color: $color-gray-500;
+    font-weight: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    text-align: right;
+  }
+
+  & label {
+    font-weight: normal;
+  }
+
+  & [data-page='first'] {
+    border-right: none;
+    border-radius: 3px 0 0 3px;
+  }
+
+  & [data-page='prev'] {
+    border-right: none;
+    border-radius: 0;
+  }
+
+  & [data-page='next'] {
+    border-radius: 0;
+  }
+
+  & [data-page='last'] {
+    border-left: none;
+    border-radius: 0 3px 3px 0;
+  }
+
+  & button {
+    border: 1px solid $color-slate-300;
+  }
+
+  //pagination container element
+  .tabulator-page-size {
+    display: inline-block;
+    margin: 0 8px;
+    border: 1px solid $color-slate-200;
+    border-radius: 3px;
+    padding: 5px;
+  }
+
+  .tabulator-pages {
+    box-sizing: border-box;
+
+    & button {
+      border-right: none;
+      min-width: 2.5em;
+    }
+  }
+
+  //pagination button
+  .tabulator-page {
+    display: inline-block;
+    background: $color-white;
+    padding: 6px 10px;
+
+    &.active {
+      background-color: $color-slate-100;
+      color: $color-gray-900;
+      font-weight: 700;
+    }
+
+    &:not(disabled) {
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          cursor: pointer;
+          background: $color-slate-100;
+        }
+      }
+    }
+  }
+}
