@@ -200,6 +200,10 @@
         border: 1px;
         background: transparent;
       }
+
+      input {
+        padding: 0 10px !important;
+      }
     }
 
     &.tabulator-validation-fail {
