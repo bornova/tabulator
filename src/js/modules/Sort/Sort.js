@@ -157,7 +157,9 @@ export default class Sort extends Module {
       }
 
       // sort on click
-      ;(this.table.options.headerSortClickElement === 'icon' ? arrowEl : colEl).addEventListener('click', (e) => {
+      const el = this.table.options.headerSortClickElement === 'icon' ? arrowEl : colEl
+
+      el.addEventListener('click', (e) => {
         let dir = ''
         let sorters = []
         let match = false

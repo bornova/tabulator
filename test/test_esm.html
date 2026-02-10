@@ -82,7 +82,12 @@
       const table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
         columns: [
-          { title: 'Id', field: 'id', headerSortTristate: true, headerMenu: headerMenu },
+          {
+            title: 'Id',
+            field: 'id',
+            headerSortTristate: true,
+            headerMenu: headerMenu
+          },
           { title: 'Name', field: 'name', sorter: 'string' },
           { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
           { title: 'Gender', field: 'gender', sorter: 'string' },

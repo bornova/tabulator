@@ -217,7 +217,7 @@ export default class MoveRows extends Module {
       },
       { passive: true }
     )
-    ;(this.moving, this.toRow, this.toRowAfter)
+
     element.addEventListener('touchmove', (e) => {
       let diff, moveToRow
 

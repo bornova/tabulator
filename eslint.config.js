@@ -23,7 +23,8 @@ export default [
       'no-fallthrough': 'off',
       'no-undef': 'off',
       'no-prototype-builtins': 'off',
-      'no-empty': 'off'
+      'no-empty': 'off',
+      'no-useless-assignment': 'off'
     }
   }
 ]

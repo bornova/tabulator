@@ -6,7 +6,10 @@ export default class Tooltip extends Module {
 
   constructor(table) {
     super(table)
-    ;((this.tooltipSubscriber = null), (this.headerSubscriber = null), (this.timeout = null))
+
+    this.tooltipSubscriber = null
+    this.headerSubscriber = null
+    this.timeout = null
     this.popupInstance = null
 
     // this.registerTableOption("tooltipGenerationMode", undefined);  //deprecated
