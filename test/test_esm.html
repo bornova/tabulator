@@ -81,9 +81,7 @@
 
       const table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
-        selectableRange: true,
-        selectableRangeColumns: true,
-        selectableRangeRows: true,
+        movableRows: true,
         columns: configs.editableColumns,
         ...configs.baseConfig,
         ...configs.paginationConfig

@@ -340,6 +340,10 @@ export default class DataTree extends Module {
     let children = []
     const output = []
 
+    if (!config) {
+      return output
+    }
+
     if (config.children !== false && (config.open || allChildren)) {
       if (!Array.isArray(config.children)) {
         config.children = this.generateChildren(row)

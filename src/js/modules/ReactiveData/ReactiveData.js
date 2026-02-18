@@ -21,6 +21,7 @@ export default class ReactiveData extends Module {
       this.subscribe('row-data-save-before', this.block.bind(this, 'rowsave'))
       this.subscribe('row-data-save-after', this.unblock.bind(this, 'rowsave'))
       this.subscribe('row-data-init-after', this.watchRow.bind(this))
+      this.subscribe('row-deleting', this.unwatchRow.bind(this))
       this.subscribe('data-processing', this.watchData.bind(this))
       this.subscribe('table-destroy', this.unwatchData.bind(this))
     }
@@ -282,6 +283,8 @@ export default class ReactiveData extends Module {
     const version = this.currentVersion
 
     Object.defineProperty(data, key, {
+      configurable: true,
+      enumerable: true,
       set: (newValue) => {
         value = newValue
         if (!self.blocked && version === self.currentVersion) {
@@ -313,6 +316,9 @@ export default class ReactiveData extends Module {
 
     for (const key in data) {
       Object.defineProperty(data, key, {
+        configurable: true,
+        enumerable: true,
+        writable: true,
         value: data[key]
       })
     }

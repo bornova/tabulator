@@ -345,7 +345,27 @@ export default class RowManager extends CoreFeature {
         this.dispatch('row-added', row, item, pos, index)
       })
 
-      this.refreshActiveData(refreshDisplayOnly ? 'displayPipeline' : false, false, true)
+      let useDisplayOnly = !!refreshDisplayOnly
+
+      if (useDisplayOnly) {
+        const hasLocalSort =
+          this.table.modules.sort &&
+          this.table.options.sortMode !== 'remote' &&
+          this.table.modules.sort.sortList &&
+          this.table.modules.sort.sortList.length
+
+        const hasLocalFilter =
+          this.table.modules.filter &&
+          this.table.options.filterMode !== 'remote' &&
+          ((this.table.modules.filter.filterList && this.table.modules.filter.filterList.length) ||
+            (this.table.modules.filter.headerFilters && Object.keys(this.table.modules.filter.headerFilters).length))
+
+        if (hasLocalSort || hasLocalFilter) {
+          useDisplayOnly = false
+        }
+      }
+
+      this.refreshActiveData(useDisplayOnly ? 'displayPipeline' : false, false, true)
 
       this.regenerateRowPositions()
 

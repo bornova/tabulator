@@ -466,7 +466,13 @@ export default class SelectRow extends Module {
   }
 
   childRowSelection(row, select) {
-    const children = this.table.modules.dataTree.getChildren(row, true, true)
+    const dataTree = this.table.modules.dataTree
+
+    if (!dataTree || !row || !row.modules || !row.modules.dataTree) {
+      return
+    }
+
+    const children = dataTree.getChildren(row, true, true)
 
     if (select) {
       for (const child of children) {

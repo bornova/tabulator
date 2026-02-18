@@ -61,7 +61,7 @@ export const editableColumns = [
   { ...baseColumns[2], editor: 'number', bottomCalc: 'avg', topCalc: 'max' },
   { ...baseColumns[3], editor: 'list', editorParams: { valuesLookup: 'active', clearable: true, autocomplete: true } },
   { ...baseColumns[4] },
-  { ...baseColumns[5] },
+  { ...baseColumns[5], editor: 'input', validator: 'required' },
   { ...baseColumns[6], editor: 'datetime' },
   { ...baseColumns[7] }
 ]

@@ -71,6 +71,24 @@ export default class MoveRows extends Module {
     }
   }
 
+  canStartMoveFromEvent(e) {
+    const target = e ? e.target : null
+
+    if (!target || typeof target.closest !== 'function') {
+      return true
+    }
+
+    if (target.closest('input, textarea, select, button, option, [contenteditable], a[href]')) {
+      return false
+    }
+
+    if (this.table.modExists('edit') && this.table.modules.edit.currentCell) {
+      return false
+    }
+
+    return true
+  }
+
   initializeGroupHeader(group) {
     const config = {}
 
@@ -136,7 +154,7 @@ export default class MoveRows extends Module {
       rowEl = row.getElement()
 
       rowEl.addEventListener('mousedown', (e) => {
-        if (e.which === 1) {
+        if (e.which === 1 && this.canStartMoveFromEvent(e)) {
           this.checkTimeout = setTimeout(() => {
             this.startMove(e, row)
           }, this.checkPeriod)
@@ -168,7 +186,7 @@ export default class MoveRows extends Module {
       const cellEl = cell.getElement(true)
 
       cellEl.addEventListener('mousedown', (e) => {
-        if (e.which === 1) {
+        if (e.which === 1 && this.canStartMoveFromEvent(e)) {
           this.checkTimeout = setTimeout(() => {
             this.startMove(e, cell.row)
           }, this.checkPeriod)
@@ -199,6 +217,10 @@ export default class MoveRows extends Module {
     element.addEventListener(
       'touchstart',
       (e) => {
+        if (!this.canStartMoveFromEvent(e)) {
+          return
+        }
+
         this.checkTimeout = setTimeout(() => {
           this.touchMove = true
           nextRow = row.nextRow()
