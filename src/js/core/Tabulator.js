@@ -197,6 +197,8 @@ class Tabulator extends ModuleBinder {
     this.externalEvents.dispatch('tableBuilding')
     this.eventBus.dispatch('table-building')
 
+    this._compatibilityCheck()
+
     this._rtlCheck()
 
     this._buildElement()
@@ -209,6 +211,18 @@ class Tabulator extends ModuleBinder {
       this.eventBus.dispatch('table-initialized')
       this.externalEvents.dispatch('tableBuilt')
     })
+  }
+
+  /**
+   * Warn when the page is running in Quirks Mode.
+   * @returns {void}
+   */
+  _compatibilityCheck() {
+    if (typeof document !== 'undefined' && document.compatMode !== 'CSS1Compat') {
+      console.warn(
+        'Tabulator Warning - Page is running in Quirks Mode (missing or invalid <!DOCTYPE html>). This can cause inconsistent table layout/rendering, including formatter height issues.'
+      )
+    }
   }
 
   /**

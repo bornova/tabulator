@@ -1,3 +1,5 @@
+<!doctype html>
+
 <html>
   <head>
     <title>Tabulator Test</title>
@@ -20,26 +22,10 @@
   <body>
     <div id="example-table"></div>
 
-    <div class="table-controls">
-      <button id="alert-show">Show Alert</button>
-      <button id="alert-clear">Hide Alert</button>
-    </div>
-
     <script type="module">
       import { TabulatorFull as Tabulator } from '../dist/js/esm/tabulator.js'
       import { faker } from 'https://esm.sh/@faker-js/faker'
       import * as configs from './configs.js'
-
-      var showBtn = document.getElementById('alert-show')
-      var hideBtn = document.getElementById('alert-clear')
-
-      showBtn.addEventListener('click', (e) => {
-        table.alert("Hey There! I'm An Alert!")
-      })
-
-      hideBtn.addEventListener('click', (e) => {
-        table.clearAlert()
-      })
 
       const formatDate = (date) => {
         const day = String(date.getDate()).padStart(2, '0')
@@ -60,31 +46,45 @@
             rating: faker.number.int({ min: 1, max: 5 }),
             col: faker.color.human(), // Generates human-readable colors like 'red', 'blue'
             dob: formatDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' })),
-            car: faker.number.int({ min: 0, max: 1 }) // Random 1 or 0
+            car: faker.vehicle.vehicle(), // Generates a random vehicle name
+            address: faker.location.streetAddress(), // Generates a random street address
+            state: faker.location.state(), // Generates a random state
+            country: faker.location.country(), // Generates a random country
+            progress: faker.number.int({ min: 0, max: 100 }) // Generates a random progress percentage
           })
         }
 
         return data
       }
 
-      var headerMenu = [
-        {
-          label: 'Hide Column',
-          action: function (e, column) {
-            column.hide()
-          }
-        }
-      ]
-
       // Generate and log the data
       const tableData = generateData(100)
 
       const table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
+        height: 600,
         movableRows: true,
-        columns: configs.editableColumns,
-        ...configs.baseConfig,
-        ...configs.paginationConfig
+        columnDefaults: {
+          headerSortTristate: true
+        },
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name', sorter: 'string' },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+          { title: 'Gender', field: 'gender', sorter: 'string' },
+          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+          { title: 'Color', field: 'col', sorter: 'string' },
+          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+          { title: 'Car', field: 'car', sorter: 'string' },
+          { title: 'Address', field: 'address', sorter: 'string' },
+          { title: 'State', field: 'state', sorter: 'string' },
+          { title: 'Country', field: 'country', sorter: 'string' },
+          {
+            title: 'Progress',
+            field: 'progress',
+            formatter: 'progress'
+          }
+        ]
       })
     </script>
   </body>
