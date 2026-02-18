@@ -50,17 +50,17 @@ export default class Tooltip extends Module {
 
     if (tooltip) {
       this.clearPopup()
-      this.timeout = setTimeout(this.loadTooltip.bind(this, e, component, tooltip), this.table.options.tooltipDelay)
+      this.timeout = setTimeout(() => this.loadTooltip(e, component, tooltip), this.table.options.tooltipDelay)
     }
   }
 
-  mouseoutCheck(action, e, component) {
+  mouseoutCheck(_action, _e, _component) {
     if (!this.popupInstance) {
       this.clearPopup()
     }
   }
 
-  clearPopup(action, e, component) {
+  clearPopup(_action, _e, _component) {
     clearTimeout(this.timeout)
     this.timeout = null
 
@@ -70,9 +70,10 @@ export default class Tooltip extends Module {
   }
 
   loadTooltip(e, component, tooltip) {
-    let contentsEl, renderedCallback, coords
+    let contentsEl
+    let renderedCallback
 
-    function onRendered(callback) {
+    const onRendered = (callback) => {
       renderedCallback = callback
     }
 
@@ -88,14 +89,12 @@ export default class Tooltip extends Module {
       if (tooltip === true) {
         if (component instanceof Cell) {
           tooltip = component.value
+        } else if (component.definition.field) {
+          this.langBind(`columns|${component.definition.field}`, (value) => {
+            contentsEl.innerHTML = tooltip = value || component.definition.title
+          })
         } else {
-          if (component.definition.field) {
-            this.langBind('columns|' + component.definition.field, (value) => {
-              contentsEl.innerHTML = tooltip = value || component.definition.title
-            })
-          } else {
-            tooltip = component.definition.title
-          }
+          tooltip = component.definition.title
         }
       }
 
@@ -113,7 +112,7 @@ export default class Tooltip extends Module {
         this.popupInstance.renderCallback(renderedCallback)
       }
 
-      coords = this.popupInstance.containerEventCoords(e)
+      const coords = this.popupInstance.containerEventCoords(e)
 
       this.popupInstance.show(coords.x + 15, coords.y + 15).hideOnBlur(() => {
         this.dispatchExternal('TooltipClosed', component.getComponent())

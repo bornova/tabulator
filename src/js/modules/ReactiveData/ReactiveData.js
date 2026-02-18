@@ -234,105 +234,38 @@ export default class ReactiveData extends Module {
   }
 
   watchTreeChildren(row) {
-    const self = this
     const childField = row.getData()[this.table.options.dataTreeChildField]
     const origFuncs = {}
 
+    const bindTreeArrayMethod = (methodName, blockKey, invoke) => {
+      origFuncs[methodName] = childField[methodName]
+
+      Object.defineProperty(childField, methodName, {
+        enumerable: false,
+        configurable: true,
+        value: (...args) => {
+          let result
+
+          if (!this.blocked) {
+            this.block(blockKey)
+
+            result = invoke(origFuncs[methodName], args)
+            this.rebuildTree(row)
+
+            this.unblock(blockKey)
+          }
+
+          return result
+        }
+      })
+    }
+
     if (childField) {
-      origFuncs.push = childField.push
-
-      Object.defineProperty(childField, 'push', {
-        enumerable: false,
-        configurable: true,
-        value: () => {
-          if (!self.blocked) {
-            self.block('tree-push')
-
-            var result = origFuncs.push.apply(childField, arguments)
-            this.rebuildTree(row)
-
-            self.unblock('tree-push')
-          }
-
-          return result
-        }
-      })
-
-      origFuncs.unshift = childField.unshift
-
-      Object.defineProperty(childField, 'unshift', {
-        enumerable: false,
-        configurable: true,
-        value: () => {
-          if (!self.blocked) {
-            self.block('tree-unshift')
-
-            var result = origFuncs.unshift.apply(childField, arguments)
-            this.rebuildTree(row)
-
-            self.unblock('tree-unshift')
-          }
-
-          return result
-        }
-      })
-
-      origFuncs.shift = childField.shift
-
-      Object.defineProperty(childField, 'shift', {
-        enumerable: false,
-        configurable: true,
-        value: () => {
-          if (!self.blocked) {
-            self.block('tree-shift')
-
-            var result = origFuncs.shift.call(childField)
-            this.rebuildTree(row)
-
-            self.unblock('tree-shift')
-          }
-
-          return result
-        }
-      })
-
-      origFuncs.pop = childField.pop
-
-      Object.defineProperty(childField, 'pop', {
-        enumerable: false,
-        configurable: true,
-        value: () => {
-          if (!self.blocked) {
-            self.block('tree-pop')
-
-            var result = origFuncs.pop.call(childField)
-            this.rebuildTree(row)
-
-            self.unblock('tree-pop')
-          }
-
-          return result
-        }
-      })
-
-      origFuncs.splice = childField.splice
-
-      Object.defineProperty(childField, 'splice', {
-        enumerable: false,
-        configurable: true,
-        value: () => {
-          if (!self.blocked) {
-            self.block('tree-splice')
-
-            var result = origFuncs.splice.apply(childField, arguments)
-            this.rebuildTree(row)
-
-            self.unblock('tree-splice')
-          }
-
-          return result
-        }
-      })
+      bindTreeArrayMethod('push', 'tree-push', (method, args) => method.apply(childField, args))
+      bindTreeArrayMethod('unshift', 'tree-unshift', (method, args) => method.apply(childField, args))
+      bindTreeArrayMethod('shift', 'tree-shift', (method) => method.call(childField))
+      bindTreeArrayMethod('pop', 'tree-pop', (method) => method.call(childField))
+      bindTreeArrayMethod('splice', 'tree-splice', (method, args) => method.apply(childField, args))
     }
   }
 

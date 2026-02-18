@@ -1,38 +1,38 @@
 export default {
-  rangeJumpLeft: function (e) {
+  rangeJumpLeft(e) {
     this.dispatch('keybinding-nav-range', e, 'left', true, false)
   },
-  rangeJumpRight: function (e) {
+  rangeJumpRight(e) {
     this.dispatch('keybinding-nav-range', e, 'right', true, false)
   },
-  rangeJumpUp: function (e) {
+  rangeJumpUp(e) {
     this.dispatch('keybinding-nav-range', e, 'up', true, false)
   },
-  rangeJumpDown: function (e) {
+  rangeJumpDown(e) {
     this.dispatch('keybinding-nav-range', e, 'down', true, false)
   },
-  rangeExpandLeft: function (e) {
+  rangeExpandLeft(e) {
     this.dispatch('keybinding-nav-range', e, 'left', false, true)
   },
-  rangeExpandRight: function (e) {
+  rangeExpandRight(e) {
     this.dispatch('keybinding-nav-range', e, 'right', false, true)
   },
-  rangeExpandUp: function (e) {
+  rangeExpandUp(e) {
     this.dispatch('keybinding-nav-range', e, 'up', false, true)
   },
-  rangeExpandDown: function (e) {
+  rangeExpandDown(e) {
     this.dispatch('keybinding-nav-range', e, 'down', false, true)
   },
-  rangeExpandJumpLeft: function (e) {
+  rangeExpandJumpLeft(e) {
     this.dispatch('keybinding-nav-range', e, 'left', true, true)
   },
-  rangeExpandJumpRight: function (e) {
+  rangeExpandJumpRight(e) {
     this.dispatch('keybinding-nav-range', e, 'right', true, true)
   },
-  rangeExpandJumpUp: function (e) {
+  rangeExpandJumpUp(e) {
     this.dispatch('keybinding-nav-range', e, 'up', true, true)
   },
-  rangeExpandJumpDown: function (e) {
+  rangeExpandJumpDown(e) {
     this.dispatch('keybinding-nav-range', e, 'down', true, true)
   }
 }

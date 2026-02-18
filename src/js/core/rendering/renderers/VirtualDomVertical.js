@@ -39,8 +39,7 @@ export default class VirtualDomVertical extends Renderer {
   clearRows() {
     const element = this.tableElement
 
-    // element.children.detach();
-    while (element.firstChild) element.removeChild(element.firstChild)
+    element.replaceChildren()
 
     element.style.paddingTop = ''
     element.style.paddingBottom = ''
@@ -250,7 +249,7 @@ export default class VirtualDomVertical extends Renderer {
     if (!position) {
       this.clear()
     } else {
-      while (element.firstChild) element.removeChild(element.firstChild)
+      element.replaceChildren()
 
       // check if position is too close to bottom of table
       heightOccupied = (rowsCount - position + 1) * this.vDomRowHeight
@@ -284,7 +283,7 @@ export default class VirtualDomVertical extends Renderer {
       }
 
       while (
-        (rowsToRender == rowsCount ||
+        (rowsToRender === rowsCount ||
           rowsHeight <= containerHeight + this.vDomWindowBuffer ||
           totalRowsRendered < this.vDomWindowMinTotalRows) &&
         this.vDomBottom < rowsCount - 1
@@ -369,13 +368,13 @@ export default class VirtualDomVertical extends Renderer {
       } else {
         this.vDomTopPad = !forceMove ? this.scrollTop - topPadHeight : this.vDomRowHeight * this.vDomTop + offset
         this.vDomBottomPad =
-          this.vDomBottom == rowsCount - 1
+          this.vDomBottom === rowsCount - 1
             ? 0
             : Math.max(this.vDomScrollHeight - this.vDomTopPad - rowsHeight - topPadHeight, 0)
       }
 
-      element.style.paddingTop = this.vDomTopPad + 'px'
-      element.style.paddingBottom = this.vDomBottomPad + 'px'
+      element.style.paddingTop = `${this.vDomTopPad}px`
+      element.style.paddingBottom = `${this.vDomBottomPad}px`
 
       if (forceMove) {
         this.scrollTop =
@@ -473,7 +472,7 @@ export default class VirtualDomVertical extends Renderer {
         this.vDomTopPad = 0
       }
 
-      table.style.paddingTop = this.vDomTopPad + 'px'
+      table.style.paddingTop = `${this.vDomTopPad}px`
       this.vDomScrollPosTop -= paddingAdjust
     }
   }
@@ -517,7 +516,7 @@ export default class VirtualDomVertical extends Renderer {
 
     if (paddingAdjust) {
       this.vDomTopPad += paddingAdjust
-      this.tableElement.style.paddingTop = this.vDomTopPad + 'px'
+      this.tableElement.style.paddingTop = `${this.vDomTopPad}px`
       this.vDomScrollPosTop += this.vDomTop ? paddingAdjust : paddingAdjust + this.vDomWindowBuffer
     }
   }
@@ -580,11 +579,11 @@ export default class VirtualDomVertical extends Renderer {
     if (paddingAdjust) {
       this.vDomBottomPad -= paddingAdjust
 
-      if (this.vDomBottomPad < 0 || index == rows.length - 1) {
+      if (this.vDomBottomPad < 0 || index === rows.length - 1) {
         this.vDomBottomPad = 0
       }
 
-      table.style.paddingBottom = this.vDomBottomPad + 'px'
+      table.style.paddingBottom = `${this.vDomBottomPad}px`
       this.vDomScrollPosBottom += paddingAdjust
     }
   }
@@ -633,7 +632,7 @@ export default class VirtualDomVertical extends Renderer {
         this.vDomBottomPad = 0
       }
 
-      this.tableElement.style.paddingBottom = this.vDomBottomPad + 'px'
+      this.tableElement.style.paddingBottom = `${this.vDomBottomPad}px`
       this.vDomScrollPosBottom -= paddingAdjust
     }
   }

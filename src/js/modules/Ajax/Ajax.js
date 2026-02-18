@@ -63,14 +63,17 @@ export default class Ajax extends Module {
         ajaxParams = ajaxParams.call(this.table)
       }
 
-      params = Object.assign(Object.assign({}, ajaxParams), params)
+      params = {
+        ...ajaxParams,
+        ...params
+      }
     }
 
     return params
   }
 
   requestDataCheck(data, params, config, silent) {
-    return !!((!data && this.url) || typeof data === 'string')
+    return (!data && this.url) || typeof data === 'string'
   }
 
   requestData(url, params, config, silent, previousData) {
@@ -90,18 +93,21 @@ export default class Ajax extends Module {
   }
 
   setDefaultConfig(config = {}) {
-    this.config = Object.assign({}, Ajax.defaultConfig)
+    this.config = { ...Ajax.defaultConfig }
 
     if (typeof config === 'string') {
       this.config.method = config
     } else {
-      Object.assign(this.config, config)
+      this.config = {
+        ...this.config,
+        ...config
+      }
     }
   }
 
   // load config object
   generateConfig(config = {}) {
-    const ajaxConfig = Object.assign({}, this.config)
+    const ajaxConfig = { ...this.config }
 
     if (typeof config === 'string') {
       ajaxConfig.method = config

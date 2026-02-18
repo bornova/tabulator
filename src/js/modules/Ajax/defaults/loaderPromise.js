@@ -1,23 +1,20 @@
 export default function (url, config, params) {
-  let contentType
-
   return new Promise((resolve, reject) => {
     // set url
     url = this.urlGenerator.call(this.table, url, config, params)
 
     // set body content if not GET request
-    if (config.method.toUpperCase() != 'GET') {
-      contentType =
+    if (config.method.toUpperCase() !== 'GET') {
+      const contentType =
         typeof this.table.options.ajaxContentType === 'object'
           ? this.table.options.ajaxContentType
           : this.contentTypeFormatters[this.table.options.ajaxContentType]
-      if (contentType) {
-        for (const key in contentType.headers) {
-          if (!config.headers) {
-            config.headers = {}
-          }
 
-          if (typeof config.headers[key] === 'undefined') {
+      if (contentType) {
+        config.headers ??= {}
+
+        for (const key in contentType.headers) {
+          if (config.headers[key] === undefined) {
             config.headers[key] = contentType.headers[key]
           }
         }
@@ -30,32 +27,22 @@ export default function (url, config, params) {
 
     if (url) {
       // configure headers
-      if (typeof config.headers === 'undefined') {
-        config.headers = {}
-      }
+      config.headers ??= {}
+      config.headers.Accept ??= 'application/json'
+      config.headers['X-Requested-With'] ??= 'XMLHttpRequest'
 
-      if (typeof config.headers.Accept === 'undefined') {
-        config.headers.Accept = 'application/json'
-      }
+      config.mode ??= 'cors'
 
-      if (typeof config.headers['X-Requested-With'] === 'undefined') {
-        config.headers['X-Requested-With'] = 'XMLHttpRequest'
-      }
-
-      if (typeof config.mode === 'undefined') {
-        config.mode = 'cors'
-      }
-
-      if (config.mode == 'cors') {
-        if (typeof config.headers.Origin === 'undefined') {
+      if (config.mode === 'cors') {
+        if (config.headers.Origin === undefined) {
           config.headers.Origin = window.location.origin
         }
 
-        if (typeof config.credentials === 'undefined') {
+        if (config.credentials === undefined) {
           config.credentials = 'same-origin'
         }
       } else {
-        if (typeof config.credentials === 'undefined') {
+        if (config.credentials === undefined) {
           config.credentials = 'include'
         }
       }

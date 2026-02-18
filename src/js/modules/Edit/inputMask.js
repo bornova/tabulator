@@ -1,13 +1,13 @@
 export default function maskInput(el, options) {
   const mask = options.mask
-  const maskLetter = typeof options.maskLetterChar !== 'undefined' ? options.maskLetterChar : 'A'
-  const maskNumber = typeof options.maskNumberChar !== 'undefined' ? options.maskNumberChar : '9'
-  const maskWildcard = typeof options.maskWildcardChar !== 'undefined' ? options.maskWildcardChar : '*'
+  const maskLetter = options.maskLetterChar ?? 'A'
+  const maskNumber = options.maskNumberChar ?? '9'
+  const maskWildcard = options.maskWildcardChar ?? '*'
 
   function fillSymbols(index) {
     const symbol = mask[index]
-    if (typeof symbol !== 'undefined' && symbol !== maskWildcard && symbol !== maskLetter && symbol !== maskNumber) {
-      el.value = el.value + '' + symbol
+    if (symbol !== undefined && symbol !== maskWildcard && symbol !== maskLetter && symbol !== maskNumber) {
+      el.value = `${el.value}${symbol}`
       fillSymbols(index + 1)
     }
   }
@@ -24,7 +24,7 @@ export default function maskInput(el, options) {
       } else {
         switch (mask[index]) {
           case maskLetter:
-            if (char.toUpperCase() == char.toLowerCase()) {
+            if (char.toUpperCase() === char.toLowerCase()) {
               e.preventDefault()
               e.stopPropagation()
               return false
@@ -32,7 +32,7 @@ export default function maskInput(el, options) {
             break
 
           case maskNumber:
-            if (isNaN(char)) {
+            if (Number.isNaN(Number.parseFloat(char))) {
               e.preventDefault()
               e.stopPropagation()
               return false

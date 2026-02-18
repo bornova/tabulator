@@ -66,10 +66,10 @@ export default class Localize extends Module {
 
   // set current locale
   setLocale(desiredLocale) {
-    desiredLocale = desiredLocale || 'default'
+    let locale = desiredLocale || 'default'
 
     // fill in any matching language values
-    function traverseLang(trans, path) {
+    const traverseLang = (trans, path) => {
       for (const prop in trans) {
         if (typeof trans[prop] === 'object') {
           if (!path[prop]) {
@@ -83,37 +83,33 @@ export default class Localize extends Module {
     }
 
     // determining correct locale to load
-    if (desiredLocale === true && navigator.language) {
+    if (locale === true && navigator.language) {
       // get local from system
-      desiredLocale = navigator.language.toLowerCase()
+      locale = navigator.language.toLowerCase()
     }
 
-    if (desiredLocale) {
+    if (locale) {
       // if locale is not set, check for matching top level locale else use default
-      if (!this.langList[desiredLocale]) {
-        const prefix = desiredLocale.split('-')[0]
+      if (!this.langList[locale]) {
+        const prefix = locale.split('-')[0]
 
         if (this.langList[prefix]) {
-          console.warn(
-            'Localization Error - Exact matching locale not found, using closest match: ',
-            desiredLocale,
-            prefix
-          )
-          desiredLocale = prefix
+          console.warn('Localization Error - Exact matching locale not found, using closest match: ', locale, prefix)
+          locale = prefix
         } else {
-          console.warn('Localization Error - Matching locale not found, using default: ', desiredLocale)
-          desiredLocale = 'default'
+          console.warn('Localization Error - Matching locale not found, using default: ', locale)
+          locale = 'default'
         }
       }
     }
 
-    this.locale = desiredLocale
+    this.locale = locale
 
     // load default lang template
     this.lang = Helpers.deepClone(this.langList.default || {})
 
-    if (desiredLocale != 'default') {
-      traverseLang(this.langList[desiredLocale], this.lang)
+    if (locale !== 'default') {
+      traverseLang(this.langList[locale], this.lang)
     }
 
     this.dispatchExternal('localized', this.locale, this.lang)
@@ -122,7 +118,7 @@ export default class Localize extends Module {
   }
 
   // get current locale
-  getLocale(locale) {
+  getLocale() {
     return this.locale
   }
 
@@ -133,9 +129,9 @@ export default class Localize extends Module {
 
   // get text for current locale
   getText(path, value) {
-    const fillPath = value ? path + '|' + value : path
+    const fillPath = value ? `${path}|${value}` : path
     const pathArray = fillPath.split('|')
-    const text = this._getLangElement(pathArray, this.locale)
+    const text = this._getLangElement(pathArray)
 
     // if(text === false){
     // 	console.warn("Localization Error - Matching localized text not found for given path: ", path);
@@ -145,22 +141,17 @@ export default class Localize extends Module {
   }
 
   // traverse langs object and find localized copy
-  _getLangElement(path, locale) {
+  _getLangElement(path) {
     let root = this.lang
 
-    path.forEach(function (level) {
-      let rootPath
-
-      if (root) {
-        rootPath = root[level]
-
-        if (typeof rootPath !== 'undefined') {
-          root = rootPath
-        } else {
-          root = false
-        }
+    for (const level of path) {
+      if (!root) {
+        break
       }
-    })
+
+      const rootPath = root[level]
+      root = typeof rootPath !== 'undefined' ? rootPath : false
+    }
 
     return root
   }

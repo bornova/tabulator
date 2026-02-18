@@ -166,11 +166,11 @@ export default class Sort extends Module {
 
         if (column.modules.sort) {
           if (column.modules.sort.tristate) {
-            if (column.modules.sort.dir == 'none') {
+            if (column.modules.sort.dir === 'none') {
               dir = column.modules.sort.startingDir
             } else {
-              if (column.modules.sort.dir == column.modules.sort.startingDir) {
-                dir = column.modules.sort.dir == 'asc' ? 'desc' : 'asc'
+              if (column.modules.sort.dir === column.modules.sort.startingDir) {
+                dir = column.modules.sort.dir === 'asc' ? 'desc' : 'asc'
               } else {
                 dir = 'none'
               }
@@ -201,11 +201,11 @@ export default class Sort extends Module {
               sorters[match].dir = dir
 
               match = sorters.splice(match, 1)[0]
-              if (dir != 'none') {
+              if (dir !== 'none') {
                 sorters.push(match)
               }
             } else {
-              if (dir != 'none') {
+              if (dir !== 'none') {
                 sorters.push({ column, dir })
               }
             }
@@ -213,7 +213,7 @@ export default class Sort extends Module {
             // add to existing sort
             this.setSort(sorters)
           } else {
-            if (dir == 'none') {
+            if (dir === 'none') {
               this.clear()
             } else {
               // sort by column only
@@ -249,42 +249,32 @@ export default class Sort extends Module {
 
   // return current sorters
   getSort() {
-    const self = this
-    const sorters = []
-
-    self.sortList.forEach(function (item) {
-      if (item.column) {
-        sorters.push({ column: item.column.getComponent(), field: item.column.getField(), dir: item.dir })
-      }
-    })
-
-    return sorters
+    return this.sortList
+      .filter((item) => item.column)
+      .map((item) => ({ column: item.column.getComponent(), field: item.column.getField(), dir: item.dir }))
   }
 
   // change sort list and trigger sort
   setSort(sortList, dir) {
-    const self = this
     const newSortList = []
 
     if (!Array.isArray(sortList)) {
       sortList = [{ column: sortList, dir }]
     }
 
-    sortList.forEach(function (item) {
-      let column
-
-      column = self.table.columnManager.findColumn(item.column)
+    sortList.forEach((item) => {
+      const column = this.table.columnManager.findColumn(item.column)
 
       if (column) {
         item.column = column
         newSortList.push(item)
-        self.changed = true
+        this.changed = true
       } else {
         console.warn('Sort Warning - Sort field does not exist and is being ignored: ', item.column)
       }
     })
 
-    self.sortList = newSortList
+    this.sortList = newSortList
 
     this.dispatch('sort-changed')
   }
@@ -335,22 +325,21 @@ export default class Sort extends Module {
 
   // work through sort list sorting data
   sort(data, sortOnly) {
-    const self = this
-    const sortList = this.table.options.sortOrderReverse ? self.sortList.slice().reverse() : self.sortList
+    const sortList = this.table.options.sortOrderReverse ? this.sortList.slice().reverse() : this.sortList
     const sortListActual = []
     const rowComponents = []
 
     if (this.subscribedExternal('dataSorting')) {
-      this.dispatchExternal('dataSorting', self.getSort())
+      this.dispatchExternal('dataSorting', this.getSort())
     }
 
     if (!sortOnly) {
-      self.clearColumnHeaders()
+      this.clearColumnHeaders()
     }
 
     if (this.table.options.sortMode !== 'remote') {
       // build list of valid sorters and trigger column specific callbacks before sort begins
-      sortList.forEach(function (item, i) {
+      sortList.forEach((item) => {
         let sortObj
 
         if (item.column) {
@@ -359,7 +348,7 @@ export default class Sort extends Module {
           if (sortObj) {
             // if no sorter has been defined, take a guess
             if (!sortObj.sorter) {
-              sortObj.sorter = self.findSorter(item.column)
+              sortObj.sorter = this.findSorter(item.column)
             }
 
             item.params =
@@ -371,18 +360,18 @@ export default class Sort extends Module {
           }
 
           if (!sortOnly) {
-            self.setColumnHeader(item.column, item.dir)
+            this.setColumnHeader(item.column, item.dir)
           }
         }
       })
 
       // sort data
       if (sortListActual.length) {
-        self._sortItems(data, sortListActual)
+        this._sortItems(data, sortListActual)
       }
     } else if (!sortOnly) {
-      sortList.forEach(function (item, i) {
-        self.setColumnHeader(item.column, item.dir)
+      sortList.forEach((item) => {
+        this.setColumnHeader(item.column, item.dir)
       })
     }
 
@@ -391,7 +380,7 @@ export default class Sort extends Module {
         rowComponents.push(row.getComponent())
       })
 
-      this.dispatchExternal('dataSorted', self.getSort(), rowComponents)
+      this.dispatchExternal('dataSorted', this.getSort(), rowComponents)
     }
 
     return data
@@ -458,8 +447,8 @@ export default class Sort extends Module {
     let el1Comp, el2Comp
 
     // switch elements depending on search direction
-    const el1 = dir == 'asc' ? a : b
-    const el2 = dir == 'asc' ? b : a
+    const el1 = dir === 'asc' ? a : b
+    const el2 = dir === 'asc' ? b : a
 
     a = column.getFieldValue(el1.getData())
     b = column.getFieldValue(el2.getData())

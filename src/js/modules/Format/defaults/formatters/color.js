@@ -1,4 +1,7 @@
 export default function (cell, formatterParams, onRendered) {
-  cell.getElement().style.backgroundColor = this.sanitizeHTML(cell.getValue())
+  const element = cell.getElement()
+  const color = this.sanitizeHTML(cell.getValue())
+
+  element.style.backgroundColor = color
   return ''
 }

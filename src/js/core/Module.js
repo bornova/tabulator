@@ -2,7 +2,7 @@ import CoreFeature from './CoreFeature.js'
 import Popup from './tools/Popup.js'
 
 export default class Module extends CoreFeature {
-  constructor(table, name) {
+  constructor(table) {
     super(table)
 
     this._handler = null
@@ -60,10 +60,9 @@ export default class Module extends CoreFeature {
 
   displayRows(adjust) {
     let index = this.table.rowManager.displayRows.length - 1
-    let lookupIndex
 
     if (this._handler) {
-      lookupIndex = this.table.rowManager.displayPipeline.findIndex((item) => {
+      const lookupIndex = this.table.rowManager.displayPipeline.findIndex((item) => {
         return item.handler === this._handler
       })
 
@@ -73,15 +72,11 @@ export default class Module extends CoreFeature {
     }
 
     if (adjust) {
-      index = index + adjust
+      index += adjust
     }
 
     if (this._handler) {
-      if (index > -1) {
-        return this.table.rowManager.getDisplayRows(index)
-      } else {
-        return this.activeRows()
-      }
+      return index > -1 ? this.table.rowManager.getDisplayRows(index) : this.activeRows()
     }
   }
 
@@ -90,9 +85,7 @@ export default class Module extends CoreFeature {
   }
 
   refreshData(renderInPosition, handler) {
-    if (!handler) {
-      handler = this._handler
-    }
+    handler ??= this._handler
 
     if (handler) {
       this.table.rowManager.refreshActiveData(handler, false, renderInPosition)

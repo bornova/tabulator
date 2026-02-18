@@ -121,9 +121,7 @@ export default class Menu extends Module {
 
   initializeColumnHeaderMenu(column) {
     let icon = column.definition.headerMenuIcon
-    let headerMenuEl
-
-    headerMenuEl = document.createElement('span')
+    const headerMenuEl = document.createElement('span')
     headerMenuEl.classList.add('tabulator-header-popup-button')
 
     if (icon) {
@@ -177,13 +175,15 @@ export default class Menu extends Module {
       component = component._row
     }
 
-    menu = typeof menu === 'function' ? menu.call(this.table, e, component.getComponent()) : menu
+    const componentRef = component.getComponent()
+    menu = typeof menu === 'function' ? menu.call(this.table, e, componentRef) : menu
 
     this.loadMenu(e, component, menu)
   }
 
   loadMenu(e, component, menu, parentEl, parentPopup) {
     const touch = !(e instanceof MouseEvent)
+    const componentRef = component.getComponent()
     const menuEl = document.createElement('div')
     let popup
 
@@ -230,7 +230,7 @@ export default class Menu extends Module {
         itemEl.classList.add('tabulator-menu-item')
 
         if (typeof label === 'function') {
-          label = label.call(this.table, component.getComponent())
+          label = label.call(this.table, componentRef)
         }
 
         if (label instanceof Node) {
@@ -240,7 +240,7 @@ export default class Menu extends Module {
         }
 
         if (typeof disabled === 'function') {
-          disabled = disabled.call(this.table, component.getComponent())
+          disabled = disabled.call(this.table, componentRef)
         }
 
         if (disabled) {
@@ -248,18 +248,16 @@ export default class Menu extends Module {
           itemEl.addEventListener('click', (e) => {
             e.stopPropagation()
           })
+        } else if (item.menu && item.menu.length) {
+          itemEl.addEventListener('click', (e) => {
+            e.stopPropagation()
+            this.loadMenu(e, component, item.menu, itemEl, popup)
+          })
         } else {
-          if (item.menu && item.menu.length) {
+          if (item.action) {
             itemEl.addEventListener('click', (e) => {
-              e.stopPropagation()
-              this.loadMenu(e, component, item.menu, itemEl, popup)
+              item.action(e, componentRef)
             })
-          } else {
-            if (item.action) {
-              itemEl.addEventListener('click', (e) => {
-                item.action(e, component.getComponent())
-              })
-            }
           }
         }
 
@@ -293,7 +291,7 @@ export default class Menu extends Module {
       this.currentComponent = component
 
       this.dispatch('menu-opened', menu, popup)
-      this.dispatchExternal('menuOpened', component.getComponent())
+      this.dispatchExternal('menuOpened', componentRef)
     }
   }
 }

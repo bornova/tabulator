@@ -1,10 +1,7 @@
 export default function (cell, onRendered, success, cancel, params) {
   const column = cell._getSelf().column
-  let lookup
-  let editorFunc
-  let editorParams
 
-  function defaultLookup(cell) {
+  const defaultLookup = (cell) => {
     const value = cell.getValue()
     let editor = 'input'
 
@@ -27,14 +24,15 @@ export default function (cell, onRendered, success, cancel, params) {
     return editor
   }
 
-  lookup = params.editorLookup ? params.editorLookup(cell) : defaultLookup(cell)
+  const lookup = params.editorLookup ? params.editorLookup(cell) : defaultLookup(cell)
 
-  if (params.paramsLookup) {
-    editorParams =
-      typeof params.paramsLookup === 'function' ? params.paramsLookup(lookup, cell) : params.paramsLookup[lookup]
-  }
+  const editorParams = params.paramsLookup
+    ? typeof params.paramsLookup === 'function'
+      ? params.paramsLookup(lookup, cell)
+      : params.paramsLookup[lookup]
+    : undefined
 
-  editorFunc = this.table.modules.edit.lookupEditor(lookup, column)
+  const editorFunc = this.table.modules.edit.lookupEditor(lookup, column)
 
   return editorFunc.call(this, cell, onRendered, success, cancel, editorParams || {})
 }

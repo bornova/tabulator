@@ -1,7 +1,5 @@
 export default function (cell, params, onRendered) {
-  let lookup, formatterFunc, formatterParams
-
-  function defaultLookup(cell) {
+  const defaultLookup = (cell) => {
     const value = cell.getValue()
     let formatter = 'plaintext'
 
@@ -20,14 +18,13 @@ export default function (cell, params, onRendered) {
     return formatter
   }
 
-  lookup = params.formatterLookup ? params.formatterLookup(cell) : defaultLookup(cell)
+  const lookup = params.formatterLookup ? params.formatterLookup(cell) : defaultLookup(cell)
+  const formatterFunc = this.table.modules.format.lookupFormatter(lookup)
+  const formatterParams = params.paramsLookup
+    ? typeof params.paramsLookup === 'function'
+      ? params.paramsLookup(lookup, cell)
+      : params.paramsLookup[lookup]
+    : undefined
 
-  if (params.paramsLookup) {
-    formatterParams =
-      typeof params.paramsLookup === 'function' ? params.paramsLookup(lookup, cell) : params.paramsLookup[lookup]
-  }
-
-  formatterFunc = this.table.modules.format.lookupFormatter(lookup)
-
-  return formatterFunc.call(this, cell, formatterParams || {}, onRendered)
+  return formatterFunc.call(this, cell, formatterParams ?? {}, onRendered)
 }

@@ -9,7 +9,8 @@ export default class GridCalculator {
   }
 
   genColumns(data) {
-    const colCount = Math.max(this.columnCount, Math.max(...data.map((item) => item.length)))
+    const maxDataColumns = Math.max(...data.map((item) => item.length))
+    const colCount = Math.max(this.columnCount, maxDataColumns)
 
     this.columnString = []
     this.columns = []
@@ -25,30 +26,28 @@ export default class GridCalculator {
   genRows(data) {
     const rowCount = Math.max(this.rowCount, data.length)
 
-    this.rows = []
-
-    for (let i = 1; i <= rowCount; i++) {
-      this.rows.push(i)
-    }
+    this.rows = Array.from({ length: rowCount }, (_value, index) => index + 1)
 
     return this.rows
   }
 
   incrementChar(i) {
-    const char = this.columnString[i]
+    const currentChar = this.columnString[i]
 
-    if (char) {
-      if (char !== 'Z') {
-        this.columnString[i] = String.fromCharCode(this.columnString[i].charCodeAt(0) + 1)
-      } else {
-        this.columnString[i] = 'A'
+    if (!currentChar) {
+      this.columnString.push('A')
+      return
+    }
 
-        if (i) {
-          this.incrementChar(i - 1)
-        } else {
-          this.columnString.push('A')
-        }
-      }
+    if (currentChar !== 'Z') {
+      this.columnString[i] = String.fromCharCode(currentChar.charCodeAt(0) + 1)
+      return
+    }
+
+    this.columnString[i] = 'A'
+
+    if (i > 0) {
+      this.incrementChar(i - 1)
     } else {
       this.columnString.push('A')
     }

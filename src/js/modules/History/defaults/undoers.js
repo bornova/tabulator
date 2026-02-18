@@ -1,17 +1,19 @@
 export default {
-  cellEdit: function (action) {
+  cellEdit(action) {
     action.component.setValueProcessData(action.data.oldValue)
     action.component.cellRendered()
   },
 
-  rowAdd: function (action) {
+  rowAdd(action) {
     action.component.deleteActual()
 
     this.table.rowManager.checkPlaceholder()
   },
 
-  rowDelete: function (action) {
-    const newRow = this.table.rowManager.addRowActual(action.data.data, action.data.pos, action.data.index)
+  rowDelete(action) {
+    const rowManager = this.table.rowManager
+    const { data, pos, index } = action.data
+    const newRow = rowManager.addRowActual(data, pos, index)
 
     if (this.table.options.groupBy && this.table.modExists('groupRows')) {
       this.table.modules.groupRows.updateGroupRows(true)
@@ -19,19 +21,16 @@ export default {
 
     this._rebindRow(action.component, newRow)
 
-    this.table.rowManager.checkPlaceholder()
+    rowManager.checkPlaceholder()
   },
 
-  rowMove: function (action) {
+  rowMove(action) {
+    const rowManager = this.table.rowManager
     const after = action.data.posFrom - action.data.posTo > 0
 
-    this.table.rowManager.moveRowActual(
-      action.component,
-      this.table.rowManager.getRowFromPosition(action.data.posFrom),
-      after
-    )
+    rowManager.moveRowActual(action.component, rowManager.getRowFromPosition(action.data.posFrom), after)
 
-    this.table.rowManager.regenerateRowPositions()
-    this.table.rowManager.reRenderInPosition()
+    rowManager.regenerateRowPositions()
+    rowManager.reRenderInPosition()
   }
 }

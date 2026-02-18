@@ -3,12 +3,12 @@ export default class SheetComponent {
     this._sheet = sheet
 
     return new Proxy(this, {
-      get: function (target, name, receiver) {
-        if (typeof target[name] !== 'undefined') {
-          return target[name]
-        } else {
-          return target._sheet.table.componentFunctionBinder.handle('sheet', target._sheet, name)
+      get(target, name, receiver) {
+        if (Reflect.has(target, name)) {
+          return Reflect.get(target, name, receiver)
         }
+
+        return target._sheet.table.componentFunctionBinder.handle('sheet', target._sheet, name)
       }
     })
   }

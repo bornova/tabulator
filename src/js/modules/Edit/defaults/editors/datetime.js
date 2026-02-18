@@ -16,16 +16,16 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) == '+') {
+      if (key.charAt(0) === '+') {
         key = key.slice(1)
-        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes['+' + key])
+        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
       } else {
         input.setAttribute(key, editorParams.elementAttributes[key])
       }
     }
   }
 
-  cellValue = typeof cellValue !== 'undefined' ? cellValue : ''
+  cellValue = cellValue !== undefined ? cellValue : ''
 
   if (inputFormat) {
     if (DT) {
@@ -37,7 +37,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
         newDatetime = DT.fromFormat(String(cellValue), inputFormat)
       }
 
-      cellValue = newDatetime.toFormat('yyyy-MM-dd') + 'T' + newDatetime.toFormat('HH:mm')
+      cellValue = `${newDatetime.toFormat('yyyy-MM-dd')}T${newDatetime.toFormat('HH:mm')}`
     } else {
       console.error("Editor Error - 'date' editor 'format' param is dependant on luxon.js")
     }
@@ -45,7 +45,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   input.value = cellValue
 
-  onRendered(function () {
+  onRendered(() => {
     if (cell.getType() === 'cell') {
       input.focus({ preventScroll: true })
       input.style.height = '100%'
@@ -60,7 +60,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     let value = input.value
     let luxDateTime
 
-    if (((cellValue === null || typeof cellValue === 'undefined') && value !== '') || value !== cellValue) {
+    if (((cellValue === null || cellValue === undefined) && value !== '') || value !== cellValue) {
       if (value && inputFormat) {
         luxDateTime = DT.fromISO(String(value))
 
@@ -87,14 +87,14 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // submit new value on blur
-  input.addEventListener('blur', function (e) {
+  input.addEventListener('blur', (e) => {
     if (e.relatedTarget || e.rangeParent || e.explicitOriginalTarget !== input) {
       onChange() // only on a "true" blur; not when focusing browser's date/time picker
     }
   })
 
   // submit new value on enter
-  input.addEventListener('keydown', function (e) {
+  input.addEventListener('keydown', (e) => {
     switch (e.keyCode) {
       // case 9:
       case 13:
@@ -112,7 +112,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
       case 38: // up arrow
       case 40: // down arrow
-        if (vertNav == 'editor') {
+        if (vertNav === 'editor') {
           e.stopImmediatePropagation()
           e.stopPropagation()
         }

@@ -43,9 +43,9 @@ export default class ColumnCalcs extends Module {
   }
 
   createElement() {
-    const el = document.createElement('div')
-    el.classList.add('tabulator-calcs-holder')
-    return el
+    const element = document.createElement('div')
+    element.classList.add('tabulator-calcs-holder')
+    return element
   }
 
   initialize() {
@@ -78,7 +78,7 @@ export default class ColumnCalcs extends Module {
   }
 
   resizeHolderWidth() {
-    this.topElement.style.minWidth = this.table.columnManager.headersElement.offsetWidth + 'px'
+    this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
   }
 
   tableRedraw(force) {
@@ -157,11 +157,11 @@ export default class ColumnCalcs extends Module {
   cellValueChanged(cell) {
     if (cell.column.definition.topCalc || cell.column.definition.bottomCalc) {
       if (this.table.options.groupBy) {
-        if (this.table.options.columnCalcs == 'table' || this.table.options.columnCalcs == 'both') {
+        if (this.table.options.columnCalcs === 'table' || this.table.options.columnCalcs === 'both') {
           this.recalcActiveRows()
         }
 
-        if (this.table.options.columnCalcs != 'table') {
+        if (this.table.options.columnCalcs !== 'table') {
           this.recalcRowGroup(cell.row)
         }
       } else {
@@ -204,7 +204,7 @@ export default class ColumnCalcs extends Module {
         column.modules.columnCalcs = config
         this.topCalcs.push(column)
 
-        if (this.table.options.columnCalcs != 'group') {
+        if (this.table.options.columnCalcs !== 'group') {
           this.initializeTopRow()
         }
       }
@@ -229,7 +229,7 @@ export default class ColumnCalcs extends Module {
         column.modules.columnCalcs = config
         this.botCalcs.push(column)
 
-        if (this.table.options.columnCalcs != 'group') {
+        if (this.table.options.columnCalcs !== 'group') {
           this.initializeBottomRow()
         }
       }
@@ -244,7 +244,9 @@ export default class ColumnCalcs extends Module {
 
     if (this.topInitialized) {
       this.topInitialized = false
-      this.topElement.parentNode.removeChild(this.topElement)
+      if (this.topElement.parentNode) {
+        this.topElement.parentNode.removeChild(this.topElement)
+      }
       changed = true
     }
 
@@ -309,7 +311,7 @@ export default class ColumnCalcs extends Module {
 
           row = this.generateRow('top', data)
           this.topRow = row
-          while (this.topElement.firstChild) this.topElement.removeChild(this.topElement.firstChild)
+          this.topElement.replaceChildren()
           this.topElement.appendChild(row.getElement())
           row.initialize(true)
         }
@@ -321,7 +323,7 @@ export default class ColumnCalcs extends Module {
 
           row = this.generateRow('bottom', data)
           this.botRow = row
-          while (this.botElement.firstChild) this.botElement.removeChild(this.botElement.firstChild)
+          this.botElement.replaceChildren()
           this.botElement.appendChild(row.getElement())
           row.initialize(true)
         }
@@ -402,7 +404,7 @@ export default class ColumnCalcs extends Module {
 
       if (hasDataTreeColumnCalcs && row.modules.dataTree?.open) {
         this.rowsToData(dataTree.getFilteredTreeChildren(row)).forEach((dataRow) => {
-          data.push(row)
+          data.push(dataRow)
         })
       }
     })
@@ -444,10 +446,10 @@ export default class ColumnCalcs extends Module {
         this.genColumn.setField(column.getField())
         this.genColumn.hozAlign = column.hozAlign
 
-        if (column.definition[pos + 'CalcFormatter'] && this.table.modExists('format')) {
+        if (column.definition[`${pos}CalcFormatter`] && this.table.modExists('format')) {
           this.genColumn.modules.format = {
-            formatter: this.table.modules.format.lookupFormatter(column.definition[pos + 'CalcFormatter']),
-            params: column.definition[pos + 'CalcFormatterParams'] || {}
+            formatter: this.table.modules.format.lookupFormatter(column.definition[`${pos}CalcFormatter`]),
+            params: column.definition[`${pos}CalcFormatterParams`] || {}
           }
         } else {
           this.genColumn.modules.format = {
@@ -455,7 +457,7 @@ export default class ColumnCalcs extends Module {
             params: {}
           }
         }
-
+        row.getElement().classList.add('tabulator-calcs', `tabulator-calcs-${pos}`)
         // ensure css class definition is replicated to calculation cell
         this.genColumn.definition.cssClass = column.definition.cssClass
 
@@ -482,20 +484,20 @@ export default class ColumnCalcs extends Module {
   // generate stats row
   generateRowData(pos, data) {
     const rowData = {}
-    const calcs = pos == 'top' ? this.topCalcs : this.botCalcs
-    const type = pos == 'top' ? 'topCalc' : 'botCalc'
+    const calcs = pos === 'top' ? this.topCalcs : this.botCalcs
+    const type = pos === 'top' ? 'topCalc' : 'botCalc'
     let params
     let paramKey
 
-    calcs.forEach(function (column) {
+    calcs.forEach((column) => {
       const values = []
 
       if (column.modules.columnCalcs && column.modules.columnCalcs[type]) {
-        data.forEach(function (item) {
+        data.forEach((item) => {
           values.push(column.getFieldValue(item))
         })
 
-        paramKey = type + 'Params'
+        paramKey = `${type}Params`
         params =
           typeof column.modules.columnCalcs[paramKey] === 'function'
             ? column.modules.columnCalcs[paramKey](values, data)
@@ -570,9 +572,9 @@ export default class ColumnCalcs extends Module {
   adjustForScrollbar(width) {
     if (this.botRow) {
       if (this.table.rtl) {
-        this.botElement.style.paddingLeft = width + 'px'
+        this.botElement.style.paddingLeft = `${width}px`
       } else {
-        this.botElement.style.paddingRight = width + 'px'
+        this.botElement.style.paddingRight = `${width}px`
       }
     }
   }

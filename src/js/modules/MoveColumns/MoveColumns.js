@@ -47,52 +47,51 @@ export default class MoveColumns extends Module {
   }
 
   initializeColumn(column) {
-    const self = this
     const config = {}
     let colEl
 
     if (!column.modules.frozen && !column.isGroup && !column.isRowHeader) {
       colEl = column.getElement()
 
-      config.mousemove = function (e) {
-        if (column.parent === self.moving.parent) {
+      config.mousemove = (e) => {
+        if (column.parent === this.moving.parent) {
           if (
-            (self.touchMove ? e.touches[0].pageX : e.pageX) -
+            (this.touchMove ? e.touches[0].pageX : e.pageX) -
               Helpers.elOffset(colEl).left +
-              self.table.columnManager.contentsElement.scrollLeft >
+              this.table.columnManager.contentsElement.scrollLeft >
             column.getWidth() / 2
           ) {
-            if (self.toCol !== column || !self.toColAfter) {
-              colEl.parentNode.insertBefore(self.placeholderElement, colEl.nextSibling)
-              self.moveColumn(column, true)
+            if (this.toCol !== column || !this.toColAfter) {
+              colEl.parentNode.insertBefore(this.placeholderElement, colEl.nextSibling)
+              this.moveColumn(column, true)
             }
           } else {
-            if (self.toCol !== column || self.toColAfter) {
-              colEl.parentNode.insertBefore(self.placeholderElement, colEl)
-              self.moveColumn(column, false)
+            if (this.toCol !== column || this.toColAfter) {
+              colEl.parentNode.insertBefore(this.placeholderElement, colEl)
+              this.moveColumn(column, false)
             }
           }
         }
       }
 
-      colEl.addEventListener('mousedown', function (e) {
-        self.touchMove = false
+      colEl.addEventListener('mousedown', (e) => {
+        this.touchMove = false
         if (e.which === 1) {
-          self.checkTimeout = setTimeout(function () {
-            self.startMove(e, column)
-          }, self.checkPeriod)
+          this.checkTimeout = setTimeout(() => {
+            this.startMove(e, column)
+          }, this.checkPeriod)
         }
       })
 
-      colEl.addEventListener('mouseup', function (e) {
+      colEl.addEventListener('mouseup', (e) => {
         if (e.which === 1) {
-          if (self.checkTimeout) {
-            clearTimeout(self.checkTimeout)
+          if (this.checkTimeout) {
+            clearTimeout(this.checkTimeout)
           }
         }
       })
 
-      self.bindTouchEvents(column)
+      this.bindTouchEvents(column)
     }
 
     column.modules.moveColumn = config
@@ -206,8 +205,8 @@ export default class MoveColumns extends Module {
     this.table.element.classList.add('tabulator-block-select')
 
     // create placeholder
-    this.placeholderElement.style.width = column.getWidth() + 'px'
-    this.placeholderElement.style.height = column.getHeight() + 'px'
+    this.placeholderElement.style.width = `${column.getWidth()}px`
+    this.placeholderElement.style.height = `${column.getHeight()}px`
 
     element.parentNode.insertBefore(this.placeholderElement, element)
     element.parentNode.removeChild(element)
@@ -219,7 +218,7 @@ export default class MoveColumns extends Module {
     headerElement.appendChild(this.hoverElement)
 
     this.hoverElement.style.left = '0'
-    this.hoverElement.style.bottom = headerElement.clientHeight - headersElement.offsetHeight + 'px'
+    this.hoverElement.style.bottom = `${headerElement.clientHeight - headersElement.offsetHeight}px`
 
     if (!this.touchMove) {
       this._bindMouseMove()
@@ -234,7 +233,7 @@ export default class MoveColumns extends Module {
   }
 
   _bindMouseMove() {
-    this.table.columnManager.columnsByIndex.forEach(function (column) {
+    this.table.columnManager.columnsByIndex.forEach((column) => {
       if (column.modules.moveColumn.mousemove) {
         column.getElement().addEventListener('mousemove', column.modules.moveColumn.mousemove)
       }
@@ -242,7 +241,7 @@ export default class MoveColumns extends Module {
   }
 
   _unbindMouseMove() {
-    this.table.columnManager.columnsByIndex.forEach(function (column) {
+    this.table.columnManager.columnsByIndex.forEach((column) => {
       if (column.modules.moveColumn.mousemove) {
         column.getElement().removeEventListener('mousemove', column.modules.moveColumn.mousemove)
       }
@@ -255,23 +254,14 @@ export default class MoveColumns extends Module {
     this.toCol = column
     this.toColAfter = after
 
-    if (after) {
-      column.getCells().forEach(function (cell, i) {
-        const cellEl = cell.getElement(true)
+    column.getCells().forEach((cell, i) => {
+      const cellEl = cell.getElement(true)
 
-        if (cellEl.parentNode && movingCells[i]) {
-          cellEl.parentNode.insertBefore(movingCells[i].getElement(), cellEl.nextSibling)
-        }
-      })
-    } else {
-      column.getCells().forEach(function (cell, i) {
-        const cellEl = cell.getElement(true)
-
-        if (cellEl.parentNode && movingCells[i]) {
-          cellEl.parentNode.insertBefore(movingCells[i].getElement(), cellEl)
-        }
-      })
-    }
+      if (cellEl.parentNode && movingCells[i]) {
+        const target = after ? cellEl.nextSibling : cellEl
+        cellEl.parentNode.insertBefore(movingCells[i].getElement(), target)
+      }
+    })
   }
 
   endMove(e) {
@@ -305,12 +295,12 @@ export default class MoveColumns extends Module {
     const xPos = (this.touchMove ? e.touches[0].pageX : e.pageX) - Helpers.elOffset(columnHolder).left + scrollLeft
     let scrollPos
 
-    this.hoverElement.style.left = xPos - this.startX + 'px'
+    this.hoverElement.style.left = `${xPos - this.startX}px`
 
     if (xPos - scrollLeft < this.autoScrollMargin) {
       if (!this.autoScrollTimeout) {
         this.autoScrollTimeout = setTimeout(() => {
-          scrollPos = Math.max(0, scrollLeft - 5)
+          scrollPos = Math.max(0, scrollLeft - this.autoScrollStep)
           this.table.rowManager.getElement().scrollLeft = scrollPos
           this.autoScrollTimeout = false
         }, 1)
@@ -320,7 +310,7 @@ export default class MoveColumns extends Module {
     if (scrollLeft + columnHolder.clientWidth - xPos < this.autoScrollMargin) {
       if (!this.autoScrollTimeout) {
         this.autoScrollTimeout = setTimeout(() => {
-          scrollPos = Math.min(columnHolder.clientWidth, scrollLeft + 5)
+          scrollPos = Math.min(columnHolder.clientWidth, scrollLeft + this.autoScrollStep)
           this.table.rowManager.getElement().scrollLeft = scrollPos
           this.autoScrollTimeout = false
         }, 1)

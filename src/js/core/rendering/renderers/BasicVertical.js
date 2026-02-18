@@ -9,16 +9,12 @@ export default class BasicVertical extends Renderer {
 
     this.scrollTop = 0
     this.scrollLeft = 0
-
-    this.scrollTop = 0
-    this.scrollLeft = 0
   }
 
   clearRows() {
     const element = this.tableElement
 
-    // element.children.detach();
-    while (element.firstChild) element.removeChild(element.firstChild)
+    element.replaceChildren()
 
     element.scrollTop = 0
     element.scrollLeft = 0
@@ -62,11 +58,7 @@ export default class BasicVertical extends Renderer {
       }
     })
 
-    if (onlyGroupHeaders) {
-      element.style.minWidth = this.table.columnManager.getWidth() + 'px'
-    } else {
-      element.style.minWidth = ''
-    }
+    element.style.minWidth = onlyGroupHeaders ? `${this.table.columnManager.getWidth()}px` : ''
   }
 
   rerenderRows(callback) {

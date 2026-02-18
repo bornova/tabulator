@@ -15,21 +15,21 @@ export default class FooterManager extends CoreFeature {
   }
 
   createElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-footer')
+    element.classList.add('tabulator-footer')
 
-    return el
+    return element
   }
 
   createContainerElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-footer-contents')
+    element.classList.add('tabulator-footer-contents')
 
-    this.element.appendChild(el)
+    this.element.appendChild(element)
 
-    return el
+    return element
   }
 
   initializeElement() {
@@ -70,14 +70,19 @@ export default class FooterManager extends CoreFeature {
   }
 
   remove(element) {
-    element.parentNode.removeChild(element)
+    if (element.parentNode) {
+      element.parentNode.removeChild(element)
+    }
+
     this.deactivate()
   }
 
   deactivate(force) {
     if (!this.element.firstChild || force) {
       if (!this.external) {
-        this.element.parentNode.removeChild(this.element)
+        if (this.element.parentNode) {
+          this.element.parentNode.removeChild(this.element)
+        }
       }
       this.active = false
     }

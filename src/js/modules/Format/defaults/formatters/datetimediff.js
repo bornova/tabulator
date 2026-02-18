@@ -21,19 +21,17 @@ export default function (cell, formatterParams, onRendered) {
 
     if (newDatetime.isValid) {
       if (humanize) {
-        return newDatetime.diff(date, unit).toHuman() + (suffix ? ' ' + suffix : '')
-      } else {
-        return parseInt(newDatetime.diff(date, unit)[unit]) + (suffix ? ' ' + suffix : '')
+        return `${newDatetime.diff(date, unit).toHuman()}${suffix ? ` ${suffix}` : ''}`
       }
-    } else {
-      if (invalid === true) {
-        return value
-      } else if (typeof invalid === 'function') {
-        return invalid(value)
-      } else {
-        return invalid
-      }
+
+      return `${parseInt(newDatetime.diff(date, unit)[unit])}${suffix ? ` ${suffix}` : ''}`
     }
+
+    if (invalid === true) {
+      return value
+    }
+
+    return typeof invalid === 'function' ? invalid(value) : invalid
   } else {
     console.error("Format Error - 'datetimediff' formatter is dependant on luxon.js")
   }

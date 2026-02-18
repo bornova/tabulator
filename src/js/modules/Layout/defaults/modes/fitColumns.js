@@ -16,9 +16,9 @@ export default function (columns, forced) {
 
     if (typeof width === 'string') {
       if (width.indexOf('%') > -1) {
-        colWidth = (totalWidth / 100) * parseInt(width)
+        colWidth = (totalWidth / 100) * parseInt(width, 10)
       } else {
-        colWidth = parseInt(width)
+        colWidth = parseInt(width, 10)
       }
     } else {
       colWidth = width
@@ -37,6 +37,8 @@ export default function (columns, forced) {
     let gap = 0
     let changeUnits = 0
     const undersizeCols = []
+    const getChangeUnit = (col) =>
+      shrinkCols ? col.column.definition.widthShrink || 1 : col.column.definition.widthGrow || 1
 
     function calcGrow(col) {
       return colWidth * (col.column.definition.widthGrow || 1)
@@ -46,8 +48,9 @@ export default function (columns, forced) {
       return calcWidth(col.width) - colWidth * (col.column.definition.widthShrink || 0)
     }
 
-    columns.forEach(function (col, i) {
+    columns.forEach((col) => {
       const width = shrinkCols ? calcShrink(col) : calcGrow(col)
+
       if (col.column.minWidth >= width) {
         oversizeCols.push(col)
       } else {
@@ -55,22 +58,20 @@ export default function (columns, forced) {
           col.width = col.column.maxWidth
           freeSpace -= col.column.maxWidth
 
-          remainingFlexGrowUnits -= shrinkCols
-            ? col.column.definition.widthShrink || 1
-            : col.column.definition.widthGrow || 1
+          remainingFlexGrowUnits -= getChangeUnit(col)
 
           if (remainingFlexGrowUnits) {
             colWidth = Math.floor(freeSpace / remainingFlexGrowUnits)
           }
         } else {
           undersizeCols.push(col)
-          changeUnits += shrinkCols ? col.column.definition.widthShrink || 1 : col.column.definition.widthGrow || 1
+          changeUnits += getChangeUnit(col)
         }
       }
     })
 
     if (oversizeCols.length) {
-      oversizeCols.forEach(function (col) {
+      oversizeCols.forEach((col) => {
         oversizeSpace += shrinkCols ? col.width - col.column.minWidth : col.column.minWidth
         col.width = col.column.minWidth
       })
@@ -83,7 +84,7 @@ export default function (columns, forced) {
     } else {
       gap = changeUnits ? freeSpace - Math.floor(freeSpace / changeUnits) * changeUnits : freeSpace
 
-      undersizeCols.forEach(function (column) {
+      undersizeCols.forEach((column) => {
         column.width = shrinkCols ? calcShrink(column) : calcGrow(column)
       })
     }
@@ -100,12 +101,12 @@ export default function (columns, forced) {
     totalWidth -= this.table.rowManager.element.offsetWidth - this.table.rowManager.element.clientWidth
   }
 
-  columns.forEach(function (column) {
+  columns.forEach((column) => {
     let width, minWidth, colWidth
 
     if (column.visible) {
       width = column.definition.width
-      minWidth = parseInt(column.minWidth)
+      minWidth = parseInt(column.minWidth, 10)
 
       if (width) {
         colWidth = calcWidth(width)
@@ -144,7 +145,7 @@ export default function (columns, forced) {
   }
 
   // calculate space for columns to be shrunk into
-  flexColumns.forEach(function (col) {
+  flexColumns.forEach((col) => {
     flexWidth -= col.width
   })
 
@@ -160,11 +161,11 @@ export default function (columns, forced) {
     fixedShrinkColumns[fixedShrinkColumns.length - 1].width -= gapFill
   }
 
-  flexColumns.forEach(function (col) {
+  flexColumns.forEach((col) => {
     col.column.setWidth(col.width)
   })
 
-  fixedShrinkColumns.forEach(function (col) {
+  fixedShrinkColumns.forEach((col) => {
     col.column.setWidth(col.width)
   })
 }

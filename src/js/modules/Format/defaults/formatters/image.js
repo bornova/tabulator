@@ -3,18 +3,18 @@ export default function (cell, formatterParams, onRendered) {
   let src = cell.getValue()
 
   if (formatterParams.urlPrefix) {
-    src = formatterParams.urlPrefix + cell.getValue()
+    src = `${formatterParams.urlPrefix}${cell.getValue()}`
   }
 
   if (formatterParams.urlSuffix) {
-    src = src + formatterParams.urlSuffix
+    src = `${src}${formatterParams.urlSuffix}`
   }
 
   el.setAttribute('src', src)
 
   switch (typeof formatterParams.height) {
     case 'number':
-      el.style.height = formatterParams.height + 'px'
+      el.style.height = `${formatterParams.height}px`
       break
 
     case 'string':
@@ -24,7 +24,7 @@ export default function (cell, formatterParams, onRendered) {
 
   switch (typeof formatterParams.width) {
     case 'number':
-      el.style.width = formatterParams.width + 'px'
+      el.style.width = `${formatterParams.width}px`
       break
 
     case 'string':
@@ -32,9 +32,7 @@ export default function (cell, formatterParams, onRendered) {
       break
   }
 
-  el.addEventListener('load', function () {
-    cell.getRow().normalizeHeight()
-  })
+  el.addEventListener('load', () => cell.getRow().normalizeHeight())
 
   return el
 }

@@ -1,6 +1,5 @@
 // star rating
 export default function (cell, onRendered, success, cancel, editorParams) {
-  const self = this
   const element = cell.getElement()
   let value = cell.getValue()
   const maxStars = element.getElementsByTagName('svg').length || 5
@@ -10,12 +9,13 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const stars = []
   const starsHolder = document.createElement('div')
   const star = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  const isIE = this.table.browser === 'ie'
 
   // change star type
   function starChange(val) {
-    stars.forEach(function (star, i) {
+    stars.forEach((star, i) => {
       if (i < val) {
-        if (self.table.browser == 'ie') {
+        if (isIE) {
           star.setAttribute('class', 'tabulator-star-active')
         } else {
           star.classList.replace('tabulator-star-inactive', 'tabulator-star-active')
@@ -24,7 +24,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
         star.innerHTML =
           '<polygon fill="#488CE9" stroke="#014AAE" stroke-width="37.6152" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="259.216,29.942 330.27,173.919 489.16,197.007 374.185,309.08 401.33,467.31 259.216,392.612 117.104,467.31 144.25,309.08 29.274,197.007 188.165,173.919 "/>'
       } else {
-        if (self.table.browser == 'ie') {
+        if (isIE) {
           star.setAttribute('class', 'tabulator-star-inactive')
         } else {
           star.classList.replace('tabulator-star-active', 'tabulator-star-inactive')
@@ -43,18 +43,18 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
     stars.push(nextStar)
 
-    starHolder.addEventListener('mouseenter', function (e) {
+    starHolder.addEventListener('mouseenter', (e) => {
       e.stopPropagation()
       e.stopImmediatePropagation()
       starChange(i)
     })
 
-    starHolder.addEventListener('mousemove', function (e) {
+    starHolder.addEventListener('mousemove', (e) => {
       e.stopPropagation()
       e.stopImmediatePropagation()
     })
 
-    starHolder.addEventListener('click', function (e) {
+    starHolder.addEventListener('click', (e) => {
       e.stopPropagation()
       e.stopImmediatePropagation()
       success(i)
@@ -90,9 +90,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) == '+') {
+      if (key.charAt(0) === '+') {
         key = key.slice(1)
-        starsHolder.setAttribute(key, starsHolder.getAttribute(key) + editorParams.elementAttributes['+' + key])
+        starsHolder.setAttribute(key, starsHolder.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
       } else {
         starsHolder.setAttribute(key, editorParams.elementAttributes[key])
       }
@@ -105,25 +105,25 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // ensure value does not exceed number of stars
-  value = Math.min(parseInt(value), maxStars)
+  value = Math.min(Number.parseInt(value, 10), maxStars)
 
   // set initial styling of stars
   starChange(value)
 
-  starsHolder.addEventListener('mousemove', function (e) {
+  starsHolder.addEventListener('mousemove', (e) => {
     starChange(0)
   })
 
-  starsHolder.addEventListener('click', function (e) {
+  starsHolder.addEventListener('click', (e) => {
     success(0)
   })
 
-  element.addEventListener('blur', function (e) {
+  element.addEventListener('blur', (e) => {
     cancel()
   })
 
   // allow key based navigation
-  element.addEventListener('keydown', function (e) {
+  element.addEventListener('keydown', (e) => {
     switch (e.keyCode) {
       case 39: // right arrow
         changeValue(value + 1)

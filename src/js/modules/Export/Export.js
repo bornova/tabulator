@@ -110,7 +110,7 @@ export default class Export extends Module {
   processColumnGroup(column) {
     const subGroups = column.columns
     let maxDepth = 0
-    const title = column.definition['title' + this.colVisPropAttach] || column.definition.title
+    const title = column.definition[`title${this.colVisPropAttach}`] || column.definition.title
 
     const groupData = {
       title,
@@ -174,10 +174,10 @@ export default class Export extends Module {
     let headerDepth = 0
     const exportRows = []
 
-    function parseColumnGroup(column, level) {
+    const parseColumnGroup = (column, level) => {
       const depth = headerDepth - level
 
-      if (typeof headers[level] === 'undefined') {
+      if (headers[level] === undefined) {
         headers[level] = []
       }
 
@@ -187,7 +187,7 @@ export default class Export extends Module {
 
       if (column.height > 1) {
         for (let i = 1; i < column.height; i++) {
-          if (typeof headers[level + i] === 'undefined') {
+          if (headers[level + i] === undefined) {
             headers[level + i] = []
           }
 
@@ -202,20 +202,20 @@ export default class Export extends Module {
       }
 
       if (column.subGroups) {
-        column.subGroups.forEach(function (subGroup) {
+        column.subGroups.forEach((subGroup) => {
           parseColumnGroup(subGroup, level + 1)
         })
       }
     }
 
     // calculate maximum header depth
-    columns.forEach(function (column) {
+    columns.forEach((column) => {
       if (column.depth > headerDepth) {
         headerDepth = column.depth
       }
     })
 
-    columns.forEach(function (column) {
+    columns.forEach((column) => {
       parseColumnGroup(column, 0)
     })
 
@@ -506,7 +506,7 @@ export default class Export extends Module {
     cellEl.innerHTML = group.value
 
     rowEl.classList.add('tabulator-print-table-group')
-    rowEl.classList.add('tabulator-group-level-' + row.indent)
+    rowEl.classList.add(`tabulator-group-level-${row.indent}`)
 
     if (group.component.isVisible()) {
       rowEl.classList.add('tabulator-group-visible')
@@ -564,33 +564,33 @@ export default class Export extends Module {
         let cellStyle
         let styleProps
 
-        var cellWrapper = {
+        const cellWrapper = {
           modules: {},
-          getValue: function () {
+          getValue() {
             return value
           },
-          getField: function () {
+          getField() {
             return column.definition.field
           },
-          getElement: function () {
+          getElement() {
             return cellEl
           },
-          getType: function () {
+          getType() {
             return 'cell'
           },
-          getColumn: function () {
+          getColumn() {
             return column.getComponent()
           },
-          getData: function () {
+          getData() {
             return row.component.getData()
           },
-          getRow: function () {
+          getRow() {
             return row.component
           },
-          getTable: function () {
+          getTable() {
             return table
           },
-          getComponent: function () {
+          getComponent() {
             return cellWrapper
           },
           column
@@ -598,7 +598,7 @@ export default class Export extends Module {
 
         const classNames = column.definition.cssClass ? column.definition.cssClass.split(' ') : []
 
-        classNames.forEach(function (className) {
+        classNames.forEach((className) => {
           cellEl.classList.add(className)
         })
 
@@ -655,8 +655,8 @@ export default class Export extends Module {
 
         if (this.table.options.dataTree && this.config.dataTree !== false) {
           if (
-            (setup.treeElementField && setup.treeElementField == column.field) ||
-            (!setup.treeElementField && i == 0)
+            (setup.treeElementField && setup.treeElementField === column.field) ||
+            (!setup.treeElementField && i === 0)
           ) {
             if (row.component._row.modules.dataTree.controlEl) {
               cellEl.insertBefore(row.component._row.modules.dataTree.controlEl.cloneNode(true), cellEl.firstChild)
@@ -678,7 +678,7 @@ export default class Export extends Module {
     if (setup.rowFormatter && row.type === 'row' && this.config.formatCells !== false) {
       const formatComponent = Object.assign(row.component)
 
-      formatComponent.getElement = function () {
+      formatComponent.getElement = () => {
         return rowEl
       }
 
@@ -730,7 +730,7 @@ export default class Export extends Module {
       if (window.getComputedStyle) {
         const fromStyle = window.getComputedStyle(from)
 
-        props.forEach(function (prop) {
+        props.forEach((prop) => {
           if (!to.style[lookup[prop]]) {
             to.style[lookup[prop]] = fromStyle.getPropertyValue(prop)
           }

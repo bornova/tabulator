@@ -23,7 +23,6 @@ export default class Group {
     this.outerHeight = 0
     this.initialized = false
     this.calcs = {}
-    this.initialized = false
     this.modules = {}
     this.arrowElement = false
 
@@ -44,7 +43,7 @@ export default class Group {
   wipe(elementsOnly) {
     if (!elementsOnly) {
       if (this.groupList.length) {
-        this.groupList.forEach(function (group) {
+        this.groupList.forEach((group) => {
           group.wipe()
         })
       } else {
@@ -66,9 +65,7 @@ export default class Group {
     arrow.classList.add('tabulator-arrow')
 
     this.element = document.createElement('div')
-    this.element.classList.add('tabulator-row')
-    this.element.classList.add('tabulator-group')
-    this.element.classList.add('tabulator-group-level-' + this.level)
+    this.element.classList.add('tabulator-row', 'tabulator-group', `tabulator-group-level-${this.level}`)
     this.element.setAttribute('role', 'rowgroup')
 
     this.arrowElement = document.createElement('div')
@@ -94,7 +91,7 @@ export default class Group {
     let toggleElement
 
     if (this.groupManager.table.options.groupToggleElement) {
-      toggleElement = this.groupManager.table.options.groupToggleElement == 'arrow' ? this.arrowElement : this.element
+      toggleElement = this.groupManager.table.options.groupToggleElement === 'arrow' ? this.arrowElement : this.element
 
       toggleElement.addEventListener('click', (e) => {
         if (this.groupManager.table.options.groupToggleElement === 'arrow') {
@@ -111,7 +108,7 @@ export default class Group {
   }
 
   _createGroup(groupID, level) {
-    const groupKey = level + '_' + groupID
+    const groupKey = `${level}_${groupID}`
     const group = new Group(
       this.groupManager,
       this,
@@ -131,7 +128,7 @@ export default class Group {
 
     if (this.hasSubGroups) {
       const groupID = this.groupManager.groupIDLookups[level].func(row.getData())
-      const groupKey = level + '_' + groupID
+      const groupKey = `${level}_${groupID}`
 
       if (this.groupManager.allowedValues && this.groupManager.allowedValues[level]) {
         if (this.groups[groupKey]) {
@@ -177,7 +174,7 @@ export default class Group {
 
     // this.generateGroupHeaderContents();
 
-    if (this.groupManager.table.modExists('columnCalcs') && this.groupManager.table.options.columnCalcs != 'table') {
+    if (this.groupManager.table.modExists('columnCalcs') && this.groupManager.table.options.columnCalcs !== 'table') {
       this.groupManager.table.modules.columnCalcs.recalcGroup(this)
     }
 
@@ -188,7 +185,7 @@ export default class Group {
     if (this.arrowElement) {
       this.arrowElement.style.marginLeft = left
 
-      this.groupList.forEach(function (child) {
+      this.groupList.forEach((child) => {
         child.scrollHeader(left)
       })
     }
@@ -237,7 +234,7 @@ export default class Group {
 
         if (
           this.groupManager.table.modExists('columnCalcs') &&
-          this.groupManager.table.options.columnCalcs != 'table'
+          this.groupManager.table.options.columnCalcs !== 'table'
         ) {
           this.groupManager.table.modules.columnCalcs.recalcGroup(this)
         }
@@ -246,7 +243,7 @@ export default class Group {
   }
 
   removeGroup(group) {
-    const groupKey = group.level + '_' + group.key
+    const groupKey = `${group.level}_${group.key}`
     let index
 
     if (this.groups[groupKey]) {
@@ -292,7 +289,7 @@ export default class Group {
         })
       } else {
         if (
-          this.groupManager.table.options.columnCalcs != 'table' &&
+          this.groupManager.table.options.columnCalcs !== 'table' &&
           this.groupManager.table.modExists('columnCalcs') &&
           this.groupManager.table.modules.columnCalcs.hasTopCalcs()
         ) {
@@ -303,7 +300,7 @@ export default class Group {
         output = output.concat(this.rows)
 
         if (
-          this.groupManager.table.options.columnCalcs != 'table' &&
+          this.groupManager.table.options.columnCalcs !== 'table' &&
           this.groupManager.table.modExists('columnCalcs') &&
           this.groupManager.table.modules.columnCalcs.hasBottomCalcs()
         ) {
@@ -312,7 +309,7 @@ export default class Group {
         }
       }
     } else {
-      if (!this.groupList.length && this.groupManager.table.options.columnCalcs != 'table') {
+      if (!this.groupList.length && this.groupManager.table.options.columnCalcs !== 'table') {
         if (this.groupManager.table.modExists('columnCalcs')) {
           if (this.groupManager.table.modules.columnCalcs.hasTopCalcs()) {
             if (this.groupManager.table.options.groupClosedShowCalcs) {
@@ -372,7 +369,7 @@ export default class Group {
   hide() {
     this.visible = false
 
-    if (this.groupManager.table.rowManager.getRenderMode() == 'basic' && !this.groupManager.table.options.pagination) {
+    if (this.groupManager.table.rowManager.getRenderMode() === 'basic' && !this.groupManager.table.options.pagination) {
       this.element.classList.remove('tabulator-group-visible')
 
       if (this.groupList.length) {
@@ -389,11 +386,9 @@ export default class Group {
           rowEl.parentNode.removeChild(rowEl)
         })
       }
-
-      this.groupManager.updateGroupRows(true)
-    } else {
-      this.groupManager.updateGroupRows(true)
     }
+
+    this.groupManager.updateGroupRows(true)
 
     this.groupManager.table.externalEvents.dispatch('groupVisibilityChanged', this.getComponent(), false)
   }
@@ -401,7 +396,7 @@ export default class Group {
   show() {
     this.visible = true
 
-    if (this.groupManager.table.rowManager.getRenderMode() == 'basic' && !this.groupManager.table.options.pagination) {
+    if (this.groupManager.table.rowManager.getRenderMode() === 'basic' && !this.groupManager.table.options.pagination) {
       this.element.classList.add('tabulator-group-visible')
 
       let prev = this.generateElement()
@@ -425,11 +420,9 @@ export default class Group {
           prev = rowEl
         })
       }
-
-      this.groupManager.updateGroupRows(true)
-    } else {
-      this.groupManager.updateGroupRows(true)
     }
+
+    this.groupManager.updateGroupRows(true)
 
     this.groupManager.table.externalEvents.dispatch('groupVisibilityChanged', this.getComponent(), true)
   }
@@ -438,7 +431,7 @@ export default class Group {
     const data = []
 
     if (typeof this.visible === 'function') {
-      this.rows.forEach(function (row) {
+      this.rows.forEach((row) => {
         data.push(row.getData())
       })
 
@@ -449,7 +442,7 @@ export default class Group {
   getRowGroup(row) {
     let match = false
     if (this.groupList.length) {
-      this.groupList.forEach(function (group) {
+      this.groupList.forEach((group) => {
         const result = group.getRowGroup(row)
 
         if (result) {
@@ -457,11 +450,7 @@ export default class Group {
         }
       })
     } else {
-      if (
-        this.rows.find(function (item) {
-          return item === row
-        })
-      ) {
+      if (this.rows.find((item) => item === row)) {
         match = this
       }
     }
@@ -472,7 +461,7 @@ export default class Group {
   getSubGroups(component) {
     const output = []
 
-    this.groupList.forEach(function (child) {
+    this.groupList.forEach((child) => {
       output.push(component ? child.getComponent() : child)
     })
 
@@ -487,7 +476,7 @@ export default class Group {
         output = output.concat(group.getRows(component, includeChildren))
       })
     } else {
-      this.rows.forEach(function (row) {
+      this.rows.forEach((row) => {
         output.push(component ? row.getComponent() : row)
       })
     }
@@ -500,7 +489,7 @@ export default class Group {
 
     const rows = this.getRows(false, true)
 
-    rows.forEach(function (row) {
+    rows.forEach((row) => {
       data.push(row.getData())
     })
 
@@ -581,7 +570,7 @@ export default class Group {
   }
 
   setHeight(height) {
-    if (this.height != height) {
+    if (this.height !== height) {
       this.height = height
       this.outerHeight = this.element.offsetHeight
     }

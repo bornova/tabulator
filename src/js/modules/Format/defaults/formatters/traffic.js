@@ -6,7 +6,6 @@ export default function (cell, formatterParams, onRendered) {
   const colors =
     formatterParams && typeof formatterParams.color !== 'undefined' ? formatterParams.color : ['red', 'orange', 'green']
   let color = '#666666'
-  let percent
   let percentValue
 
   if (isNaN(value) || typeof cell.getValue() === 'undefined') {
@@ -16,11 +15,12 @@ export default function (cell, formatterParams, onRendered) {
   el.classList.add('tabulator-traffic-light')
 
   // make sure value is in range
-  percentValue = parseFloat(value) <= max ? parseFloat(value) : max
+  const parsedValue = parseFloat(value)
+  percentValue = parsedValue <= max ? parsedValue : max
   percentValue = parseFloat(percentValue) >= min ? parseFloat(percentValue) : min
 
   // workout percentage
-  percent = (max - min) / 100
+  const percent = (max - min) / 100
   percentValue = Math.round((percentValue - min) / percent)
 
   // set color

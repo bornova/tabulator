@@ -63,7 +63,7 @@ export default class Edit {
   _initializeValue() {
     let initialValue = this.cell.getValue()
 
-    if (typeof initialValue === 'undefined' && typeof this.params.defaultValue !== 'undefined') {
+    if (initialValue === undefined && this.params.defaultValue !== undefined) {
       initialValue = this.params.defaultValue
     }
 
@@ -78,7 +78,7 @@ export default class Edit {
   _onRendered() {
     const cellEl = this.cell.getElement()
 
-    function clickStop(e) {
+    const clickStop = (e) => {
       e.stopPropagation()
     }
 
@@ -109,13 +109,13 @@ export default class Edit {
   _setListWidth() {
     const element = this.isFilter ? this.input : this.cell.getElement()
 
-    this.listEl.style.minWidth = element.offsetWidth + 'px'
+    this.listEl.style.minWidth = `${element.offsetWidth}px`
 
     if (this.params.maxWidth) {
       if (this.params.maxWidth === true) {
-        this.listEl.style.maxWidth = element.offsetWidth + 'px'
+        this.listEl.style.maxWidth = `${element.offsetWidth}px`
       } else if (typeof this.params.maxWidth === 'number') {
-        this.listEl.style.maxWidth = this.params.maxWidth + 'px'
+        this.listEl.style.maxWidth = `${this.params.maxWidth}px`
       } else {
         this.listEl.style.maxWidth = this.params.maxWidth
       }
@@ -140,9 +140,9 @@ export default class Edit {
 
     if (attribs && typeof attribs === 'object') {
       for (let key in attribs) {
-        if (key.charAt(0) == '+') {
+        if (key.charAt(0) === '+') {
           key = key.slice(1)
-          input.setAttribute(key, input.getAttribute(key) + attribs['+' + key])
+          input.setAttribute(key, input.getAttribute(key) + attribs[`+${key}`])
         } else {
           input.setAttribute(key, attribs[key])
         }
@@ -367,7 +367,7 @@ export default class Edit {
   _keyUp(e) {
     const index = this.displayItems.indexOf(this.focusedItem)
 
-    if (this.params.verticalNavigation == 'editor' || (this.params.verticalNavigation == 'hybrid' && index)) {
+    if (this.params.verticalNavigation === 'editor' || (this.params.verticalNavigation === 'hybrid' && index)) {
       e.stopImmediatePropagation()
       e.stopPropagation()
       e.preventDefault()
@@ -382,15 +382,15 @@ export default class Edit {
     const index = this.displayItems.indexOf(this.focusedItem)
 
     if (
-      this.params.verticalNavigation == 'editor' ||
-      (this.params.verticalNavigation == 'hybrid' && index < this.displayItems.length - 1)
+      this.params.verticalNavigation === 'editor' ||
+      (this.params.verticalNavigation === 'hybrid' && index < this.displayItems.length - 1)
     ) {
       e.stopImmediatePropagation()
       e.stopPropagation()
       e.preventDefault()
 
       if (index < this.displayItems.length - 1) {
-        if (index == -1) {
+        if (index === -1) {
           this._focusItem(this.displayItems[0])
         } else {
           this._focusItem(this.displayItems[index + 1])
@@ -489,9 +489,9 @@ export default class Edit {
 
   rebuildOptionsList() {
     this._generateOptions()
-      .then(this._sortOptions.bind(this))
-      .then(this._buildList.bind(this))
-      .then(this._showList.bind(this))
+      .then((options) => this._sortOptions(options))
+      .then((options) => this._buildList(options))
+      .then(() => this._showList())
       .catch((e) => {
         if (!Number.isInteger(e)) {
           console.error('List generation error', e)
@@ -527,7 +527,7 @@ export default class Edit {
         this._addPlaceholder(this.params.placeholderLoading)
       }
 
-      return values.then().then((responseValues) => {
+      return values.then((responseValues) => {
         if (this.listIteration === iteration) {
           return this._parseList(responseValues)
         } else {
@@ -620,7 +620,7 @@ export default class Edit {
   }
 
   _emptyValueCheck(value) {
-    return value === null || typeof value === 'undefined' || value === ''
+    return value === null || value === undefined || value === ''
   }
 
   _parseList(inputValues) {
@@ -675,7 +675,7 @@ export default class Edit {
         original: option
       }
 
-      if (this.initialValues && this.initialValues.indexOf(option.value) > -1) {
+      if (this.initialValues && this.initialValues.includes(option.value)) {
         this._chooseItem(item, true)
       }
     }
@@ -812,7 +812,7 @@ export default class Edit {
   _defaultFilterFunc(term, label, value, item) {
     term = String(term).toLowerCase()
 
-    if (label !== null && typeof label !== 'undefined') {
+    if (label !== null && label !== undefined) {
       if (String(label).toLowerCase().indexOf(term) > -1 || String(value).toLowerCase().indexOf(term) > -1) {
         return true
       }
@@ -826,7 +826,7 @@ export default class Edit {
   /// ///////////////////////////////////
 
   _clearList() {
-    while (this.listEl.firstChild) this.listEl.removeChild(this.listEl.firstChild)
+    this.listEl.replaceChildren()
 
     this.displayItems = []
   }
@@ -868,13 +868,13 @@ export default class Edit {
           el.classList.add('tabulator-edit-list-item')
         }
 
-        el.classList.add('tabulator-edit-list-group-level-' + item.level)
+        el.classList.add(`tabulator-edit-list-group-level-${item.level}`)
 
         if (item.elementAttributes && typeof item.elementAttributes === 'object') {
           for (let key in item.elementAttributes) {
-            if (key.charAt(0) == '+') {
+            if (key.charAt(0) === '+') {
               key = key.slice(1)
-              el.setAttribute(key, this.input.getAttribute(key) + item.elementAttributes['+' + key])
+              el.setAttribute(key, this.input.getAttribute(key) + item.elementAttributes[`+${key}`])
             } else {
               el.setAttribute(key, item.elementAttributes[key])
             }
@@ -1037,7 +1037,7 @@ export default class Edit {
         } else {
           initialValue = Array.isArray(this.initialValues) ? this.initialValues[0] : this.initialValues
 
-          if (initialValue === null || typeof initialValue === 'undefined' || initialValue === '') {
+          if (initialValue === null || initialValue === undefined || initialValue === '') {
             output = initialValue
           } else {
             output = this.params.emptyValue

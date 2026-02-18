@@ -1,18 +1,16 @@
 export default {
-  visible: function () {
+  visible() {
     return this.rowManager.getVisibleRows(false, true)
   },
-  all: function () {
+  all() {
     return this.rowManager.rows
   },
-  selected: function () {
+  selected() {
     return this.modules.selectRow.selectedRows
   },
-  active: function () {
-    if (this.options.pagination) {
-      return this.rowManager.getDisplayRows(this.rowManager.displayRows.length - 2)
-    } else {
-      return this.rowManager.getDisplayRows()
-    }
+  active() {
+    return this.options.pagination
+      ? this.rowManager.getDisplayRows(this.rowManager.displayRows.length - 2)
+      : this.rowManager.getDisplayRows()
   }
 }

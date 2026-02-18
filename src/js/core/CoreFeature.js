@@ -15,28 +15,28 @@ export default class CoreFeature {
   /// ////////// Localization ///////////////
   /// ///////////////////////////////////////
 
-  langText() {
-    return this.table.modules.localize.getText(...arguments)
+  langText(...args) {
+    return this.table.modules.localize.getText(...args)
   }
 
-  langBind() {
-    return this.table.modules.localize.bind(...arguments)
+  langBind(...args) {
+    return this.table.modules.localize.bind(...args)
   }
 
-  langLocale() {
-    return this.table.modules.localize.getLocale(...arguments)
+  langLocale(...args) {
+    return this.table.modules.localize.getLocale(...args)
   }
 
   /// ///////////////////////////////////////
   /// /////// Inter Table Comms /////////////
   /// ///////////////////////////////////////
 
-  commsConnections() {
-    return this.table.modules.comms.getConnections(...arguments)
+  commsConnections(...args) {
+    return this.table.modules.comms.getConnections(...args)
   }
 
-  commsSend() {
-    return this.table.modules.comms.send(...arguments)
+  commsSend(...args) {
+    return this.table.modules.comms.send(...args)
   }
 
   /// ///////////////////////////////////////
@@ -55,44 +55,44 @@ export default class CoreFeature {
   /// //////////// Event Bus ////////////////
   /// ///////////////////////////////////////
 
-  subscribe() {
-    return this.table.eventBus.subscribe(...arguments)
+  subscribe(...args) {
+    return this.table.eventBus.subscribe(...args)
   }
 
-  unsubscribe() {
-    return this.table.eventBus.unsubscribe(...arguments)
+  unsubscribe(...args) {
+    return this.table.eventBus.unsubscribe(...args)
   }
 
   subscribed(key) {
     return this.table.eventBus.subscribed(key)
   }
 
-  subscriptionChange() {
-    return this.table.eventBus.subscriptionChange(...arguments)
+  subscriptionChange(...args) {
+    return this.table.eventBus.subscriptionChange(...args)
   }
 
-  dispatch() {
-    return this.table.eventBus.dispatch(...arguments)
+  dispatch(...args) {
+    return this.table.eventBus.dispatch(...args)
   }
 
-  chain() {
-    return this.table.eventBus.chain(...arguments)
+  chain(...args) {
+    return this.table.eventBus.chain(...args)
   }
 
-  confirm() {
-    return this.table.eventBus.confirm(...arguments)
+  confirm(...args) {
+    return this.table.eventBus.confirm(...args)
   }
 
-  dispatchExternal() {
-    return this.table.externalEvents.dispatch(...arguments)
+  dispatchExternal(...args) {
+    return this.table.externalEvents.dispatch(...args)
   }
 
   subscribedExternal(key) {
     return this.table.externalEvents.subscribed(key)
   }
 
-  subscriptionChangeExternal() {
-    return this.table.externalEvents.subscriptionChange(...arguments)
+  subscriptionChangeExternal(...args) {
+    return this.table.externalEvents.subscriptionChange(...args)
   }
 
   /// ///////////////////////////////////////
@@ -104,7 +104,7 @@ export default class CoreFeature {
   }
 
   setOption(key, value) {
-    if (typeof value !== 'undefined') {
+    if (value !== undefined) {
       this.table.options[key] = value
     }
 

@@ -4,10 +4,13 @@ export default function (cell, formatterParams, onRendered) {
   const table = cell.getTable()
 
   row.watchPosition((position) => {
+    let displayPosition = position
+
     if (formatterParams.relativeToPage) {
-      position += table.modules.page.getPageSize() * (table.modules.page.getPage() - 1)
+      displayPosition += table.modules.page.getPageSize() * (table.modules.page.getPage() - 1)
     }
-    content.innerText = position
+
+    content.innerText = displayPosition
   })
 
   return content

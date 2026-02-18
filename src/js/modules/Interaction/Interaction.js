@@ -139,12 +139,10 @@ export default class Interaction extends Module {
   }
 
   clearTouchWatchers() {
-    const types = Object.values(this.touchWatchers)
-
-    types.forEach((type) => {
-      for (const key in type) {
-        type[key] = null
-      }
+    Object.values(this.touchWatchers).forEach((watchers) => {
+      Object.keys(watchers).forEach((key) => {
+        watchers[key] = null
+      })
     })
   }
 
@@ -171,29 +169,34 @@ export default class Interaction extends Module {
         window.getSelection().removeAllRanges()
         window.getSelection().addRange(range)
       }
-    } catch (e) {}
+    } catch (error) {}
   }
 
   initializeExternalEvents() {
-    for (const key in this.eventMap) {
+    Object.keys(this.eventMap).forEach((key) => {
       this.subscriptionChangeExternal(key, this.subscriptionChanged.bind(this, key))
-    }
+    })
   }
 
   subscriptionChanged(key, added) {
+    const eventName = this.eventMap[key]
+    const isTouchEvent = !eventName.includes('-')
+
     if (added) {
-      if (!this.subscribers[key]) {
-        if (this.eventMap[key].includes('-')) {
-          this.subscribers[key] = this.handle.bind(this, key)
-          this.subscribe(this.eventMap[key], this.subscribers[key])
-        } else {
-          this.subscribeTouchEvents(key)
-        }
+      if (this.subscribers[key]) {
+        return
+      }
+
+      if (!isTouchEvent) {
+        this.subscribers[key] = this.handle.bind(this, key)
+        this.subscribe(eventName, this.subscribers[key])
+      } else {
+        this.subscribeTouchEvents(key)
       }
     } else {
-      if (this.eventMap[key].includes('-')) {
+      if (!isTouchEvent) {
         if (this.subscribers[key] && !this.columnSubscribers[key] && !this.subscribedExternal(key)) {
-          this.unsubscribe(this.eventMap[key], this.subscribers[key])
+          this.unsubscribe(eventName, this.subscribers[key])
           delete this.subscribers[key]
         }
       } else {
@@ -204,13 +207,15 @@ export default class Interaction extends Module {
 
   subscribeTouchEvents(key) {
     const type = this.eventMap[key]
+    const startEvent = `${type}-touchstart`
+    const endEvent = `${type}-touchend`
 
-    if (!this.touchSubscribers[type + '-touchstart']) {
-      this.touchSubscribers[type + '-touchstart'] = this.handleTouch.bind(this, type, 'start')
-      this.touchSubscribers[type + '-touchend'] = this.handleTouch.bind(this, type, 'end')
+    if (!this.touchSubscribers[startEvent]) {
+      this.touchSubscribers[startEvent] = this.handleTouch.bind(this, type, 'start')
+      this.touchSubscribers[endEvent] = this.handleTouch.bind(this, type, 'end')
 
-      this.subscribe(type + '-touchstart', this.touchSubscribers[type + '-touchstart'])
-      this.subscribe(type + '-touchend', this.touchSubscribers[type + '-touchend'])
+      this.subscribe(startEvent, this.touchSubscribers[startEvent])
+      this.subscribe(endEvent, this.touchSubscribers[endEvent])
     }
 
     this.subscribers[key] = true
@@ -219,24 +224,25 @@ export default class Interaction extends Module {
   unsubscribeTouchEvents(key) {
     let noTouch = true
     const type = this.eventMap[key]
+    const startEvent = `${type}-touchstart`
+    const endEvent = `${type}-touchend`
 
     if (this.subscribers[key] && !this.subscribedExternal(key)) {
       delete this.subscribers[key]
 
-      for (const i in this.eventMap) {
-        if (this.eventMap[i] === type) {
-          if (this.subscribers[i]) {
-            noTouch = false
-          }
+      for (const eventKey in this.eventMap) {
+        if (this.eventMap[eventKey] === type && this.subscribers[eventKey]) {
+          noTouch = false
+          break
         }
       }
 
       if (noTouch) {
-        this.unsubscribe(type + '-touchstart', this.touchSubscribers[type + '-touchstart'])
-        this.unsubscribe(type + '-touchend', this.touchSubscribers[type + '-touchend'])
+        this.unsubscribe(startEvent, this.touchSubscribers[startEvent])
+        this.unsubscribe(endEvent, this.touchSubscribers[endEvent])
 
-        delete this.touchSubscribers[type + '-touchstart']
-        delete this.touchSubscribers[type + '-touchend']
+        delete this.touchSubscribers[startEvent]
+        delete this.touchSubscribers[endEvent]
       }
     }
   }
@@ -263,10 +269,7 @@ export default class Interaction extends Module {
 
   handleTouch(type, action, e, component) {
     const watchers = this.touchWatchers[type]
-
-    if (type === 'column') {
-      type = 'header'
-    }
+    const dispatchType = type === 'column' ? 'header' : type
 
     switch (action) {
       case 'start':
@@ -282,21 +285,21 @@ export default class Interaction extends Module {
           clearTimeout(watchers.tapDbl)
           watchers.tapDbl = null
 
-          this.dispatchEvent(type + 'TapHold', e, component)
+          this.dispatchEvent(`${dispatchType}TapHold`, e, component)
         }, 1000)
         break
 
       case 'end':
         if (watchers.tap) {
           watchers.tap = null
-          this.dispatchEvent(type + 'Tap', e, component)
+          this.dispatchEvent(`${dispatchType}Tap`, e, component)
         }
 
         if (watchers.tapDbl) {
           clearTimeout(watchers.tapDbl)
           watchers.tapDbl = null
 
-          this.dispatchEvent(type + 'DblTap', e, component)
+          this.dispatchEvent(`${dispatchType}DblTap`, e, component)
         } else {
           watchers.tapDbl = setTimeout(() => {
             clearTimeout(watchers.tapDbl)

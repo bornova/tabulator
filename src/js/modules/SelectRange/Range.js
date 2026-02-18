@@ -141,11 +141,12 @@ export default class Range extends CoreFeature {
 
     if (this.initialized) {
       this.dispatchExternal('rangeChanged', this.getComponent())
-    } else {
-      if (this.initializing.start && this.initializing.end) {
-        this.initialized = true
-        this.dispatchExternal('rangeAdded', this.getComponent())
-      }
+      return
+    }
+
+    if (this.initializing.start && this.initializing.end) {
+      this.initialized = true
+      this.dispatchExternal('rangeAdded', this.getComponent())
     }
   }
 
@@ -214,19 +215,15 @@ export default class Range extends CoreFeature {
       // this.element.classList.toggle("tabulator-range-active", this === this.rangeManager.activeRange);
 
       if (this.table.rtl) {
-        this.element.style.right =
-          topLeftRowEl.offsetWidth - topLeftCellEl.offsetLeft - topLeftCellEl.offsetWidth + 'px'
-        this.element.style.width =
-          topLeftCellEl.offsetLeft + topLeftCellEl.offsetWidth - bottomRightCellEl.offsetLeft + 'px'
+        this.element.style.right = `${topLeftRowEl.offsetWidth - topLeftCellEl.offsetLeft - topLeftCellEl.offsetWidth}px`
+        this.element.style.width = `${topLeftCellEl.offsetLeft + topLeftCellEl.offsetWidth - bottomRightCellEl.offsetLeft}px`
       } else {
-        this.element.style.left = topLeftRowEl.offsetLeft + topLeftCellEl.offsetLeft + 'px'
-        this.element.style.width =
-          bottomRightCellEl.offsetLeft + bottomRightCellEl.offsetWidth - topLeftCellEl.offsetLeft + 'px'
+        this.element.style.left = `${topLeftRowEl.offsetLeft + topLeftCellEl.offsetLeft}px`
+        this.element.style.width = `${bottomRightCellEl.offsetLeft + bottomRightCellEl.offsetWidth - topLeftCellEl.offsetLeft}px`
       }
 
-      this.element.style.top = topLeftRowEl.offsetTop + 'px'
-      this.element.style.height =
-        bottomRightRowEl.offsetTop + bottomRightRowEl.offsetHeight - topLeftRowEl.offsetTop + 'px'
+      this.element.style.top = `${topLeftRowEl.offsetTop}px`
+      this.element.style.height = `${bottomRightRowEl.offsetTop + bottomRightRowEl.offsetHeight - topLeftRowEl.offsetTop}px`
     }
   }
 
@@ -243,19 +240,19 @@ export default class Range extends CoreFeature {
   }
 
   occupiesRow(row) {
-    return this.top <= row.position - 1 && row.position - 1 <= this.bottom
+    const position = row.position - 1
+
+    return this.top <= position && position <= this.bottom
   }
 
   occupiesColumn(col) {
-    return this.left <= col.getPosition() - 1 && col.getPosition() - 1 <= this.right
+    const position = col.getPosition() - 1
+
+    return this.left <= position && position <= this.right
   }
 
   overlaps(left, top, right, bottom) {
-    if (this.left > right || left > this.right || this.top > bottom || top > this.bottom) {
-      return false
-    }
-
-    return true
+    return !(this.left > right || left > this.right || this.top > bottom || top > this.bottom)
   }
 
   getData() {
@@ -372,7 +369,7 @@ export default class Range extends CoreFeature {
 
   destroyedGuard(func) {
     if (this.destroyed) {
-      console.warn('You cannot call the ' + func + ' function on a destroyed range')
+      console.warn(`You cannot call the ${func} function on a destroyed range`)
     }
 
     return !this.destroyed

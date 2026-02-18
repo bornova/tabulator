@@ -33,7 +33,7 @@ export default class VirtualDomHorizontal extends Renderer {
   }
 
   compatibilityCheck() {
-    if (this.options('layout') == 'fitDataTable') {
+    if (this.options('layout') === 'fitDataTable') {
       console.warn('Horizontal Virtual DOM is not compatible with fitDataTable layout mode')
     }
 
@@ -68,7 +68,7 @@ export default class VirtualDomHorizontal extends Renderer {
   }
 
   scrollColumns(left, dir) {
-    if (this.scrollLeft != left) {
+    if (this.scrollLeft !== left) {
       this.scrollLeft = left
 
       this.scroll(left - (this.vDomScrollPosLeft + this.windowBuffer))
@@ -154,8 +154,8 @@ export default class VirtualDomHorizontal extends Renderer {
       }
     })
 
-    this.tableElement.style.paddingLeft = this.vDomPadLeft + 'px'
-    this.tableElement.style.paddingRight = this.vDomPadRight + 'px'
+    this.tableElement.style.paddingLeft = `${this.vDomPadLeft}px`
+    this.tableElement.style.paddingRight = `${this.vDomPadRight}px`
 
     this.initialized = true
 
@@ -251,7 +251,9 @@ export default class VirtualDomHorizontal extends Renderer {
             cell.column.reinitializeWidth()
           }
 
-          rowEl.parentNode.removeChild(rowEl)
+          if (rowEl.parentNode) {
+            rowEl.parentNode.removeChild(rowEl)
+          }
 
           this.rerenderColumns(false, true)
         }
@@ -265,19 +267,11 @@ export default class VirtualDomHorizontal extends Renderer {
   }
 
   reinitChanged(old) {
-    let match = true
-
     if (old.cols.length !== this.columns.length || old.leftCol !== this.leftCol || old.rightCol !== this.rightCol) {
       return true
     }
 
-    old.cols.forEach((col, i) => {
-      if (col !== this.columns[i]) {
-        match = false
-      }
-    })
-
-    return !match
+    return old.cols.some((col, index) => col !== this.columns[index])
   }
 
   reinitializeRows() {
@@ -374,7 +368,7 @@ export default class VirtualDomHorizontal extends Renderer {
     }
 
     if (changes) {
-      this.tableElement.style.paddingRight = this.vDomPadRight + 'px'
+      this.tableElement.style.paddingRight = `${this.vDomPadRight}px`
     }
   }
 
@@ -427,7 +421,7 @@ export default class VirtualDomHorizontal extends Renderer {
     }
 
     if (changes) {
-      this.tableElement.style.paddingLeft = this.vDomPadLeft + 'px'
+      this.tableElement.style.paddingLeft = `${this.vDomPadLeft}px`
     }
   }
 
@@ -471,7 +465,7 @@ export default class VirtualDomHorizontal extends Renderer {
     }
 
     if (changes) {
-      this.tableElement.style.paddingRight = this.vDomPadRight + 'px'
+      this.tableElement.style.paddingRight = `${this.vDomPadRight}px`
     }
   }
 
@@ -515,7 +509,7 @@ export default class VirtualDomHorizontal extends Renderer {
     }
 
     if (changes) {
-      this.tableElement.style.paddingLeft = this.vDomPadLeft + 'px'
+      this.tableElement.style.paddingLeft = `${this.vDomPadLeft}px`
     }
   }
 
@@ -583,7 +577,7 @@ export default class VirtualDomHorizontal extends Renderer {
         row.modules.vdomHoz.rightCol !== this.rightCol
       ) {
         const rowEl = row.getElement()
-        while (rowEl.firstChild) rowEl.removeChild(rowEl.firstChild)
+        rowEl.replaceChildren()
 
         this.initializeRow(row)
       }

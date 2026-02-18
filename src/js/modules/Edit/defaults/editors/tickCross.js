@@ -3,7 +3,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const value = cell.getValue()
   const input = document.createElement('input')
   const tristate = editorParams.tristate
-  const indetermValue = typeof editorParams.indeterminateValue === 'undefined' ? null : editorParams.indeterminateValue
+  const indetermValue = editorParams.indeterminateValue === undefined ? null : editorParams.indeterminateValue
   let indetermState = false
   const trueValueSet = Object.keys(editorParams).includes('trueValue')
   const falseValueSet = Object.keys(editorParams).includes('falseValue')
@@ -14,9 +14,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) == '+') {
+      if (key.charAt(0) === '+') {
         key = key.slice(1)
-        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes['+' + key])
+        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
       } else {
         input.setAttribute(key, editorParams.elementAttributes[key])
       }
@@ -30,9 +30,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     input.indeterminate = true
   }
 
-  if (this.table.browser != 'firefox' && this.table.browser != 'safari') {
+  if (this.table.browser !== 'firefox' && this.table.browser !== 'safari') {
     // prevent blur issue on mac firefox
-    onRendered(function () {
+    onRendered(() => {
       if (cell.getType() === 'cell') {
         input.focus({ preventScroll: true })
       }
@@ -76,20 +76,20 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // submit new value on blur
-  input.addEventListener('change', function (e) {
+  input.addEventListener('change', () => {
     success(setValue())
   })
 
-  input.addEventListener('blur', function (e) {
+  input.addEventListener('blur', () => {
     success(setValue(true))
   })
 
   // submit new value on enter
-  input.addEventListener('keydown', function (e) {
-    if (e.keyCode == 13) {
+  input.addEventListener('keydown', (e) => {
+    if (e.keyCode === 13) {
       success(setValue())
     }
-    if (e.keyCode == 27) {
+    if (e.keyCode === 27) {
       cancel()
     }
   })

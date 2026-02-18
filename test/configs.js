@@ -42,7 +42,7 @@ export const groupedColumns = [
 export const calculatedColumns = [
   { ...baseColumns[0] },
   { ...baseColumns[1] },
-  { ...baseColumns[2], bottomCalc: 'avg', topCalc: 'max' },
+  { ...baseColumns[2] },
   { ...baseColumns[3] },
   { ...baseColumns[4] },
   { ...baseColumns[5] },
@@ -53,7 +53,7 @@ export const calculatedColumns = [
 export const editableColumns = [
   { ...baseColumns[0] },
   { ...baseColumns[1], editor: 'list', editorParams: { valuesLookup: 'active', clearable: true, autocomplete: true } },
-  { ...baseColumns[2], editor: 'number' },
+  { ...baseColumns[2], editor: 'number', bottomCalc: 'avg', topCalc: 'max' },
   { ...baseColumns[3], editor: 'list', editorParams: { valuesLookup: 'active', clearable: true, autocomplete: true } },
   { ...baseColumns[4] },
   { ...baseColumns[5] },

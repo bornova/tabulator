@@ -1,5 +1,5 @@
 export default function (cell, formatterParams, onRendered) {
-  let value = cell.getValue()
+  const value = cell.getValue()
   const element = cell.getElement()
   const maxStars = formatterParams && formatterParams.stars ? formatterParams.stars : 5
   const stars = document.createElement('span')
@@ -19,13 +19,12 @@ export default function (cell, formatterParams, onRendered) {
   star.setAttribute('xml:space', 'preserve')
   star.style.padding = '0 1px'
 
-  value = value && !isNaN(value) ? parseInt(value) : 0
-
-  value = Math.max(0, Math.min(value, maxStars))
+  const parsedValue = value && !isNaN(value) ? parseInt(value) : 0
+  const normalizedValue = Math.max(0, Math.min(parsedValue, maxStars))
 
   for (let i = 1; i <= maxStars; i++) {
     const nextStar = star.cloneNode(true)
-    nextStar.innerHTML = i <= value ? starActive : starInactive
+    nextStar.innerHTML = i <= normalizedValue ? starActive : starInactive
 
     stars.appendChild(nextStar)
   }
@@ -34,7 +33,7 @@ export default function (cell, formatterParams, onRendered) {
   element.style.overflow = 'hidden'
   element.style.textOverflow = 'ellipsis'
 
-  element.setAttribute('aria-label', value)
+  element.setAttribute('aria-label', normalizedValue)
 
   return stars
 }

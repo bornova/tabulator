@@ -4,12 +4,16 @@ export default class CellComponent {
     this._cell = cell
 
     return new Proxy(this, {
-      get: function (target, name, receiver) {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
+
         if (typeof target[name] !== 'undefined') {
           return target[name]
-        } else {
-          return target._cell.table.componentFunctionBinder.handle('cell', target._cell, name)
         }
+
+        return target._cell.table.componentFunctionBinder.handle('cell', target._cell, name)
       }
     })
   }
@@ -50,11 +54,7 @@ export default class CellComponent {
     return this._cell.column.getComponent()
   }
 
-  setValue(value, mutate) {
-    if (typeof mutate === 'undefined') {
-      mutate = true
-    }
-
+  setValue(value, mutate = true) {
     this._cell.setValue(value, mutate)
   }
 

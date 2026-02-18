@@ -29,6 +29,9 @@ export default class ResizeTable extends Module {
   initialize() {
     if (this.table.options.autoResize) {
       const table = this.table
+      const canResize = () =>
+        !table.browserMobile ||
+        (table.browserMobile && (!table.modules.edit || (table.modules.edit && !table.modules.edit.currentCell)))
       let tableStyle
 
       this.tableHeight = table.element.clientHeight
@@ -49,14 +52,11 @@ export default class ResizeTable extends Module {
         this.autoResize = true
 
         this.resizeObserver = new ResizeObserver((entry) => {
-          if (
-            !table.browserMobile ||
-            (table.browserMobile && (!table.modules.edit || (table.modules.edit && !table.modules.edit.currentCell)))
-          ) {
+          if (canResize()) {
             const nodeHeight = Math.floor(entry[0].contentRect.height)
             const nodeWidth = Math.floor(entry[0].contentRect.width)
 
-            if (this.tableHeight != nodeHeight || this.tableWidth != nodeWidth) {
+            if (this.tableHeight !== nodeHeight || this.tableWidth !== nodeWidth) {
               this.tableHeight = nodeHeight
               this.tableWidth = nodeWidth
 
@@ -80,14 +80,11 @@ export default class ResizeTable extends Module {
           (tableStyle.getPropertyValue('max-height') || tableStyle.getPropertyValue('min-height'))
         ) {
           this.containerObserver = new ResizeObserver((entry) => {
-            if (
-              !table.browserMobile ||
-              (table.browserMobile && (!table.modules.edit || (table.modules.edit && !table.modules.edit.currentCell)))
-            ) {
+            if (canResize()) {
               const nodeHeight = Math.floor(entry[0].contentRect.height)
               const nodeWidth = Math.floor(entry[0].contentRect.width)
 
-              if (this.containerHeight != nodeHeight || this.containerWidth != nodeWidth) {
+              if (this.containerHeight !== nodeHeight || this.containerWidth !== nodeWidth) {
                 this.containerHeight = nodeHeight
                 this.containerWidth = nodeWidth
                 this.tableHeight = table.element.clientHeight
@@ -103,11 +100,8 @@ export default class ResizeTable extends Module {
 
         this.subscribe('table-resize', this.tableResized.bind(this))
       } else {
-        this.binding = function () {
-          if (
-            !table.browserMobile ||
-            (table.browserMobile && (!table.modules.edit || (table.modules.edit && !table.modules.edit.currentCell)))
-          ) {
+        this.binding = () => {
+          if (canResize()) {
             table.columnManager.rerenderColumns(true)
             table.redraw()
           }
@@ -150,20 +144,22 @@ export default class ResizeTable extends Module {
   }
 
   clearBindings() {
+    const tableElement = this.table.element
+
     if (this.binding) {
       window.removeEventListener('resize', this.binding)
     }
 
     if (this.resizeObserver) {
-      this.resizeObserver.unobserve(this.table.element)
+      this.resizeObserver.unobserve(tableElement)
     }
 
     if (this.visibilityObserver) {
-      this.visibilityObserver.unobserve(this.table.element)
+      this.visibilityObserver.unobserve(tableElement)
     }
 
-    if (this.containerObserver) {
-      this.containerObserver.unobserve(this.table.element.parentNode)
+    if (this.containerObserver && tableElement.parentNode) {
+      this.containerObserver.unobserve(tableElement.parentNode)
     }
   }
 }

@@ -72,33 +72,32 @@ export default class MoveRows extends Module {
   }
 
   initializeGroupHeader(group) {
-    const self = this
     const config = {}
 
     // inter table drag drop
-    config.mouseup = function (e) {
-      self.tableRowDrop(e, group)
+    config.mouseup = (e) => {
+      this.tableRowDrop(e, group)
     }
 
     // same table drag drop
-    config.mousemove = function (e) {
+    config.mousemove = (e) => {
       let rowEl
 
       if (
-        e.pageY - Helpers.elOffset(group.element).top + self.table.rowManager.element.scrollTop >
+        e.pageY - Helpers.elOffset(group.element).top + this.table.rowManager.element.scrollTop >
         group.getHeight() / 2
       ) {
-        if (self.toRow !== group || !self.toRowAfter) {
+        if (this.toRow !== group || !this.toRowAfter) {
           rowEl = group.getElement()
-          rowEl.parentNode.insertBefore(self.placeholderElement, rowEl.nextSibling)
-          self.moveRow(group, true)
+          rowEl.parentNode.insertBefore(this.placeholderElement, rowEl.nextSibling)
+          this.moveRow(group, true)
         }
       } else {
-        if (self.toRow !== group || self.toRowAfter) {
+        if (this.toRow !== group || this.toRowAfter) {
           rowEl = group.getElement()
           if (rowEl.previousSibling) {
-            rowEl.parentNode.insertBefore(self.placeholderElement, rowEl)
-            self.moveRow(group, false)
+            rowEl.parentNode.insertBefore(this.placeholderElement, rowEl)
+            this.moveRow(group, false)
           }
         }
       }
@@ -108,28 +107,27 @@ export default class MoveRows extends Module {
   }
 
   initializeRow(row) {
-    const self = this
     const config = {}
     let rowEl
 
     // inter table drag drop
-    config.mouseup = function (e) {
-      self.tableRowDrop(e, row)
+    config.mouseup = (e) => {
+      this.tableRowDrop(e, row)
     }
 
     // same table drag drop
-    config.mousemove = function (e) {
+    config.mousemove = (e) => {
       const rowEl = row.getElement()
 
-      if (e.pageY - Helpers.elOffset(rowEl).top + self.table.rowManager.element.scrollTop > row.getHeight() / 2) {
-        if (self.toRow !== row || !self.toRowAfter) {
-          rowEl.parentNode.insertBefore(self.placeholderElement, rowEl.nextSibling)
-          self.moveRow(row, true)
+      if (e.pageY - Helpers.elOffset(rowEl).top + this.table.rowManager.element.scrollTop > row.getHeight() / 2) {
+        if (this.toRow !== row || !this.toRowAfter) {
+          rowEl.parentNode.insertBefore(this.placeholderElement, rowEl.nextSibling)
+          this.moveRow(row, true)
         }
       } else {
-        if (self.toRow !== row || self.toRowAfter) {
-          rowEl.parentNode.insertBefore(self.placeholderElement, rowEl)
-          self.moveRow(row, false)
+        if (this.toRow !== row || this.toRowAfter) {
+          rowEl.parentNode.insertBefore(this.placeholderElement, rowEl)
+          this.moveRow(row, false)
         }
       }
     }
@@ -137,18 +135,18 @@ export default class MoveRows extends Module {
     if (!this.hasHandle) {
       rowEl = row.getElement()
 
-      rowEl.addEventListener('mousedown', function (e) {
+      rowEl.addEventListener('mousedown', (e) => {
         if (e.which === 1) {
-          self.checkTimeout = setTimeout(function () {
-            self.startMove(e, row)
-          }, self.checkPeriod)
+          this.checkTimeout = setTimeout(() => {
+            this.startMove(e, row)
+          }, this.checkPeriod)
         }
       })
 
-      rowEl.addEventListener('mouseup', function (e) {
+      rowEl.addEventListener('mouseup', (e) => {
         if (e.which === 1) {
-          if (self.checkTimeout) {
-            clearTimeout(self.checkTimeout)
+          if (this.checkTimeout) {
+            clearTimeout(this.checkTimeout)
           }
         }
       })
@@ -167,21 +165,20 @@ export default class MoveRows extends Module {
 
   initializeCell(cell) {
     if (cell.column.definition.rowHandle && this.table.options.movableRows !== false) {
-      const self = this
       const cellEl = cell.getElement(true)
 
-      cellEl.addEventListener('mousedown', function (e) {
+      cellEl.addEventListener('mousedown', (e) => {
         if (e.which === 1) {
-          self.checkTimeout = setTimeout(function () {
-            self.startMove(e, cell.row)
-          }, self.checkPeriod)
+          this.checkTimeout = setTimeout(() => {
+            this.startMove(e, cell.row)
+          }, this.checkPeriod)
         }
       })
 
-      cellEl.addEventListener('mouseup', function (e) {
+      cellEl.addEventListener('mouseup', (e) => {
         if (e.which === 1) {
-          if (self.checkTimeout) {
-            clearTimeout(self.checkTimeout)
+          if (this.checkTimeout) {
+            clearTimeout(this.checkTimeout)
           }
         }
       })
@@ -304,8 +301,8 @@ export default class MoveRows extends Module {
     this.table.element.classList.add('tabulator-block-select')
 
     // create placeholder
-    this.placeholderElement.style.width = row.getWidth() + 'px'
-    this.placeholderElement.style.height = row.getHeight() + 'px'
+    this.placeholderElement.style.width = `${row.getWidth()}px`
+    this.placeholderElement.style.height = `${row.getHeight()}px`
 
     if (!this.connection) {
       element.parentNode.insertBefore(this.placeholderElement, element)
@@ -323,7 +320,7 @@ export default class MoveRows extends Module {
       document.body.appendChild(this.hoverElement)
       this.hoverElement.style.left = '0'
       this.hoverElement.style.top = '0'
-      this.hoverElement.style.width = this.table.element.clientWidth + 'px'
+      this.hoverElement.style.width = `${this.table.element.clientWidth}px`
       this.hoverElement.style.whiteSpace = 'nowrap'
       this.hoverElement.style.overflow = 'hidden'
       this.hoverElement.style.pointerEvents = 'none'
@@ -412,13 +409,15 @@ export default class MoveRows extends Module {
     const scrollTop = rowHolder.scrollTop
     const yPos = (this.touchMove ? e.touches[0].pageY : e.pageY) - rowHolder.getBoundingClientRect().top + scrollTop
 
-    this.hoverElement.style.top =
-      Math.min(yPos - this.startY, this.table.rowManager.element.scrollHeight - this.hoverElement.offsetHeight) + 'px'
+    this.hoverElement.style.top = `${Math.min(
+      yPos - this.startY,
+      this.table.rowManager.element.scrollHeight - this.hoverElement.offsetHeight
+    )}px`
   }
 
   moveHoverConnections(e) {
-    this.hoverElement.style.left = this.startX + (this.touchMove ? e.touches[0].pageX : e.pageX) + 'px'
-    this.hoverElement.style.top = this.startY + (this.touchMove ? e.touches[0].pageY : e.pageY) + 'px'
+    this.hoverElement.style.left = `${this.startX + (this.touchMove ? e.touches[0].pageX : e.pageX)}px`
+    this.hoverElement.style.top = `${this.startY + (this.touchMove ? e.touches[0].pageY : e.pageY)}px`
   }
 
   elementRowDrop(e, element, row) {
@@ -441,12 +440,11 @@ export default class MoveRows extends Module {
 
     if (this.connectionSelectorsElements) {
       this.connectionElements = []
+      const selectors = Array.isArray(this.connectionSelectorsElements)
+        ? this.connectionSelectorsElements
+        : [this.connectionSelectorsElements]
 
-      if (!Array.isArray(this.connectionSelectorsElements)) {
-        this.connectionSelectorsElements = [this.connectionSelectorsElements]
-      }
-
-      this.connectionSelectorsElements.forEach((query) => {
+      selectors.forEach((query) => {
         if (typeof query === 'string') {
           this.connectionElements = this.connectionElements.concat(
             Array.prototype.slice.call(document.querySelectorAll(query))

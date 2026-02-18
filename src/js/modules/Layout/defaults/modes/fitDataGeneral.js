@@ -1,10 +1,14 @@
 // resize columns to fit data they contain and stretch row to fill table, also used for fitDataTable
 export default function (columns, forced) {
-  columns.forEach(function (column) {
+  const table = this.table
+
+  columns.forEach((column) => {
     column.reinitializeWidth()
   })
 
-  if (this.table.options.responsiveLayout && this.table.modExists('responsiveLayout', true)) {
-    this.table.modules.responsiveLayout.update()
+  if (!(table.options.responsiveLayout && table.modExists('responsiveLayout', true))) {
+    return
   }
+
+  table.modules.responsiveLayout.update()
 }

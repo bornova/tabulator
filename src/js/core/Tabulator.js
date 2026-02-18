@@ -26,14 +26,14 @@ class Tabulator extends ModuleBinder {
   // default setup options
   static defaultOptions = defaultOptions
 
-  static extendModule() {
+  static extendModule(...args) {
     Tabulator.initializeModuleBinder()
-    Tabulator._extendModule(...arguments)
+    Tabulator._extendModule(...args)
   }
 
-  static registerModule() {
+  static registerModule(...args) {
     Tabulator.initializeModuleBinder()
-    Tabulator._registerModule(...arguments)
+    Tabulator._registerModule(...args)
   }
 
   constructor(element, options, modules) {
@@ -76,9 +76,7 @@ class Tabulator extends ModuleBinder {
       this.initializeCoreSystems(options)
 
       // delay table creation to allow event bindings immediately after the constructor
-      setTimeout(() => {
-        this._create()
-      })
+      setTimeout(() => this._create())
     }
 
     this.constructor.registry.register(this) // register table for inter-device communication
@@ -88,15 +86,17 @@ class Tabulator extends ModuleBinder {
     if (typeof HTMLElement !== 'undefined' && element instanceof HTMLElement) {
       this.element = element
       return true
-    } else if (typeof element === 'string') {
+    }
+
+    if (typeof element === 'string') {
       this.element = document.querySelector(element)
 
       if (this.element) {
         return true
-      } else {
-        console.error('Tabulator Creation Error - no element found matching selector: ', element)
-        return false
       }
+
+      console.error('Tabulator Creation Error - no element found matching selector: ', element)
+      return false
     } else {
       console.error('Tabulator Creation Error - Invalid element provided:', element)
       return false
@@ -137,13 +137,15 @@ class Tabulator extends ModuleBinder {
   _clearSelection() {
     this.element.classList.add('tabulator-block-select')
 
-    if (window.getSelection) {
-      if (window.getSelection().empty) {
+    const selection = window.getSelection ? window.getSelection() : null
+
+    if (selection) {
+      if (selection.empty) {
         // Chrome
-        window.getSelection().empty()
-      } else if (window.getSelection().removeAllRanges) {
+        selection.empty()
+      } else if (selection.removeAllRanges) {
         // Firefox
-        window.getSelection().removeAllRanges()
+        selection.removeAllRanges()
       }
     } else if (document.selection) {
       // IE?
@@ -196,10 +198,10 @@ class Tabulator extends ModuleBinder {
 
   // clear pointers to objects in default config object
   _clearObjectPointers() {
-    this.options.columns = this.options.columns.slice(0)
+    this.options.columns = [...this.options.columns]
 
     if (Array.isArray(this.options.data) && !this.options.reactiveData) {
-      this.options.data = this.options.data.slice(0)
+      this.options.data = [...this.options.data]
     }
   }
 
@@ -217,11 +219,9 @@ class Tabulator extends ModuleBinder {
       const attributes = element.attributes
 
       // loop through attributes and apply them on div
-      for (const i in attributes) {
-        if (typeof attributes[i] === 'object') {
-          newElement.setAttribute(attributes[i].name, attributes[i].value)
-        }
-      }
+      Array.from(attributes).forEach((attribute) => {
+        newElement.setAttribute(attribute.name, attribute.value)
+      })
 
       // replace table with div element
       element.parentNode.replaceChild(newElement, element)
@@ -233,23 +233,23 @@ class Tabulator extends ModuleBinder {
     element.setAttribute('role', 'grid')
 
     // empty element
-    while (element.firstChild) element.removeChild(element.firstChild)
+    element.replaceChildren()
 
     // set table height
     if (options.height) {
-      options.height = isNaN(options.height) ? options.height : options.height + 'px'
+      options.height = Number.isNaN(Number(options.height)) ? options.height : `${options.height}px`
       element.style.height = options.height
     }
 
     // set table min height
     if (options.minHeight !== false) {
-      options.minHeight = isNaN(options.minHeight) ? options.minHeight : options.minHeight + 'px'
+      options.minHeight = Number.isNaN(Number(options.minHeight)) ? options.minHeight : `${options.minHeight}px`
       element.style.minHeight = options.minHeight
     }
 
     // set table maxHeight
     if (options.maxHeight !== false) {
-      options.maxHeight = isNaN(options.maxHeight) ? options.maxHeight : options.maxHeight + 'px'
+      options.maxHeight = Number.isNaN(Number(options.maxHeight)) ? options.maxHeight : `${options.maxHeight}px`
       element.style.maxHeight = options.maxHeight
     }
   }
@@ -313,7 +313,7 @@ class Tabulator extends ModuleBinder {
     this.rowManager.destroy()
 
     // clear DOM
-    while (element.firstChild) element.removeChild(element.firstChild)
+    element.replaceChildren()
     element.classList.remove('tabulator')
     element.removeAttribute('tabulator-layout')
 
@@ -323,16 +323,16 @@ class Tabulator extends ModuleBinder {
   _detectBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera
 
-    if (ua.indexOf('Trident') > -1) {
+    if (ua.includes('Trident')) {
       this.browser = 'ie'
       this.browserSlow = true
-    } else if (ua.indexOf('Edge') > -1) {
+    } else if (ua.includes('Edge')) {
       this.browser = 'edge'
       this.browserSlow = true
-    } else if (ua.indexOf('Firefox') > -1) {
+    } else if (ua.includes('Firefox')) {
       this.browser = 'firefox'
       this.browserSlow = false
-    } else if (ua.indexOf('Mac OS') > -1) {
+    } else if (ua.includes('Mac OS')) {
       this.browser = 'safari'
       this.browserSlow = false
     } else {
@@ -356,9 +356,9 @@ class Tabulator extends ModuleBinder {
       if (!func) {
         stack = new Error().stack.split('\n')
 
-        line = stack[0] == 'Error' ? stack[2] : stack[1]
+        line = stack[0] === 'Error' ? stack[2] : stack[1]
 
-        if (line[0] == ' ') {
+        if (line[0] === ' ') {
           func = line.trim().split(' ')[1].split('.')[1]
         } else {
           func = line.trim().split('@')[0]
@@ -488,11 +488,7 @@ class Tabulator extends ModuleBinder {
 
       if (data) {
         this.rowManager.addRows(data, pos, index).then((rows) => {
-          const output = []
-
-          rows.forEach(function (row) {
-            output.push(row.getComponent())
-          })
+          const output = rows.map((row) => row.getComponent())
 
           resolve(output)
         })
@@ -763,11 +759,7 @@ class Tabulator extends ModuleBinder {
     this.initGuard()
 
     if (column) {
-      if (column.visible) {
-        column.hide()
-      } else {
-        column.show()
-      }
+      column.visible ? column.hide() : column.show()
     } else {
       console.warn('Column Visibility Toggle Error - No matching column found:', field)
       return false
@@ -829,16 +821,14 @@ class Tabulator extends ModuleBinder {
 
   // scroll to column in DOM
   scrollToColumn(field, position, ifVisible) {
-    return new Promise((resolve, reject) => {
-      const column = this.columnManager.findColumn(field)
+    const column = this.columnManager.findColumn(field)
 
-      if (column) {
-        return this.columnManager.scrollToColumn(column, position, ifVisible)
-      } else {
-        console.warn('Scroll Error - No matching column found:', field)
-        return Promise.reject('Scroll Error - No matching column found')
-      }
-    })
+    if (column) {
+      return this.columnManager.scrollToColumn(column, position, ifVisible)
+    }
+
+    console.warn('Scroll Error - No matching column found:', field)
+    return Promise.reject('Scroll Error - No matching column found')
   }
 
   /// ///////// General Public Functions ////////////
@@ -851,7 +841,7 @@ class Tabulator extends ModuleBinder {
   }
 
   setHeight(height) {
-    this.options.height = isNaN(height) ? height : height + 'px'
+    this.options.height = Number.isNaN(Number(height)) ? height : `${height}px`
     this.element.style.height = this.options.height
     this.rowManager.initializeRenderer()
     this.rowManager.redraw(true)
@@ -867,11 +857,8 @@ class Tabulator extends ModuleBinder {
     this.externalEvents.unsubscribe(key, callback)
   }
 
-  dispatchEvent() {
-    const args = Array.from(arguments)
-    args.shift()
-
-    this.externalEvents.dispatch(...arguments)
+  dispatchEvent(...args) {
+    this.externalEvents.dispatch(...args)
   }
 
   /// ///////////////// Alerts ///////////////////
@@ -892,12 +879,13 @@ class Tabulator extends ModuleBinder {
   modExists(plugin, required) {
     if (this.modules[plugin]) {
       return true
-    } else {
-      if (required) {
-        console.error('Tabulator Module Not Installed: ' + plugin)
-      }
-      return false
     }
+
+    if (required) {
+      console.error('Tabulator Module Not Installed: ' + plugin)
+    }
+
+    return false
   }
 
   module(key) {

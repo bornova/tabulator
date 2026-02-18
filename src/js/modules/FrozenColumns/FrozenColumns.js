@@ -73,7 +73,7 @@ export default class FrozenColumns extends Module {
       if (this.frozenCheck(column)) {
         config.position = this.initializationMode
 
-        if (this.initializationMode == 'left') {
+        if (this.initializationMode === 'left') {
           this.leftColumns.push(column)
         } else {
           this.rightColumns.unshift(column)
@@ -97,9 +97,9 @@ export default class FrozenColumns extends Module {
 
     if (column.parent.isGroup) {
       return this.frozenCheck(column.parent)
-    } else {
-      return column.definition.frozen
     }
+
+    return column.definition.frozen
   }
 
   // layout calculation rows
@@ -144,13 +144,13 @@ export default class FrozenColumns extends Module {
 
     this.leftColumns.forEach((column, i) => {
       column.modules.frozen.marginValue = leftMargin
-      column.modules.frozen.margin = column.modules.frozen.marginValue + 'px'
+      column.modules.frozen.margin = `${column.modules.frozen.marginValue}px`
 
       if (column.visible) {
         leftMargin += column.getWidth()
       }
 
-      if (i == this.leftColumns.length - 1) {
+      if (i === this.leftColumns.length - 1) {
         column.modules.frozen.edge = true
       } else {
         column.modules.frozen.edge = false
@@ -184,13 +184,13 @@ export default class FrozenColumns extends Module {
 
     this.rightColumns.forEach((column, i) => {
       column.modules.frozen.marginValue = rightMargin
-      column.modules.frozen.margin = column.modules.frozen.marginValue + 'px'
+      column.modules.frozen.margin = `${column.modules.frozen.marginValue}px`
 
       if (column.visible) {
         rightMargin += column.getWidth()
       }
 
-      if (i == this.rightColumns.length - 1) {
+      if (i === this.rightColumns.length - 1) {
         column.modules.frozen.edge = true
       } else {
         column.modules.frozen.edge = false
@@ -243,7 +243,7 @@ export default class FrozenColumns extends Module {
 
   layoutRow(row) {
     if (this.table.options.layout === 'fitDataFill' && this.rightColumns.length) {
-      this.table.rowManager.getTableElement().style.minWidth = 'calc(100% - ' + this.rightMargin + ')'
+      this.table.rowManager.getTableElement().style.minWidth = `calc(100% - ${this.rightMargin})`
     }
 
     this.leftColumns.forEach((column) => {
@@ -264,35 +264,25 @@ export default class FrozenColumns extends Module {
   }
 
   layoutElement(element, column) {
-    let position
+    const frozen = column.modules.frozen
 
-    if (column.modules.frozen && element) {
+    if (frozen && element) {
       element.style.position = 'sticky'
 
-      if (this.table.rtl) {
-        position = column.modules.frozen.position === 'left' ? 'right' : 'left'
-      } else {
-        position = column.modules.frozen.position
-      }
+      const position = this.table.rtl ? (frozen.position === 'left' ? 'right' : 'left') : frozen.position
 
-      element.style[position] = column.modules.frozen.margin
+      element.style[position] = frozen.margin
 
       element.classList.add('tabulator-frozen')
 
-      element.classList.toggle(
-        'tabulator-frozen-left',
-        column.modules.frozen.edge && column.modules.frozen.position === 'left'
-      )
-      element.classList.toggle(
-        'tabulator-frozen-right',
-        column.modules.frozen.edge && column.modules.frozen.position === 'right'
-      )
+      element.classList.toggle('tabulator-frozen-left', frozen.edge && frozen.position === 'left')
+      element.classList.toggle('tabulator-frozen-right', frozen.edge && frozen.position === 'right')
     }
   }
 
   adjustForScrollbar(width) {
     if (this.rightColumns.length) {
-      this.table.columnManager.getContentsElement().style.width = 'calc(100% - ' + width + 'px)'
+      this.table.columnManager.getContentsElement().style.width = `calc(100% - ${width}px)`
     }
   }
 

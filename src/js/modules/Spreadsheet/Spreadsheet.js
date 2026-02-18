@@ -104,12 +104,13 @@ export default class Spreadsheet extends Module {
   tableInitialized() {
     if (this.sheets.length) {
       this.loadSheet(this.sheets[0])
-    } else {
-      if (this.options('spreadsheetSheets')) {
-        this.loadSheets(this.options('spreadsheetSheets'))
-      } else if (this.options('spreadsheetData')) {
-        this.loadData(this.options('spreadsheetData'))
-      }
+      return
+    }
+
+    if (this.options('spreadsheetSheets')) {
+      this.loadSheets(this.options('spreadsheetSheets'))
+    } else if (this.options('spreadsheetData')) {
+      this.loadData(this.options('spreadsheetData'))
     }
   }
 
@@ -189,8 +190,6 @@ export default class Spreadsheet extends Module {
   }
 
   newSheet(definition = {}) {
-    let sheet
-
     if (!definition.rows) {
       definition.rows = this.options('spreadsheetRows')
     }
@@ -199,7 +198,7 @@ export default class Spreadsheet extends Module {
       definition.columns = this.options('spreadsheetColumns')
     }
 
-    sheet = new Sheet(this, definition)
+    const sheet = new Sheet(this, definition)
 
     this.sheets.push(sheet)
 
@@ -212,36 +211,42 @@ export default class Spreadsheet extends Module {
 
   removeSheet(sheet) {
     const index = this.sheets.indexOf(sheet)
-    let prevSheet
 
-    if (this.sheets.length > 1) {
-      if (index > -1) {
-        this.sheets.splice(index, 1)
-        sheet.destroy()
-
-        if (this.activeSheet === sheet) {
-          prevSheet = this.sheets[index - 1] || this.sheets[0]
-
-          if (prevSheet) {
-            this.loadSheet(prevSheet)
-          } else {
-            this.activeSheet = null
-          }
-        }
-      }
-    } else {
+    if (this.sheets.length <= 1) {
       console.warn('Unable to remove sheet, at least one sheet must be active')
+      return
+    }
+
+    if (index < 0) {
+      return
+    }
+
+    this.sheets.splice(index, 1)
+    sheet.destroy()
+
+    if (this.activeSheet === sheet) {
+      const prevSheet = this.sheets[index - 1] || this.sheets[0]
+
+      if (prevSheet) {
+        this.loadSheet(prevSheet)
+      } else {
+        this.activeSheet = null
+      }
     }
   }
 
   lookupSheet(key) {
     if (!key) {
       return this.activeSheet
-    } else if (key instanceof Sheet) {
-      return key
-    } else if (key instanceof SheetComponent) {
-      return key._sheet
     } else {
+      if (key instanceof Sheet) {
+        return key
+      }
+
+      if (key instanceof SheetComponent) {
+        return key._sheet
+      }
+
       return this.sheets.find((sheet) => sheet.key === key) || false
     }
   }

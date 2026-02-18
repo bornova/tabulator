@@ -46,22 +46,22 @@ export default class RowManager extends CoreFeature {
   /// ///////////// Setup Functions /////////////////
 
   createHolderElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-tableholder')
-    el.setAttribute('tabindex', 0)
+    element.classList.add('tabulator-tableholder')
+    element.setAttribute('tabindex', 0)
     // el.setAttribute("role", "rowgroup");
 
-    return el
+    return element
   }
 
   createTableElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-table')
-    el.setAttribute('role', 'rowgroup')
+    element.classList.add('tabulator-table')
+    element.setAttribute('role', 'rowgroup')
 
-    return el
+    return element
   }
 
   initializePlaceholder() {
@@ -92,7 +92,7 @@ export default class RowManager extends CoreFeature {
       } else {
         console.warn('Invalid placeholder provided, must be string or HTML Element', placeholder)
 
-        this.el = null
+        this.placeholder = null
       }
 
       this.placeholder = el
@@ -126,7 +126,7 @@ export default class RowManager extends CoreFeature {
       const topDir = this.scrollTop > top
 
       // handle horizontal scrolling
-      if (this.scrollLeft != left) {
+      if (this.scrollLeft !== left) {
         this.scrollLeft = left
 
         this.dispatch('scroll-horizontal', left, leftDir)
@@ -136,7 +136,7 @@ export default class RowManager extends CoreFeature {
       }
 
       // handle vertical scrolling
-      if (this.scrollTop != top) {
+      if (this.scrollTop !== top) {
         this.scrollTop = top
 
         this.renderer.scrollRows(top, topDir)
@@ -400,7 +400,7 @@ export default class RowManager extends CoreFeature {
     if (index && allIndex > -1) {
       activeIndex = this.activeRows.indexOf(index)
 
-      this.displayRowIterator(function (rows) {
+      this.displayRowIterator((rows) => {
         const displayIndex = rows.indexOf(index)
 
         if (displayIndex > -1) {
@@ -415,14 +415,14 @@ export default class RowManager extends CoreFeature {
       this.rows.splice(top ? allIndex : allIndex + 1, 0, row)
     } else {
       if (top) {
-        this.displayRowIterator(function (rows) {
+        this.displayRowIterator((rows) => {
           rows.unshift(row)
         })
 
         this.activeRows.unshift(row)
         this.rows.unshift(row)
       } else {
-        this.displayRowIterator(function (rows) {
+        this.displayRowIterator((rows) => {
           rows.push(row)
         })
 
@@ -525,7 +525,7 @@ export default class RowManager extends CoreFeature {
       nextRow = this.getDisplayRows()[index + 1]
     }
 
-    if (nextRow && (!(nextRow instanceof Row) || nextRow.type != 'row')) {
+    if (nextRow && (!(nextRow instanceof Row) || nextRow.type !== 'row')) {
       return this.nextDisplayRow(nextRow, rowOnly)
     }
 
@@ -540,7 +540,7 @@ export default class RowManager extends CoreFeature {
       prevRow = this.getDisplayRows()[index - 1]
     }
 
-    if (rowOnly && prevRow && (!(prevRow instanceof Row) || prevRow.type != 'row')) {
+    if (rowOnly && prevRow && (!(prevRow instanceof Row) || prevRow.type !== 'row')) {
       return this.prevDisplayRow(prevRow, rowOnly)
     }
 
@@ -564,27 +564,15 @@ export default class RowManager extends CoreFeature {
   }
 
   getData(active, transform) {
-    const output = []
     const rows = this.getRows(active)
 
-    rows.forEach(function (row) {
-      if (row.type == 'row') {
-        output.push(row.getData(transform || 'data'))
-      }
-    })
-
-    return output
+    return rows.filter((row) => row.type === 'row').map((row) => row.getData(transform || 'data'))
   }
 
   getComponents(active) {
-    const output = []
     const rows = this.getRows(active)
 
-    rows.forEach(function (row) {
-      output.push(row.getComponent())
-    })
-
-    return output
+    return rows.map((row) => row.getComponent())
   }
 
   getDataCount(active) {
@@ -639,7 +627,7 @@ export default class RowManager extends CoreFeature {
           stage = 'dataPipeline'
 
           if (skipStage) {
-            if (index == this.dataPipeline.length - 1) {
+            if (index === this.dataPipeline.length - 1) {
               stage = 'display'
             } else {
               index++
@@ -654,7 +642,7 @@ export default class RowManager extends CoreFeature {
             stage = 'displayPipeline'
 
             if (skipStage) {
-              if (index == this.displayPipeline.length - 1) {
+              if (index === this.displayPipeline.length - 1) {
                 stage = 'end'
               } else {
                 index++
@@ -770,7 +758,7 @@ export default class RowManager extends CoreFeature {
   }
 
   setActiveRows(activeRows) {
-    this.activeRows = this.activeRows = Object.assign([], activeRows)
+    this.activeRows = [...activeRows]
     this.activeRowsCount = this.activeRows.length
   }
 
@@ -787,13 +775,13 @@ export default class RowManager extends CoreFeature {
   setDisplayRows(displayRows, index) {
     this.displayRows[index] = displayRows
 
-    if (index == this.displayRows.length - 1) {
+    if (index === this.displayRows.length - 1) {
       this.displayRowsCount = this.displayRows[this.displayRows.length - 1].length
     }
   }
 
   getDisplayRows(index) {
-    if (typeof index === 'undefined') {
+    if (index === undefined) {
       return this.displayRows.length ? this.displayRows[this.displayRows.length - 1] : []
     } else {
       return this.displayRows[index] || []
@@ -1017,27 +1005,23 @@ export default class RowManager extends CoreFeature {
 
   _positionPlaceholder() {
     if (this.placeholder && this.placeholder.parentNode) {
-      this.placeholder.style.width = this.table.columnManager.getWidth() + 'px'
-      this.placeholderContents.style.width = this.table.rowManager.element.clientWidth + 'px'
-      this.placeholderContents.style.marginLeft = this.scrollLeft + 'px'
+      this.placeholder.style.width = `${this.table.columnManager.getWidth()}px`
+      this.placeholderContents.style.width = `${this.table.rowManager.element.clientWidth}px`
+      this.placeholderContents.style.marginLeft = `${this.scrollLeft}px`
     }
   }
 
   styleRow(row, index) {
     const rowEl = row.getElement()
 
-    if (index % 2) {
-      rowEl.classList.add('tabulator-row-even')
-      rowEl.classList.remove('tabulator-row-odd')
-    } else {
-      rowEl.classList.add('tabulator-row-odd')
-      rowEl.classList.remove('tabulator-row-even')
-    }
+    const isEven = Boolean(index % 2)
+    rowEl.classList.toggle('tabulator-row-even', isEven)
+    rowEl.classList.toggle('tabulator-row-odd', !isEven)
   }
 
   // normalize height of active rows
   normalizeHeight(force) {
-    this.activeRows.forEach(function (row) {
+    this.activeRows.forEach((row) => {
       row.normalizeHeight(force)
     })
   }
@@ -1057,24 +1041,24 @@ export default class RowManager extends CoreFeature {
       )
 
       if (this.fixedHeight) {
-        minHeight = isNaN(this.table.options.minHeight)
+        minHeight = Number.isNaN(Number(this.table.options.minHeight))
           ? this.table.options.minHeight
-          : this.table.options.minHeight + 'px'
+          : `${this.table.options.minHeight}px`
 
-        const height = 'calc(100% - ' + otherHeight + 'px)'
-        this.element.style.minHeight = minHeight || 'calc(100% - ' + otherHeight + 'px)'
+        const height = `calc(100% - ${otherHeight}px)`
+        this.element.style.minHeight = minHeight || `calc(100% - ${otherHeight}px)`
         this.element.style.height = height
         this.element.style.maxHeight = height
       } else {
         this.element.style.height = ''
-        this.element.style.height = this.table.element.clientHeight - otherHeight + 'px'
+        this.element.style.height = `${this.table.element.clientHeight - otherHeight}px`
         this.element.scrollTop = this.scrollTop
       }
 
       this.renderer.resize()
 
       // check if the table has changed size when dealing with variable height tables
-      if (!this.fixedHeight && initialHeight != this.element.clientHeight) {
+      if (!this.fixedHeight && initialHeight !== this.element.clientHeight) {
         resized = true
         if (!this.redrawing) {
           // prevent recursive redraws
@@ -1097,7 +1081,7 @@ export default class RowManager extends CoreFeature {
 
   // reinitialize all rows
   reinitialize() {
-    this.rows.forEach(function (row) {
+    this.rows.forEach((row) => {
       row.reinitialize(true)
     })
   }

@@ -50,9 +50,9 @@ export default class ColumnManager extends CoreFeature {
 
   padVerticalScrollbar(width) {
     if (this.table.rtl) {
-      this.headersElement.style.marginLeft = width + 'px'
+      this.headersElement.style.marginLeft = `${width}px`
     } else {
-      this.headersElement.style.marginRight = width + 'px'
+      this.headersElement.style.marginRight = `${width}px`
     }
   }
 
@@ -79,34 +79,34 @@ export default class ColumnManager extends CoreFeature {
   }
 
   createHeadersElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-headers')
-    el.setAttribute('role', 'row')
+    element.classList.add('tabulator-headers')
+    element.setAttribute('role', 'row')
 
-    return el
+    return element
   }
 
   createHeaderContentsElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-header-contents')
-    el.setAttribute('role', 'rowgroup')
+    element.classList.add('tabulator-header-contents')
+    element.setAttribute('role', 'rowgroup')
 
-    return el
+    return element
   }
 
   createHeaderElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-header')
-    el.setAttribute('role', 'rowgroup')
+    element.classList.add('tabulator-header')
+    element.setAttribute('role', 'rowgroup')
 
     if (!this.table.options.headerVisible) {
-      el.classList.add('tabulator-header-hidden')
+      element.classList.add('tabulator-header-hidden')
     }
 
-    return el
+    return element
   }
 
   // return containing element
@@ -238,7 +238,7 @@ export default class ColumnManager extends CoreFeature {
         break
 
       default:
-        if (!isNaN(value) && value !== '') {
+        if (!Number.isNaN(Number(value)) && value !== '') {
           sorter = 'number'
         } else {
           if (value.match(/((^[0-9]+[a-z]+)|(^[a-z]+[0-9]+))+$/i)) {
@@ -254,7 +254,7 @@ export default class ColumnManager extends CoreFeature {
   }
 
   setColumns(cols, row) {
-    while (this.headersElement.firstChild) this.headersElement.removeChild(this.headersElement.firstChild)
+    this.headersElement.replaceChildren()
 
     this.columns = []
     this.columnsByIndex = []
@@ -339,7 +339,7 @@ export default class ColumnManager extends CoreFeature {
   _reIndexColumns() {
     this.columnsByIndex = []
 
-    this.columns.forEach(function (column) {
+    this.columns.forEach((column) => {
       column.reRegisterPosition()
     })
   }
@@ -363,7 +363,7 @@ export default class ColumnManager extends CoreFeature {
         }
       })
 
-      this.headersElement.style.height = minHeight + 'px'
+      this.headersElement.style.height = `${minHeight}px`
 
       this.columns.forEach((column) => {
         column.verticalAlign(this.table.options.columnHeaderVertAlign, minHeight)
@@ -448,9 +448,7 @@ export default class ColumnManager extends CoreFeature {
   }
 
   findColumnIndex(column) {
-    return this.columnsByIndex.findIndex((col) => {
-      return column === col
-    })
+    return this.columnsByIndex.findIndex((col) => column === col)
   }
 
   // return all columns that are not groups
@@ -460,9 +458,7 @@ export default class ColumnManager extends CoreFeature {
 
   // traverse across columns and call action
   traverse(callback) {
-    this.columnsByIndex.forEach((column, i) => {
-      callback(column, i)
-    })
+    this.columnsByIndex.forEach(callback)
   }
 
   // get definitions of actual columns
@@ -480,24 +476,13 @@ export default class ColumnManager extends CoreFeature {
 
   // get full nested definition tree
   getDefinitionTree() {
-    const output = []
-
-    this.columns.forEach((column) => {
-      output.push(column.getDefinition(true))
-    })
-
-    return output
+    return this.columns.map((column) => column.getDefinition(true))
   }
 
   getComponents(structured) {
-    const output = []
     const columns = structured ? this.columns : this.columnsByIndex
 
-    columns.forEach((column) => {
-      output.push(column.getComponent())
-    })
-
-    return output
+    return columns.map((column) => column.getComponent())
   }
 
   getWidth() {
@@ -569,7 +554,7 @@ export default class ColumnManager extends CoreFeature {
 
         rows = rows.concat(this.table.rowManager.rows)
 
-        rows.forEach(function (row) {
+        rows.forEach((row) => {
           if (row.cells.length) {
             const cell = row.cells.splice(fromIndex, 1)[0]
             row.cells.splice(toIndex, 0, cell)
@@ -586,13 +571,8 @@ export default class ColumnManager extends CoreFeature {
     const colEl = column.getElement()
 
     return new Promise((resolve, reject) => {
-      if (typeof position === 'undefined') {
-        position = this.table.options.scrollToColumnPosition
-      }
-
-      if (typeof ifVisible === 'undefined') {
-        ifVisible = this.table.options.scrollToColumnIfVisible
-      }
+      position ??= this.table.options.scrollToColumnPosition
+      ifVisible ??= this.table.options.scrollToColumnIfVisible
 
       if (column.visible) {
         // align to correct position
@@ -654,19 +634,19 @@ export default class ColumnManager extends CoreFeature {
       totalWidth -= this.table.rowManager.element.offsetWidth - this.table.rowManager.element.clientWidth
     }
 
-    this.columnsByIndex.forEach(function (column) {
+    this.columnsByIndex.forEach((column) => {
       let width, minWidth, colWidth
 
       if (column.visible) {
         width = column.definition.width || 0
 
-        minWidth = parseInt(column.minWidth)
+        minWidth = Number.parseInt(column.minWidth, 10)
 
         if (typeof width === 'string') {
           if (width.indexOf('%') > -1) {
-            colWidth = (totalWidth / 100) * parseInt(width)
+            colWidth = (totalWidth / 100) * Number.parseInt(width, 10)
           } else {
-            colWidth = parseInt(width)
+            colWidth = Number.parseInt(width, 10)
           }
         } else {
           colWidth = width
@@ -687,7 +667,7 @@ export default class ColumnManager extends CoreFeature {
 
       this.dispatch('column-add', definition, before, nextToColumn)
 
-      if (this.layoutMode() != 'fitColumns') {
+      if (this.layoutMode() !== 'fitColumns') {
         column.reinitializeWidth()
       }
 

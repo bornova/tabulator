@@ -94,7 +94,7 @@ export default class ResponsiveLayout extends Module {
 
     // assign collapse column
     for (const col of this.table.columnManager.columnsByIndex) {
-      if (col.definition.formatter == 'responsiveCollapse') {
+      if (col.definition.formatter === 'responsiveCollapse') {
         this.collapseHandleColumn = col
         break
       }
@@ -194,12 +194,10 @@ export default class ResponsiveLayout extends Module {
   // redraw columns to fit space
   update() {
     let working = true
+    const isFitColumns = this.table.modules.layout.getMode() === 'fitColumns'
 
     while (working) {
-      const width =
-        this.table.modules.layout.getMode() == 'fitColumns'
-          ? this.table.columnManager.getFlexBaseWidth()
-          : this.table.columnManager.getWidth()
+      const width = isFitColumns ? this.table.columnManager.getFlexBaseWidth() : this.table.columnManager.getWidth()
 
       const diff =
         (this.table.options.headerVisible
@@ -341,7 +339,7 @@ export default class ResponsiveLayout extends Module {
       const titleHighlight = document.createElement('strong')
       titleData.appendChild(titleHighlight)
 
-      this.modules.localize.bind('columns|' + item.field, function (text) {
+      this.modules.localize.bind(`columns|${item.field}`, (text) => {
         titleHighlight.innerHTML = text || item.title
       })
 

@@ -4,7 +4,7 @@ import maskInput from '../../inputMask.js'
 export default function (cell, onRendered, success, cancel, editorParams) {
   let cellValue = cell.getValue()
   const vertNav = editorParams.verticalNavigation || 'hybrid'
-  const value = String(cellValue !== null && typeof cellValue !== 'undefined' ? cellValue : '')
+  const value = String(cellValue !== null && cellValue !== undefined ? cellValue : '')
   const input = document.createElement('textarea')
   let scrollHeight = 0
 
@@ -19,9 +19,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) == '+') {
+      if (key.charAt(0) === '+') {
         key = key.slice(1)
-        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes['+' + key])
+        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
       } else {
         input.setAttribute(key, editorParams.elementAttributes[key])
       }
@@ -30,13 +30,13 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   input.value = value
 
-  onRendered(function () {
+  onRendered(() => {
     if (cell.getType() === 'cell') {
       input.focus({ preventScroll: true })
       input.style.height = '100%'
 
       input.scrollHeight
-      input.style.height = input.scrollHeight + 'px'
+      input.style.height = `${input.scrollHeight}px`
       cell.getRow().normalizeHeight()
 
       if (editorParams.selectContents) {
@@ -45,13 +45,13 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     }
   })
 
-  function onChange(e) {
-    if (((cellValue === null || typeof cellValue === 'undefined') && input.value !== '') || input.value !== cellValue) {
+  function onChange() {
+    if (((cellValue === null || cellValue === undefined) && input.value !== '') || input.value !== cellValue) {
       if (success(input.value)) {
         cellValue = input.value // persist value if successfully validated incase editor is used as header filter
       }
 
-      setTimeout(function () {
+      setTimeout(() => {
         cell.getRow().normalizeHeight()
       }, 300)
     } else {
@@ -63,24 +63,24 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   input.addEventListener('change', onChange)
   input.addEventListener('blur', onChange)
 
-  input.addEventListener('keyup', function () {
+  input.addEventListener('keyup', () => {
     input.style.height = ''
 
     const heightNow = input.scrollHeight
 
-    input.style.height = heightNow + 'px'
+    input.style.height = `${heightNow}px`
 
-    if (heightNow != scrollHeight) {
+    if (heightNow !== scrollHeight) {
       scrollHeight = heightNow
       cell.getRow().normalizeHeight()
     }
   })
 
-  input.addEventListener('keydown', function (e) {
+  input.addEventListener('keydown', (e) => {
     switch (e.keyCode) {
       case 13:
         if (e.shiftKey && editorParams.shiftEnterSubmit) {
-          onChange(e)
+          onChange()
         }
         break
 
@@ -89,7 +89,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
         break
 
       case 38: // up arrow
-        if (vertNav == 'editor' || (vertNav == 'hybrid' && input.selectionStart)) {
+        if (vertNav === 'editor' || (vertNav === 'hybrid' && input.selectionStart)) {
           e.stopImmediatePropagation()
           e.stopPropagation()
         }
@@ -97,7 +97,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
         break
 
       case 40: // down arrow
-        if (vertNav == 'editor' || (vertNav == 'hybrid' && input.selectionStart !== input.value.length)) {
+        if (vertNav === 'editor' || (vertNav === 'hybrid' && input.selectionStart !== input.value.length)) {
           e.stopImmediatePropagation()
           e.stopPropagation()
         }

@@ -78,7 +78,7 @@ export default class Validate extends Module {
   /// ////////////////////////////////
 
   cellIsValid(cell) {
-    return cell.modules.validate ? cell.modules.validate.invalid || true : true
+    return !(cell.modules.validate && cell.modules.validate.invalid)
   }
 
   cellValidate(cell) {
@@ -140,9 +140,7 @@ export default class Validate extends Module {
 
     // clear row data
     this.table.rowManager.rows.forEach((row) => {
-      row = row.getComponent()
-
-      const valid = row.validate()
+      const valid = row.getComponent().validate()
 
       if (valid !== true) {
         output = output.concat(valid)
@@ -164,21 +162,19 @@ export default class Validate extends Module {
 
   // validate
   initializeColumn(column) {
-    const self = this
     const config = []
-    let validator
 
     if (column.definition.validator) {
       if (Array.isArray(column.definition.validator)) {
         column.definition.validator.forEach((item) => {
-          validator = self._extractValidator(item)
+          const validator = this._extractValidator(item)
 
           if (validator) {
             config.push(validator)
           }
         })
       } else {
-        validator = this._extractValidator(column.definition.validator)
+        const validator = this._extractValidator(column.definition.validator)
 
         if (validator) {
           config.push(validator)
@@ -219,23 +215,22 @@ export default class Validate extends Module {
     if (!func) {
       console.warn('Validator Setup Error - No matching validator found:', type)
       return false
-    } else {
-      return {
-        type: typeof type === 'function' ? 'function' : type,
-        func,
-        params
-      }
+    }
+
+    return {
+      type: typeof type === 'function' ? 'function' : type,
+      func,
+      params
     }
   }
 
   validate(validators, cell, value) {
-    const self = this
     const failedValidators = []
     const invalidIndex = this.invalidCells.indexOf(cell)
 
     if (validators) {
       validators.forEach((item) => {
-        if (!item.func.call(self, cell.getComponent(), value, item.params)) {
+        if (!item.func.call(this, cell.getComponent(), value, item.params)) {
           failedValidators.push({
             type: item.type,
             parameters: item.params
@@ -262,7 +257,7 @@ export default class Validate extends Module {
         cell.getElement().classList.add('tabulator-validation-fail')
       }
 
-      if (invalidIndex == -1) {
+      if (invalidIndex === -1) {
         this.invalidCells.push(cell)
       }
     }
@@ -271,13 +266,7 @@ export default class Validate extends Module {
   }
 
   getInvalidCells() {
-    const output = []
-
-    this.invalidCells.forEach((cell) => {
-      output.push(cell.getComponent())
-    })
-
-    return output
+    return this.invalidCells.map((cell) => cell.getComponent())
   }
 
   clearValidation(cell) {

@@ -1,5 +1,5 @@
 export default {
-  range: function () {
+  range() {
     return this.modules.selectRange.selectedRows()
   }
 }

@@ -3,7 +3,7 @@ export default function (cell, formatterParams, onRendered) {
   const element = cell.getElement()
   const empty = formatterParams.allowEmpty
   const truthy = formatterParams.allowTruthy
-  const trueValueSet = Object.keys(formatterParams).includes('trueValue')
+  const trueValueSet = Object.prototype.hasOwnProperty.call(formatterParams, 'trueValue')
   const tick =
     typeof formatterParams.tickElement !== 'undefined'
       ? formatterParams.tickElement
@@ -20,13 +20,13 @@ export default function (cell, formatterParams, onRendered) {
   ) {
     element.setAttribute('aria-checked', true)
     return tick || ''
-  } else {
-    if (empty && (value === 'null' || value === '' || value === null || typeof value === 'undefined')) {
-      element.setAttribute('aria-checked', 'mixed')
-      return ''
-    } else {
-      element.setAttribute('aria-checked', false)
-      return cross || ''
-    }
   }
+
+  if (empty && (value === 'null' || value === '' || value === null || typeof value === 'undefined')) {
+    element.setAttribute('aria-checked', 'mixed')
+    return ''
+  }
+
+  element.setAttribute('aria-checked', false)
+  return cross || ''
 }

@@ -81,33 +81,7 @@
 
       const table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
-        columns: [
-          {
-            title: 'Id',
-            field: 'id',
-            headerSortTristate: true,
-            headerMenu: headerMenu
-          },
-          { title: 'Name', field: 'name', sorter: 'string' },
-          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
-          { title: 'Gender', field: 'gender', sorter: 'string' },
-          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
-          { title: 'Color', field: 'col', sorter: 'string' },
-          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
-          {
-            title: 'Car',
-            field: 'car',
-            sorter: 'boolean',
-            hozAlign: 'center',
-            formatter: 'toggle',
-            formatterParams: {
-              size: 10,
-              onValue: 'on',
-              offValue: 'off',
-              clickable: true
-            }
-          }
-        ],
+        columns: configs.editableColumns,
         ...configs.baseConfig,
         ...configs.paginationConfig
       })

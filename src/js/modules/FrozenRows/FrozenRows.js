@@ -51,7 +51,7 @@ export default class FrozenRows extends Module {
   }
 
   resizeHolderWidth() {
-    this.topElement.style.minWidth = this.table.columnManager.headersElement.offsetWidth + 'px'
+    this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
   }
 
   initializeRows() {
@@ -62,13 +62,12 @@ export default class FrozenRows extends Module {
 
   initializeRow(row) {
     const frozenRows = this.table.options.frozenRows
-    const rowType = typeof frozenRows
 
-    if (rowType === 'number') {
+    if (typeof frozenRows === 'number') {
       if (row.getPosition() && row.getPosition() + this.rows.length <= frozenRows) {
         this.freezeRow(row)
       }
-    } else if (rowType === 'function') {
+    } else if (typeof frozenRows === 'function') {
       if (frozenRows.call(this.table, row.getComponent())) {
         this.freezeRow(row)
       }
@@ -100,7 +99,7 @@ export default class FrozenRows extends Module {
   getRows(rows) {
     const output = rows.slice(0)
 
-    this.rows.forEach(function (row) {
+    this.rows.forEach((row) => {
       const index = output.indexOf(row)
 
       if (index > -1) {
@@ -162,7 +161,7 @@ export default class FrozenRows extends Module {
     }
   }
 
-  styleRows(row) {
+  styleRows() {
     this.rows.forEach((row, i) => {
       this.table.rowManager.styleRow(row, i)
     })

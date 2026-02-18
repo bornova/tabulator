@@ -8,6 +8,8 @@ export default class Mutator extends Module {
   // load defaults
   static mutators = defaultMutators
 
+  static keyPrefix = 'mutator'
+
   constructor(table) {
     super(table)
 
@@ -45,7 +47,7 @@ export default class Mutator extends Module {
     const config = {}
 
     this.allowedTypes.forEach((type) => {
-      const key = 'mutator' + (type.charAt(0).toUpperCase() + type.slice(1))
+      const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
       let mutator
 
       if (column.definition[key]) {
@@ -56,7 +58,7 @@ export default class Mutator extends Module {
 
           config[key] = {
             mutator,
-            params: column.definition[key + 'Params'] || {}
+            params: column.definition[`${key}Params`] || {}
           }
         }
       }
@@ -68,68 +70,71 @@ export default class Mutator extends Module {
   }
 
   lookupMutator(value) {
-    let mutator = false
-
     // set column mutator
     switch (typeof value) {
       case 'string':
         if (Mutator.mutators[value]) {
-          mutator = Mutator.mutators[value]
-        } else {
-          console.warn('Mutator Error - No such mutator found, ignoring: ', value)
+          return Mutator.mutators[value]
         }
-        break
+
+        console.warn('Mutator Error - No such mutator found, ignoring: ', value)
+        return false
 
       case 'function':
-        mutator = value
-        break
-    }
+        return value
 
-    return mutator
+      default:
+        return false
+    }
   }
 
   // apply mutator to row
   transformRow(data, type, updatedData) {
-    const key = 'mutator' + (type.charAt(0).toUpperCase() + type.slice(1))
-    let value
+    const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
+    const sourceData = typeof updatedData !== 'undefined' ? updatedData : data
 
-    // console.log("key", key)
-
-    if (this.enabled) {
-      this.table.columnManager.traverse((column) => {
-        let mutator, params, component
-
-        if (column.modules.mutate) {
-          mutator = column.modules.mutate[key] || column.modules.mutate.mutator || false
-
-          if (mutator) {
-            value = column.getFieldValue(typeof updatedData !== 'undefined' ? updatedData : data)
-
-            if ((type == 'data' && !updatedData) || typeof value !== 'undefined') {
-              component = column.getComponent()
-              params =
-                typeof mutator.params === 'function' ? mutator.params(value, data, type, component) : mutator.params
-              column.setFieldValue(data, mutator.mutator(value, data, type, params, component))
-            }
-          }
-        }
-      })
+    if (!this.enabled) {
+      return data
     }
+
+    this.table.columnManager.traverse((column) => {
+      if (!column.modules.mutate) {
+        return
+      }
+
+      const mutator = column.modules.mutate[key] || column.modules.mutate.mutator || false
+
+      if (!mutator) {
+        return
+      }
+
+      const value = column.getFieldValue(sourceData)
+
+      if ((type === 'data' && !updatedData) || typeof value !== 'undefined') {
+        const component = column.getComponent()
+        const params =
+          typeof mutator.params === 'function' ? mutator.params(value, data, type, component) : mutator.params
+
+        column.setFieldValue(data, mutator.mutator(value, data, type, params, component))
+      }
+    })
 
     return data
   }
 
   // apply mutator to new cell value
   transformCell(cell, value) {
-    if (cell.column.modules.mutate) {
-      const mutator = cell.column.modules.mutate.mutatorEdit || cell.column.modules.mutate.mutator || false
-      let tempData = {}
+    if (!cell.column.modules.mutate) {
+      return value
+    }
 
-      if (mutator) {
-        tempData = Object.assign(tempData, cell.row.getData())
-        cell.column.setFieldValue(tempData, value)
-        return mutator.mutator(value, tempData, 'edit', mutator.params, cell.getComponent())
-      }
+    const mutator = cell.column.modules.mutate.mutatorEdit || cell.column.modules.mutate.mutator || false
+
+    if (mutator) {
+      const tempData = { ...cell.row.getData() }
+
+      cell.column.setFieldValue(tempData, value)
+      return mutator.mutator(value, tempData, 'edit', mutator.params, cell.getComponent())
     }
 
     return value

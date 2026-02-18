@@ -454,8 +454,7 @@ export default class Edit extends Module {
       this.dispatch('edit-editor-clear', cell, cancel)
 
       cellEl.classList.remove('tabulator-editing')
-
-      while (cellEl.firstChild) cellEl.removeChild(cellEl.firstChild)
+      cellEl.replaceChildren()
 
       cell.row.getElement().classList.remove('tabulator-editing')
 
@@ -472,7 +471,7 @@ export default class Edit extends Module {
       cell.setValueActual(cell.getValue())
       cell.cellRendered()
 
-      if (cell.column.definition.editor == 'textarea' || cell.column.definition.variableHeight) {
+      if (cell.column.definition.editor === 'textarea' || cell.column.definition.variableHeight) {
         cell.row.normalizeHeight(true)
       }
 
@@ -488,42 +487,41 @@ export default class Edit extends Module {
   // return a formatted value for a cell
   bindEditor(cell) {
     if (cell.column.modules.edit) {
-      const self = this
       const element = cell.getElement(true)
 
       this.updateCellClass(cell)
       element.setAttribute('tabindex', 0)
 
-      element.addEventListener('mousedown', function (e) {
+      element.addEventListener('mousedown', (e) => {
         if (e.button === 2) {
           e.preventDefault()
         } else {
-          self.mouseClick = true
+          this.mouseClick = true
         }
       })
 
       if (this.options('editTriggerEvent') === 'dblclick') {
-        element.addEventListener('dblclick', function (e) {
+        element.addEventListener('dblclick', (e) => {
           if (!element.classList.contains('tabulator-editing')) {
             element.focus({ preventScroll: true })
-            self.edit(cell, e, false)
+            this.edit(cell, e, false)
           }
         })
       }
 
       if (this.options('editTriggerEvent') === 'focus' || this.options('editTriggerEvent') === 'click') {
-        element.addEventListener('click', function (e) {
+        element.addEventListener('click', (e) => {
           if (!element.classList.contains('tabulator-editing')) {
             element.focus({ preventScroll: true })
-            self.edit(cell, e, false)
+            this.edit(cell, e, false)
           }
         })
       }
 
       if (this.options('editTriggerEvent') === 'focus') {
-        element.addEventListener('focus', function (e) {
-          if (!self.recursionBlock) {
-            self.edit(cell, e, false)
+        element.addEventListener('focus', (e) => {
+          if (!this.recursionBlock) {
+            this.edit(cell, e, false)
           }
         })
       }
@@ -546,7 +544,7 @@ export default class Edit extends Module {
   }
 
   focusScrollAdjust(cell) {
-    if (this.table.rowManager.getRenderMode() == 'virtual') {
+    if (this.table.rowManager.getRenderMode() === 'virtual') {
       const topEdge = this.table.rowManager.element.scrollTop
       const bottomEdge = this.table.rowManager.element.clientHeight + this.table.rowManager.element.scrollTop
       const rowEl = cell.row.getElement()
@@ -564,13 +562,13 @@ export default class Edit extends Module {
       const cellEl = cell.getElement()
 
       if (this.table.modExists('frozenColumns')) {
-        leftEdge += parseInt(this.table.modules.frozenColumns.leftMargin || 0)
-        rightEdge -= parseInt(this.table.modules.frozenColumns.rightMargin || 0)
+        leftEdge += Number.parseInt(this.table.modules.frozenColumns.leftMargin || 0, 10)
+        rightEdge -= Number.parseInt(this.table.modules.frozenColumns.rightMargin || 0, 10)
       }
 
       if (this.table.options.renderHorizontal === 'virtual') {
-        leftEdge -= parseInt(this.table.columnManager.renderer.vDomPadLeft)
-        rightEdge -= parseInt(this.table.columnManager.renderer.vDomPadLeft)
+        leftEdge -= Number.parseInt(this.table.columnManager.renderer.vDomPadLeft, 10)
+        rightEdge -= Number.parseInt(this.table.columnManager.renderer.vDomPadLeft, 10)
       }
 
       if (cellEl.offsetLeft < leftEdge) {
@@ -608,9 +606,8 @@ export default class Edit extends Module {
   }
 
   edit(cell, e, forceEdit) {
-    const self = this
     let allowEdit = true
-    let rendered = function () {}
+    let rendered = () => {}
     const element = cell.getElement()
     let editFinished = false
     let cellEditor
@@ -627,14 +624,14 @@ export default class Edit extends Module {
     }
 
     // handle successful value change
-    function success(value) {
-      if (self.currentCell === cell && !editFinished) {
-        const valid = self.chain('edit-success', [cell, value], true, true)
+    const success = (value) => {
+      if (this.currentCell === cell && !editFinished) {
+        const valid = this.chain('edit-success', [cell, value], true, true)
 
-        if (valid === true || self.table.options.validationMode === 'highlight') {
+        if (valid === true || this.table.options.validationMode === 'highlight') {
           editFinished = true
 
-          self.clearEditor()
+          this.clearEditor()
 
           if (!cell.modules.edit) {
             cell.modules.edit = {}
@@ -642,19 +639,19 @@ export default class Edit extends Module {
 
           cell.modules.edit.edited = true
 
-          if (self.editedCells.indexOf(cell) == -1) {
-            self.editedCells.push(cell)
+          if (!this.editedCells.includes(cell)) {
+            this.editedCells.push(cell)
           }
 
-          value = self.transformEmptyValues(value, cell)
+          value = this.transformEmptyValues(value, cell)
 
           cell.setValue(value, true)
 
           return valid === true
         } else {
           editFinished = true
-          self.invalidEdit = true
-          self.focusCellNoEvent(cell, true)
+          this.invalidEdit = true
+          this.focusCellNoEvent(cell, true)
           rendered()
 
           setTimeout(() => {
@@ -668,17 +665,17 @@ export default class Edit extends Module {
     }
 
     // handle aborted edit
-    function cancel() {
+    const cancel = () => {
       // editFinished = true;
 
-      if (self.currentCell === cell && !editFinished) {
-        self.cancelEdit()
+      if (this.currentCell === cell && !editFinished) {
+        this.cancelEdit()
       } else {
         // console.warn("Edit Success Error - cannot call cancel on a cell that is no longer being edited");
       }
     }
 
-    function onRendered(callback) {
+    const onRendered = (callback) => {
       rendered = callback
     }
 
@@ -690,9 +687,9 @@ export default class Edit extends Module {
       allowEdit = this.allowEdit(cell)
 
       if (allowEdit || forceEdit) {
-        self.cancelEdit()
+        this.cancelEdit()
 
-        self.currentCell = cell
+        this.currentCell = cell
 
         this.focusScrollAdjust(cell)
 
@@ -718,7 +715,7 @@ export default class Edit extends Module {
             ? cell.column.modules.edit.params(component)
             : cell.column.modules.edit.params
 
-        cellEditor = cell.column.modules.edit.editor.call(self, component, onRendered, success, cancel, params)
+        cellEditor = cell.column.modules.edit.editor.call(this, component, onRendered, success, cancel, params)
 
         // if editor returned, add to DOM, if false, abort edit
         if (this.currentCell && cellEditor !== false) {
@@ -726,7 +723,7 @@ export default class Edit extends Module {
             element.classList.add('tabulator-editing')
             cell.row.getElement().classList.add('tabulator-editing')
             cell.table.element.classList.add('tabulator-editing')
-            while (element.firstChild) element.removeChild(element.firstChild)
+            element.replaceChildren()
             element.appendChild(cellEditor)
 
             // trigger onRendered Callback
@@ -736,7 +733,7 @@ export default class Edit extends Module {
             const children = element.children
 
             for (let i = 0; i < children.length; i++) {
-              children[i].addEventListener('click', function (e) {
+              children[i].addEventListener('click', (e) => {
                 e.stopPropagation()
               })
             }
@@ -764,7 +761,7 @@ export default class Edit extends Module {
   }
 
   emptyValueCheck(value) {
-    return value === '' || value === null || typeof value === 'undefined'
+    return value === '' || value === null || value === undefined
   }
 
   transformEmptyValues(value, cell) {

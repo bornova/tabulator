@@ -5,23 +5,24 @@ export default function (pageSize, currentRow, currentPage, totalRows, totalPage
   const ofEl = document.createElement('span')
   const totalEl = document.createElement('span')
   const rowsEl = document.createElement('span')
+  const { localize } = this.table.modules
 
-  this.table.modules.localize.langBind('pagination|counter|showing', (value) => {
+  localize.langBind('pagination|counter|showing', (value) => {
     showingEl.innerHTML = value
   })
 
-  this.table.modules.localize.langBind('pagination|counter|of', (value) => {
+  localize.langBind('pagination|counter|of', (value) => {
     ofEl.innerHTML = value
   })
 
-  this.table.modules.localize.langBind('pagination|counter|rows', (value) => {
+  localize.langBind('pagination|counter|rows', (value) => {
     rowsEl.innerHTML = value
   })
 
   if (totalRows) {
-    valueEl.innerHTML = ' ' + currentRow + '-' + Math.min(currentRow + pageSize - 1, totalRows) + ' '
+    valueEl.innerHTML = ` ${currentRow}-${Math.min(currentRow + pageSize - 1, totalRows)} `
 
-    totalEl.innerHTML = ' ' + totalRows + ' '
+    totalEl.innerHTML = ` ${totalRows} `
 
     el.appendChild(showingEl)
     el.appendChild(valueEl)

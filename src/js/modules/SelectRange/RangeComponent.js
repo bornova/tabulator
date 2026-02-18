@@ -3,14 +3,18 @@ export default class RangeComponent {
     this._range = range
 
     return new Proxy(this, {
-      get: function (target, name, receiver) {
-        if (typeof target[name] !== 'undefined') {
-          return target[name]
-        } else {
-          return target._range.table.componentFunctionBinder.handle('range', target._range, name)
+      get(target, name, receiver) {
+        if (Reflect.has(target, name)) {
+          return Reflect.get(target, name, receiver)
         }
+
+        return target._range.table.componentFunctionBinder.handle('range', target._range, name)
       }
     })
+  }
+
+  _resolveCell(cell) {
+    return cell ? cell._cell : cell
   }
 
   getElement() {
@@ -59,20 +63,20 @@ export default class RangeComponent {
 
   setBounds(start, end) {
     if (this._range.destroyedGuard('setBounds')) {
-      this._range.setBounds(start ? start._cell : start, end ? end._cell : end)
+      this._range.setBounds(this._resolveCell(start), this._resolveCell(end))
     }
   }
 
   setStartBound(start) {
     if (this._range.destroyedGuard('setStartBound')) {
-      this._range.setEndBound(start ? start._cell : start)
+      this._range.setEndBound(this._resolveCell(start))
       this._range.rangeManager.layoutElement()
     }
   }
 
   setEndBound(end) {
     if (this._range.destroyedGuard('setEndBound')) {
-      this._range.setEndBound(end ? end._cell : end)
+      this._range.setEndBound(this._resolveCell(end))
       this._range.rangeManager.layoutElement()
     }
   }

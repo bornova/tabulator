@@ -1,5 +1,5 @@
 export default function (list, options = {}, setFileContents) {
-  const delimiter = options.delimiter ? options.delimiter : ','
+  const delimiter = options.delimiter || ','
   let fileContents = []
   const headers = []
 
@@ -19,9 +19,7 @@ export default function (list, options = {}, setFileContents) {
         row.columns.forEach((col, i) => {
           if (col && col.depth === 1) {
             headers[i] =
-              typeof col.value === 'undefined' || col.value === null
-                ? ''
-                : '"' + String(col.value).split('"').join('""') + '"'
+              col.value === undefined || col.value === null ? '' : `"${String(col.value).split('"').join('""')}"`
           }
         })
         break
@@ -39,7 +37,7 @@ export default function (list, options = {}, setFileContents) {
                 break
             }
 
-            item.push('"' + String(col.value).split('"').join('""') + '"')
+            item.push(`"${String(col.value).split('"').join('""')}"`)
           }
         })
 
@@ -55,7 +53,7 @@ export default function (list, options = {}, setFileContents) {
   fileContents = fileContents.join('\n')
 
   if (options.bom) {
-    fileContents = '\ufeff' + fileContents
+    fileContents = `\ufeff${fileContents}`
   }
 
   setFileContents(fileContents, 'text/csv')

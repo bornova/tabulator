@@ -10,55 +10,38 @@ export default function (a, b, aRow, bRow, column, dir, params) {
 
   if (params.valueMap) {
     if (typeof params.valueMap === 'string') {
-      valueMap = function (value) {
-        return value.map((item) => {
-          return Helpers.retrieveNestedData(table.options.nestedFieldSeparator, params.valueMap, item)
-        })
-      }
+      valueMap = (value) =>
+        value.map((item) => Helpers.retrieveNestedData(table.options.nestedFieldSeparator, params.valueMap, item))
     } else {
       valueMap = params.valueMap
     }
   }
 
-  function calc(value) {
-    let result
-
-    if (valueMap) {
-      value = valueMap(value)
-    }
+  const calc = (value) => {
+    const mappedValue = valueMap ? valueMap(value) : value
 
     switch (type) {
       case 'length':
-        result = value.length
-        break
+        return mappedValue.length
 
       case 'sum':
-        result = value.reduce(function (c, d) {
-          return c + d
-        })
-        break
+        return mappedValue.reduce((current, next) => current + next, 0)
 
       case 'max':
-        result = Math.max.apply(null, value)
-        break
+        return Math.max.apply(null, mappedValue)
 
       case 'min':
-        result = Math.min.apply(null, value)
-        break
+        return Math.min.apply(null, mappedValue)
 
       case 'avg':
-        result =
-          value.reduce(function (c, d) {
-            return c + d
-          }) / value.length
-        break
+        return mappedValue.length ? mappedValue.reduce((current, next) => current + next, 0) / mappedValue.length : 0
 
       case 'string':
-        result = value.join('')
-        break
-    }
+        return mappedValue.join('')
 
-    return result
+      default:
+        return mappedValue.length
+    }
   }
 
   // handle non array values
@@ -68,12 +51,13 @@ export default function (a, b, aRow, bRow, column, dir, params) {
     emptyAlign = 1
   } else {
     if (type === 'string') {
-      return String(calc(a))
-        .toLowerCase()
-        .localeCompare(String(calc(b)).toLowerCase())
-    } else {
-      return calc(b) - calc(a)
+      const aValue = String(calc(a)).toLowerCase()
+      const bValue = String(calc(b)).toLowerCase()
+
+      return aValue.localeCompare(bValue)
     }
+
+    return calc(b) - calc(a)
   }
 
   // fix empty values in position

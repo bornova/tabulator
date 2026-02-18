@@ -7,18 +7,19 @@ export default function (cell, formatterParams = {}, onRendered) {
   const max = formatterParams.max ? formatterParams.max : 100
   const min = formatterParams.min ? formatterParams.min : 0
   const legendAlign = formatterParams.legendAlign ? formatterParams.legendAlign : 'center'
-  let percent
   let percentValue
   let color
   let legend
   let legendColor
+  let legendEl
 
   // make sure value is in range
-  percentValue = parseFloat(value) <= max ? parseFloat(value) : max
+  const parsedValue = parseFloat(value)
+  percentValue = parsedValue <= max ? parsedValue : max
   percentValue = parseFloat(percentValue) >= min ? parseFloat(percentValue) : min
 
   // workout percentage
-  percent = (max - min) / 100
+  const percent = (max - min) / 100
   percentValue = Math.round((percentValue - min) / percent)
 
   // set bar color
@@ -87,7 +88,7 @@ export default function (cell, formatterParams = {}, onRendered) {
 
   const barEl = document.createElement('div')
   barEl.style.display = 'inline-block'
-  barEl.style.width = percentValue + '%'
+  barEl.style.width = `${percentValue}%`
   barEl.style.backgroundColor = color
   barEl.style.height = '100%'
 
@@ -100,7 +101,7 @@ export default function (cell, formatterParams = {}, onRendered) {
   barContainer.style.height = '100%'
 
   if (legend) {
-    var legendEl = document.createElement('div')
+    legendEl = document.createElement('div')
     legendEl.style.position = 'absolute'
     legendEl.style.top = 0
     legendEl.style.left = 0
@@ -110,7 +111,7 @@ export default function (cell, formatterParams = {}, onRendered) {
     legendEl.innerHTML = legend
   }
 
-  onRendered(function () {
+  onRendered(() => {
     // handle custom element needed if formatter is to be included in printed/downloaded output
     if (!(cell instanceof CellComponent)) {
       const holderEl = document.createElement('div')

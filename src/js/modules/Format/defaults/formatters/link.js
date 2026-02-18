@@ -55,7 +55,7 @@ export default function (cell, formatterParams, onRendered) {
       }
     }
 
-    el.setAttribute('href', urlPrefix + value)
+    el.setAttribute('href', `${urlPrefix}${value}`)
 
     if (formatterParams.target) {
       el.setAttribute('target', formatterParams.target)
@@ -74,7 +74,7 @@ export default function (cell, formatterParams, onRendered) {
     el.innerHTML = this.emptyToSpace(this.sanitizeHTML(label))
 
     return el
-  } else {
-    return '&nbsp;'
   }
+
+  return '&nbsp;'
 }

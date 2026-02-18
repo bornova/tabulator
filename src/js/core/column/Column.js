@@ -106,11 +106,11 @@ export default class Column extends CoreFeature {
 
     // map columnDefaults onto column definitions
     if (defaults) {
-      for (const key in defaults) {
+      Object.entries(defaults).forEach(([key, value]) => {
         if (typeof this.definition[key] === 'undefined') {
-          this.definition[key] = defaults[key]
+          this.definition[key] = value
         }
-      }
+      })
     }
 
     this.definition = this.table.columnManager.optionsList.generate(Column.defaultOptionList, this.definition)
@@ -118,7 +118,7 @@ export default class Column extends CoreFeature {
 
   checkDefinition() {
     Object.keys(this.definition).forEach((key) => {
-      if (Column.defaultOptionList.indexOf(key) === -1) {
+      if (!Column.defaultOptionList.includes(key)) {
         console.warn("Invalid column definition option in '" + (this.field || this.definition.title) + "' column:", key)
       }
     })
@@ -148,7 +148,7 @@ export default class Column extends CoreFeature {
   // trigger position registration
   reRegisterPosition() {
     if (this.isGroup) {
-      this.columns.forEach(function (column) {
+      this.columns.forEach((column) => {
         column.reRegisterPosition()
       })
     } else {
@@ -160,7 +160,7 @@ export default class Column extends CoreFeature {
   _initialize() {
     const def = this.definition
 
-    while (this.element.firstChild) this.element.removeChild(this.element.firstChild)
+    this.element.replaceChildren()
 
     if (def.headerVertical) {
       this.element.classList.add('tabulator-col-vertical')
@@ -200,7 +200,7 @@ export default class Column extends CoreFeature {
 
     // assign additional css classes to column header
     if (def.cssClass) {
-      const classNames = def.cssClass.split(' ')
+      const classNames = def.cssClass.split(/\s+/).filter(Boolean)
       classNames.forEach((className) => {
         this.element.classList.add(className)
       })
@@ -298,14 +298,12 @@ export default class Column extends CoreFeature {
   }
 
   _formatColumnHeaderTitle(el, title) {
-    const contents = this.chain('column-format', [this, title, el], null, () => {
-      return title
-    })
+    const contents = this.chain('column-format', [this, title, el], null, () => title)
 
     switch (typeof contents) {
       case 'object':
         if (contents instanceof Node) {
-          el.appendChild(contents)
+          el.replaceChildren(contents)
         } else {
           el.innerHTML = ''
           console.warn(
@@ -330,7 +328,7 @@ export default class Column extends CoreFeature {
 
     // asign additional css classes to column header
     if (this.definition.cssClass) {
-      const classNames = this.definition.cssClass.split(' ')
+      const classNames = this.definition.cssClass.split(/\s+/).filter(Boolean)
       classNames.forEach((className) => {
         this.element.classList.add(className)
       })
@@ -380,7 +378,7 @@ export default class Column extends CoreFeature {
     const length = structure.length
 
     for (let i = 0; i < length; i++) {
-      if (i == length - 1) {
+      if (i === length - 1) {
         dataObj[structure[i]] = value
       } else {
         if (!dataObj[structure[i]]) {
@@ -416,12 +414,12 @@ export default class Column extends CoreFeature {
       : height || this.parent.getHeadersElement().clientHeight
     // var parentHeight = this.parent.isGroup ? this.parent.getGroupElement().clientHeight : this.parent.getHeadersElement().clientHeight;
 
-    this.element.style.height = parentHeight + 'px'
+    this.element.style.height = `${parentHeight}px`
 
     this.dispatch('column-height', this, this.element.style.height)
 
     if (this.isGroup) {
-      this.groupElement.style.minHeight = parentHeight - this.contentElement.offsetHeight + 'px'
+      this.groupElement.style.minHeight = `${parentHeight - this.contentElement.offsetHeight}px`
     }
 
     // vertically align cell contents
@@ -433,7 +431,7 @@ export default class Column extends CoreFeature {
     // 	}
     // }
 
-    this.columns.forEach(function (column) {
+    this.columns.forEach((column) => {
       column.verticalAlign(alignment)
     })
   }
@@ -445,7 +443,7 @@ export default class Column extends CoreFeature {
     this.element.style.minHeight = ''
     this.groupElement.style.minHeight = ''
 
-    this.columns.forEach(function (column) {
+    this.columns.forEach((column) => {
       column.clearVerticalAlign()
     })
 
@@ -474,28 +472,12 @@ export default class Column extends CoreFeature {
 
   // return the first column in a group
   getFirstColumn() {
-    if (!this.isGroup) {
-      return this
-    } else {
-      if (this.columns.length) {
-        return this.columns[0].getFirstColumn()
-      } else {
-        return false
-      }
-    }
+    return !this.isGroup ? this : this.columns.length ? this.columns[0].getFirstColumn() : false
   }
 
   // return the last column in a group
   getLastColumn() {
-    if (!this.isGroup) {
-      return this
-    } else {
-      if (this.columns.length) {
-        return this.columns[this.columns.length - 1].getLastColumn()
-      } else {
-        return false
-      }
-    }
+    return !this.isGroup ? this : this.columns.length ? this.columns[this.columns.length - 1].getLastColumn() : false
   }
 
   // return all columns in a group
@@ -534,7 +516,7 @@ export default class Column extends CoreFeature {
     const colDefs = []
 
     if (this.isGroup && updateBranches) {
-      this.columns.forEach(function (column) {
+      this.columns.forEach((column) => {
         colDefs.push(column.getDefinition(true))
       })
 
@@ -546,13 +528,7 @@ export default class Column extends CoreFeature {
 
   /// ///////////////// Actions ////////////////////
   checkColumnVisibility() {
-    let visible = false
-
-    this.columns.forEach(function (column) {
-      if (column.visible) {
-        visible = true
-      }
-    })
+    const visible = this.columns.some((column) => column.visible)
 
     if (visible) {
       this.show()
@@ -573,7 +549,7 @@ export default class Column extends CoreFeature {
         this.parent.checkColumnVisibility()
       }
 
-      this.cells.forEach(function (cell) {
+      this.cells.forEach((cell) => {
         cell.show()
       })
 
@@ -612,7 +588,7 @@ export default class Column extends CoreFeature {
         this.parent.checkColumnVisibility()
       }
 
-      this.cells.forEach(function (cell) {
+      this.cells.forEach((cell) => {
         cell.hide()
       })
 
@@ -636,15 +612,15 @@ export default class Column extends CoreFeature {
     let childWidth = 0
 
     if (this.contentElement && this.columns.length) {
-      this.columns.forEach(function (column) {
+      this.columns.forEach((column) => {
         if (column.visible) {
           childWidth += column.getWidth()
         }
       })
 
-      this.contentElement.style.maxWidth = childWidth - 1 + 'px'
+      this.contentElement.style.maxWidth = `${childWidth - 1}px`
       if (this.table.initialized) {
-        this.element.style.width = childWidth + 'px'
+        this.element.style.width = `${childWidth}px`
       }
 
       if (this.parent.isGroup) {
@@ -671,8 +647,8 @@ export default class Column extends CoreFeature {
   }
 
   setWidthActual(width) {
-    if (isNaN(width)) {
-      width = Math.floor((this.table.element.clientWidth / 100) * parseInt(width))
+    if (Number.isNaN(Number(width))) {
+      width = Math.floor((this.table.element.clientWidth / 100) * Number.parseInt(width, 10))
     }
 
     width = Math.max(this.minWidth, width)
@@ -687,7 +663,7 @@ export default class Column extends CoreFeature {
     this.element.style.width = this.widthStyled
 
     if (!this.isGroup) {
-      this.cells.forEach(function (cell) {
+      this.cells.forEach((cell) => {
         cell.setWidth()
       })
     }
@@ -706,7 +682,7 @@ export default class Column extends CoreFeature {
   checkCellHeights() {
     const rows = []
 
-    this.cells.forEach(function (cell) {
+    this.cells.forEach((cell) => {
       if (cell.row.heightInitialized) {
         if (cell.row.getElement().offsetParent !== null) {
           rows.push(cell.row)
@@ -717,11 +693,11 @@ export default class Column extends CoreFeature {
       }
     })
 
-    rows.forEach(function (row) {
+    rows.forEach((row) => {
       row.calcHeight()
     })
 
-    rows.forEach(function (row) {
+    rows.forEach((row) => {
       row.setCellHeight()
     })
   }
@@ -730,7 +706,7 @@ export default class Column extends CoreFeature {
     let width = 0
 
     if (this.isGroup) {
-      this.columns.forEach(function (column) {
+      this.columns.forEach((column) => {
         if (column.visible) {
           width += column.getWidth()
         }
@@ -776,7 +752,7 @@ export default class Column extends CoreFeature {
 
     this.element.style.minWidth = this.minWidthStyled
 
-    this.cells.forEach(function (cell) {
+    this.cells.forEach((cell) => {
       cell.setMinWidth()
     })
   }
@@ -801,15 +777,15 @@ export default class Column extends CoreFeature {
 
     this.element.style.maxWidth = this.maxWidthStyled
 
-    this.cells.forEach(function (cell) {
+    this.cells.forEach((cell) => {
       cell.setMaxWidth()
     })
   }
 
   delete() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.isGroup) {
-        this.columns.forEach(function (column) {
+        this.columns.forEach((column) => {
           column.delete()
         })
       }
@@ -826,10 +802,10 @@ export default class Column extends CoreFeature {
         this.element.parentNode.removeChild(this.element)
       }
 
-      this.element = false
-      this.contentElement = false
-      this.titleElement = false
-      this.groupElement = false
+      this.element = null
+      this.contentElement = null
+      this.titleElement = null
+      this.groupElement = null
 
       if (this.parent.isGroup) {
         this.parent.removeChild(this)
@@ -944,11 +920,13 @@ export default class Column extends CoreFeature {
 
     if (!this.isGroup) {
       if (!this.parent.isGroup) {
-        definition = Object.assign({}, this.getDefinition())
-        definition = Object.assign(definition, updates)
+        definition = {
+          ...this.getDefinition(),
+          ...updates
+        }
 
         return this.table.columnManager.addColumn(definition, false, this).then((column) => {
-          if (definition.field == this.field) {
+          if (definition.field === this.field) {
             this.field = false // clear field name to prevent deletion of duplicate column from arrays
           }
 

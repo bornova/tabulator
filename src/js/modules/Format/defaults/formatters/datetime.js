@@ -22,15 +22,13 @@ export default function (cell, formatterParams, onRendered) {
       }
 
       return newDatetime.toFormat(outputFormat)
-    } else {
-      if (invalid === true || !value) {
-        return value
-      } else if (typeof invalid === 'function') {
-        return invalid(value)
-      } else {
-        return invalid
-      }
     }
+
+    if (invalid === true || !value) {
+      return value
+    }
+
+    return typeof invalid === 'function' ? invalid(value) : invalid
   } else {
     console.error("Format Error - 'datetime' formatter is dependant on luxon.js")
   }

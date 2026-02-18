@@ -1,14 +1,12 @@
 export default function (cell, formatterParams, onRendered) {
   const value = cell.getValue()
   const size = formatterParams.size || 15
-  const sizePx = size + 'px'
-  let containEl
-  let switchEl
-  const onValue = formatterParams.hasOwnProperty('onValue') ? formatterParams.onValue : true
-  const offValue = formatterParams.hasOwnProperty('offValue') ? formatterParams.offValue : false
+  const sizePx = `${size}px`
+  const onValue = Object.prototype.hasOwnProperty.call(formatterParams, 'onValue') ? formatterParams.onValue : true
+  const offValue = Object.prototype.hasOwnProperty.call(formatterParams, 'offValue') ? formatterParams.offValue : false
   const state = formatterParams.onTruthy ? value : value === onValue
 
-  containEl = document.createElement('div')
+  const containEl = document.createElement('div')
   containEl.classList.add('tabulator-toggle')
 
   if (state) {
@@ -24,16 +22,16 @@ export default function (cell, formatterParams, onRendered) {
     }
   }
 
-  containEl.style.width = 2.5 * size + 'px'
+  containEl.style.width = `${2.5 * size}px`
   containEl.style.borderRadius = sizePx
 
   if (formatterParams.clickable) {
-    containEl.addEventListener('click', (e) => {
+    containEl.addEventListener('click', () => {
       cell.setValue(state ? offValue : onValue)
     })
   }
 
-  switchEl = document.createElement('div')
+  const switchEl = document.createElement('div')
   switchEl.classList.add('tabulator-toggle-switch')
 
   switchEl.style.height = sizePx

@@ -39,7 +39,7 @@ export default class Accessor extends Module {
     const config = {}
 
     this.allowedTypes.forEach((type) => {
-      const key = 'accessor' + (type.charAt(0).toUpperCase() + type.slice(1))
+      const key = `accessor${type.charAt(0).toUpperCase() + type.slice(1)}`
       let accessor
 
       if (column.definition[key]) {
@@ -62,35 +62,32 @@ export default class Accessor extends Module {
   }
 
   lookupAccessor(value) {
-    let accessor = false
-
-    // set column accessor
-    switch (typeof value) {
-      case 'string':
-        if (Accessor.accessors[value]) {
-          accessor = Accessor.accessors[value]
-        } else {
-          console.warn('Accessor Error - No such accessor found, ignoring: ', value)
-        }
-        break
-
-      case 'function':
-        accessor = value
-        break
+    if (typeof value === 'function') {
+      return value
     }
 
-    return accessor
+    if (typeof value === 'string') {
+      const accessor = Accessor.accessors[value]
+
+      if (accessor) {
+        return accessor
+      }
+
+      console.warn('Accessor Error - No such accessor found, ignoring: ', value)
+    }
+
+    return false
   }
 
   // apply accessor to row
   transformRow(row, type) {
-    const key = 'accessor' + (type.charAt(0).toUpperCase() + type.slice(1))
+    const key = `accessor${type.charAt(0).toUpperCase() + type.slice(1)}`
     const rowComponent = row.getComponent()
 
     // clone data object with deep copy to isolate internal data from returned result
     const data = Helpers.deepClone(row.data || {})
 
-    this.table.columnManager.traverse(function (column) {
+    this.table.columnManager.traverse((column) => {
       let value, accessor, params, colComponent
 
       if (column.modules.accessor) {
@@ -99,7 +96,7 @@ export default class Accessor extends Module {
         if (accessor) {
           value = column.getFieldValue(data)
 
-          if (value != 'undefined') {
+          if (value !== 'undefined') {
             colComponent = column.getComponent()
             params =
               typeof accessor.params === 'function'

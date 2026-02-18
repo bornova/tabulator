@@ -1,14 +1,11 @@
 // draggable progress bar
 export default function (cell, onRendered, success, cancel, editorParams) {
   const element = cell.getElement()
+  const firstInnerDiv = element.getElementsByTagName('div')[0]
   const max =
-    typeof editorParams.max === 'undefined'
-      ? (element.getElementsByTagName('div')[0] && element.getElementsByTagName('div')[0].getAttribute('max')) || 100
-      : editorParams.max
+    editorParams.max === undefined ? (firstInnerDiv && firstInnerDiv.getAttribute('max')) || 100 : editorParams.max
   const min =
-    typeof editorParams.min === 'undefined'
-      ? (element.getElementsByTagName('div')[0] && element.getElementsByTagName('div')[0].getAttribute('min')) || 0
-      : editorParams.min
+    editorParams.min === undefined ? (firstInnerDiv && firstInnerDiv.getAttribute('min')) || 0 : editorParams.min
   const percent = (max - min) / 100
   let value = cell.getValue() || 0
   const handle = document.createElement('div')
@@ -25,8 +22,8 @@ export default function (cell, onRendered, success, cancel, editorParams) {
         Math.round(
           bar.offsetWidth /
             ((element.clientWidth -
-              parseInt(style.getPropertyValue('padding-left')) -
-              parseInt(style.getPropertyValue('padding-right'))) /
+              Number.parseInt(style.getPropertyValue('padding-left'), 10) -
+              Number.parseInt(style.getPropertyValue('padding-right'), 10)) /
               100)
         ) +
       min
@@ -57,9 +54,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) == '+') {
+      if (key.charAt(0) === '+') {
         key = key.slice(1)
-        bar.setAttribute(key, bar.getAttribute(key) + editorParams.elementAttributes['+' + key])
+        bar.setAttribute(key, bar.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
       } else {
         bar.setAttribute(key, editorParams.elementAttributes[key])
       }
@@ -76,29 +73,29 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   // workout percentage
   value = Math.round((value - min) / percent)
   // bar.style.right = value + "%";
-  bar.style.width = value + '%'
+  bar.style.width = `${value}%`
 
   element.setAttribute('aria-valuemin', min)
   element.setAttribute('aria-valuemax', max)
 
   bar.appendChild(handle)
 
-  handle.addEventListener('mousedown', function (e) {
+  handle.addEventListener('mousedown', (e) => {
     mouseDrag = e.screenX
     mouseDragWidth = bar.offsetWidth
   })
 
-  handle.addEventListener('mouseover', function () {
+  handle.addEventListener('mouseover', () => {
     handle.style.cursor = 'ew-resize'
   })
 
-  element.addEventListener('mousemove', function (e) {
+  element.addEventListener('mousemove', (e) => {
     if (mouseDrag) {
-      bar.style.width = mouseDragWidth + e.screenX - mouseDrag + 'px'
+      bar.style.width = `${mouseDragWidth + e.screenX - mouseDrag}px`
     }
   })
 
-  element.addEventListener('mouseup', function (e) {
+  element.addEventListener('mouseup', (e) => {
     if (mouseDrag) {
       e.stopPropagation()
       e.stopImmediatePropagation()
@@ -111,16 +108,16 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   })
 
   // allow key based navigation
-  element.addEventListener('keydown', function (e) {
+  element.addEventListener('keydown', (e) => {
     switch (e.keyCode) {
       case 39: // right arrow
         e.preventDefault()
-        bar.style.width = bar.clientWidth + element.clientWidth / 100 + 'px'
+        bar.style.width = `${bar.clientWidth + element.clientWidth / 100}px`
         break
 
       case 37: // left arrow
         e.preventDefault()
-        bar.style.width = bar.clientWidth - element.clientWidth / 100 + 'px'
+        bar.style.width = `${bar.clientWidth - element.clientWidth / 100}px`
         break
 
       case 9: // tab
@@ -134,7 +131,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     }
   })
 
-  element.addEventListener('blur', function () {
+  element.addEventListener('blur', () => {
     cancel()
   })
 

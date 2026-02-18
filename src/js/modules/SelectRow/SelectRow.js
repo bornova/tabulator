@@ -103,12 +103,12 @@ export default class SelectRow extends Module {
     element.classList.toggle('tabulator-unselectable', !selectable)
 
     // set row selection class
-    if (self.checkRowSelectability(row)) {
-      if (self.table.options.selectableRows && self.table.options.selectableRows != 'highlight') {
+    if (selectable) {
+      if (self.table.options.selectableRows && self.table.options.selectableRows !== 'highlight') {
         if (self.table.options.selectableRowsRangeMode === 'click') {
           element.addEventListener('click', this.handleComplexRowClick.bind(this, row))
         } else {
-          element.addEventListener('click', function (e) {
+          element.addEventListener('click', () => {
             if (!self.table.modExists('edit') || !self.table.modules.edit.getCurrentCell()) {
               self.table._clearSelection()
             }
@@ -118,7 +118,7 @@ export default class SelectRow extends Module {
             }
           })
 
-          element.addEventListener('mousedown', function (e) {
+          element.addEventListener('mousedown', (e) => {
             if (e.shiftKey) {
               self.table._clearSelection()
 
@@ -135,18 +135,18 @@ export default class SelectRow extends Module {
             }
           })
 
-          element.addEventListener('mouseenter', function (e) {
+          element.addEventListener('mouseenter', () => {
             if (self.selecting) {
               self.table._clearSelection()
               self.toggleRow(row)
 
-              if (self.selectPrev[1] == row) {
+              if (self.selectPrev[1] === row) {
                 self.toggleRow(self.selectPrev[0])
               }
             }
           })
 
-          element.addEventListener('mouseout', function (e) {
+          element.addEventListener('mouseout', () => {
             if (self.selecting) {
               self.table._clearSelection()
               self.selectPrev.unshift(row)
@@ -168,8 +168,8 @@ export default class SelectRow extends Module {
       const fromRowIdx = lastClickedRowIdx <= rowIdx ? lastClickedRowIdx : rowIdx
       const toRowIdx = lastClickedRowIdx >= rowIdx ? lastClickedRowIdx : rowIdx
 
-      const rows = this.table.rowManager.getDisplayRows().slice(0)
-      let toggledRows = rows.splice(fromRowIdx, toRowIdx - fromRowIdx + 1)
+      const rows = this.table.rowManager.getDisplayRows()
+      let toggledRows = rows.slice(fromRowIdx, toRowIdx + 1)
 
       if (e.ctrlKey || e.metaKey) {
         toggledRows.forEach((toggledRow) => {
@@ -265,10 +265,11 @@ export default class SelectRow extends Module {
 
         this._rowSelectionChanged(false, changes)
       }
-    } else {
-      if (rowMatch) {
-        this._selectRow(rowMatch, false, true)
-      }
+      return
+    }
+
+    if (rowMatch) {
+      this._selectRow(rowMatch, false, true)
     }
   }
 
@@ -288,7 +289,7 @@ export default class SelectRow extends Module {
     const row = this.table.rowManager.findRow(rowInfo)
 
     if (row) {
-      if (this.selectedRows.indexOf(row) == -1) {
+      if (this.selectedRows.indexOf(row) === -1) {
         row.getElement().classList.add('tabulator-selected')
         if (!row.modules.select) {
           row.modules.select = {}
@@ -313,7 +314,7 @@ export default class SelectRow extends Module {
       }
     } else {
       if (!silent) {
-        console.warn('Selection Error - No such row found, ignoring selection:' + rowInfo)
+        console.warn(`Selection Error - No such row found, ignoring selection:${rowInfo}`)
       }
     }
   }
@@ -362,24 +363,22 @@ export default class SelectRow extends Module {
 
         this._rowSelectionChanged(silent, [], changes)
       }
-    } else {
-      if (rowMatch) {
-        this._deselectRow(rowMatch, silent, true)
-      }
+      return
+    }
+
+    if (rowMatch) {
+      this._deselectRow(rowMatch, silent, true)
     }
   }
 
   // deselect an individual row
   _deselectRow(rowInfo, silent) {
-    const self = this
-    const row = self.table.rowManager.findRow(rowInfo)
+    const row = this.table.rowManager.findRow(rowInfo)
     let index
     let element
 
     if (row) {
-      index = self.selectedRows.findIndex(function (selectedRow) {
-        return selectedRow == row
-      })
+      index = this.selectedRows.findIndex((selectedRow) => selectedRow === row)
 
       if (index > -1) {
         element = row.getElement()
@@ -396,7 +395,7 @@ export default class SelectRow extends Module {
         if (row.modules.select.checkboxEl) {
           row.modules.select.checkboxEl.checked = false
         }
-        self.selectedRows.splice(index, 1)
+        this.selectedRows.splice(index, 1)
 
         if (this.table.options.dataTreeSelectPropagate) {
           this.childRowSelection(row, false)
@@ -404,35 +403,23 @@ export default class SelectRow extends Module {
 
         this.dispatchExternal('rowDeselected', row.getComponent())
 
-        self._rowSelectionChanged(silent, undefined, row)
+        this._rowSelectionChanged(silent, undefined, row)
 
         return row
       }
     } else {
       if (!silent) {
-        console.warn('Deselection Error - No such row found, ignoring selection:' + rowInfo)
+        console.warn(`Deselection Error - No such row found, ignoring selection:${rowInfo}`)
       }
     }
   }
 
   getSelectedData() {
-    const data = []
-
-    this.selectedRows.forEach(function (row) {
-      data.push(row.getData())
-    })
-
-    return data
+    return this.selectedRows.map((row) => row.getData())
   }
 
   getSelectedRows() {
-    const rows = []
-
-    this.selectedRows.forEach(function (row) {
-      rows.push(row.getComponent())
-    })
-
-    return rows
+    return this.selectedRows.map((row) => row.getComponent())
   }
 
   _rowSelectionChanged(silent, selected = [], deselected = []) {
@@ -454,13 +441,13 @@ export default class SelectRow extends Module {
         selected = [selected]
       }
 
-      selected = selected.map((row) => row.getComponent())
+      selected = selected.filter((row) => row).map((row) => row.getComponent())
 
       if (!Array.isArray(deselected)) {
         deselected = [deselected]
       }
 
-      deselected = deselected.map((row) => row.getComponent())
+      deselected = deselected.filter((row) => row).map((row) => row.getComponent())
 
       this.dispatchExternal('rowSelectionChanged', this.getSelectedData(), this.getSelectedRows(), selected, deselected)
     }

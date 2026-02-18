@@ -1,30 +1,34 @@
 export default {
-  insert: function (fromRow, toRow, fromTable) {
+  insert(fromRow, toRow, fromTable) {
     this.table.addRow(fromRow.getData(), undefined, toRow)
+
     return true
   },
 
-  add: function (fromRow, toRow, fromTable) {
+  add(fromRow, toRow, fromTable) {
     this.table.addRow(fromRow.getData())
+
     return true
   },
 
-  update: function (fromRow, toRow, fromTable) {
-    if (toRow) {
-      toRow.update(fromRow.getData())
-      return true
+  update(fromRow, toRow, fromTable) {
+    if (!toRow) {
+      return false
     }
 
-    return false
+    toRow.update(fromRow.getData())
+
+    return true
   },
 
-  replace: function (fromRow, toRow, fromTable) {
-    if (toRow) {
-      this.table.addRow(fromRow.getData(), undefined, toRow)
-      toRow.delete()
-      return true
+  replace(fromRow, toRow, fromTable) {
+    if (!toRow) {
+      return false
     }
 
-    return false
+    this.table.addRow(fromRow.getData(), undefined, toRow)
+    toRow.delete()
+
+    return true
   }
 }

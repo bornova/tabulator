@@ -5,12 +5,16 @@ export default class ColumnComponent {
     this.type = 'ColumnComponent'
 
     return new Proxy(this, {
-      get: function (target, name, receiver) {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
+
         if (typeof target[name] !== 'undefined') {
           return target[name]
-        } else {
-          return target._column.table.componentFunctionBinder.handle('column', target._column, name)
         }
+
+        return target._column.table.componentFunctionBinder.handle('column', target._column, name)
       }
     })
   }
@@ -32,13 +36,7 @@ export default class ColumnComponent {
   }
 
   getCells() {
-    const cells = []
-
-    this._column.cells.forEach(function (cell) {
-      cells.push(cell.getComponent())
-    })
-
-    return cells
+    return this._column.cells.map((cell) => cell.getComponent())
   }
 
   isVisible() {
@@ -47,7 +45,7 @@ export default class ColumnComponent {
 
   show() {
     if (this._column.isGroup) {
-      this._column.columns.forEach(function (column) {
+      this._column.columns.forEach((column) => {
         column.show()
       })
     } else {
@@ -57,7 +55,7 @@ export default class ColumnComponent {
 
   hide() {
     if (this._column.isGroup) {
-      this._column.columns.forEach(function (column) {
+      this._column.columns.forEach((column) => {
         column.hide()
       })
     } else {
@@ -66,11 +64,7 @@ export default class ColumnComponent {
   }
 
   toggle() {
-    if (this._column.visible) {
-      this.hide()
-    } else {
-      this.show()
-    }
+    this._column.visible ? this.hide() : this.show()
   }
 
   delete() {
@@ -78,15 +72,7 @@ export default class ColumnComponent {
   }
 
   getSubColumns() {
-    const output = []
-
-    if (this._column.columns.length) {
-      this._column.columns.forEach(function (column) {
-        output.push(column.getComponent())
-      })
-    }
-
-    return output
+    return this._column.columns.map((column) => column.getComponent())
   }
 
   getParentColumn() {
@@ -136,13 +122,7 @@ export default class ColumnComponent {
   }
 
   setWidth(width) {
-    let result
-
-    if (width === true) {
-      result = this._column.reinitializeWidth(true)
-    } else {
-      result = this._column.setWidth(width)
-    }
+    const result = width === true ? this._column.reinitializeWidth(true) : this._column.setWidth(width)
 
     this._column.table.columnManager.rerenderColumns(true)
 

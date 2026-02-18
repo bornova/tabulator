@@ -28,16 +28,14 @@ export default function (list, options, setFileContents) {
     list.forEach((row, i) => {
       const rowData = []
 
-      row.columns.forEach(function (col, j) {
+      row.columns.forEach((col, j) => {
         if (col) {
           rowData.push(
             !(col.value instanceof Date) && typeof col.value === 'object' ? JSON.stringify(col.value) : col.value
           )
 
-          if (col.width > 1 || col.height > -1) {
-            if (col.height > 1 || col.width > 1) {
-              merges.push({ s: { r: i, c: j }, e: { r: i + col.height - 1, c: j + col.width - 1 } })
-            }
+          if (col.height > 1 || col.width > 1) {
+            merges.push({ s: { r: i, c: j }, e: { r: i + col.height - 1, c: j + col.width - 1 } })
           }
         } else {
           rowData.push('')
@@ -65,7 +63,7 @@ export default function (list, options, setFileContents) {
   }
 
   if (options.sheets) {
-    for (var sheet in options.sheets) {
+    for (const sheet in options.sheets) {
       if (options.sheets[sheet] === true) {
         workbook.SheetNames.push(sheet)
         workbook.Sheets[sheet] = generateSheet()
@@ -95,7 +93,7 @@ export default function (list, options, setFileContents) {
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
     const view = new Uint8Array(buf)
-    for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff
+    for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xff
     return buf
   }
 

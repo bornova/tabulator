@@ -46,7 +46,7 @@ export default class Download extends Module {
   download(type, filename, options, range, interceptCallback) {
     let downloadFunc = false
 
-    function buildLink(data, mime) {
+    const buildLink = (data, mime) => {
       if (interceptCallback) {
         if (interceptCallback === true) {
           this.triggerDownload(data, mime, type, filename, true)
@@ -60,18 +60,16 @@ export default class Download extends Module {
 
     if (typeof type === 'function') {
       downloadFunc = type
+    } else if (Download.downloaders[type]) {
+      downloadFunc = Download.downloaders[type]
     } else {
-      if (Download.downloaders[type]) {
-        downloadFunc = Download.downloaders[type]
-      } else {
-        console.warn('Download Error - No such download type found: ', type)
-      }
+      console.warn('Download Error - No such download type found: ', type)
     }
 
     if (downloadFunc) {
       const list = this.generateExportList(range)
 
-      downloadFunc.call(this.table, list, options || {}, buildLink.bind(this))
+      downloadFunc.call(this.table, list, options || {}, buildLink)
     }
   }
 
@@ -118,7 +116,7 @@ export default class Download extends Module {
       if (newTab) {
         window.open(window.URL.createObjectURL(blob))
       } else {
-        filename = filename || 'Tabulator.' + (typeof type === 'function' ? 'txt' : type)
+        filename = filename || `Tabulator.${typeof type === 'function' ? 'txt' : type}`
 
         if (navigator.msSaveOrOpenBlob) {
           navigator.msSaveOrOpenBlob(blob, filename)

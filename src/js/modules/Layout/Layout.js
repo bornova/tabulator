@@ -23,12 +23,12 @@ export default class Layout extends Module {
   // initialize layout system
   initialize() {
     const layout = this.table.options.layout
+    const modeExists = Boolean(Layout.modes[layout])
 
-    if (Layout.modes[layout]) {
-      this.mode = layout
-    } else {
-      console.warn("Layout Error - invalid mode set, defaulting to 'fitData' : " + layout)
-      this.mode = 'fitData'
+    this.mode = modeExists ? layout : 'fitData'
+
+    if (!modeExists) {
+      console.warn(`Layout Error - invalid mode set, defaulting to 'fitData' : ${layout}`)
     }
 
     this.table.element.setAttribute('tabulator-layout', this.mode)
@@ -50,14 +50,14 @@ export default class Layout extends Module {
 
   // trigger table layout
   layout(dataChanged) {
-    const variableHeight = this.table.columnManager.columnsByIndex.find(
+    const hasVariableHeightColumns = this.table.columnManager.columnsByIndex.find(
       (column) => column.definition.variableHeight || column.definition.formatter === 'textarea'
     )
 
     this.dispatch('layout-refreshing')
     Layout.modes[this.mode].call(this, this.table.columnManager.columnsByIndex, dataChanged)
 
-    if (variableHeight) {
+    if (hasVariableHeightColumns) {
       this.table.rowManager.normalizeHeight(true)
     }
 

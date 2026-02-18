@@ -24,15 +24,12 @@ export default class Keybindings extends Module {
 
   initialize() {
     const bindings = this.table.options.keybindings
-    const mergedBindings = {}
+    const mergedBindings = { ...Keybindings.bindings, ...bindings }
 
     this.watchKeys = {}
     this.pressedKeys = []
 
     if (bindings !== false) {
-      Object.assign(mergedBindings, Keybindings.bindings)
-      Object.assign(mergedBindings, bindings)
-
       this.mapBindings(mergedBindings)
       this.bindEvents()
     }
@@ -42,23 +39,24 @@ export default class Keybindings extends Module {
 
   mapBindings(bindings) {
     for (const key in bindings) {
-      if (Keybindings.actions[key]) {
-        if (bindings[key]) {
-          if (typeof bindings[key] !== 'object') {
-            bindings[key] = [bindings[key]]
-          }
-
-          bindings[key].forEach((binding) => {
-            const bindingList = Array.isArray(binding) ? binding : [binding]
-
-            bindingList.forEach((item) => {
-              this.mapBinding(key, item)
-            })
-          })
-        }
-      } else {
+      if (!Keybindings.actions[key]) {
         console.warn('Key Binding Error - no such action:', key)
+        continue
       }
+
+      if (!bindings[key]) {
+        continue
+      }
+
+      const actionBindings = Array.isArray(bindings[key]) ? bindings[key] : [bindings[key]]
+
+      actionBindings.forEach((binding) => {
+        const bindingList = Array.isArray(binding) ? binding : [binding]
+
+        bindingList.forEach((item) => {
+          this.mapBinding(key, item)
+        })
+      })
     }
   }
 
@@ -71,7 +69,7 @@ export default class Keybindings extends Module {
       meta: false
     }
 
-    const symbols = symbolsList.toString().toLowerCase().split(' ').join('').split('+')
+    const symbols = symbolsList.toString().toLowerCase().replace(/\s+/g, '').split('+')
 
     symbols.forEach((symbol) => {
       switch (symbol) {
@@ -87,44 +85,43 @@ export default class Keybindings extends Module {
           binding.meta = true
           break
 
-        default:
-          symbol = isNaN(symbol) ? symbol.toUpperCase().charCodeAt(0) : parseInt(symbol)
-          binding.keys.push(symbol)
+        default: {
+          const keyCode = isNaN(symbol) ? symbol.toUpperCase().charCodeAt(0) : parseInt(symbol)
+          binding.keys.push(keyCode)
 
-          if (!this.watchKeys[symbol]) {
-            this.watchKeys[symbol] = []
+          if (!this.watchKeys[keyCode]) {
+            this.watchKeys[keyCode] = []
           }
 
-          this.watchKeys[symbol].push(binding)
+          this.watchKeys[keyCode].push(binding)
+        }
       }
     })
   }
 
   bindEvents() {
-    const self = this
-
-    this.keyupBinding = function (e) {
+    this.keyupBinding = (e) => {
       const code = e.keyCode
-      const bindings = self.watchKeys[code]
+      const bindings = this.watchKeys[code]
 
       if (bindings) {
-        self.pressedKeys.push(code)
+        this.pressedKeys.push(code)
 
-        bindings.forEach(function (binding) {
-          self.checkBinding(e, binding)
+        bindings.forEach((binding) => {
+          this.checkBinding(e, binding)
         })
       }
     }
 
-    this.keydownBinding = function (e) {
+    this.keydownBinding = (e) => {
       const code = e.keyCode
-      const bindings = self.watchKeys[code]
+      const bindings = this.watchKeys[code]
 
       if (bindings) {
-        const index = self.pressedKeys.indexOf(code)
+        const index = this.pressedKeys.indexOf(code)
 
         if (index > -1) {
-          self.pressedKeys.splice(index, 1)
+          this.pressedKeys.splice(index, 1)
         }
       }
     }
@@ -147,11 +144,11 @@ export default class Keybindings extends Module {
   checkBinding(e, binding) {
     let match = true
 
-    if (e.ctrlKey == binding.ctrl && e.shiftKey == binding.shift && e.metaKey == binding.meta) {
+    if (e.ctrlKey === binding.ctrl && e.shiftKey === binding.shift && e.metaKey === binding.meta) {
       binding.keys.forEach((key) => {
         const index = this.pressedKeys.indexOf(key)
 
-        if (index == -1) {
+        if (index === -1) {
           match = false
         }
       })

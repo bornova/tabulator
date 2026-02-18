@@ -49,48 +49,45 @@ export default class Persistence extends Module {
       // determine persistent layout storage type
       const mode = this.table.options.persistenceMode
       const id = this.table.options.persistenceID
+      const resolveHandler = (customHandler, defaults, errorPrefix) => {
+        if (!customHandler) {
+          if (defaults[this.mode]) {
+            return defaults[this.mode]
+          }
+
+          console.warn(`${errorPrefix} - invalid handler set`, this.mode)
+          return false
+        }
+
+        if (typeof customHandler === 'function') {
+          return customHandler
+        }
+
+        if (defaults[customHandler]) {
+          return defaults[customHandler]
+        }
+
+        console.warn(`${errorPrefix} - invalid handler set`, customHandler)
+        return false
+      }
+
       let retrievedData
 
       this.mode = mode !== true ? mode : this.localStorageTest() ? 'local' : 'cookie'
 
-      if (this.table.options.persistenceReaderFunc) {
-        if (typeof this.table.options.persistenceReaderFunc === 'function') {
-          this.readFunc = this.table.options.persistenceReaderFunc
-        } else {
-          if (Persistence.readers[this.table.options.persistenceReaderFunc]) {
-            this.readFunc = Persistence.readers[this.table.options.persistenceReaderFunc]
-          } else {
-            console.warn('Persistence Read Error - invalid reader set', this.table.options.persistenceReaderFunc)
-          }
-        }
-      } else {
-        if (Persistence.readers[this.mode]) {
-          this.readFunc = Persistence.readers[this.mode]
-        } else {
-          console.warn('Persistence Read Error - invalid reader set', this.mode)
-        }
-      }
-
-      if (this.table.options.persistenceWriterFunc) {
-        if (typeof this.table.options.persistenceWriterFunc === 'function') {
-          this.writeFunc = this.table.options.persistenceWriterFunc
-        } else {
-          if (Persistence.writers[this.table.options.persistenceWriterFunc]) {
-            this.writeFunc = Persistence.writers[this.table.options.persistenceWriterFunc]
-          } else {
-            console.warn('Persistence Write Error - invalid reader set', this.table.options.persistenceWriterFunc)
-          }
-        }
-      } else {
-        if (Persistence.writers[this.mode]) {
-          this.writeFunc = Persistence.writers[this.mode]
-        } else {
-          console.warn('Persistence Write Error - invalid writer set', this.mode)
-        }
-      }
+      this.readFunc = resolveHandler(
+        this.table.options.persistenceReaderFunc,
+        Persistence.readers,
+        'Persistence Read Error'
+      )
+      this.writeFunc = resolveHandler(
+        this.table.options.persistenceWriterFunc,
+        Persistence.writers,
+        'Persistence Write Error'
+      )
 
       // set storage tag
-      this.id = 'tabulator-' + (id || this.table.element.getAttribute('id') || '')
+      this.id = `tabulator-${id || this.table.element.getAttribute('id') || ''}`
 
       this.config = {
         sort: this.table.options.persistence === true || this.table.options.persistence.sort,
@@ -189,7 +186,7 @@ export default class Persistence extends Module {
     if (this.config.sort) {
       sorters = this.load('sort')
 
-      if (!sorters === false) {
+      if (sorters !== false) {
         this.table.options.initialSort = sorters
       }
     }
@@ -197,14 +194,15 @@ export default class Persistence extends Module {
     if (this.config.filter) {
       filters = this.load('filter')
 
-      if (!filters === false) {
+      if (filters !== false) {
         this.table.options.initialFilter = filters
       }
     }
+
     if (this.config.headerFilter) {
       headerFilters = this.load('headerFilter')
 
-      if (!headerFilters === false) {
+      if (headerFilters !== false) {
         this.table.options.initialHeaderFilter = headerFilters
       }
     }
@@ -303,7 +301,7 @@ export default class Persistence extends Module {
       if (from) {
         if (mergeAllNew) {
           keys = Object.keys(column)
-        } else if (this.config.columns === true || this.config.columns == undefined) {
+        } else if (this.config.columns === true || this.config.columns === undefined) {
           keys = Object.keys(from)
           keys.push('width')
         } else {
@@ -343,7 +341,7 @@ export default class Persistence extends Module {
   _findColumn(columns, subject) {
     const type = subject.columns ? 'group' : subject.field ? 'field' : 'object'
 
-    return columns.find(function (col) {
+    return columns.find((col) => {
       switch (type) {
         case 'group':
           return col.title === subject.title && col.columns.length === subject.columns.length
@@ -394,7 +392,7 @@ export default class Persistence extends Module {
 
   // ensure sorters contain no function data
   validateSorters(data) {
-    data.forEach(function (item) {
+    data.forEach((item) => {
       item.column = item.field
       delete item.field
     })
@@ -454,7 +452,7 @@ export default class Persistence extends Module {
       } else {
         defStore.field = column.getField()
 
-        if (this.config.columns === true || this.config.columns == undefined) {
+        if (this.config.columns === true || this.config.columns === undefined) {
           keys = Object.keys(colDef)
           keys.push('width')
           keys.push('visible')

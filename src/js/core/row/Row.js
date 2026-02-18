@@ -36,12 +36,12 @@ export default class Row extends CoreFeature {
   }
 
   createElement() {
-    const el = document.createElement('div')
+    const element = document.createElement('div')
 
-    el.classList.add('tabulator-row')
-    el.setAttribute('role', 'row')
+    element.classList.add('tabulator-row')
+    element.setAttribute('role', 'row')
 
-    this.element = el
+    this.element = element
   }
 
   getElement() {
@@ -71,7 +71,7 @@ export default class Row extends CoreFeature {
     if (!this.initialized || force) {
       this.deleteCells()
 
-      while (this.element.firstChild) this.element.removeChild(this.element.firstChild)
+      this.element.replaceChildren()
 
       this.dispatch('row-layout-before', this)
 
@@ -153,7 +153,7 @@ export default class Row extends CoreFeature {
       }
     }
 
-    this.heightStyled = this.height ? this.height + 'px' : ''
+    this.heightStyled = this.height ? `${this.height}px` : ''
     this.outerHeight = this.element.offsetHeight
   }
 
@@ -164,7 +164,7 @@ export default class Row extends CoreFeature {
   calcMaxHeight() {
     let maxHeight = 0
 
-    this.cells.forEach(function (cell) {
+    this.cells.forEach((cell) => {
       const height = cell.getHeight()
 
       if (height > maxHeight) {
@@ -177,7 +177,7 @@ export default class Row extends CoreFeature {
 
   // set of cells
   setCellHeight() {
-    this.cells.forEach(function (cell) {
+    this.cells.forEach((cell) => {
       cell.setHeight()
     })
 
@@ -185,7 +185,7 @@ export default class Row extends CoreFeature {
   }
 
   clearCellHeight() {
-    this.cells.forEach(function (cell) {
+    this.cells.forEach((cell) => {
       cell.clearHeight()
     })
   }
@@ -203,11 +203,11 @@ export default class Row extends CoreFeature {
 
   // set height of rows
   setHeight(height, force) {
-    if (this.height != height || force) {
+    if (this.height !== height || force) {
       this.manualHeight = true
 
       this.height = height
-      this.heightStyled = height ? height + 'px' : ''
+      this.heightStyled = height ? `${height}px` : ''
 
       this.setCellHeight()
 
@@ -260,8 +260,10 @@ export default class Row extends CoreFeature {
       this.dispatch('row-data-save-before', this)
 
       if (this.subscribed('row-data-changing')) {
-        tempData = Object.assign(tempData, this.data)
-        tempData = Object.assign(tempData, updatedData)
+        tempData = {
+          ...this.data,
+          ...updatedData
+        }
       }
 
       newRowData = this.chain('row-data-changing', [this, tempData, updatedData], null, updatedData)
@@ -337,7 +339,7 @@ export default class Row extends CoreFeature {
       this.generateCells()
     }
 
-    match = this.cells.find(function (cell) {
+    match = this.cells.find((cell) => {
       return cell.column === column
     })
 
@@ -345,7 +347,7 @@ export default class Row extends CoreFeature {
   }
 
   getCellIndex(findCell) {
-    return this.cells.findIndex(function (cell) {
+    return this.cells.findIndex((cell) => {
       return cell === findCell
     })
   }
@@ -403,7 +405,7 @@ export default class Row extends CoreFeature {
 
     this.initialized = false
     this.heightInitialized = false
-    this.element = false
+    this.element = null
 
     this.dispatch('row-deleted', this)
   }
@@ -425,14 +427,14 @@ export default class Row extends CoreFeature {
     this.deleteCells()
 
     if (this.element) {
-      while (this.element.firstChild) this.element.removeChild(this.element.firstChild)
+      this.element.replaceChildren()
 
       if (this.element.parentNode) {
         this.element.parentNode.removeChild(this.element)
       }
     }
 
-    this.element = false
+    this.element = null
     this.modules = {}
   }
 
@@ -445,7 +447,7 @@ export default class Row extends CoreFeature {
   }
 
   setPosition(position) {
-    if (position != this.position) {
+    if (position !== this.position) {
       this.position = position
 
       this.positionWatchers.forEach((callback) => {

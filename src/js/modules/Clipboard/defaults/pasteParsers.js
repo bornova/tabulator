@@ -1,5 +1,5 @@
 export default {
-  table: function (clipboard) {
+  table(clipboard) {
     const data = []
     let headerFindSuccess = true
     const columns = this.table.columnManager.columns
@@ -9,14 +9,14 @@ export default {
     // get data from clipboard into array of columns and rows.
     clipboard = clipboard.split('\n')
 
-    clipboard.forEach(function (row) {
+    clipboard.forEach((row) => {
       data.push(row.split('\t'))
     })
 
     if (data.length && !(data.length === 1 && data[0].length < 2)) {
       // check if headers are present by title
-      data[0].forEach(function (value) {
-        const column = columns.find(function (column) {
+      data[0].forEach((value) => {
+        const column = columns.find((column) => {
           return value && column.definition.title && value.trim() && column.definition.title.trim() === value.trim()
         })
 
@@ -32,8 +32,8 @@ export default {
         headerFindSuccess = true
         columnMap = []
 
-        data[0].forEach(function (value) {
-          const column = columns.find(function (column) {
+        data[0].forEach((value) => {
+          const column = columns.find((column) => {
             return value && column.field && value.trim() && column.field.trim() === value.trim()
           })
 
@@ -54,10 +54,10 @@ export default {
         data.shift()
       }
 
-      data.forEach(function (item) {
+      data.forEach((item) => {
         const row = {}
 
-        item.forEach(function (value, i) {
+        item.forEach((value, i) => {
           if (columnMap[i]) {
             row[columnMap[i].field] = value
           }
@@ -67,8 +67,8 @@ export default {
       })
 
       return rows
-    } else {
-      return false
     }
+
+    return false
   }
 }

@@ -114,9 +114,7 @@ export default class Popup extends Module {
 
   initializeColumnHeaderPopup(column) {
     let icon = column.definition.headerPopupIcon
-    let headerPopupEl
-
-    headerPopupEl = document.createElement('span')
+    const headerPopupEl = document.createElement('span')
     headerPopupEl.classList.add('tabulator-header-popup-button')
 
     if (icon) {
@@ -166,7 +164,7 @@ export default class Popup extends Module {
   loadPopupEvent(contents, e, component, position) {
     let renderedCallback
 
-    function onRendered(callback) {
+    const onRendered = (callback) => {
       renderedCallback = callback
     }
 
@@ -176,8 +174,9 @@ export default class Popup extends Module {
       component = component._row
     }
 
-    contents =
-      typeof contents === 'function' ? contents.call(this.table, e, component.getComponent(), onRendered) : contents
+    const componentRef = component.getComponent()
+
+    contents = typeof contents === 'function' ? contents.call(this.table, e, componentRef, onRendered) : contents
 
     this.loadPopup(e, component, contents, renderedCallback, position)
   }
@@ -216,10 +215,12 @@ export default class Popup extends Module {
       popup.show(component.getElement(), position || 'center')
     }
 
+    const componentRef = component.getComponent()
+
     popup.hideOnBlur(() => {
-      this.dispatchExternal('popupClosed', component.getComponent())
+      this.dispatchExternal('popupClosed', componentRef)
     })
 
-    this.dispatchExternal('popupOpened', component.getComponent())
+    this.dispatchExternal('popupOpened', componentRef)
   }
 }

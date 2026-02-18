@@ -1,9 +1,11 @@
 import bindings from './keybindings/bindings.js'
 import actions from './keybindings/actions.js'
 
-export default {
+const extensions = {
   keybindings: {
     bindings,
     actions
   }
 }
+
+export default extensions

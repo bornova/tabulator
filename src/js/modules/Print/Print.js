@@ -51,18 +51,29 @@ export default class Print extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  resolvePrintContent(contentOption) {
+    return typeof contentOption === 'function' ? contentOption.call(this.table) : contentOption
+  }
+
+  appendPrintSection(rootElement, sectionElement, content) {
+    if (typeof content === 'string') {
+      sectionElement.innerHTML = content
+    } else {
+      sectionElement.appendChild(content)
+    }
+
+    rootElement.appendChild(sectionElement)
+  }
+
   replaceTable() {
+    const { printConfig, printStyled, printRowRange } = this.table.options
+
     if (!this.manualBlock) {
       this.element = document.createElement('div')
       this.element.classList.add('tabulator-print-table')
 
       this.element.appendChild(
-        this.table.modules.export.generateTable(
-          this.table.options.printConfig,
-          this.table.options.printStyled,
-          this.table.options.printRowRange,
-          'print'
-        )
+        this.table.modules.export.generateTable(printConfig, printStyled, printRowRange, 'print')
       )
 
       this.table.element.style.display = 'none'
@@ -81,65 +92,40 @@ export default class Print extends Module {
   }
 
   printFullscreen(visible, style, config) {
+    const { printConfig, printStyled, printRowRange, printHeader, printFooter, printFormatter } = this.table.options
     const scrollX = window.scrollX
     const scrollY = window.scrollY
     const headerEl = document.createElement('div')
     const footerEl = document.createElement('div')
     const tableEl = this.table.modules.export.generateTable(
-      typeof config !== 'undefined' ? config : this.table.options.printConfig,
-      typeof style !== 'undefined' ? style : this.table.options.printStyled,
-      visible || this.table.options.printRowRange,
+      typeof config !== 'undefined' ? config : printConfig,
+      typeof style !== 'undefined' ? style : printStyled,
+      visible || printRowRange,
       'print'
     )
-    let headerContent
-    let footerContent
 
     this.manualBlock = true
 
     this.element = document.createElement('div')
     this.element.classList.add('tabulator-print-fullscreen')
 
-    if (this.table.options.printHeader) {
+    if (printHeader) {
       headerEl.classList.add('tabulator-print-header')
-
-      headerContent =
-        typeof this.table.options.printHeader === 'function'
-          ? this.table.options.printHeader.call(this.table)
-          : this.table.options.printHeader
-
-      if (typeof headerContent === 'string') {
-        headerEl.innerHTML = headerContent
-      } else {
-        headerEl.appendChild(headerContent)
-      }
-
-      this.element.appendChild(headerEl)
+      this.appendPrintSection(this.element, headerEl, this.resolvePrintContent(printHeader))
     }
 
     this.element.appendChild(tableEl)
 
-    if (this.table.options.printFooter) {
+    if (printFooter) {
       footerEl.classList.add('tabulator-print-footer')
-
-      footerContent =
-        typeof this.table.options.printFooter === 'function'
-          ? this.table.options.printFooter.call(this.table)
-          : this.table.options.printFooter
-
-      if (typeof footerContent === 'string') {
-        footerEl.innerHTML = footerContent
-      } else {
-        footerEl.appendChild(footerContent)
-      }
-
-      this.element.appendChild(footerEl)
+      this.appendPrintSection(this.element, footerEl, this.resolvePrintContent(printFooter))
     }
 
     document.body.classList.add('tabulator-print-fullscreen-hide')
     document.body.appendChild(this.element)
 
-    if (this.table.options.printFormatter) {
-      this.table.options.printFormatter(this.element, tableEl)
+    if (printFormatter) {
+      printFormatter(this.element, tableEl)
     }
 
     window.print()

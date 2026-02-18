@@ -8,15 +8,15 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   input.setAttribute('type', 'number')
 
-  if (typeof editorParams.max !== 'undefined') {
+  if (editorParams.max !== undefined) {
     input.setAttribute('max', editorParams.max)
   }
 
-  if (typeof editorParams.min !== 'undefined') {
+  if (editorParams.min !== undefined) {
     input.setAttribute('min', editorParams.min)
   }
 
-  if (typeof editorParams.step !== 'undefined') {
+  if (editorParams.step !== undefined) {
     input.setAttribute('step', editorParams.step)
   }
 
@@ -27,9 +27,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) == '+') {
+      if (key.charAt(0) === '+') {
         key = key.slice(1)
-        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes['+' + key])
+        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
       } else {
         input.setAttribute(key, editorParams.elementAttributes[key])
       }
@@ -38,11 +38,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   input.value = cellValue
 
-  const blurFunc = function (e) {
-    onChange()
-  }
+  const blurFunc = () => onChange()
 
-  onRendered(function () {
+  onRendered(() => {
     if (cell.getType() === 'cell') {
       // submit new value on blur
       input.removeEventListener('blur', blurFunc)
@@ -62,7 +60,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   function onChange() {
     let value = input.value
 
-    if (!isNaN(value) && value !== '') {
+    if (!Number.isNaN(Number(value)) && value !== '') {
       value = Number(value)
     }
 
@@ -76,7 +74,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // submit new value on enter
-  input.addEventListener('keydown', function (e) {
+  input.addEventListener('keydown', (e) => {
     switch (e.keyCode) {
       case 13:
         // case 9:
@@ -89,7 +87,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
       case 38: // up arrow
       case 40: // down arrow
-        if (vertNav == 'editor') {
+        if (vertNav === 'editor') {
           e.stopImmediatePropagation()
           e.stopPropagation()
         }

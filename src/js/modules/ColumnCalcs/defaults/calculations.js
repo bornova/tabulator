@@ -1,10 +1,10 @@
 export default {
-  avg: function (values, data, calcParams) {
+  avg(values, data, calcParams) {
     let output = 0
     const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : 2
 
     if (values.length) {
-      output = values.reduce(function (sum, value) {
+      output = values.reduce((sum, value) => {
         return Number(sum) + Number(value)
       })
 
@@ -15,11 +15,11 @@ export default {
 
     return parseFloat(output).toString()
   },
-  max: function (values, data, calcParams) {
+  max(values, data, calcParams) {
     let output = null
     const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
 
-    values.forEach(function (value) {
+    values.forEach((value) => {
       value = Number(value)
 
       if (value > output || output === null) {
@@ -29,11 +29,11 @@ export default {
 
     return output !== null ? (precision !== false ? output.toFixed(precision) : output) : ''
   },
-  min: function (values, data, calcParams) {
+  min(values, data, calcParams) {
     let output = null
     const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
 
-    values.forEach(function (value) {
+    values.forEach((value) => {
       value = Number(value)
 
       if (value < output || output === null) {
@@ -43,36 +43,36 @@ export default {
 
     return output !== null ? (precision !== false ? output.toFixed(precision) : output) : ''
   },
-  sum: function (values, data, calcParams) {
+  sum(values, data, calcParams) {
     let output = 0
     const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
 
     if (values.length) {
-      values.forEach(function (value) {
+      values.forEach((value) => {
         value = Number(value)
 
-        output += !isNaN(value) ? Number(value) : 0
+        output += !Number.isNaN(value) ? Number(value) : 0
       })
     }
 
     return precision !== false ? output.toFixed(precision) : output
   },
-  concat: function (values, data, calcParams) {
+  concat(values, data, calcParams) {
     let output = 0
 
     if (values.length) {
-      output = values.reduce(function (sum, value) {
+      output = values.reduce((sum, value) => {
         return String(sum) + String(value)
       })
     }
 
     return output
   },
-  count: function (values, data, calcParams) {
+  count(values, data, calcParams) {
     let output = 0
 
     if (values.length) {
-      values.forEach(function (value) {
+      values.forEach((value) => {
         if (value) {
           output++
         }
@@ -81,7 +81,7 @@ export default {
 
     return output
   },
-  unique: function (values, data, calcParams) {
+  unique(values, data, calcParams) {
     const unique = values.filter((value, index) => {
       return (values || value === 0) && values.indexOf(value) === index
     })

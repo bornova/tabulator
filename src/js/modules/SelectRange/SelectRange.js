@@ -47,6 +47,8 @@ export default class SelectRange extends Module {
 
   initialize() {
     if (this.options('selectableRange')) {
+      const columns = this.options('columns')
+
       if (!this.options('selectableRows')) {
         this.maxRanges = this.options('selectableRange')
 
@@ -56,13 +58,13 @@ export default class SelectRange extends Module {
         console.warn('SelectRange functionality cannot be used in conjunction with row selection')
       }
 
-      if (this.options('columns').findIndex((column) => column.frozen) > 0) {
+      if (columns.findIndex((column) => column.frozen) > 0) {
         console.warn(
           'Having frozen column in arbitrary position with selectRange option may result in unpredictable behavior.'
         )
       }
 
-      if (this.options('columns').filter((column) => column.frozen) > 1) {
+      if (columns.filter((column) => column.frozen).length > 1) {
         console.warn('Having multiple frozen columns with selectRange option may result in unpredictable behavior.')
       }
     }
@@ -205,13 +207,10 @@ export default class SelectRange extends Module {
   /// ////////////////////////////////
 
   cellGetRanges(cell) {
-    let ranges = []
-
-    if (cell.column === this.rowHeader) {
-      ranges = this.ranges.filter((range) => range.occupiesRow(cell.row))
-    } else {
-      ranges = this.ranges.filter((range) => range.occupies(cell))
-    }
+    const ranges =
+      cell.column === this.rowHeader
+        ? this.ranges.filter((range) => range.occupiesRow(cell.row))
+        : this.ranges.filter((range) => range.occupies(cell))
 
     return ranges.map((range) => range.getComponent())
   }
@@ -232,32 +231,33 @@ export default class SelectRange extends Module {
   /// /////// Event Handlers /////////
   /// ////////////////////////////////
 
-  _handleMouseUp(e) {
+  _handleMouseUp(_e) {
     this.mousedown = false
     document.removeEventListener('mouseup', this.mouseUpEvent)
   }
 
   _handleKeyDown(e) {
+    const editModule = this.table.modules.edit
+
+    if (this.blockKeydown || (editModule && editModule.currentCell)) {
+      return
+    }
+
+    if (e.key === 'Enter') {
+      if (editModule) {
+        editModule.editCell(this.getActiveCell())
+      }
+
+      e.preventDefault()
+      return
+    }
+
     if (
-      !this.blockKeydown &&
-      (!this.table.modules.edit || (this.table.modules.edit && !this.table.modules.edit.currentCell))
+      (e.key === 'Backspace' || e.key === 'Delete') &&
+      this.options('selectableRangeClearCells') &&
+      this.activeRange
     ) {
-      if (e.key === 'Enter') {
-        // is editing a cell?
-        if (this.table.modules.edit && this.table.modules.edit.currentCell) {
-          return
-        }
-
-        this.table.modules.edit.editCell(this.getActiveCell())
-
-        e.preventDefault()
-      }
-
-      if ((e.key === 'Backspace' || e.key === 'Delete') && this.options('selectableRangeClearCells')) {
-        if (this.activeRange) {
-          this.activeRange.clearValues()
-        }
-      }
+      this.activeRange.clearValues()
     }
   }
 
@@ -278,7 +278,7 @@ export default class SelectRange extends Module {
         window.getSelection().removeAllRanges()
         window.getSelection().addRange(range)
       }
-    } catch (e) {}
+    } catch (_error) {}
   }
 
   restoreFocus(element) {
@@ -396,7 +396,7 @@ export default class SelectRange extends Module {
     this.activeRange.setBounds(false, cell, true)
   }
 
-  handleCellClick(e, cell) {
+  handleCellClick(_e, cell) {
     this.initializeFocus(cell)
   }
 
@@ -495,7 +495,7 @@ export default class SelectRange extends Module {
           (this.selecting === 'row' && (dir === 'left' || dir === 'right')) ||
           (this.selecting === 'column' && (dir === 'up' || dir === 'down'))
         ) {
-          return
+          return false
         }
       }
 
@@ -586,23 +586,15 @@ export default class SelectRange extends Module {
   }
 
   findJumpRow(column, rows, reverse, emptyStart, emptySide) {
-    if (reverse) {
-      rows = rows.reverse()
-    }
+    const targetRows = reverse ? [...rows].reverse() : rows
 
-    return this.findJumpItem(emptyStart, emptySide, rows, function (row) {
-      return row.getData()[column.getField()]
-    })
+    return this.findJumpItem(emptyStart, emptySide, targetRows, (row) => row.getData()[column.getField()])
   }
 
   findJumpCol(row, columns, reverse, emptyStart, emptySide) {
-    if (reverse) {
-      columns = columns.reverse()
-    }
+    const targetColumns = reverse ? [...columns].reverse() : columns
 
-    return this.findJumpItem(emptyStart, emptySide, columns, function (column) {
-      return row.getData()[column.getField()]
-    })
+    return this.findJumpItem(emptyStart, emptySide, targetColumns, (column) => row.getData()[column.getField()])
   }
 
   findJumpItem(emptyStart, emptySide, items, valueResolver) {
@@ -728,14 +720,8 @@ export default class SelectRange extends Module {
         range = this.resetRanges()
         this.selecting = 'all'
 
-        let topLeftCell
         const bottomRightCell = this.getCell(-1, -1)
-
-        if (this.rowHeader) {
-          topLeftCell = this.getCell(0, 1)
-        } else {
-          topLeftCell = this.getCell(0, 0)
-        }
+        const topLeftCell = this.getCell(0, this.rowHeader ? 1 : 0)
 
         range.setBounds(topLeftCell, bottomRightCell)
         return
@@ -764,13 +750,8 @@ export default class SelectRange extends Module {
     let withinHorizontalView
     let withinVerticalView
 
-    if (typeof row === 'undefined') {
-      row = this.getRowByRangePos(range.end.row).getElement()
-    }
-
-    if (typeof column === 'undefined') {
-      column = this.getColumnByRangePos(range.end.col).getElement()
-    }
+    row = row || this.getRowByRangePos(range.end.row).getElement()
+    column = column || this.getColumnByRangePos(range.end.col).getElement()
 
     rect = {
       left: column.offsetLeft,
@@ -816,7 +797,7 @@ export default class SelectRange extends Module {
   layoutChange() {
     this.overlay.style.visibility = 'hidden'
     clearTimeout(this.layoutChangeTimeout)
-    this.layoutChangeTimeout = setTimeout(this.layoutRanges.bind(this), 200)
+    this.layoutChangeTimeout = setTimeout(() => this.layoutRanges(), 200)
   }
 
   redraw(force) {
@@ -828,13 +809,7 @@ export default class SelectRange extends Module {
   }
 
   layoutElement(visibleRows) {
-    let rows
-
-    if (visibleRows) {
-      rows = this.table.rowManager.getVisibleRows(true)
-    } else {
-      rows = this.table.rowManager.getRows()
-    }
+    const rows = visibleRows ? this.table.rowManager.getVisibleRows(true) : this.table.rowManager.getRows()
 
     rows.forEach((row) => {
       if (row.type === 'row') {
@@ -897,15 +872,14 @@ export default class SelectRange extends Module {
     activeRowEl = activeCell.row.getElement()
 
     if (this.table.rtl) {
-      this.activeRangeCellElement.style.right =
-        activeRowEl.offsetWidth - activeCellEl.offsetLeft - activeCellEl.offsetWidth + 'px'
+      this.activeRangeCellElement.style.right = `${activeRowEl.offsetWidth - activeCellEl.offsetLeft - activeCellEl.offsetWidth}px`
     } else {
-      this.activeRangeCellElement.style.left = activeRowEl.offsetLeft + activeCellEl.offsetLeft + 'px'
+      this.activeRangeCellElement.style.left = `${activeRowEl.offsetLeft + activeCellEl.offsetLeft}px`
     }
 
-    this.activeRangeCellElement.style.top = activeRowEl.offsetTop + 'px'
-    this.activeRangeCellElement.style.width = activeCellEl.offsetWidth + 'px'
-    this.activeRangeCellElement.style.height = activeRowEl.offsetHeight + 'px'
+    this.activeRangeCellElement.style.top = `${activeRowEl.offsetTop}px`
+    this.activeRangeCellElement.style.width = `${activeCellEl.offsetWidth}px`
+    this.activeRangeCellElement.style.height = `${activeRowEl.offsetHeight}px`
 
     this.ranges.forEach((range) => range.layout())
 
@@ -972,7 +946,7 @@ export default class SelectRange extends Module {
   }
 
   resetRanges() {
-    let range, cell, visibleCells
+    let range
 
     this.ranges.forEach((range) => range.destroy())
     this.ranges = []
@@ -980,8 +954,8 @@ export default class SelectRange extends Module {
     range = this.addRange()
 
     if (this.table.rowManager.activeRows.length) {
-      visibleCells = this.table.rowManager.activeRows[0].cells.filter((cell) => cell.column.visible)
-      cell = visibleCells[this.rowHeader ? 1 : 0]
+      const visibleCells = this.table.rowManager.activeRows[0].cells.filter((cell) => cell.column.visible)
+      const cell = visibleCells[this.rowHeader ? 1 : 0]
 
       if (cell) {
         range.setBounds(cell)

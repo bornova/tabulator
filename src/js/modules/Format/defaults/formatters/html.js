@@ -1,3 +1,5 @@
 export default function (cell, formatterParams, onRendered) {
-  return cell.getValue()
+  const value = cell.getValue()
+
+  return value
 }

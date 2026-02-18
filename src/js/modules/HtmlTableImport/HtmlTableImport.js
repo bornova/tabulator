@@ -15,14 +15,16 @@ export default class HtmlTableImport extends Module {
   }
 
   tableElementCheck() {
-    if (this.table.originalElement && this.table.originalElement.tagName === 'TABLE') {
-      if (this.table.originalElement.childNodes.length) {
-        this.parseTable()
-      } else {
-        console.warn(
-          'Unable to parse data from empty table tag, Tabulator should be initialized on a div tag unless importing data from a table element.'
-        )
-      }
+    if (!(this.table.originalElement && this.table.originalElement.tagName === 'TABLE')) {
+      return
+    }
+
+    if (this.table.originalElement.childNodes.length) {
+      this.parseTable()
+    } else {
+      console.warn(
+        'Unable to parse data from empty table tag, Tabulator should be initialized on a div tag unless importing data from a table element.'
+      )
     }
   }
 
@@ -30,22 +32,21 @@ export default class HtmlTableImport extends Module {
     const element = this.table.originalElement
     const options = this.table.options
     const headers = element.getElementsByTagName('th')
-    let rows = element.getElementsByTagName('tbody')[0]
+    const tableBody = element.getElementsByTagName('tbody')[0]
+    const rows = tableBody ? tableBody.getElementsByTagName('tr') : []
     const data = []
 
     this.hasIndex = false
 
     this.dispatchExternal('htmlImporting')
 
-    rows = rows ? rows.getElementsByTagName('tr') : []
-
     // check for Tabulator inline options
     this._extractOptions(element, options)
 
     if (headers.length) {
-      this._extractHeaders(headers, rows)
+      this._extractHeaders(headers)
     } else {
-      this._generateBlankHeaders(headers, rows)
+      this._generateBlankHeaders(headers)
     }
 
     // iterate through table rows and build data set
@@ -85,9 +86,8 @@ export default class HtmlTableImport extends Module {
       optionsList[item.toLowerCase()] = item
     })
 
-    for (const index in attributes) {
-      const attrib = attributes[index]
-      var name
+    for (const attrib of attributes) {
+      let name
 
       if (attrib && typeof attrib === 'object' && attrib.name && attrib.name.indexOf('tabulator-') === 0) {
         name = attrib.name.replace('tabulator-', '')
@@ -114,20 +114,16 @@ export default class HtmlTableImport extends Module {
 
   // find column if it has already been defined
   _findCol(title) {
-    const match = this.table.options.columns.find((column) => {
-      return column.title === title
-    })
-
-    return match || false
+    return this.table.options.columns.find((column) => column.title === title) || false
   }
 
   // extract column from headers
-  _extractHeaders(headers, rows) {
+  _extractHeaders(headers) {
     for (let index = 0; index < headers.length; index++) {
       const header = headers[index]
       let exists = false
       let col = this._findCol(header.textContent)
-      var width
+      const width = header.getAttribute('width')
 
       if (col) {
         exists = true
@@ -139,8 +135,6 @@ export default class HtmlTableImport extends Module {
         col.field = header.textContent.trim().toLowerCase().replaceAll(' ', '_')
       }
 
-      width = header.getAttribute('width')
-
       if (width && !col.width) {
         col.width = width
       }
@@ -150,7 +144,7 @@ export default class HtmlTableImport extends Module {
 
       this.fieldIndex[index] = col.field
 
-      if (col.field == this.table.options.index) {
+      if (col.field === this.table.options.index) {
         this.hasIndex = true
       }
 
@@ -161,10 +155,10 @@ export default class HtmlTableImport extends Module {
   }
 
   // generate blank headers
-  _generateBlankHeaders(headers, rows) {
+  _generateBlankHeaders(headers) {
     for (let index = 0; index < headers.length; index++) {
       const header = headers[index]
-      const col = { title: '', field: 'col' + index }
+      const col = { title: '', field: `col${index}` }
 
       this.fieldIndex[index] = col.field
 

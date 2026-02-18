@@ -16,8 +16,8 @@ export default class Clipboard extends Module {
     super(table)
 
     this.mode = true
-    this.pasteParser = function () {}
-    this.pasteAction = function () {}
+    this.pasteParser = () => {}
+    this.pasteAction = () => {}
     this.customSelection = false
     this.rowRange = false
     this.blocked = true // block copy actions not originating from this command
@@ -91,9 +91,7 @@ export default class Clipboard extends Module {
     }
 
     if (this.mode === true || this.mode === 'paste') {
-      this.table.element.addEventListener('paste', (e) => {
-        this.paste(e)
-      })
+      this.table.element.addEventListener('paste', this.paste.bind(this))
     }
 
     this.setPasteParser(this.table.options.clipboardPasteParser)
@@ -183,34 +181,32 @@ export default class Clipboard extends Module {
 
   // PASTE EVENT HANDLING
   setPasteAction(action) {
-    switch (typeof action) {
-      case 'string':
-        this.pasteAction = Clipboard.pasteActions[action]
+    if (typeof action === 'function') {
+      this.pasteAction = action
+      return
+    }
 
-        if (!this.pasteAction) {
-          console.warn('Clipboard Error - No such paste action found:', action)
-        }
-        break
+    if (typeof action === 'string') {
+      this.pasteAction = Clipboard.pasteActions[action]
 
-      case 'function':
-        this.pasteAction = action
-        break
+      if (!this.pasteAction) {
+        console.warn('Clipboard Error - No such paste action found:', action)
+      }
     }
   }
 
   setPasteParser(parser) {
-    switch (typeof parser) {
-      case 'string':
-        this.pasteParser = Clipboard.pasteParsers[parser]
+    if (typeof parser === 'function') {
+      this.pasteParser = parser
+      return
+    }
 
-        if (!this.pasteParser) {
-          console.warn('Clipboard Error - No such paste parser found:', parser)
-        }
-        break
+    if (typeof parser === 'string') {
+      this.pasteParser = Clipboard.pasteParsers[parser]
 
-      case 'function':
-        this.pasteParser = parser
-        break
+      if (!this.pasteParser) {
+        console.warn('Clipboard Error - No such paste parser found:', parser)
+      }
     }
   }
 
@@ -239,28 +235,16 @@ export default class Clipboard extends Module {
   }
 
   mutateData(data) {
-    let output = []
-
     if (Array.isArray(data)) {
-      data.forEach((row) => {
-        output.push(this.table.modules.mutator.transformRow(row, 'clipboard'))
-      })
-    } else {
-      output = data
+      return data.map((row) => this.table.modules.mutator.transformRow(row, 'clipboard'))
     }
 
-    return output
+    return data
   }
 
   checkPasteOrigin(e) {
-    let valid = true
     const blocked = this.confirm('clipboard-paste', [e])
-
-    if (blocked || !['DIV', 'SPAN'].includes(e.target.tagName)) {
-      valid = false
-    }
-
-    return valid
+    return !(blocked || !['DIV', 'SPAN'].includes(e.target.tagName))
   }
 
   getPasteData(e) {

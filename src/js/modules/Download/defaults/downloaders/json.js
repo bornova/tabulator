@@ -1,5 +1,5 @@
 export default function (list, options, setFileContents) {
-  let fileContents = []
+  const fileContents = []
 
   list.forEach((row) => {
     const item = {}
@@ -28,7 +28,5 @@ export default function (list, options, setFileContents) {
     }
   })
 
-  fileContents = JSON.stringify(fileContents, null, '\t')
-
-  setFileContents(fileContents, 'application/json')
+  setFileContents(JSON.stringify(fileContents, null, '\t'), 'application/json')
 }

@@ -198,13 +198,12 @@ export default class Filter extends Module {
 
   // initialize column header filter
   initializeColumn(column, value) {
-    const self = this
     const field = column.getField()
 
     // handle successfully value change
-    function success(value) {
+    const success = (value) => {
       const filterType =
-        (column.modules.filter.tagType == 'input' && column.modules.filter.attrType == 'text') ||
+        (column.modules.filter.tagType === 'input' && column.modules.filter.attrType === 'text') ||
         column.modules.filter.tagType == 'textarea'
           ? 'partial'
           : 'match'
@@ -222,7 +221,7 @@ export default class Filter extends Module {
             case 'string':
               if (Filter.filters[column.definition.headerFilterFunc]) {
                 type = column.definition.headerFilterFunc
-                filterFunc = function (data) {
+                filterFunc = (data) => {
                   let params = column.definition.headerFilterFuncParams || {}
                   const fieldVal = column.getFieldValue(data)
 
@@ -239,7 +238,7 @@ export default class Filter extends Module {
               break
 
             case 'function':
-              filterFunc = function (data) {
+              filterFunc = (data) => {
                 let params = column.definition.headerFilterFuncParams || {}
                 const fieldVal = column.getFieldValue(data)
 
@@ -255,40 +254,40 @@ export default class Filter extends Module {
           if (!filterFunc) {
             switch (filterType) {
               case 'partial':
-                filterFunc = function (data) {
+                filterFunc = (data) => {
                   const colVal = column.getFieldValue(data)
 
-                  if (typeof colVal !== 'undefined' && colVal !== null) {
+                  if (colVal !== undefined && colVal !== null) {
                     return String(colVal).toLowerCase().indexOf(String(value).toLowerCase()) > -1
-                  } else {
-                    return false
                   }
+
+                  return false
                 }
                 type = 'like'
                 break
 
               default:
-                filterFunc = function (data) {
+                filterFunc = (data) => {
                   return column.getFieldValue(data) == value
                 }
                 type = '='
             }
           }
 
-          self.headerFilters[field] = { value, func: filterFunc, type }
+          this.headerFilters[field] = { value, func: filterFunc, type }
         } else {
-          delete self.headerFilters[field]
+          delete this.headerFilters[field]
         }
 
         column.modules.filter.value = value
 
-        filterChangeCheck = JSON.stringify(self.headerFilters)
+        filterChangeCheck = JSON.stringify(this.headerFilters)
 
-        if (self.prevHeaderFilterChangeCheck !== filterChangeCheck) {
-          self.prevHeaderFilterChangeCheck = filterChangeCheck
+        if (this.prevHeaderFilterChangeCheck !== filterChangeCheck) {
+          this.prevHeaderFilterChangeCheck = filterChangeCheck
 
-          self.trackChanges()
-          self.refreshFilter()
+          this.trackChanges()
+          this.refreshFilter()
         }
       }
 
@@ -306,7 +305,6 @@ export default class Filter extends Module {
   }
 
   generateHeaderFilterElement(column, initialValue, reinitialize) {
-    const self = this
     const success = column.modules.filter.success
     const field = column.getField()
     let filterElement
@@ -321,9 +319,9 @@ export default class Filter extends Module {
     column.modules.filter.value = initialValue
 
     // handle aborted edit
-    function cancel() {}
+    const cancel = () => {}
 
-    function onRendered(callback) {
+    const onRendered = (callback) => {
       onRenderedCallback = callback
     }
 
@@ -335,9 +333,9 @@ export default class Filter extends Module {
       // set empty value function
       column.modules.filter.emptyFunc =
         column.definition.headerFilterEmptyCheck ||
-        function (value) {
+        ((value) => {
           return !value && value !== 0
-        }
+        })
 
       filterElement = document.createElement('div')
       filterElement.classList.add('tabulator-header-filter')
@@ -345,14 +343,14 @@ export default class Filter extends Module {
       // set column editor
       switch (typeof column.definition.headerFilter) {
         case 'string':
-          if (self.table.modules.edit.editors[column.definition.headerFilter]) {
-            editor = self.table.modules.edit.editors[column.definition.headerFilter]
+          if (this.table.modules.edit.editors[column.definition.headerFilter]) {
+            editor = this.table.modules.edit.editors[column.definition.headerFilter]
 
             if (
               (column.definition.headerFilter === 'tick' || column.definition.headerFilter === 'tickCross') &&
               !column.definition.headerFilterEmptyCheck
             ) {
-              column.modules.filter.emptyFunc = function (value) {
+              column.modules.filter.emptyFunc = (value) => {
                 return value !== true && value !== false
               }
             }
@@ -369,19 +367,19 @@ export default class Filter extends Module {
           if (column.modules.edit && column.modules.edit.editor) {
             editor = column.modules.edit.editor
           } else {
-            if (column.definition.formatter && self.table.modules.edit.editors[column.definition.formatter]) {
-              editor = self.table.modules.edit.editors[column.definition.formatter]
+            if (column.definition.formatter && this.table.modules.edit.editors[column.definition.formatter]) {
+              editor = this.table.modules.edit.editors[column.definition.formatter]
 
               if (
                 (column.definition.formatter === 'tick' || column.definition.formatter === 'tickCross') &&
                 !column.definition.headerFilterEmptyCheck
               ) {
-                column.modules.filter.emptyFunc = function (value) {
+                column.modules.filter.emptyFunc = (value) => {
                   return value !== true && value !== false
                 }
               }
             } else {
-              editor = self.table.modules.edit.editors.input
+              editor = this.table.modules.edit.editors.input
             }
           }
           break
@@ -389,16 +387,16 @@ export default class Filter extends Module {
 
       if (editor) {
         cellWrapper = {
-          getValue: function () {
-            return typeof initialValue !== 'undefined' ? initialValue : ''
+          getValue() {
+            return initialValue !== undefined ? initialValue : ''
           },
-          getField: function () {
+          getField() {
             return column.definition.field
           },
-          getElement: function () {
+          getElement() {
             return filterElement
           },
-          getColumn: function () {
+          getColumn() {
             return column.getComponent()
           },
           getTable: () => {
@@ -407,46 +405,44 @@ export default class Filter extends Module {
           getType: () => {
             return 'header'
           },
-          getRow: function () {
+          getRow() {
             return {
-              normalizeHeight: function () {}
+              normalizeHeight() {}
             }
           }
         }
 
         params = column.definition.headerFilterParams || {}
 
-        params = typeof params === 'function' ? params.call(self.table, cellWrapper) : params
+        params = typeof params === 'function' ? params.call(this.table, cellWrapper) : params
 
         editorElement = editor.call(this.table.modules.edit, cellWrapper, onRendered, success, cancel, params)
 
         if (!editorElement) {
-          console.warn('Filter Error - Cannot add filter to ' + field + ' column, editor returned a value of false')
+          console.warn(`Filter Error - Cannot add filter to ${field} column, editor returned a value of false`)
           return
         }
 
         if (!(editorElement instanceof Node)) {
           console.warn(
-            'Filter Error - Cannot add filter to ' +
-              field +
-              ' column, editor should return an instance of Node, the editor returned:',
+            `Filter Error - Cannot add filter to ${field} column, editor should return an instance of Node, the editor returned:`,
             editorElement
           )
           return
         }
 
         // set Placeholder Text
-        self.langBind('headerFilters|columns|' + column.definition.field, function (value) {
+        this.langBind(`headerFilters|columns|${column.definition.field}`, (value) => {
           editorElement.setAttribute(
             'placeholder',
-            typeof value !== 'undefined' && value
+            value !== undefined && value
               ? value
-              : column.definition.headerFilterPlaceholder || self.langText('headerFilters|default')
+              : column.definition.headerFilterPlaceholder || this.langText('headerFilters|default')
           )
         })
 
         // focus on element on click
-        editorElement.addEventListener('click', function (e) {
+        editorElement.addEventListener('click', (e) => {
           e.stopPropagation()
           editorElement.focus()
         })
@@ -465,14 +461,14 @@ export default class Filter extends Module {
         // live update filters as user types
         typingTimer = false
 
-        searchTrigger = function (e) {
+        searchTrigger = () => {
           if (typingTimer) {
             clearTimeout(typingTimer)
           }
 
-          typingTimer = setTimeout(function () {
+          typingTimer = setTimeout(() => {
             success(editorElement.value)
-          }, self.table.options.headerFilterLiveFilterDelay)
+          }, this.table.options.headerFilterLiveFilterDelay)
         }
 
         column.modules.filter.headerElement = editorElement
@@ -494,14 +490,14 @@ export default class Filter extends Module {
             editorElement.addEventListener('search', searchTrigger)
 
             // update number filtered columns on change
-            if (column.modules.filter.attrType == 'number') {
-              editorElement.addEventListener('change', function (e) {
+            if (column.modules.filter.attrType === 'number') {
+              editorElement.addEventListener('change', () => {
                 success(editorElement.value)
               })
             }
 
             // change text inputs to search inputs to allow for clearing of field
-            if (column.modules.filter.attrType == 'text' && this.table.browser !== 'ie') {
+            if (column.modules.filter.attrType === 'text' && this.table.browser !== 'ie') {
               editorElement.setAttribute('type', 'search')
               // editorElement.off("change blur"); //prevent blur from triggering filter and preventing selection click
             }
@@ -509,11 +505,11 @@ export default class Filter extends Module {
 
           // prevent input and select elements from propagating click to column sorters etc
           if (
-            column.modules.filter.tagType == 'input' ||
-            column.modules.filter.tagType == 'select' ||
-            column.modules.filter.tagType == 'textarea'
+            column.modules.filter.tagType === 'input' ||
+            column.modules.filter.tagType === 'select' ||
+            column.modules.filter.tagType === 'textarea'
           ) {
-            editorElement.addEventListener('mousedown', function (e) {
+            editorElement.addEventListener('mousedown', (e) => {
               e.stopPropagation()
             })
           }
@@ -524,7 +520,7 @@ export default class Filter extends Module {
         column.contentElement.appendChild(filterElement)
 
         if (!reinitialize) {
-          self.headerFilterColumns.push(column)
+          this.headerFilterColumns.push(column)
         }
 
         if (onRenderedCallback) {
@@ -538,7 +534,7 @@ export default class Filter extends Module {
 
   // hide all header filter elements (used to ensure correct column widths in "fitData" layout mode)
   hideHeaderFilterElements() {
-    this.headerFilterColumns.forEach(function (column) {
+    this.headerFilterColumns.forEach((column) => {
       if (column.modules.filter && column.modules.filter.headerElement) {
         column.modules.filter.headerElement.style.display = 'none'
       }
@@ -547,7 +543,7 @@ export default class Filter extends Module {
 
   // show all header filter elements (used to ensure correct column widths in "fitData" layout mode)
   showHeaderFilterElements() {
-    this.headerFilterColumns.forEach(function (column) {
+    this.headerFilterColumns.forEach((column) => {
       if (column.modules.filter && column.modules.filter.headerElement) {
         column.modules.filter.headerElement.style.display = ''
       }
@@ -664,7 +660,7 @@ export default class Filter extends Module {
     let filterFunc = false
 
     if (typeof filter.field === 'function') {
-      filterFunc = function (data) {
+      filterFunc = (data) => {
         return filter.field(data, filter.type || {}) // pass params to custom filter function
       }
     } else {
@@ -672,11 +668,11 @@ export default class Filter extends Module {
         column = this.table.columnManager.getColumnByField(filter.field)
 
         if (column) {
-          filterFunc = function (data) {
+          filterFunc = (data) => {
             return Filter.filters[filter.type](filter.value, column.getFieldValue(data), data, filter.params || {})
           }
         } else {
-          filterFunc = function (data) {
+          filterFunc = (data) => {
             return Filter.filters[filter.type](filter.value, data[filter.field], data, filter.params || {})
           }
         }
@@ -713,7 +709,7 @@ export default class Filter extends Module {
     }
 
     if (ajax) {
-      output.forEach(function (item) {
+      output.forEach((item) => {
         if (typeof item.type === 'function') {
           item.type = 'function'
         }
@@ -807,7 +803,7 @@ export default class Filter extends Module {
     this.prevHeaderFilterChangeCheck = '{}'
 
     this.headerFilterColumns.forEach((column) => {
-      if (typeof column.modules.filter.value !== 'undefined') {
+      if (column.modules.filter.value !== undefined) {
         delete column.modules.filter.value
       }
       column.modules.filter.prevSuccess = undefined

@@ -70,7 +70,7 @@ export default class Page extends Module {
       this.subscribe('table-built', this.calculatePageSizes.bind(this))
       this.subscribe('footer-redraw', this.footerRedraw.bind(this))
 
-      if (this.table.options.paginationAddRow == 'page') {
+      if (this.table.options.paginationAddRow === 'page') {
         this.subscribe('row-adding-position', this.rowAddingPosition.bind(this))
       }
 
@@ -274,11 +274,11 @@ export default class Page extends Module {
         pageSizes = this.table.options.paginationSizeSelector
         this.pageSizes = pageSizes
 
-        if (this.pageSizes.indexOf(this.size) == -1) {
+        if (this.pageSizes.indexOf(this.size) === -1) {
           pageSizes.unshift(this.size)
         }
       } else {
-        if (this.pageSizes.indexOf(this.size) == -1) {
+        if (this.pageSizes.indexOf(this.size) === -1) {
           pageSizes = []
 
           for (let i = 1; i < 5; i++) {
@@ -412,7 +412,7 @@ export default class Page extends Module {
         this.element.appendChild(this.pageSizeSelect)
 
         this.pageSizeSelect.addEventListener('change', (e) => {
-          this.setPageSize(this.pageSizeSelect.value == 'true' ? true : this.pageSizeSelect.value)
+          this.setPageSize(this.pageSizeSelect.value === 'true' ? true : this.pageSizeSelect.value)
           this.setPage(1)
         })
       }
@@ -426,8 +426,6 @@ export default class Page extends Module {
 
       if (!this.table.options.paginationElement) {
         if (this.table.options.paginationCounter) {
-          paginationCounterHolder
-
           if (this.table.options.paginationCounterElement) {
             if (this.table.options.paginationCounterElement instanceof HTMLElement) {
               this.table.options.paginationCounterElement.appendChild(this.pageCounterElement)
@@ -485,7 +483,7 @@ export default class Page extends Module {
   // reset to first page without triggering action
   reset(force) {
     if (!this.initialLoad) {
-      if (this.mode == 'local' || force) {
+      if (this.mode === 'local' || force) {
         this.page = 1
         this.trackChanges()
       }
@@ -494,7 +492,7 @@ export default class Page extends Module {
 
   // set the maximum page
   setMaxPage(max) {
-    max = parseInt(max)
+    max = parseInt(max, 10)
 
     this.max = max || 1
 
@@ -520,7 +518,7 @@ export default class Page extends Module {
         return this.setPage(this.max)
     }
 
-    page = parseInt(page)
+    page = parseInt(page, 10)
 
     if ((page > 0 && page <= this.max) || this.mode !== 'local') {
       this.page = page
@@ -529,7 +527,7 @@ export default class Page extends Module {
 
       return this.trigger()
     } else {
-      console.warn('Pagination Error - Requested page is out of range of 1 - ' + this.max + ':', page)
+      console.warn(`Pagination Error - Requested page is out of range of 1 - ${this.max}:`, page)
       return Promise.reject()
     }
   }
@@ -550,7 +548,7 @@ export default class Page extends Module {
 
   setPageSize(size) {
     if (size !== true) {
-      size = parseInt(size)
+      size = parseInt(size, 10)
     }
 
     if (size > 0) {
@@ -625,7 +623,7 @@ export default class Page extends Module {
       this.prevBut.disabled = false
     }
 
-    if (this.page == this.max) {
+    if (this.page === this.max) {
       this.lastBut.disabled = true
       this.nextBut.disabled = true
     } else {
@@ -646,7 +644,7 @@ export default class Page extends Module {
     const button = document.createElement('button')
 
     button.classList.add('tabulator-page')
-    if (page == this.page) {
+    if (page === this.page) {
       button.classList.add('active')
     }
 
@@ -654,8 +652,8 @@ export default class Page extends Module {
     button.setAttribute('role', 'button')
 
     this.langBind('pagination|page_title', (value) => {
-      button.setAttribute('aria-label', value + ' ' + page)
-      button.setAttribute('title', value + ' ' + page)
+      button.setAttribute('aria-label', `${value} ${page}`)
+      button.setAttribute('title', `${value} ${page}`)
     })
 
     button.setAttribute('data-page', page)
@@ -711,7 +709,7 @@ export default class Page extends Module {
     return this.max
   }
 
-  getPageSize(size) {
+  getPageSize() {
     return this.size
   }
 
@@ -731,7 +729,7 @@ export default class Page extends Module {
       return row.type === 'row'
     })
 
-    if (this.mode == 'local') {
+    if (this.mode === 'local') {
       output = []
 
       this.setMaxRows(data.length)
@@ -741,7 +739,7 @@ export default class Page extends Module {
         end = data.length
       } else {
         start = this.size * (this.page - 1)
-        end = start + parseInt(this.size)
+        end = start + parseInt(this.size, 10)
       }
 
       this._setPageButtons()
@@ -819,18 +817,19 @@ export default class Page extends Module {
     }
 
     if (data.data) {
-      this.max = parseInt(data.last_page) || 1
+      const lastPage = parseInt(data.last_page, 10) || 1
+      this.max = lastPage
 
       this.remoteRowCountEstimate =
         typeof data.last_row !== 'undefined'
           ? data.last_row
-          : data.last_page * this.size - (this.page == data.last_page ? this.size - data.data.length : 0)
+          : lastPage * this.size - (this.page === lastPage ? this.size - data.data.length : 0)
 
       if (this.progressiveLoad) {
         switch (this.mode) {
           case 'progressive_load':
-            if (this.page == 1) {
-              this.table.rowManager.setData(data.data, false, this.page == 1)
+            if (this.page === 1) {
+              this.table.rowManager.setData(data.data, false, this.page === 1)
             } else {
               this.table.rowManager.addRows(data.data)
             }
@@ -845,7 +844,7 @@ export default class Page extends Module {
           case 'progressive_scroll':
             data = this.page === 1 ? data.data : this.table.rowManager.getData().concat(data.data)
 
-            this.table.rowManager.setData(data, this.page !== 1, this.page == 1)
+            this.table.rowManager.setData(data, this.page !== 1, this.page === 1)
 
             margin = this.table.options.progressiveLoadScrollMargin || this.table.rowManager.element.clientHeight * 2
 

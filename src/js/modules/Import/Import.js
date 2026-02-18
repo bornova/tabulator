@@ -29,10 +29,9 @@ export default class Import extends Module {
   }
 
   loadDataCheck(data) {
-    return (
-      this.table.options.importFormat &&
-      (typeof data === 'string' || (Array.isArray(data) && data.length && Array.isArray(data)))
-    )
+    const isImportableArray = Array.isArray(data) && data.length && Array.isArray(data)
+
+    return this.table.options.importFormat && (typeof data === 'string' || isImportableArray)
   }
 
   loadData(data, params, config, silent, previousData) {
@@ -45,20 +44,11 @@ export default class Import extends Module {
   }
 
   lookupImporter(importFormat) {
-    let importer
-
-    if (!importFormat) {
-      importFormat = this.table.options.importFormat
-    }
-
-    if (typeof importFormat === 'string') {
-      importer = Import.importers[importFormat]
-    } else {
-      importer = importFormat
-    }
+    const format = importFormat || this.table.options.importFormat
+    const importer = typeof format === 'string' ? Import.importers[format] : format
 
     if (!importer) {
-      console.error('Import Error - Importer not found:', importFormat)
+      console.error('Import Error - Importer not found:', format)
     }
 
     return importer
@@ -67,28 +57,30 @@ export default class Import extends Module {
   importFromFile(importFormat, extension, importReader) {
     const importer = this.lookupImporter(importFormat)
 
-    if (importer) {
-      return this.pickFile(extension, importReader)
-        .then(this.importData.bind(this, importer))
-        .then(this.structureData.bind(this))
-        .then(this.mutateData.bind(this))
-        .then(this.validateData.bind(this))
-        .then(this.setData.bind(this))
-        .catch((err) => {
-          this.dispatch('import-error', err)
-          this.dispatchExternal('importError', err)
-
-          console.error('Import Error:', err || 'Unable to import file')
-
-          this.table.dataLoader.alertError()
-
-          setTimeout(() => {
-            this.table.dataLoader.clearAlert()
-          }, 3000)
-
-          return Promise.reject(err)
-        })
+    if (!importer) {
+      return
     }
+
+    return this.pickFile(extension, importReader)
+      .then(this.importData.bind(this, importer))
+      .then(this.structureData.bind(this))
+      .then(this.mutateData.bind(this))
+      .then(this.validateData.bind(this))
+      .then(this.setData.bind(this))
+      .catch((err) => {
+        this.dispatch('import-error', err)
+        this.dispatchExternal('importError', err)
+
+        console.error('Import Error:', err || 'Unable to import file')
+
+        this.table.dataLoader.alertError()
+
+        setTimeout(() => {
+          this.table.dataLoader.clearAlert()
+        }, 3000)
+
+        return Promise.reject(err)
+      })
   }
 
   pickFile(extensions, importReader) {
@@ -97,7 +89,7 @@ export default class Import extends Module {
       input.type = 'file'
       input.accept = extensions
 
-      input.addEventListener('change', (e) => {
+      input.addEventListener('change', () => {
         const file = input.files[0]
         const reader = new FileReader()
         const valid = this.validateFile(file)
@@ -124,7 +116,7 @@ export default class Import extends Module {
               reader.readAsText(file)
           }
 
-          reader.onload = (e) => {
+          reader.onload = () => {
             resolve(reader.result)
           }
 
@@ -144,13 +136,11 @@ export default class Import extends Module {
   }
 
   importData(importer, fileContents) {
-    let data
-
     this.table.dataLoader.alertLoader()
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        data = importer.call(this.table, fileContents)
+        const data = importer.call(this.table, fileContents)
 
         if (data instanceof Promise) {
           resolve(data)
@@ -162,61 +152,37 @@ export default class Import extends Module {
   }
 
   structureData(parsedData) {
-    let data = []
-
     if (Array.isArray(parsedData) && parsedData.length && Array.isArray(parsedData[0])) {
-      if (this.table.options.autoColumns) {
-        data = this.structureArrayToObject(parsedData)
-      } else {
-        data = this.structureArrayToColumns(parsedData)
-      }
-
-      return data
-    } else {
-      return parsedData
+      return this.table.options.autoColumns
+        ? this.structureArrayToObject(parsedData)
+        : this.structureArrayToColumns(parsedData)
     }
+
+    return parsedData
   }
 
   mutateData(data) {
-    let output = []
-
     if (Array.isArray(data)) {
-      data.forEach((row) => {
-        output.push(this.table.modules.mutator.transformRow(row, 'import'))
-      })
-    } else {
-      output = data
+      return data.map((row) => this.table.modules.mutator.transformRow(row, 'import'))
     }
 
-    return output
+    return data
   }
 
   transformHeader(headers) {
-    const output = []
-
     if (this.table.options.importHeaderTransform) {
-      headers.forEach((item) => {
-        output.push(this.table.options.importHeaderTransform.call(this.table, item, headers))
-      })
-    } else {
-      return headers
+      return headers.map((item) => this.table.options.importHeaderTransform.call(this.table, item, headers))
     }
 
-    return output
+    return headers
   }
 
   transformData(row) {
-    const output = []
-
     if (this.table.options.importValueTransform) {
-      row.forEach((item) => {
-        output.push(this.table.options.importValueTransform.call(this.table, item, row))
-      })
-    } else {
-      return row
+      return row.map((item) => this.table.options.importValueTransform.call(this.table, item, row))
     }
 
-    return output
+    return row
   }
 
   structureArrayToObject(parsedData) {
@@ -224,11 +190,10 @@ export default class Import extends Module {
 
     const data = parsedData.map((values) => {
       const row = {}
-
-      values = this.transformData(values)
+      const transformedValues = this.transformData(values)
 
       columns.forEach((key, i) => {
-        row[key] = values[i]
+        row[key] = transformedValues[i]
       })
 
       return row
@@ -252,10 +217,9 @@ export default class Import extends Module {
     // convert row arrays to objects
     parsedData.forEach((rowData) => {
       const row = {}
+      const transformedRowData = this.transformData(rowData)
 
-      rowData = this.transformData(rowData)
-
-      rowData.forEach((value, index) => {
+      transformedRowData.forEach((value, index) => {
         const column = columns[index]
 
         if (column) {
@@ -278,16 +242,14 @@ export default class Import extends Module {
   }
 
   validateData(data) {
-    let result
-
     if (this.table.options.importDataValidator) {
-      result = this.table.options.importDataValidator.call(this.table, data)
+      const result = this.table.options.importDataValidator.call(this.table, data)
 
       if (result === true) {
         return data
-      } else {
-        return Promise.reject(result)
       }
+
+      return Promise.reject(result)
     }
 
     return data

@@ -5,20 +5,21 @@ export default function (pageSize, currentRow, currentPage, totalRows, totalPage
   const ofEl = document.createElement('span')
   const totalEl = document.createElement('span')
   const rowsEl = document.createElement('span')
+  const { localize } = this.table.modules
 
-  this.table.modules.localize.langBind('pagination|counter|showing', (value) => {
+  localize.langBind('pagination|counter|showing', (value) => {
     showingEl.innerHTML = value
   })
 
-  valueEl.innerHTML = ' ' + currentPage + ' '
+  valueEl.innerHTML = ` ${currentPage} `
 
-  this.table.modules.localize.langBind('pagination|counter|of', (value) => {
+  localize.langBind('pagination|counter|of', (value) => {
     ofEl.innerHTML = value
   })
 
-  totalEl.innerHTML = ' ' + totalPages + ' '
+  totalEl.innerHTML = ` ${totalPages} `
 
-  this.table.modules.localize.langBind('pagination|counter|pages', (value) => {
+  localize.langBind('pagination|counter|pages', (value) => {
     rowsEl.innerHTML = value
   })
 

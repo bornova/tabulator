@@ -1,48 +1,37 @@
 export default {
-  range: function (data) {
-    let rows = []
+  range(data) {
     const range = this.table.modules.selectRange.activeRange
-    let singleCell = false
-    let bounds
-    let startCell
-    let startRow
-    let rowWidth
-    let dataLength
-
-    dataLength = data.length
-
-    if (range) {
-      bounds = range.getBounds()
-      startCell = bounds.start
-
-      if (bounds.start === bounds.end) {
-        singleCell = true
-      }
-
-      if (startCell) {
-        rows = this.table.rowManager.activeRows.slice()
-        startRow = rows.indexOf(startCell.row)
-
-        if (singleCell) {
-          rowWidth = data.length
-        } else {
-          rowWidth = rows.indexOf(bounds.end.row) - startRow + 1
-        }
-
-        if (startRow > -1) {
-          this.table.blockRedraw()
-
-          rows = rows.slice(startRow, startRow + rowWidth)
-
-          rows.forEach((row, i) => {
-            row.updateData(data[i % dataLength])
-          })
-
-          this.table.restoreRedraw()
-        }
-      }
+    if (!range) {
+      return []
     }
 
-    return rows
+    const bounds = range.getBounds()
+    const startCell = bounds.start
+
+    if (!startCell) {
+      return []
+    }
+
+    const dataLength = data.length
+    const allRows = this.table.rowManager.activeRows.slice()
+    const startRowIndex = allRows.indexOf(startCell.row)
+    const singleCell = bounds.start === bounds.end
+    const rowCount = singleCell ? data.length : allRows.indexOf(bounds.end.row) - startRowIndex + 1
+
+    if (startRowIndex > -1) {
+      const rows = allRows.slice(startRowIndex, startRowIndex + rowCount)
+
+      this.table.blockRedraw()
+
+      rows.forEach((row, i) => {
+        row.updateData(data[i % dataLength])
+      })
+
+      this.table.restoreRedraw()
+
+      return rows
+    }
+
+    return []
   }
 }

@@ -5,12 +5,12 @@ export default class GroupComponent {
     this.type = 'GroupComponent'
 
     return new Proxy(this, {
-      get: function (target, name, receiver) {
-        if (typeof target[name] !== 'undefined') {
-          return target[name]
-        } else {
-          return target._group.groupManager.table.componentFunctionBinder.handle('group', target._group, name)
+      get(target, name, receiver) {
+        if (Reflect.has(target, name)) {
+          return Reflect.get(target, name, receiver)
         }
+
+        return target._group.groupManager.table.componentFunctionBinder.handle('group', target._group, name)
       }
     })
   }

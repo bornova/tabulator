@@ -100,6 +100,10 @@ export default class ResizeColumns extends Module {
     return offset !== false ? offset + 'px' : false
   }
 
+  getClientX(e) {
+    return typeof e.clientX === 'undefined' ? e.touches[0].clientX : e.clientX
+  }
+
   reinitializeColumn(column) {
     const frozenOffset = this.frozenColumnOffset(column)
 
@@ -124,7 +128,6 @@ export default class ResizeColumns extends Module {
   }
 
   initializeColumn(type, component, column, element) {
-    const self = this
     let variableHeight = false
     const mode = column.definition.resizable
     let config = {}
@@ -132,22 +135,22 @@ export default class ResizeColumns extends Module {
 
     // set column resize mode
     if (type === 'header') {
-      variableHeight = column.definition.formatter == 'textarea' || column.definition.variableHeight
+      variableHeight = column.definition.formatter === 'textarea' || column.definition.variableHeight
       config = { variableHeight }
     }
 
-    if ((mode === true || mode == type) && this._checkResizability(nearestColumn)) {
+    if ((mode === true || mode === type) && this._checkResizability(nearestColumn)) {
       const handle = document.createElement('span')
       handle.className = 'tabulator-col-resize-handle'
 
-      handle.addEventListener('click', function (e) {
+      handle.addEventListener('click', (e) => {
         e.stopPropagation()
       })
 
-      const handleDown = function (e) {
-        self.startColumn = column
-        self.initialNextColumn = self.nextColumn = nearestColumn.nextColumn()
-        self._mouseDown(e, nearestColumn, handle)
+      const handleDown = (e) => {
+        this.startColumn = column
+        this.initialNextColumn = this.nextColumn = nearestColumn.nextColumn()
+        this._mouseDown(e, nearestColumn, handle)
       }
 
       handle.addEventListener('mousedown', handleDown)
@@ -161,8 +164,8 @@ export default class ResizeColumns extends Module {
         nearestColumn.reinitializeWidth(true)
 
         if (oldWidth !== nearestColumn.getWidth()) {
-          self.dispatch('column-resized', nearestColumn)
-          self.dispatchExternal('columnResized', nearestColumn.getComponent())
+          this.dispatch('column-resized', nearestColumn)
+          this.dispatchExternal('columnResized', nearestColumn.getComponent())
         }
       })
 
@@ -208,7 +211,7 @@ export default class ResizeColumns extends Module {
   }
 
   resize(e, column) {
-    const x = typeof e.clientX === 'undefined' ? e.touches[0].clientX : e.clientX
+    const x = this.getClientX(e)
     let startDiff = x - this.startX
     let moveDiff = x - this.latestX
     let blockedBefore
@@ -221,11 +224,11 @@ export default class ResizeColumns extends Module {
       moveDiff = -moveDiff
     }
 
-    blockedBefore = column.width == column.minWidth || column.width == column.maxWidth
+    blockedBefore = column.width === column.minWidth || column.width === column.maxWidth
 
     column.setWidth(this.startWidth + startDiff)
 
-    blockedAfter = column.width == column.minWidth || column.width == column.maxWidth
+    blockedAfter = column.width === column.minWidth || column.width === column.maxWidth
 
     if (moveDiff < 0) {
       this.nextColumn = this.initialNextColumn
@@ -253,7 +256,7 @@ export default class ResizeColumns extends Module {
   }
 
   calcGuidePosition(e, column, handle) {
-    const mouseX = typeof e.clientX === 'undefined' ? e.touches[0].clientX : e.clientX
+    const mouseX = this.getClientX(e)
     const handleX = handle.getBoundingClientRect().x - this.table.element.getBoundingClientRect().x
     const tableX = this.table.element.getBoundingClientRect().x
     const columnX = column.element.getBoundingClientRect().left - tableX
@@ -272,42 +275,41 @@ export default class ResizeColumns extends Module {
   }
 
   _mouseDown(e, column, handle) {
-    const self = this
     let guideEl
 
     this.dispatchExternal('columnResizing', column.getComponent())
 
-    if (self.table.options.resizableColumnGuide) {
+    if (this.table.options.resizableColumnGuide) {
       guideEl = document.createElement('span')
       guideEl.classList.add('tabulator-col-resize-guide')
-      self.table.element.appendChild(guideEl)
+      this.table.element.appendChild(guideEl)
       setTimeout(() => {
-        guideEl.style.left = self.calcGuidePosition(e, column, handle) + 'px'
+        guideEl.style.left = `${this.calcGuidePosition(e, column, handle)}px`
       })
     }
 
-    self.table.element.classList.add('tabulator-block-select')
+    this.table.element.classList.add('tabulator-block-select')
 
-    function mouseMove(e) {
-      if (self.table.options.resizableColumnGuide) {
-        guideEl.style.left = self.calcGuidePosition(e, column, handle) + 'px'
+    const mouseMove = (e) => {
+      if (this.table.options.resizableColumnGuide) {
+        guideEl.style.left = `${this.calcGuidePosition(e, column, handle)}px`
       } else {
-        self.resize(e, column)
+        this.resize(e, column)
       }
     }
 
-    function mouseUp(e) {
-      if (self.table.options.resizableColumnGuide) {
-        self.resize(e, column)
+    const mouseUp = (e) => {
+      if (this.table.options.resizableColumnGuide) {
+        this.resize(e, column)
         guideEl.remove()
       }
 
       // block editor from taking action while resizing is taking place
-      if (self.startColumn.modules.edit) {
-        self.startColumn.modules.edit.blocked = false
+      if (this.startColumn.modules.edit) {
+        this.startColumn.modules.edit.blocked = false
       }
 
-      if (self.table.browserSlow && column.modules.resize && column.modules.resize.variableHeight) {
+      if (this.table.browserSlow && column.modules.resize && column.modules.resize.variableHeight) {
         column.checkCellHeights()
       }
 
@@ -317,26 +319,26 @@ export default class ResizeColumns extends Module {
       handle.removeEventListener('touchmove', mouseMove)
       handle.removeEventListener('touchend', mouseUp)
 
-      self.table.element.classList.remove('tabulator-block-select')
+      this.table.element.classList.remove('tabulator-block-select')
 
-      if (self.startWidth !== column.getWidth()) {
-        self.table.columnManager.verticalAlignHeaders()
+      if (this.startWidth !== column.getWidth()) {
+        this.table.columnManager.verticalAlignHeaders()
 
-        self.dispatch('column-resized', column)
-        self.dispatchExternal('columnResized', column.getComponent())
+        this.dispatch('column-resized', column)
+        this.dispatchExternal('columnResized', column.getComponent())
       }
     }
 
     e.stopPropagation() // prevent resize from interfering with movable columns
 
     // block editor from taking action while resizing is taking place
-    if (self.startColumn.modules.edit) {
-      self.startColumn.modules.edit.blocked = true
+    if (this.startColumn.modules.edit) {
+      this.startColumn.modules.edit.blocked = true
     }
 
-    self.startX = typeof e.clientX === 'undefined' ? e.touches[0].clientX : e.clientX
-    self.latestX = self.startX
-    self.startWidth = column.getWidth()
+    this.startX = this.getClientX(e)
+    this.latestX = this.startX
+    this.startWidth = column.getWidth()
 
     document.body.addEventListener('mousemove', mouseMove)
     document.body.addEventListener('mouseup', mouseUp)

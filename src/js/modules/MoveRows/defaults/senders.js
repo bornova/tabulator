@@ -1,5 +1,5 @@
 export default {
-  delete: function (fromRow, toRow, toTable) {
+  delete(fromRow, toRow, toTable) {
     fromRow.delete()
   }
 }

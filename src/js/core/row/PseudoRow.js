@@ -5,9 +5,9 @@ export default class PseudoRow {
   }
 
   _createElement() {
-    const el = document.createElement('div')
-    el.classList.add('tabulator-row')
-    return el
+    const element = document.createElement('div')
+    element.classList.add('tabulator-row')
+    return element
   }
 
   getElement() {
@@ -23,7 +23,7 @@ export default class PseudoRow {
   }
 
   getHeight() {
-    return this.element.outerHeight
+    return this.element.offsetHeight
   }
 
   initialize() {}

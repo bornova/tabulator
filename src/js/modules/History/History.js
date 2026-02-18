@@ -49,19 +49,19 @@ export default class History extends Module {
   }
 
   rowDeleted(row) {
-    let index, rows
+    let index
 
     if (this.table.options.groupBy) {
-      rows = row.getComponent().getGroup()._getSelf().rows
+      const rows = row.getComponent().getGroup()._getSelf().rows
       index = rows.indexOf(row)
 
-      if (index) {
+      if (index > 0) {
         index = rows[index - 1]
       }
     } else {
       index = row.table.rowManager.getRowIndex(row)
 
-      if (index) {
+      if (index > 0) {
         index = row.table.rowManager.rows[index - 1]
       }
     }
@@ -99,72 +99,72 @@ export default class History extends Module {
   }
 
   clearComponentHistory(component) {
-    const index = this.history.findIndex(function (item) {
-      return item.component === component
-    })
+    while (true) {
+      const index = this.history.findIndex((item) => item.component === component)
 
-    if (index > -1) {
+      if (index === -1) {
+        break
+      }
+
       this.history.splice(index, 1)
+
       if (index <= this.index) {
         this.index--
       }
-
-      this.clearComponentHistory(component)
     }
   }
 
   undo() {
-    if (this.index > -1) {
-      const action = this.history[this.index]
-
-      History.undoers[action.type].call(this, action)
-
-      this.index--
-
-      this.dispatchExternal('historyUndo', action.type, action.component.getComponent(), action.data)
-
-      return true
-    } else {
+    if (this.index < 0) {
       console.warn(
         this.options('history') ? 'History Undo Error - No more history to undo' : 'History module not enabled'
       )
       return false
     }
+
+    const action = this.history[this.index]
+
+    History.undoers[action.type].call(this, action)
+
+    this.index--
+
+    this.dispatchExternal('historyUndo', action.type, action.component.getComponent(), action.data)
+
+    return true
   }
 
   redo() {
-    if (this.history.length - 1 > this.index) {
-      this.index++
-
-      const action = this.history[this.index]
-
-      History.redoers[action.type].call(this, action)
-
-      this.dispatchExternal('historyRedo', action.type, action.component.getComponent(), action.data)
-
-      return true
-    } else {
+    if (this.history.length - 1 <= this.index) {
       console.warn(
         this.options('history') ? 'History Redo Error - No more history to redo' : 'History module not enabled'
       )
       return false
     }
+
+    this.index++
+
+    const action = this.history[this.index]
+
+    History.redoers[action.type].call(this, action)
+
+    this.dispatchExternal('historyRedo', action.type, action.component.getComponent(), action.data)
+
+    return true
   }
 
   // rebind rows to new element after deletion
   _rebindRow(oldRow, newRow) {
-    this.history.forEach(function (action) {
-      if (action.component instanceof Row) {
-        if (action.component === oldRow) {
-          action.component = newRow
-        }
-      } else if (action.component instanceof Cell) {
-        if (action.component.row === oldRow) {
-          const field = action.component.column.getField()
+    this.history.forEach((action) => {
+      if (action.component instanceof Row && action.component === oldRow) {
+        action.component = newRow
+        return
+      }
 
-          if (field) {
-            action.component = newRow.getCell(field)
-          }
+      if (action.component instanceof Cell && action.component.row === oldRow) {
+        const field = action.component.column.getField()
+
+        if (field) {
+          action.component = newRow.getCell(field)
         }
       }
     })

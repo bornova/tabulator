@@ -1,5 +1,5 @@
 export default {
-  range: function () {
+  range() {
     const columns = this.modules.selectRange.selectedColumns()
 
     if (this.columnManager.rowHeader) {

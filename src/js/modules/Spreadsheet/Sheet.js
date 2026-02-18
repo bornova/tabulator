@@ -20,7 +20,7 @@ export default class Sheet extends CoreFeature {
     this.grid = new GridCalculator(this.columnCount, this.rowCount)
 
     this.defaultColumnDefinition = { width: 100, headerHozAlign: 'center', headerSort: false }
-    this.columnDefinition = Object.assign(this.defaultColumnDefinition, this.options('spreadsheetColumnDefinition'))
+    this.columnDefinition = Object.assign({}, this.defaultColumnDefinition, this.options('spreadsheetColumnDefinition'))
 
     this.columnDefs = []
     this.rowDefs = []
@@ -65,27 +65,19 @@ export default class Sheet extends CoreFeature {
     this.grid.setColumnCount(this.columnCount)
     this.columnFields = this.grid.genColumns(this.data)
 
-    this.columnDefs = []
-
-    this.columnFields.forEach((ref) => {
-      const def = Object.assign({}, this.columnDefinition)
-      def.field = ref
-      def.title = ref
-
-      this.columnDefs.push(def)
-    })
+    this.columnDefs = this.columnFields.map((ref) => ({
+      ...this.columnDefinition,
+      field: ref,
+      title: ref
+    }))
   }
 
   initializeRows() {
-    let refs
-
     this.grid.setRowCount(this.rowCount)
 
-    refs = this.grid.genRows(this.data)
+    const refs = this.grid.genRows(this.data)
 
-    this.rowDefs = []
-
-    refs.forEach((ref, i) => {
+    this.rowDefs = refs.map((ref, i) => {
       const def = { _id: ref }
       const data = this.data[i]
 
@@ -99,7 +91,7 @@ export default class Sheet extends CoreFeature {
         })
       }
 
-      this.rowDefs.push(def)
+      return def
     })
   }
 
@@ -150,21 +142,13 @@ export default class Sheet extends CoreFeature {
   }
 
   getData(full) {
-    let output = []
+    let output
     let rowWidths
     let outputWidth
     let outputHeight
 
     // map data to array format
-    this.rowDefs.forEach((rowData) => {
-      const row = []
-
-      this.columnFields.forEach((field) => {
-        row.push(rowData[field])
-      })
-
-      output.push(row)
-    })
+    output = this.rowDefs.map((rowData) => this.columnFields.map((field) => rowData[field]))
 
     // trim output
     if (!full && !this.options('spreadsheetOutputFull')) {

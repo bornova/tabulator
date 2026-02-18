@@ -1,58 +1,64 @@
 import RowComponent from '../../../../core/row/RowComponent.js'
 
-export default function (cell, formatterParams, onRendered) {
-  let checkbox = document.createElement('input')
+export default function (cell, formatterParams, _onRendered) {
+  const checkbox = document.createElement('input')
   let blocked = false
 
   checkbox.type = 'checkbox'
 
   checkbox.setAttribute('aria-label', 'Select Row')
 
-  if (this.table.modExists('selectRow', true)) {
-    checkbox.addEventListener('click', (e) => {
-      e.stopPropagation()
+  if (!this.table.modExists('selectRow', true)) {
+    return checkbox
+  }
+
+  const selectRowModule = this.table.modules.selectRow
+  const isClickRangeMode = this.table.options.selectableRowsRangeMode === 'click'
+
+  checkbox.addEventListener('click', (e) => {
+    e.stopPropagation()
+  })
+
+  if (typeof cell.getRow !== 'function') {
+    checkbox.addEventListener('change', () => {
+      if (selectRowModule.selectedRows.length) {
+        this.table.deselectRow()
+      } else {
+        this.table.selectRow(formatterParams.rowRange)
+      }
     })
 
-    if (typeof cell.getRow === 'function') {
-      const row = cell.getRow()
+    selectRowModule.registerHeaderSelectCheckbox(checkbox)
+    return checkbox
+  }
 
-      if (row instanceof RowComponent) {
-        checkbox.addEventListener('change', (e) => {
-          if (this.table.options.selectableRowsRangeMode === 'click') {
-            if (!blocked) {
-              row.toggleSelect()
-            } else {
-              blocked = false
-            }
-          } else {
-            row.toggleSelect()
-          }
-        })
+  const row = cell.getRow()
 
-        if (this.table.options.selectableRowsRangeMode === 'click') {
-          checkbox.addEventListener('click', (e) => {
-            blocked = true
-            this.table.modules.selectRow.handleComplexRowClick(row._row, e)
-          })
-        }
+  if (!(row instanceof RowComponent)) {
+    return ''
+  }
 
-        checkbox.checked = row.isSelected && row.isSelected()
-        this.table.modules.selectRow.registerRowSelectCheckbox(row, checkbox)
+  checkbox.addEventListener('change', () => {
+    if (isClickRangeMode) {
+      if (!blocked) {
+        row.toggleSelect()
       } else {
-        checkbox = ''
+        blocked = false
       }
     } else {
-      checkbox.addEventListener('change', (e) => {
-        if (this.table.modules.selectRow.selectedRows.length) {
-          this.table.deselectRow()
-        } else {
-          this.table.selectRow(formatterParams.rowRange)
-        }
-      })
-
-      this.table.modules.selectRow.registerHeaderSelectCheckbox(checkbox)
+      row.toggleSelect()
     }
+  })
+
+  if (isClickRangeMode) {
+    checkbox.addEventListener('click', (e) => {
+      blocked = true
+      selectRowModule.handleComplexRowClick(row._row, e)
+    })
   }
+
+  checkbox.checked = !!(row.isSelected && row.isSelected())
+  selectRowModule.registerRowSelectCheckbox(row, checkbox)
 
   return checkbox
 }

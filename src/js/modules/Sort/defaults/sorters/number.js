@@ -5,21 +5,22 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   const thousand = params.thousandSeparator
   let emptyAlign = 0
 
-  a = String(a)
-  b = String(b)
+  const normalizeNumber = (value) => {
+    let normalized = String(value)
 
-  if (thousand) {
-    a = a.split(thousand).join('')
-    b = b.split(thousand).join('')
+    if (thousand) {
+      normalized = normalized.split(thousand).join('')
+    }
+
+    if (decimal) {
+      normalized = normalized.split(decimal).join('.')
+    }
+
+    return parseFloat(normalized)
   }
 
-  if (decimal) {
-    a = a.split(decimal).join('.')
-    b = b.split(decimal).join('.')
-  }
-
-  a = parseFloat(a)
-  b = parseFloat(b)
+  a = normalizeNumber(a)
+  b = normalizeNumber(b)
 
   // handle non numeric values
   if (isNaN(a)) {

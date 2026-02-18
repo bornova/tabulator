@@ -1,25 +1,27 @@
 export default {
-  undo: function (e) {
-    let cell = false
-    if (this.table.options.history && this.table.modExists('history') && this.table.modExists('edit')) {
-      cell = this.table.modules.edit.currentCell
+  undo(e) {
+    if (!(this.table.options.history && this.table.modExists('history') && this.table.modExists('edit'))) {
+      return
+    }
 
-      if (!cell) {
-        e.preventDefault()
-        this.table.modules.history.undo()
-      }
+    const cell = this.table.modules.edit.currentCell
+
+    if (!cell) {
+      e.preventDefault()
+      this.table.modules.history.undo()
     }
   },
 
-  redo: function (e) {
-    let cell = false
-    if (this.table.options.history && this.table.modExists('history') && this.table.modExists('edit')) {
-      cell = this.table.modules.edit.currentCell
+  redo(e) {
+    if (!(this.table.options.history && this.table.modExists('history') && this.table.modExists('edit'))) {
+      return
+    }
 
-      if (!cell) {
-        e.preventDefault()
-        this.table.modules.history.redo()
-      }
+    const cell = this.table.modules.edit.currentCell
+
+    if (!cell) {
+      e.preventDefault()
+      this.table.modules.history.redo()
     }
   }
 }

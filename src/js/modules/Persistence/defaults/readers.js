@@ -1,14 +1,14 @@
 // read persistance information from storage
 export default {
-  local: function (id, type) {
-    const data = localStorage.getItem(id + '-' + type)
+  local(id, type) {
+    const data = localStorage.getItem(`${id}-${type}`)
 
     return data ? JSON.parse(data) : false
   },
-  cookie: function (id, type) {
+  cookie(id, type) {
     let cookie = document.cookie
-    const key = id + '-' + type
-    const cookiePos = cookie.indexOf(key + '=')
+    const key = `${id}-${type}`
+    const cookiePos = cookie.indexOf(`${key}=`)
     let end
     let data
 
@@ -22,7 +22,7 @@ export default {
         cookie = cookie.slice(0, end)
       }
 
-      data = cookie.replace(key + '=', '')
+      data = cookie.replace(`${key}=`, '')
     }
 
     return data ? JSON.parse(data) : false

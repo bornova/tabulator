@@ -17,7 +17,7 @@ export default class DataTree extends Module {
     this.branchEl = null
     this.elementField = false
 
-    this.startOpen = function () {}
+    this.startOpen = () => {}
 
     this.registerTableOption('dataTree', false) // enable data tree
     this.registerTableOption('dataTreeFilter', true) // filter child rows
@@ -106,9 +106,7 @@ export default class DataTree extends Module {
 
       switch (typeof options.dataTreeStartExpanded) {
         case 'boolean':
-          this.startOpen = function (row, index) {
-            return options.dataTreeStartExpanded
-          }
+          this.startOpen = (row, index) => options.dataTreeStartExpanded
           break
 
         case 'function':
@@ -116,9 +114,7 @@ export default class DataTree extends Module {
           break
 
         default:
-          this.startOpen = function (row, index) {
-            return options.dataTreeStartExpanded[index]
-          }
+          this.startOpen = (row, index) => options.dataTreeStartExpanded[index]
           break
       }
 
@@ -219,7 +215,7 @@ export default class DataTree extends Module {
   reinitializeRowChildren(row) {
     const children = this.getTreeChildren(row, false, true)
 
-    children.forEach(function (child) {
+    children.forEach((child) => {
       child.reinitialize(true)
     })
   }
@@ -245,7 +241,7 @@ export default class DataTree extends Module {
 
     this.generateControlElement(row, el)
 
-    row.getElement().classList.add('tabulator-tree-level-' + config.index)
+    row.getElement().classList.add(`tabulator-tree-level-${config.index}`)
 
     if (config.index) {
       if (this.branchEl) {
@@ -431,11 +427,7 @@ export default class DataTree extends Module {
     const config = row.modules.dataTree
 
     if (config.children !== false) {
-      if (config.open) {
-        this.collapseRow(row)
-      } else {
-        this.expandRow(row)
-      }
+      config.open ? this.collapseRow(row) : this.expandRow(row)
     }
   }
 
@@ -576,7 +568,7 @@ export default class DataTree extends Module {
     } else {
       // subject should be treated as the index of the row
       match = parent.data[this.field].find((row) => {
-        return row.data[this.table.options.index] == subject
+        return row.data[this.table.options.index] === subject
       })
     }
 
@@ -585,7 +577,7 @@ export default class DataTree extends Module {
         match = parent.data[this.field].indexOf(match)
       }
 
-      if (match == -1) {
+      if (match === -1) {
         match = false
       }
     }
@@ -626,8 +618,8 @@ export default class DataTree extends Module {
 
   redrawNeeded(data) {
     return (
-      (this.field ? typeof data[this.field] !== 'undefined' : false) ||
-      (this.elementField ? typeof data[this.elementField] !== 'undefined' : false)
+      (this.field ? data[this.field] !== undefined : false) ||
+      (this.elementField ? data[this.elementField] !== undefined : false)
     )
   }
 }

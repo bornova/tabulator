@@ -1,11 +1,12 @@
 export default {
-  keyBlock: function (e) {
+  keyBlock(e) {
     e.stopPropagation()
     e.preventDefault()
   },
 
-  scrollPageUp: function (e) {
+  scrollPageUp(e) {
     const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
     const newPos = rowManager.scrollTop - rowManager.element.clientHeight
 
     e.preventDefault()
@@ -14,15 +15,16 @@ export default {
       if (newPos >= 0) {
         rowManager.element.scrollTop = newPos
       } else {
-        rowManager.scrollToRow(rowManager.getDisplayRows()[0])
+        rowManager.scrollToRow(displayRows[0])
       }
     }
 
     this.table.element.focus()
   },
 
-  scrollPageDown: function (e) {
+  scrollPageDown(e) {
     const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
     const newPos = rowManager.scrollTop + rowManager.element.clientHeight
     const scrollMax = rowManager.element.scrollHeight
 
@@ -32,58 +34,60 @@ export default {
       if (newPos <= scrollMax) {
         rowManager.element.scrollTop = newPos
       } else {
-        rowManager.scrollToRow(rowManager.getDisplayRows()[rowManager.displayRowsCount - 1])
+        rowManager.scrollToRow(displayRows[rowManager.displayRowsCount - 1])
       }
     }
 
     this.table.element.focus()
   },
 
-  scrollToStart: function (e) {
+  scrollToStart(e) {
     const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
 
     e.preventDefault()
 
     if (rowManager.displayRowsCount) {
-      rowManager.scrollToRow(rowManager.getDisplayRows()[0])
+      rowManager.scrollToRow(displayRows[0])
     }
 
     this.table.element.focus()
   },
 
-  scrollToEnd: function (e) {
+  scrollToEnd(e) {
     const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
 
     e.preventDefault()
 
     if (rowManager.displayRowsCount) {
-      rowManager.scrollToRow(rowManager.getDisplayRows()[rowManager.displayRowsCount - 1])
+      rowManager.scrollToRow(displayRows[rowManager.displayRowsCount - 1])
     }
 
     this.table.element.focus()
   },
 
-  navPrev: function (e) {
+  navPrev(e) {
     this.dispatch('keybinding-nav-prev', e)
   },
 
-  navNext: function (e) {
+  navNext(e) {
     this.dispatch('keybinding-nav-next', e)
   },
 
-  navLeft: function (e) {
+  navLeft(e) {
     this.dispatch('keybinding-nav-left', e)
   },
 
-  navRight: function (e) {
+  navRight(e) {
     this.dispatch('keybinding-nav-right', e)
   },
 
-  navUp: function (e) {
+  navUp(e) {
     this.dispatch('keybinding-nav-up', e)
   },
 
-  navDown: function (e) {
+  navDown(e) {
     this.dispatch('keybinding-nav-down', e)
   }
 }

@@ -15,17 +15,12 @@ export default function (list, options = {}, setFileContents) {
     fillColor: 232
   }
   const jsPDFParams = options.jsPDF || {}
-  const title = options.title ? options.title : ''
+  const title = options.title || ''
   let jspdfLib
   let doc
 
-  if (!jsPDFParams.orientation) {
-    jsPDFParams.orientation = options.orientation || 'landscape'
-  }
-
-  if (!jsPDFParams.unit) {
-    jsPDFParams.unit = 'pt'
-  }
+  jsPDFParams.orientation ||= options.orientation || 'landscape'
+  jsPDFParams.unit ||= 'pt'
 
   // parse row list
   list.forEach((row) => {
@@ -52,8 +47,6 @@ export default function (list, options = {}, setFileContents) {
     const rowData = []
 
     row.columns.forEach((col) => {
-      let cell
-
       if (col) {
         switch (typeof col.value) {
           case 'object':
@@ -65,7 +58,7 @@ export default function (list, options = {}, setFileContents) {
             break
         }
 
-        cell = {
+        const cell = {
           content: col.value,
           colSpan: col.width,
           rowSpan: col.height

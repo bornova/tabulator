@@ -1,11 +1,11 @@
 export default {
-  replace: function (data) {
+  replace(data) {
     return this.table.setData(data)
   },
-  update: function (data) {
+  update(data) {
     return this.table.updateOrAddData(data)
   },
-  insert: function (data) {
+  insert(data) {
     return this.table.addData(data)
   }
 }

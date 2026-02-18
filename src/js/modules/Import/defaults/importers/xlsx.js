@@ -1,7 +1,8 @@
 export default function (input) {
-  const XLSXLib = this.dependencyRegistry.lookup('XLSX')
-  const workbook2 = XLSXLib.read(input)
-  const sheet = workbook2.Sheets[workbook2.SheetNames[0]]
+  const xlsxLib = this.dependencyRegistry.lookup('XLSX')
+  const workbook = xlsxLib.read(input)
+  const firstSheetName = workbook.SheetNames[0]
+  const sheet = workbook.Sheets[firstSheetName]
 
-  return XLSXLib.utils.sheet_to_json(sheet, { header: 1 })
+  return xlsxLib.utils.sheet_to_json(sheet, { header: 1 })
 }

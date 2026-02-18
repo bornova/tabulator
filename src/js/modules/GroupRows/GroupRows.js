@@ -56,7 +56,7 @@ export default class GroupRows extends Module {
   initialize() {
     this.subscribe('table-destroy', this._blockRedrawing.bind(this))
     this.subscribe('rows-wipe', this._blockRedrawing.bind(this))
-    this.subscribe('rows-wiped', this._restore_redrawing.bind(this))
+    this.subscribe('rows-wiped', this._restoreRedrawing.bind(this))
 
     if (this.table.options.groupBy) {
       if (this.table.options.groupUpdateOnCellEdit) {
@@ -88,7 +88,7 @@ export default class GroupRows extends Module {
     this.blockRedraw = true
   }
 
-  _restore_redrawing() {
+  _restoreRedrawing() {
     this.blockRedraw = false
   }
 
@@ -134,13 +134,13 @@ export default class GroupRows extends Module {
       if (groupBy) {
         if (
           this.table.modExists('columnCalcs') &&
-          this.table.options.columnCalcs != 'table' &&
-          this.table.options.columnCalcs != 'both'
+          this.table.options.columnCalcs !== 'table' &&
+          this.table.options.columnCalcs !== 'both'
         ) {
           this.table.modules.columnCalcs.removeCalcs()
         }
       } else {
-        if (this.table.modExists('columnCalcs') && this.table.options.columnCalcs != 'group') {
+        if (this.table.modExists('columnCalcs') && this.table.options.columnCalcs !== 'group') {
           const cols = this.table.columnManager.getRealColumns()
 
           cols.forEach((col) => {
@@ -168,13 +168,9 @@ export default class GroupRows extends Module {
           column = this.table.columnManager.getColumnByField(group)
 
           if (column) {
-            lookupFunc = function (data) {
-              return column.getFieldValue(data)
-            }
+            lookupFunc = (data) => column.getFieldValue(data)
           } else {
-            lookupFunc = function (data) {
-              return data[group]
-            }
+            lookupFunc = (data) => data[group]
           }
         }
 
@@ -190,14 +186,7 @@ export default class GroupRows extends Module {
           startOpen = [startOpen]
         }
 
-        startOpen.forEach((level) => {
-          level =
-            typeof level === 'function'
-              ? level
-              : function () {
-                  return true
-                }
-        })
+        startOpen = startOpen.map((level) => (typeof level === 'function' ? level : () => true))
 
         this.startOpen = startOpen
       }
@@ -230,7 +219,7 @@ export default class GroupRows extends Module {
         return row.type !== 'group'
       })
 
-      el.style.minWidth = !rows.length ? this.table.columnManager.getWidth() + 'px' : ''
+      el.style.minWidth = !rows.length ? `${this.table.columnManager.getWidth()}px` : ''
     } else {
       return rows
     }
@@ -243,7 +232,7 @@ export default class GroupRows extends Module {
       const groupRows = row.modules.group.rows
 
       if (groupRows.length > 1) {
-        if (!index || (index && groupRows.indexOf(index) == -1)) {
+        if (!index || (index && groupRows.indexOf(index) === -1)) {
           if (top) {
             if (groupRows[0] !== row) {
               index = groupRows[0]
@@ -405,7 +394,7 @@ export default class GroupRows extends Module {
   getGroups(component) {
     const groupComponents = []
 
-    this.groupList.forEach(function (group) {
+    this.groupList.forEach((group) => {
       groupComponents.push(component ? group.getComponent() : group)
     })
 
@@ -432,7 +421,7 @@ export default class GroupRows extends Module {
 
   wipe() {
     if (this.table.options.groupBy) {
-      this.groupList.forEach(function (group) {
+      this.groupList.forEach((group) => {
         group.wipe()
       })
 
@@ -528,7 +517,7 @@ export default class GroupRows extends Module {
   }
 
   createGroup(groupID, level, oldGroups) {
-    const groupKey = level + '_' + groupID
+    const groupKey = `${level}_${groupID}`
     let group
 
     oldGroups = oldGroups || []
@@ -549,7 +538,7 @@ export default class GroupRows extends Module {
 
   assignRowToExistingGroup(row, oldGroups) {
     const groupID = this.groupIDLookups[0].func(row.getData())
-    const groupKey = '0_' + groupID
+    const groupKey = `0_${groupID}`
 
     if (this.groups[groupKey]) {
       this.groups[groupKey].addRow(row)
@@ -558,13 +547,14 @@ export default class GroupRows extends Module {
 
   assignRowToGroup(row, oldGroups) {
     const groupID = this.groupIDLookups[0].func(row.getData())
-    const newGroupNeeded = !this.groups['0_' + groupID]
+    const groupKey = `0_${groupID}`
+    const newGroupNeeded = !this.groups[groupKey]
 
     if (newGroupNeeded) {
       this.createGroup(groupID, 0, oldGroups)
     }
 
-    this.groups['0_' + groupID].addRow(row)
+    this.groups[groupKey].addRow(row)
 
     return !newGroupNeeded
   }
@@ -578,7 +568,7 @@ export default class GroupRows extends Module {
 
       // figure out if new group path is the same as old group path
       samePath =
-        oldGroupPath.length == newGroupPath.length &&
+        oldGroupPath.length === newGroupPath.length &&
         oldGroupPath.every((element, index) => {
           return element === newGroupPath[index]
         })
@@ -625,7 +615,7 @@ export default class GroupRows extends Module {
         left -= this.table.columnManager.renderer.vDomPadLeft
       }
 
-      left = left + 'px'
+      left = `${left}px`
 
       this.groupList.forEach((group) => {
         group.scrollHeader(left)
@@ -634,7 +624,7 @@ export default class GroupRows extends Module {
   }
 
   removeGroup(group) {
-    const groupKey = group.level + '_' + group.key
+    const groupKey = `${group.level}_${group.key}`
     let index
 
     if (this.groups[groupKey]) {
@@ -663,7 +653,7 @@ export default class GroupRows extends Module {
     })
 
     if (onlyGroupHeaders) {
-      element.style.minWidth = this.table.columnManager.getWidth() + 'px'
+      element.style.minWidth = `${this.table.columnManager.getWidth()}px`
     } else {
       element.style.minWidth = ''
     }

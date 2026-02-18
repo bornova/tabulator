@@ -3,12 +3,16 @@ export default class CalcComponent {
     this._row = row
 
     return new Proxy(this, {
-      get: function (target, name, receiver) {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
+
         if (typeof target[name] !== 'undefined') {
           return target[name]
-        } else {
-          return target._row.table.componentFunctionBinder.handle('row', target._row, name)
         }
+
+        return target._row.table.componentFunctionBinder.handle('row', target._row, name)
       }
     })
   }
@@ -26,13 +30,7 @@ export default class CalcComponent {
   }
 
   getCells() {
-    const cells = []
-
-    this._row.getCells().forEach(function (cell) {
-      cells.push(cell.getComponent())
-    })
-
-    return cells
+    return this._row.getCells().map((cell) => cell.getComponent())
   }
 
   getCell(column) {

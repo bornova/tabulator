@@ -42,9 +42,7 @@ export default class Renderer extends CoreFeature {
 
   rerenderRows(callback) {
     // rerender rows and keep position
-    if (callback) {
-      callback()
-    }
+    callback?.()
   }
 
   rerenderColumns(update, blockRedraw) {
@@ -95,13 +93,9 @@ export default class Renderer extends CoreFeature {
   styleRow(row, index) {
     const rowEl = row.getElement()
 
-    if (index % 2) {
-      rowEl.classList.add('tabulator-row-even')
-      rowEl.classList.remove('tabulator-row-odd')
-    } else {
-      rowEl.classList.add('tabulator-row-odd')
-      rowEl.classList.remove('tabulator-row-even')
-    }
+    const isEven = Boolean(index % 2)
+    rowEl.classList.toggle('tabulator-row-even', isEven)
+    rowEl.classList.toggle('tabulator-row-odd', !isEven)
   }
 
   /// ////////////////////////////////
@@ -123,7 +117,7 @@ export default class Renderer extends CoreFeature {
 
   rerender(callback) {
     // rerender and keep position
-    this.rerenderRows()
+    this.rerenderRows(callback)
     this.rerenderColumns()
   }
 
@@ -134,9 +128,7 @@ export default class Renderer extends CoreFeature {
 
     return new Promise((resolve, reject) => {
       if (rowIndex > -1) {
-        if (typeof ifVisible === 'undefined') {
-          ifVisible = this.table.options.scrollToRowIfVisible
-        }
+        ifVisible ??= this.table.options.scrollToRowIfVisible
 
         // check row visibility
         if (!ifVisible) {
@@ -145,14 +137,12 @@ export default class Renderer extends CoreFeature {
 
             if (offset > 0 && offset < this.elementVertical.clientHeight - rowEl.offsetHeight) {
               resolve()
-              return false
+              return
             }
           }
         }
 
-        if (typeof position === 'undefined') {
-          position = this.table.options.scrollToRowPosition
-        }
+        position ??= this.table.options.scrollToRowPosition
 
         if (position === 'nearest') {
           position = this.scrollToRowNearestTop(row) ? 'top' : 'bottom'
@@ -166,7 +156,7 @@ export default class Renderer extends CoreFeature {
           case 'middle':
           case 'center':
             if (
-              this.elementVertical.scrollHeight - this.elementVertical.scrollTop ==
+              this.elementVertical.scrollHeight - this.elementVertical.scrollTop ===
               this.elementVertical.clientHeight
             ) {
               this.elementVertical.scrollTop =
@@ -181,7 +171,7 @@ export default class Renderer extends CoreFeature {
 
           case 'bottom':
             if (
-              this.elementVertical.scrollHeight - this.elementVertical.scrollTop ==
+              this.elementVertical.scrollHeight - this.elementVertical.scrollTop ===
               this.elementVertical.clientHeight
             ) {
               this.elementVertical.scrollTop =

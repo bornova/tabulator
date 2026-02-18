@@ -1,7 +1,10 @@
+const isEmptyValue = (value) => value === '' || value === null || typeof value === 'undefined'
+const alphaNumericPattern = /^[a-z0-9]+$/i
+
 export default {
   // is integer
-  integer: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  integer(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
 
@@ -11,8 +14,8 @@ export default {
   },
 
   // is float
-  float: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  float(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
 
@@ -22,83 +25,89 @@ export default {
   },
 
   // must be a number
-  numeric: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  numeric(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return !isNaN(value)
   },
 
   // must be a string
-  string: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  string(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return isNaN(value)
   },
 
   // must be alphanumeric
-  alphanumeric: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  alphanumeric(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
 
-    const reg = new RegExp(/^[a-z0-9]+$/i)
-
-    return reg.test(value)
+    return alphaNumericPattern.test(value)
   },
 
   // maximum value
-  max: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  max(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return parseFloat(value) <= parameters
   },
 
   // minimum value
-  min: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  min(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return parseFloat(value) >= parameters
   },
 
   // starts with  value
-  starts: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  starts(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return String(value).toLowerCase().startsWith(String(parameters).toLowerCase())
   },
 
   // ends with  value
-  ends: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  ends(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return String(value).toLowerCase().endsWith(String(parameters).toLowerCase())
   },
 
   // minimum string length
-  minLength: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  minLength(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return String(value).length >= parameters
   },
 
   // maximum string length
-  maxLength: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  maxLength(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     return String(value).length <= parameters
   },
 
   // in provided value list
-  in: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  in(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
 
@@ -110,40 +119,38 @@ export default {
   },
 
   // must match provided regex
-  regex: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  regex(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
+
     const reg = new RegExp(parameters)
 
     return reg.test(value)
   },
 
   // value must be unique in this column
-  unique: function (cell, value, parameters) {
-    if (value === '' || value === null || typeof value === 'undefined') {
+  unique(cell, value, parameters) {
+    if (isEmptyValue(value)) {
       return true
     }
-    let unique = true
 
     const cellData = cell.getData()
     const column = cell.getColumn()._getSelf()
 
-    this.table.rowManager.rows.forEach(function (row) {
+    for (const row of this.table.rowManager.rows) {
       const data = row.getData()
 
-      if (data !== cellData) {
-        if (value == column.getFieldValue(data)) {
-          unique = false
-        }
+      if (data !== cellData && value == column.getFieldValue(data)) {
+        return false
       }
-    })
+    }
 
-    return unique
+    return true
   },
 
   // must have a value
-  required: function (cell, value, parameters) {
-    return value !== '' && value !== null && typeof value !== 'undefined'
+  required(cell, value, parameters) {
+    return !isEmptyValue(value)
   }
 }

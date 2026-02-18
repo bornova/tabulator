@@ -1,10 +1,14 @@
 // resize columns to fit data they contain
 export default function (columns, forced) {
+  const table = this.table
+
   if (forced) {
-    this.table.columnManager.renderer.reinitializeColumnWidths(columns)
+    table.columnManager.renderer.reinitializeColumnWidths(columns)
   }
 
-  if (this.table.options.responsiveLayout && this.table.modExists('responsiveLayout', true)) {
-    this.table.modules.responsiveLayout.update()
+  if (!(table.options.responsiveLayout && table.modExists('responsiveLayout', true))) {
+    return
   }
+
+  table.modules.responsiveLayout.update()
 }

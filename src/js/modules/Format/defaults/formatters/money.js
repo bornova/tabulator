@@ -1,11 +1,6 @@
 export default function (cell, formatterParams, onRendered) {
   let floatVal = parseFloat(cell.getValue())
   let sign = ''
-  let number
-  let integer
-  let decimal
-  let rgx
-  let value
 
   const decimalSym = formatterParams.decimal || '.'
   const thousandSym = formatterParams.thousand || ','
@@ -23,26 +18,25 @@ export default function (cell, formatterParams, onRendered) {
     sign = negativeSign
   }
 
-  number = precision !== false ? floatVal.toFixed(precision) : floatVal
-  number = String(number).split('.')
+  const number = String(precision !== false ? floatVal.toFixed(precision) : floatVal).split('.')
 
-  integer = number[0]
-  decimal = number.length > 1 ? decimalSym + number[1] : ''
+  let integer = number[0]
+  const decimal = number.length > 1 ? `${decimalSym}${number[1]}` : ''
 
   if (formatterParams.thousand !== false) {
-    rgx = /(\d+)(\d{3})/
+    const rgx = /(\d+)(\d{3})/
 
     while (rgx.test(integer)) {
-      integer = integer.replace(rgx, '$1' + thousandSym + '$2')
+      integer = integer.replace(rgx, `$1${thousandSym}$2`)
     }
   }
 
-  value = integer + decimal
+  const value = `${integer}${decimal}`
 
   if (sign === true) {
-    value = '(' + value + ')'
-    return after ? value + symbol : symbol + value
+    const wrappedValue = `(${value})`
+    return after ? `${wrappedValue}${symbol}` : `${symbol}${wrappedValue}`
   } else {
-    return after ? sign + value + symbol : sign + symbol + value
+    return after ? `${sign}${value}${symbol}` : `${sign}${symbol}${value}`
   }
 }

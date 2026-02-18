@@ -1,6 +1,18 @@
 import CoreFeature from '../CoreFeature.js'
 import CellComponent from './CellComponent.js'
 
+const VERTICAL_ALIGN_TO_FLEX = {
+  top: 'flex-start',
+  bottom: 'flex-end',
+  middle: 'center'
+}
+
+const HORIZONTAL_ALIGN_TO_FLEX = {
+  left: 'flex-start',
+  right: 'flex-end',
+  center: 'center'
+}
+
 export default class Cell extends CoreFeature {
   constructor(column, row) {
     super(column.table)
@@ -10,13 +22,14 @@ export default class Cell extends CoreFeature {
     this.row = row
     this.element = null
     this.value = null
-    this.initialValue
+    this.initialValue = undefined
     this.oldValue = null
     this.modules = {}
 
     this.height = null
     this.width = null
     this.minWidth = null
+    this.maxWidth = null
 
     this.component = null
 
@@ -52,16 +65,6 @@ export default class Cell extends CoreFeature {
   _configureCell() {
     const element = this.element
     const field = this.column.getField()
-    const vertAligns = {
-      top: 'flex-start',
-      bottom: 'flex-end',
-      middle: 'center'
-    }
-    const hozAligns = {
-      left: 'flex-start',
-      right: 'flex-end',
-      center: 'center'
-    }
 
     // set text alignment
     element.style.textAlign = this.column.hozAlign
@@ -69,10 +72,10 @@ export default class Cell extends CoreFeature {
     if (this.column.vertAlign) {
       element.style.display = 'inline-flex'
 
-      element.style.alignItems = vertAligns[this.column.vertAlign] || ''
+      element.style.alignItems = VERTICAL_ALIGN_TO_FLEX[this.column.vertAlign] || ''
 
       if (this.column.hozAlign) {
-        element.style.justifyContent = hozAligns[this.column.hozAlign] || ''
+        element.style.justifyContent = HORIZONTAL_ALIGN_TO_FLEX[this.column.hozAlign] || ''
       }
     }
 
@@ -82,7 +85,7 @@ export default class Cell extends CoreFeature {
 
     // add class to cell if needed
     if (this.column.definition.cssClass) {
-      const classNames = this.column.definition.cssClass.split(' ')
+      const classNames = this.column.definition.cssClass.split(/\s+/).filter(Boolean)
       classNames.forEach((className) => {
         element.classList.add(className)
       })
@@ -98,19 +101,12 @@ export default class Cell extends CoreFeature {
 
   // generate cell contents
   _generateContents() {
-    let val
-
-    val = this.chain('cell-format', this, null, () => {
-      return (this.element.innerHTML = this.value)
-    })
+    const val = this.chain('cell-format', this, null, () => (this.element.innerHTML = this.value))
 
     switch (typeof val) {
       case 'object':
         if (val instanceof Node) {
-          // clear previous cell contents
-          while (this.element.firstChild) this.element.removeChild(this.element.firstChild)
-
-          this.element.appendChild(val)
+          this.element.replaceChildren(val)
         } else {
           this.element.innerHTML = ''
 
@@ -279,7 +275,7 @@ export default class Cell extends CoreFeature {
       this.element.parentNode.removeChild(this.element)
     }
 
-    this.element = false
+    this.element = null
     this.column.deleteCell(this)
     this.row.deleteCell(this)
     this.calcs = {}

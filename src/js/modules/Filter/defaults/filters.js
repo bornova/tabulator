@@ -1,35 +1,35 @@
 export default {
   // equal to
-  '=': function (filterVal, rowVal, rowData, filterParams) {
+  '='(filterVal, rowVal, rowData, filterParams) {
     return rowVal == filterVal
   },
 
   // less than
-  '<': function (filterVal, rowVal, rowData, filterParams) {
+  '<'(filterVal, rowVal, rowData, filterParams) {
     return rowVal < filterVal
   },
 
   // less than or equal to
-  '<=': function (filterVal, rowVal, rowData, filterParams) {
+  '<='(filterVal, rowVal, rowData, filterParams) {
     return rowVal <= filterVal
   },
 
   // greater than
-  '>': function (filterVal, rowVal, rowData, filterParams) {
+  '>'(filterVal, rowVal, rowData, filterParams) {
     return rowVal > filterVal
   },
 
   // greater than or equal to
-  '>=': function (filterVal, rowVal, rowData, filterParams) {
+  '>='(filterVal, rowVal, rowData, filterParams) {
     return rowVal >= filterVal
   },
 
   // not equal to
-  '!=': function (filterVal, rowVal, rowData, filterParams) {
+  '!='(filterVal, rowVal, rowData, filterParams) {
     return rowVal != filterVal
   },
 
-  regex: function (filterVal, rowVal, rowData, filterParams) {
+  regex(filterVal, rowVal, rowData, filterParams) {
     if (typeof filterVal === 'string') {
       filterVal = new RegExp(filterVal)
     }
@@ -38,24 +38,22 @@ export default {
   },
 
   // contains the string
-  like: function (filterVal, rowVal, rowData, filterParams) {
-    if (filterVal === null || typeof filterVal === 'undefined') {
+  like(filterVal, rowVal, rowData, filterParams) {
+    if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
-    } else {
-      if (typeof rowVal !== 'undefined' && rowVal !== null) {
-        return String(rowVal).toLowerCase().indexOf(filterVal.toLowerCase()) > -1
-      } else {
-        return false
-      }
     }
+
+    if (rowVal !== undefined && rowVal !== null) {
+      return String(rowVal).toLowerCase().indexOf(filterVal.toLowerCase()) > -1
+    }
+
+    return false
   },
 
   // contains the keywords
-  keywords: function (filterVal, rowVal, rowData, filterParams) {
-    const keywords = filterVal
-      .toLowerCase()
-      .split(typeof filterParams.separator === 'undefined' ? ' ' : filterParams.separator)
-    const value = String(rowVal === null || typeof rowVal === 'undefined' ? '' : rowVal).toLowerCase()
+  keywords(filterVal, rowVal, rowData, filterParams) {
+    const keywords = filterVal.toLowerCase().split(filterParams.separator === undefined ? ' ' : filterParams.separator)
+    const value = String(rowVal === null || rowVal === undefined ? '' : rowVal).toLowerCase()
     const matches = []
 
     keywords.forEach((keyword) => {
@@ -68,38 +66,38 @@ export default {
   },
 
   // starts with the string
-  starts: function (filterVal, rowVal, rowData, filterParams) {
-    if (filterVal === null || typeof filterVal === 'undefined') {
+  starts(filterVal, rowVal, rowData, filterParams) {
+    if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
-    } else {
-      if (typeof rowVal !== 'undefined' && rowVal !== null) {
-        return String(rowVal).toLowerCase().startsWith(filterVal.toLowerCase())
-      } else {
-        return false
-      }
     }
+
+    if (rowVal !== undefined && rowVal !== null) {
+      return String(rowVal).toLowerCase().startsWith(filterVal.toLowerCase())
+    }
+
+    return false
   },
 
   // ends with the string
-  ends: function (filterVal, rowVal, rowData, filterParams) {
-    if (filterVal === null || typeof filterVal === 'undefined') {
+  ends(filterVal, rowVal, rowData, filterParams) {
+    if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
-    } else {
-      if (typeof rowVal !== 'undefined' && rowVal !== null) {
-        return String(rowVal).toLowerCase().endsWith(filterVal.toLowerCase())
-      } else {
-        return false
-      }
     }
+
+    if (rowVal !== undefined && rowVal !== null) {
+      return String(rowVal).toLowerCase().endsWith(filterVal.toLowerCase())
+    }
+
+    return false
   },
 
   // in array
-  in: function (filterVal, rowVal, rowData, filterParams) {
+  in(filterVal, rowVal, rowData, filterParams) {
     if (Array.isArray(filterVal)) {
-      return filterVal.length ? filterVal.indexOf(rowVal) > -1 : true
-    } else {
-      console.warn('Filter Error - filter value is not an array:', filterVal)
-      return false
+      return filterVal.length ? filterVal.includes(rowVal) : true
     }
+
+    console.warn('Filter Error - filter value is not an array:', filterVal)
+    return false
   }
 }
