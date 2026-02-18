@@ -591,17 +591,20 @@ export default class Filter extends Module {
   }
 
   refreshFilter() {
+    const left = this.table.rowManager.scrollLeft
+
     if (this.tableInitialized) {
       if (this.table.options.filterMode === 'remote') {
-        this.reloadData(null, false, false)
+        this.reloadData(null, false, false).finally(() => {
+          this.table.rowManager.scrollHorizontal(left)
+          this.table.columnManager.scrollHorizontal(left)
+        })
       } else {
         this.refreshData(true)
+        this.table.rowManager.scrollHorizontal(left)
+        this.table.columnManager.scrollHorizontal(left)
       }
     }
-
-    // TODO - Persist left position of row manager
-    // left = this.scrollLeft;
-    // this.scrollHorizontal(left);
   }
 
   // check if the filters has changed since last use

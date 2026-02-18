@@ -62,6 +62,24 @@ export default class Page extends Module {
     this.registerComponentFunction('row', 'pageTo', this.setPageToRow.bind(this))
   }
 
+  logPageError(message, ...details) {
+    const error = { message, details }
+
+    this.dispatch('page-error', error)
+    this.dispatchExternal('pageError', error)
+
+    console.error(message, ...details)
+  }
+
+  logPageWarning(message, ...details) {
+    const warning = { message, details }
+
+    this.dispatch('page-warning', warning)
+    this.dispatchExternal('pageWarning', warning)
+
+    console.warn(message, ...details)
+  }
+
   initialize() {
     if (this.table.options.pagination) {
       this.subscribe('row-deleted', this.rowsUpdated.bind(this))
@@ -80,7 +98,7 @@ export default class Page extends Module {
       }
 
       if (this.table.options.progressiveLoad) {
-        console.error('Progressive Load Error - Pagination and progressive load cannot be used at the same time')
+        this.logPageError('Progressive Load Error - Pagination and progressive load cannot be used at the same time')
       }
 
       this.registerDisplayHandler(this.restOnRenderBefore.bind(this), 40)
@@ -329,7 +347,7 @@ export default class Page extends Module {
         this.pageCounterElement = document.createElement('span')
         this.pageCounterElement.classList.add('tabulator-page-counter')
       } else {
-        console.warn('Pagination Error - No such page counter found: ', counter)
+        this.logPageWarning('Pagination Error - No such page counter found: ', counter)
       }
     }
   }
@@ -435,7 +453,7 @@ export default class Page extends Module {
               if (paginationCounterHolder) {
                 paginationCounterHolder.appendChild(this.pageCounterElement)
               } else {
-                console.warn(
+                this.logPageWarning(
                   'Pagination Error - Unable to find element matching paginationCounterElement selector:',
                   this.table.options.paginationCounterElement
                 )
@@ -527,7 +545,7 @@ export default class Page extends Module {
 
       return this.trigger()
     } else {
-      console.warn(`Pagination Error - Requested page is out of range of 1 - ${this.max}:`, page)
+      this.logPageWarning(`Pagination Error - Requested page is out of range of 1 - ${this.max}:`, page)
       return Promise.reject()
     }
   }
@@ -541,7 +559,7 @@ export default class Page extends Module {
 
       return this.setPage(page)
     } else {
-      console.warn('Pagination Error - Requested row is not visible')
+      this.logPageWarning('Pagination Error - Requested row is not visible')
       return Promise.reject()
     }
   }
@@ -589,7 +607,7 @@ export default class Page extends Module {
             this.pageCounterElement.innerHTML = ''
 
             if (content != null) {
-              console.warn(
+              this.logPageWarning(
                 'Page Counter Error - Page Counter has returned a type of object, the only valid page counter object return is an instance of Node, the page counter returned:',
                 content
               )
@@ -675,7 +693,7 @@ export default class Page extends Module {
 
       return this.trigger()
     } else {
-      console.warn('Pagination Error - Previous page would be less than page 1:', 0)
+      this.logPageWarning('Pagination Error - Previous page would be less than page 1:', 0)
       return Promise.reject()
     }
   }
@@ -690,7 +708,7 @@ export default class Page extends Module {
       return this.trigger()
     } else {
       if (!this.progressiveLoad) {
-        console.warn(
+        this.logPageWarning(
           'Pagination Error - Next page would be greater than maximum page of ' + this.max + ':',
           this.max + 1
         )
@@ -800,7 +818,7 @@ export default class Page extends Module {
         return this.reloadData(null, true)
 
       default:
-        console.warn('Pagination Error - no such pagination mode:', this.mode)
+        this.logPageWarning('Pagination Error - no such pagination mode:', this.mode)
         return Promise.reject()
     }
   }
@@ -809,7 +827,7 @@ export default class Page extends Module {
     let margin, paginationOutOfRange
 
     if (typeof data.last_page === 'undefined') {
-      console.warn(
+      this.logPageWarning(
         "Remote Pagination Error - Server response missing '" +
           (this.options('dataReceiveParams').last_page || 'last_page') +
           "' property"
@@ -861,7 +879,7 @@ export default class Page extends Module {
         return false
       } else {
         if (this.page > this.max) {
-          console.warn('Remote Pagination Error - Server returned last page value lower than the current page')
+          this.logPageWarning('Remote Pagination Error - Server returned last page value lower than the current page')
 
           paginationOutOfRange = this.options('paginationOutOfRange')
 
@@ -880,7 +898,7 @@ export default class Page extends Module {
         // this.table.columnManager.scrollHorizontal(left);
       }
     } else {
-      console.warn(
+      this.logPageWarning(
         "Remote Pagination Error - Server response missing '" +
           (this.options('dataReceiveParams').data || 'data') +
           "' property"

@@ -15,7 +15,8 @@ export default function (a, b, aRow, bRow, column, dir, params) {
 
   if (typeof DT === 'undefined') {
     console.error("Sort Error - 'datetime' sorter is dependant on luxon.js")
-    return
+
+    return String(a).localeCompare(String(b))
   }
 
   a = parseDateTime(a)

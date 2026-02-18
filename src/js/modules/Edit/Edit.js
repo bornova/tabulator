@@ -609,6 +609,7 @@ export default class Edit extends Module {
     let allowEdit = true
     let rendered = () => {}
     const element = cell.getElement()
+    const editModule = cell.column.modules.edit
     let editFinished = false
     let cellEditor
     let component
@@ -679,7 +680,7 @@ export default class Edit extends Module {
       rendered = callback
     }
 
-    if (!cell.column.modules.edit.blocked) {
+    if (editModule && !editModule.blocked) {
       if (e) {
         e.stopPropagation()
       }
@@ -710,12 +711,9 @@ export default class Edit extends Module {
         this.dispatch('cell-editing', cell)
         this.dispatchExternal('cellEditing', component)
 
-        params =
-          typeof cell.column.modules.edit.params === 'function'
-            ? cell.column.modules.edit.params(component)
-            : cell.column.modules.edit.params
+        params = typeof editModule.params === 'function' ? editModule.params(component) : editModule.params
 
-        cellEditor = cell.column.modules.edit.editor.call(this, component, onRendered, success, cancel, params)
+        cellEditor = editModule.editor.call(this, component, onRendered, success, cancel, params)
 
         // if editor returned, add to DOM, if false, abort edit
         if (this.currentCell && cellEditor !== false) {

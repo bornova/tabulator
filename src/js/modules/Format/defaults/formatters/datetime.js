@@ -31,5 +31,11 @@ export default function (cell, formatterParams, onRendered) {
     return typeof invalid === 'function' ? invalid(value) : invalid
   } else {
     console.error("Format Error - 'datetime' formatter is dependant on luxon.js")
+
+    if (invalid === true || !value) {
+      return value
+    }
+
+    return typeof invalid === 'function' ? invalid(value) : invalid
   }
 }

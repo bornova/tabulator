@@ -52,7 +52,12 @@ export const calculatedColumns = [
 
 export const editableColumns = [
   { ...baseColumns[0] },
-  { ...baseColumns[1], editor: 'list', editorParams: { valuesLookup: 'active', clearable: true, autocomplete: true } },
+  {
+    ...baseColumns[1],
+    editor: 'list',
+    editorParams: { valuesLookup: 'active', clearable: true, autocomplete: true },
+    headerFilter: 'input'
+  },
   { ...baseColumns[2], editor: 'number', bottomCalc: 'avg', topCalc: 'max' },
   { ...baseColumns[3], editor: 'list', editorParams: { valuesLookup: 'active', clearable: true, autocomplete: true } },
   { ...baseColumns[4] },

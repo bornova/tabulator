@@ -2,7 +2,7 @@
 export default function (cell, onRendered, success, cancel, editorParams) {
   const inputFormat = editorParams.format
   const vertNav = editorParams.verticalNavigation || 'editor'
-  const DT = inputFormat ? window.DateTime || luxon.DateTime : null
+  const DT = inputFormat ? this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime') : null
   let newDatetime
 
   // create and style input
@@ -61,8 +61,8 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     let luxTime
 
     if (((cellValue === null || cellValue === undefined) && value !== '') || value !== cellValue) {
-      if (value && inputFormat) {
-        luxTime = DT.fromFormat(String(value), 'hh:mm')
+      if (value && inputFormat && DT) {
+        luxTime = DT.fromFormat(String(value), 'HH:mm')
 
         switch (inputFormat) {
           case true:

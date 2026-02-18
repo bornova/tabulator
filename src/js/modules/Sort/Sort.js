@@ -229,15 +229,18 @@ export default class Sort extends Module {
   }
 
   refreshSort() {
+    const left = this.table.rowManager.scrollLeft
+
     if (this.table.options.sortMode === 'remote') {
-      this.reloadData(null, false, false)
+      this.reloadData(null, false, false).finally(() => {
+        this.table.rowManager.scrollHorizontal(left)
+        this.table.columnManager.scrollHorizontal(left)
+      })
     } else {
       this.refreshData(true)
+      this.table.rowManager.scrollHorizontal(left)
+      this.table.columnManager.scrollHorizontal(left)
     }
-
-    // TODO - Persist left position of row manager
-    // left = this.scrollLeft;
-    // this.scrollHorizontal(left);
   }
 
   // check if the sorters have changed since last use

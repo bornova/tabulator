@@ -28,6 +28,24 @@ export default class Import extends Module {
     }
   }
 
+  logImportError(message, ...details) {
+    const error = { message, details }
+
+    this.dispatch('import-error', error)
+    this.dispatchExternal('importError', error)
+
+    console.error(message, ...details)
+  }
+
+  logImportWarning(message, ...details) {
+    const warning = { message, details }
+
+    this.dispatch('import-warning', warning)
+    this.dispatchExternal('importWarning', warning)
+
+    console.warn(message, ...details)
+  }
+
   loadDataCheck(data) {
     const isImportableArray = Array.isArray(data) && data.length && Array.isArray(data)
 
@@ -38,7 +56,7 @@ export default class Import extends Module {
     return this.importData(this.lookupImporter(), data)
       .then(this.structureData.bind(this))
       .catch((err) => {
-        console.error('Import Error:', err || 'Unable to import data')
+        this.logImportError('Import Error:', err || 'Unable to import data')
         return Promise.reject(err)
       })
   }
@@ -48,7 +66,7 @@ export default class Import extends Module {
     const importer = typeof format === 'string' ? Import.importers[format] : format
 
     if (!importer) {
-      console.error('Import Error - Importer not found:', format)
+      this.logImportError('Import Error - Importer not found:', format)
     }
 
     return importer
@@ -68,10 +86,7 @@ export default class Import extends Module {
       .then(this.validateData.bind(this))
       .then(this.setData.bind(this))
       .catch((err) => {
-        this.dispatch('import-error', err)
-        this.dispatchExternal('importError', err)
-
-        console.error('Import Error:', err || 'Unable to import file')
+        this.logImportError('Import Error:', err || 'Unable to import file')
 
         this.table.dataLoader.alertError()
 
@@ -121,7 +136,7 @@ export default class Import extends Module {
           }
 
           reader.onerror = (e) => {
-            console.warn('File Load Error - Unable to read file')
+            this.logImportWarning('File Load Error - Unable to read file')
             reject(e)
           }
         } else {

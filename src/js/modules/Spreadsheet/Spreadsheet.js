@@ -174,10 +174,17 @@ export default class Spreadsheet extends Module {
       this.newSheet(def)
     })
 
-    this.loadSheet(this.sheets[0])
+    if (this.sheets.length) {
+      this.loadSheet(this.sheets[0])
+    }
   }
 
   loadSheet(sheet) {
+    if (!sheet) {
+      this.activeSheet = null
+      return
+    }
+
     if (this.activeSheet !== sheet) {
       if (this.activeSheet) {
         this.activeSheet.unload()
