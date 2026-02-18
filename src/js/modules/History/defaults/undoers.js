@@ -1,15 +1,45 @@
+/**
+ * Default history undo action handlers.
+ *
+ * @type {{
+ *   cellEdit: function(Object): void,
+ *   rowAdd: function(Object): void,
+ *   rowDelete: function(Object): void,
+ *   rowMove: function(Object): void
+ * }}
+ */
 export default {
+  /**
+   * Revert an edited cell value.
+   *
+   * @param {Object} action History action.
+   * @returns {void}
+   */
   cellEdit(action) {
     action.component.setValueProcessData(action.data.oldValue)
     action.component.cellRendered()
   },
 
+  /**
+   * Revert a row add action.
+   *
+   * @this {Object}
+   * @param {Object} action History action.
+   * @returns {void}
+   */
   rowAdd(action) {
     action.component.deleteActual()
 
     this.table.rowManager.checkPlaceholder()
   },
 
+  /**
+   * Revert a row delete action.
+   *
+   * @this {Object}
+   * @param {Object} action History action.
+   * @returns {void}
+   */
   rowDelete(action) {
     const rowManager = this.table.rowManager
     const { data, pos, index } = action.data
@@ -24,6 +54,13 @@ export default {
     rowManager.checkPlaceholder()
   },
 
+  /**
+   * Revert a row move action.
+   *
+   * @this {Object}
+   * @param {Object} action History action.
+   * @returns {void}
+   */
   rowMove(action) {
     const rowManager = this.table.rowManager
     const after = action.data.posFrom - action.data.posTo > 0

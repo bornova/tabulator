@@ -1,6 +1,9 @@
 import CoreFeature from '../CoreFeature.js'
 
 export default class DependencyRegistry extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -9,10 +12,21 @@ export default class DependencyRegistry extends CoreFeature {
     this.props = {}
   }
 
+  /**
+   * Initialize dependency map from table options.
+   * @returns {void}
+   */
   initialize() {
     this.deps = Object.assign({}, this.options('dependencies'))
   }
 
+  /**
+   * Lookup a dependency by key and optional property.
+   * @param {string|Array<string>} key Dependency key or list of fallback keys.
+   * @param {string} [prop] Property name to resolve from the dependency.
+   * @param {boolean} [silent] Suppress missing dependency error.
+   * @returns {*}
+   */
   lookup(key, prop, silent) {
     if (Array.isArray(key)) {
       for (const item of key) {
@@ -37,6 +51,13 @@ export default class DependencyRegistry extends CoreFeature {
     }
   }
 
+  /**
+   * Lookup and cache a dependency property.
+   * @param {string} key Dependency key.
+   * @param {string} prop Property name.
+   * @param {boolean} [silent] Suppress missing dependency error.
+   * @returns {*}
+   */
   lookupProp(key, prop, silent) {
     let dependency
 
@@ -56,6 +77,12 @@ export default class DependencyRegistry extends CoreFeature {
     }
   }
 
+  /**
+   * Lookup a dependency by key.
+   * @param {string} key Dependency key.
+   * @param {boolean} [silent] Suppress missing dependency error.
+   * @returns {*}
+   */
   lookupKey(key, silent) {
     let dependency
 
@@ -73,6 +100,11 @@ export default class DependencyRegistry extends CoreFeature {
     return dependency
   }
 
+  /**
+   * Log a dependency lookup error.
+   * @param {string|Array<string>} key Missing dependency key.
+   * @returns {void}
+   */
   error(key) {
     console.error(
       'Unable to find dependency',

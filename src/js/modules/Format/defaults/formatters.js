@@ -21,6 +21,11 @@ import adaptable from './formatters/adaptable.js'
 import array from './formatters/array.js'
 import json from './formatters/json.js'
 
+/**
+ * Default formatter implementations.
+ *
+ * @type {Object<string, function(Object, Object, function): *>}
+ */
 export default {
   plaintext,
   html,

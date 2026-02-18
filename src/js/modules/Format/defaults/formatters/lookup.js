@@ -1,3 +1,11 @@
+/**
+ * Map a cell value to a display value.
+ *
+ * @param {Object} cell Cell component.
+ * @param {Object<string, *>} formatterParams Lookup map.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {*} Lookup result.
+ */
 export default function (cell, formatterParams, onRendered) {
   const value = cell.getValue()
 

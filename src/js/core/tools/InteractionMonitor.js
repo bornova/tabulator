@@ -2,6 +2,9 @@ import CoreFeature from '../CoreFeature.js'
 import Row from '../row/Row.js'
 
 export default class InteractionManager extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -55,6 +58,10 @@ export default class InteractionManager extends CoreFeature {
     this.pseudoTracking = false
   }
 
+  /**
+   * Initialize interaction monitoring and subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.el = this.table.element
 
@@ -62,6 +69,10 @@ export default class InteractionManager extends CoreFeature {
     this.bindSubscriptionWatchers()
   }
 
+  /**
+   * Build listener metadata map from listener names.
+   * @returns {void}
+   */
   buildListenerMap() {
     const listenerMap = {}
 
@@ -75,6 +86,10 @@ export default class InteractionManager extends CoreFeature {
     this.listeners = listenerMap
   }
 
+  /**
+   * Bind pseudo enter/leave trackers using mouseover events.
+   * @returns {void}
+   */
   bindPseudoEvents() {
     Object.keys(this.pseudoTrackers).forEach((key) => {
       this.pseudoTrackers[key].subscriber = this.pseudoMouseEnter.bind(this, key)
@@ -84,6 +99,13 @@ export default class InteractionManager extends CoreFeature {
     this.pseudoTracking = true
   }
 
+  /**
+   * Handle pseudo mouse enter transitions.
+   * @param {string} key Component key.
+   * @param {Event} e Source event.
+   * @param {object} target Target component.
+   * @returns {void}
+   */
   pseudoMouseEnter(key, e, target) {
     if (this.pseudoTrackers[key].target !== target) {
       if (this.pseudoTrackers[key].target) {
@@ -98,6 +120,12 @@ export default class InteractionManager extends CoreFeature {
     }
   }
 
+  /**
+   * Handle pseudo mouse leave transitions for tracked components.
+   * @param {string} key Component key.
+   * @param {Event} e Source event.
+   * @returns {void}
+   */
   pseudoMouseLeave(key, e) {
     let leaveList = Object.keys(this.pseudoTrackers)
     const linkedKeys = {
@@ -121,6 +149,10 @@ export default class InteractionManager extends CoreFeature {
     })
   }
 
+  /**
+   * Bind subscription change watchers for all component/listener combinations.
+   * @returns {void}
+   */
   bindSubscriptionWatchers() {
     const listeners = Object.keys(this.listeners)
     const components = Object.values(this.componentMap)
@@ -136,6 +168,13 @@ export default class InteractionManager extends CoreFeature {
     this.subscribe('table-destroy', this.clearWatchers.bind(this))
   }
 
+  /**
+   * Handle subscription state changes for a component/listener pair.
+   * @param {string} component Component key.
+   * @param {string} key Listener key.
+   * @param {boolean} added Subscription added state.
+   * @returns {void}
+   */
   subscriptionChanged(component, key, added) {
     const listener = this.listeners[key].components
     const index = listener.indexOf(component)
@@ -164,6 +203,10 @@ export default class InteractionManager extends CoreFeature {
     }
   }
 
+  /**
+   * Attach or remove DOM listeners based on current subscriptions.
+   * @returns {void}
+   */
   updateEventListeners() {
     for (const key in this.listeners) {
       const listener = this.listeners[key]
@@ -183,6 +226,12 @@ export default class InteractionManager extends CoreFeature {
     }
   }
 
+  /**
+   * Track a DOM event and dispatch component-level events.
+   * @param {string} type Event type.
+   * @param {Event} e Source event.
+   * @returns {void}
+   */
   track(type, e) {
     const path = (e.composedPath && e.composedPath()) || e.path
 
@@ -196,6 +245,11 @@ export default class InteractionManager extends CoreFeature {
     }
   }
 
+  /**
+   * Find potential component targets from an event path.
+   * @param {Array<EventTarget>} path Event composed path.
+   * @returns {object}
+   */
   findTargets(path) {
     const targets = {}
 
@@ -230,6 +284,12 @@ export default class InteractionManager extends CoreFeature {
     return targets
   }
 
+  /**
+   * Resolve internal component objects from target elements.
+   * @param {string} type Event type.
+   * @param {object} targets Target element map.
+   * @returns {object}
+   */
   bindComponents(type, targets) {
     // ensure row component is looked up before cell
     const keys = Object.keys(targets).reverse()
@@ -308,6 +368,13 @@ export default class InteractionManager extends CoreFeature {
     return output
   }
 
+  /**
+   * Trigger component event bus dispatches for resolved targets.
+   * @param {string} type Event type.
+   * @param {Event} e Source event.
+   * @param {object} targets Resolved component targets.
+   * @returns {void}
+   */
   triggerEvents(type, e, targets) {
     const listener = this.listeners[type]
 
@@ -318,6 +385,10 @@ export default class InteractionManager extends CoreFeature {
     }
   }
 
+  /**
+   * Remove all active DOM event watchers.
+   * @returns {void}
+   */
   clearWatchers() {
     for (const key in this.listeners) {
       const listener = this.listeners[key]

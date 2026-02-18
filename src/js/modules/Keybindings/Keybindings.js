@@ -10,6 +10,9 @@ export default class Keybindings extends Module {
   static bindings = defaultBindings
   static actions = defaultActions
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -22,6 +25,10 @@ export default class Keybindings extends Module {
     this.registerTableOption('tabEndNewRow', false) // create new row when tab to end of table
   }
 
+  /**
+   * Initialize keybinding mappings and DOM listeners.
+   * @returns {void}
+   */
   initialize() {
     const bindings = this.table.options.keybindings
     const mergedBindings = { ...Keybindings.bindings, ...bindings }
@@ -37,6 +44,11 @@ export default class Keybindings extends Module {
     this.subscribe('table-destroy', this.clearBindings.bind(this))
   }
 
+  /**
+   * Map configured action bindings into key watch lists.
+   * @param {object} bindings Binding definitions.
+   * @returns {void}
+   */
   mapBindings(bindings) {
     for (const key in bindings) {
       if (!Keybindings.actions[key]) {
@@ -60,6 +72,12 @@ export default class Keybindings extends Module {
     }
   }
 
+  /**
+   * Map one action binding string/array into normalized key metadata.
+   * @param {string} action Action name.
+   * @param {string|number|Array<string|number>} symbolsList Binding symbols.
+   * @returns {void}
+   */
   mapBinding(action, symbolsList) {
     const binding = {
       action: Keybindings.actions[action],
@@ -99,6 +117,10 @@ export default class Keybindings extends Module {
     })
   }
 
+  /**
+   * Bind keydown/keyup listeners on the table element.
+   * @returns {void}
+   */
   bindEvents() {
     this.keyupBinding = (e) => {
       const code = e.keyCode
@@ -131,6 +153,10 @@ export default class Keybindings extends Module {
     this.table.element.addEventListener('keyup', this.keydownBinding)
   }
 
+  /**
+   * Remove keybinding listeners from the table element.
+   * @returns {void}
+   */
   clearBindings() {
     if (this.keyupBinding) {
       this.table.element.removeEventListener('keydown', this.keyupBinding)
@@ -141,6 +167,12 @@ export default class Keybindings extends Module {
     }
   }
 
+  /**
+   * Check a key event against a normalized binding and run action on match.
+   * @param {KeyboardEvent} e Keyboard event.
+   * @param {object} binding Normalized binding object.
+   * @returns {boolean}
+   */
   checkBinding(e, binding) {
     let match = true
 

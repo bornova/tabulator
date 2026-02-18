@@ -1,4 +1,12 @@
 // resize columns to fit data the contain and stretch last column to fill table
+/**
+ * Resize columns to fit content and stretch the last visible column.
+ *
+ * @this {Object}
+ * @param {Array<Object>} columns Columns to resize.
+ * @param {boolean} forced Force recalculation.
+ * @returns {void}
+ */
 export default function (columns, forced) {
   const table = this.table
   const hasResponsiveLayout = table.options.responsiveLayout && table.modExists('responsiveLayout', true)

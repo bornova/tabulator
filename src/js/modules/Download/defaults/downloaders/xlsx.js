@@ -1,5 +1,12 @@
 import CoreFeature from '../../../../core/CoreFeature.js'
 
+/**
+ * Generate XLSX workbook output from export rows.
+ * @param {Array<object>} list Export row list.
+ * @param {object} options Downloader options.
+ * @param {Function} setFileContents Callback to receive file payload.
+ * @returns {void}
+ */
 export default function (list, options, setFileContents) {
   const self = this
   const sheetName = options.sheetName || 'Sheet1'
@@ -15,6 +22,10 @@ export default function (list, options, setFileContents) {
   workbook.SheetNames = []
   workbook.Sheets = {}
 
+  /**
+   * Build worksheet data from export rows.
+   * @returns {object}
+   */
   function generateSheet() {
     const rows = []
     const merges = []
@@ -90,6 +101,11 @@ export default function (list, options, setFileContents) {
   }
 
   // convert workbook to binary array
+  /**
+   * Convert binary string to ArrayBuffer.
+   * @param {string} s Binary string.
+   * @returns {ArrayBuffer}
+   */
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
     const view = new Uint8Array(buf)

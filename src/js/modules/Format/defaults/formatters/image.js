@@ -1,3 +1,11 @@
+/**
+ * Render an image element from the cell value.
+ *
+ * @param {Object} cell Cell component.
+ * @param {{urlPrefix?: string, urlSuffix?: string, height?: string|number, width?: string|number}} formatterParams Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {HTMLImageElement} Image element.
+ */
 export default function (cell, formatterParams, onRendered) {
   const el = document.createElement('img')
   let src = cell.getValue()

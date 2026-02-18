@@ -5,6 +5,9 @@ export default class ResponsiveLayout extends Module {
   static moduleName = 'responsiveLayout'
   static moduleExtensions = extensions
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -25,6 +28,10 @@ export default class ResponsiveLayout extends Module {
   }
 
   // generate responsive columns list
+  /**
+   * Initialize responsive layout subscriptions.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.responsiveLayout) {
       this.subscribe('column-layout', this.initializeColumn.bind(this))
@@ -45,6 +52,11 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Update responsive visibility during table redraw.
+   * @param {boolean} force Force redraw state.
+   * @returns {void}
+   */
   tableRedraw(force) {
     if (['fitColumns', 'fitDataStretch'].indexOf(this.layoutMode()) === -1) {
       if (!force) {
@@ -53,6 +65,10 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Rebuild responsive metadata and hidden column lists.
+   * @returns {void}
+   */
   initializeResponsivity() {
     let columns = []
 
@@ -110,6 +126,11 @@ export default class ResponsiveLayout extends Module {
   }
 
   // define layout information
+  /**
+   * Initialize responsive config for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const def = column.getDefinition()
 
@@ -119,6 +140,11 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Initialize collapsed responsive row container.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   initializeRow(row) {
     let el
 
@@ -137,6 +163,11 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Layout collapsed responsive row content.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   layoutRow(row) {
     const rowEl = row.getElement()
 
@@ -147,6 +178,12 @@ export default class ResponsiveLayout extends Module {
   }
 
   // update column visibility
+  /**
+   * Track manual column visibility changes.
+   * @param {object} column Internal column.
+   * @param {boolean} responsiveToggle Responsive-driven change flag.
+   * @returns {void}
+   */
   updateColumnVisibility(column, responsiveToggle) {
     if (!responsiveToggle && column.modules.responsive) {
       column.modules.responsive.visible = column.visible
@@ -154,6 +191,11 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Hide a column due to responsive constraints.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   hideColumn(column) {
     const colCount = this.hiddenColumns.length
 
@@ -169,6 +211,11 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Show a responsive-hidden column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   showColumn(column) {
     let index
 
@@ -192,6 +239,10 @@ export default class ResponsiveLayout extends Module {
   }
 
   // redraw columns to fit space
+  /**
+   * Adjust visible columns to fit available width.
+   * @returns {void}
+   */
   update() {
     let working = true
     const isFitColumns = this.table.modules.layout.getMode() === 'fitColumns'
@@ -240,6 +291,10 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Regenerate collapsed content for all display rows.
+   * @returns {void}
+   */
   generateCollapsedContent() {
     const rows = this.table.rowManager.getDisplayRows()
 
@@ -248,6 +303,11 @@ export default class ResponsiveLayout extends Module {
     })
   }
 
+  /**
+   * Generate collapsed content for a specific row.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   generateCollapsedRowContent(row) {
     let el, contents
 
@@ -264,6 +324,11 @@ export default class ResponsiveLayout extends Module {
     }
   }
 
+  /**
+   * Generate collapsed row data from hidden columns.
+   * @param {object} row Internal row.
+   * @returns {Array<object>}
+   */
   generateCollapsedRowData(row) {
     const data = row.getData()
     const output = []
@@ -327,6 +392,11 @@ export default class ResponsiveLayout extends Module {
     return output
   }
 
+  /**
+   * Default collapsed row formatter.
+   * @param {Array<object>} data Collapsed row data.
+   * @returns {HTMLElement|string}
+   */
   formatCollapsedData(data) {
     const list = document.createElement('table')
 

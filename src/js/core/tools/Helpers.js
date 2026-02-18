@@ -1,8 +1,18 @@
 export default class Helpers {
+  /**
+   * Check whether an element has a visible box.
+   * @param {HTMLElement} el Target element.
+   * @returns {boolean}
+   */
   static elVisible(el) {
     return !(el.offsetWidth <= 0 && el.offsetHeight <= 0)
   }
 
+  /**
+   * Get page-offset coordinates for an element.
+   * @param {HTMLElement} el Target element.
+   * @returns {{top:number,left:number}}
+   */
   static elOffset(el) {
     const box = el.getBoundingClientRect()
 
@@ -12,6 +22,13 @@ export default class Helpers {
     }
   }
 
+  /**
+   * Retrieve nested data from an object using a delimited field path.
+   * @param {string} separator Nested field separator.
+   * @param {string} field Field path.
+   * @param {object} data Source object.
+   * @returns {*}
+   */
   static retrieveNestedData(separator, field, data) {
     const structure = separator ? field.split(separator) : [field]
     const length = structure.length
@@ -30,6 +47,13 @@ export default class Helpers {
     return output
   }
 
+  /**
+   * Deep clone plain objects/arrays with circular reference handling.
+   * @param {object|Array<*>} obj Source value.
+   * @param {object|Array<*>} [clone] Existing clone target.
+   * @param {Array<object>} [list=[]] Internal reference map.
+   * @returns {object|Array<*>}
+   */
   static deepClone(obj, clone, list = []) {
     const objectProto = {}.__proto__
     const arrayProto = [].__proto__

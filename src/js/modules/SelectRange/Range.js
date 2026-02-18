@@ -2,6 +2,12 @@ import CoreFeature from '../../core/CoreFeature.js'
 import RangeComponent from './RangeComponent'
 
 export default class Range extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   * @param {object} rangeManager Range manager.
+   * @param {object} [start] Start boundary cell/column.
+   * @param {object} [end] End boundary cell/column.
+   */
   constructor(table, rangeManager, start, end) {
     super(table)
 
@@ -37,11 +43,21 @@ export default class Range extends CoreFeature {
     })
   }
 
+  /**
+   * Initialize range DOM element.
+   * @returns {void}
+   */
   initElement() {
     this.element = document.createElement('div')
     this.element.classList.add('tabulator-range')
   }
 
+  /**
+   * Initialize start/end bounds.
+   * @param {object} [start] Start boundary.
+   * @param {object} [end] End boundary.
+   * @returns {void}
+   */
   initBounds(start, end) {
     this._updateMinMax()
 
@@ -54,6 +70,12 @@ export default class Range extends CoreFeature {
   /// ////   Boundary Setup    ///////
   /// ////////////////////////////////
 
+  /**
+   * Set range start coordinates.
+   * @param {number} row Row index.
+   * @param {number} col Column index.
+   * @returns {void}
+   */
   setStart(row, col) {
     if (this.start.row !== row || this.start.col !== col) {
       this.start.row = row
@@ -64,6 +86,12 @@ export default class Range extends CoreFeature {
     }
   }
 
+  /**
+   * Set range end coordinates.
+   * @param {number} row Row index.
+   * @param {number} col Column index.
+   * @returns {void}
+   */
   setEnd(row, col) {
     if (this.end.row !== row || this.end.col !== col) {
       this.end.row = row
@@ -74,6 +102,13 @@ export default class Range extends CoreFeature {
     }
   }
 
+  /**
+   * Set range bounds from boundary components.
+   * @param {object} start Start boundary.
+   * @param {object} [end] End boundary.
+   * @param {Array<object>} [visibleRows] Visible rows.
+   * @returns {void}
+   */
   setBounds(start, end, visibleRows) {
     if (start) {
       this.setStartBound(start)
@@ -83,6 +118,11 @@ export default class Range extends CoreFeature {
     this.rangeManager.layoutElement(visibleRows)
   }
 
+  /**
+   * Resolve and set start bound from element.
+   * @param {object} element Cell/column element.
+   * @returns {void}
+   */
   setStartBound(element) {
     let row, col
 
@@ -102,6 +142,11 @@ export default class Range extends CoreFeature {
     }
   }
 
+  /**
+   * Resolve and set end bound from element.
+   * @param {object} element Cell/column element.
+   * @returns {void}
+   */
   setEndBound(element) {
     const rowsCount = this._getTableRows().length
     let row
@@ -133,6 +178,10 @@ export default class Range extends CoreFeature {
     }
   }
 
+  /**
+   * Recompute normalized min/max bounds and emit range events.
+   * @returns {void}
+   */
   _updateMinMax() {
     this.top = Math.min(this.start.row, this.end.row)
     this.bottom = Math.max(this.start.row, this.end.row)
@@ -150,10 +199,18 @@ export default class Range extends CoreFeature {
     }
   }
 
+  /**
+   * Get visible table columns by index.
+   * @returns {Array<object>}
+   */
   _getTableColumns() {
     return this.table.columnManager.getVisibleColumnsByIndex()
   }
 
+  /**
+   * Get display rows excluding non-row types.
+   * @returns {Array<object>}
+   */
   _getTableRows() {
     return this.table.rowManager.getDisplayRows().filter((row) => row.type === 'row')
   }
@@ -162,6 +219,10 @@ export default class Range extends CoreFeature {
   /// ////      Rendering      ///////
   /// ////////////////////////////////
 
+  /**
+   * Layout range highlight element.
+   * @returns {void}
+   */
   layout() {
     let _vDomTop = this.table.rowManager.renderer.vDomTop
     let _vDomBottom = this.table.rowManager.renderer.vDomBottom
@@ -227,34 +288,71 @@ export default class Range extends CoreFeature {
     }
   }
 
+  /**
+   * Check if cell matches top-left bound.
+   * @param {object} cell Internal cell.
+   * @returns {boolean}
+   */
   atTopLeft(cell) {
     return cell.row.position - 1 === this.top && cell.column.getPosition() - 1 === this.left
   }
 
+  /**
+   * Check if cell matches bottom-right bound.
+   * @param {object} cell Internal cell.
+   * @returns {boolean}
+   */
   atBottomRight(cell) {
     return cell.row.position - 1 === this.bottom && cell.column.getPosition() - 1 === this.right
   }
 
+  /**
+   * Check if range occupies a cell.
+   * @param {object} cell Internal cell.
+   * @returns {boolean}
+   */
   occupies(cell) {
     return this.occupiesRow(cell.row) && this.occupiesColumn(cell.column)
   }
 
+  /**
+   * Check if range occupies a row.
+   * @param {object} row Internal row.
+   * @returns {boolean}
+   */
   occupiesRow(row) {
     const position = row.position - 1
 
     return this.top <= position && position <= this.bottom
   }
 
+  /**
+   * Check if range occupies a column.
+   * @param {object} col Internal column.
+   * @returns {boolean}
+   */
   occupiesColumn(col) {
     const position = col.getPosition() - 1
 
     return this.left <= position && position <= this.right
   }
 
+  /**
+   * Check if range overlaps bounds.
+   * @param {number} left Left index.
+   * @param {number} top Top index.
+   * @param {number} right Right index.
+   * @param {number} bottom Bottom index.
+   * @returns {boolean}
+   */
   overlaps(left, top, right, bottom) {
     return !(this.left > right || left > this.right || this.top > bottom || top > this.bottom)
   }
 
+  /**
+   * Get range data as array of row objects.
+   * @returns {Array<object>}
+   */
   getData() {
     const data = []
     const rows = this.getRows()
@@ -274,6 +372,12 @@ export default class Range extends CoreFeature {
     return data
   }
 
+  /**
+   * Get range cells.
+   * @param {boolean} [structured] Return 2D structure.
+   * @param {boolean} [component] Return components.
+   * @returns {Array<object>}
+   */
   getCells(structured, component) {
     let cells = []
     const rows = this.getRows()
@@ -304,18 +408,34 @@ export default class Range extends CoreFeature {
     return cells
   }
 
+  /**
+   * Get range cells as a structured component matrix.
+   * @returns {Array<Array<object>>}
+   */
   getStructuredCells() {
     return this.getCells(true, true)
   }
 
+  /**
+   * Get range rows.
+   * @returns {Array<object>}
+   */
   getRows() {
     return this._getTableRows().slice(this.top, this.bottom + 1)
   }
 
+  /**
+   * Get range columns.
+   * @returns {Array<object>}
+   */
   getColumns() {
     return this._getTableColumns().slice(this.left, this.right + 1)
   }
 
+  /**
+   * Clear values across range cells.
+   * @returns {void}
+   */
   clearValues() {
     const cells = this.getCells()
     const clearValue = this.table.options.selectableRangeClearCellsValue
@@ -329,6 +449,11 @@ export default class Range extends CoreFeature {
     this.table.restoreRedraw()
   }
 
+  /**
+   * Get start/end range bounds.
+   * @param {boolean} [component] Return cell components.
+   * @returns {{start:object|null,end:object|null}}
+   */
   getBounds(component) {
     const cells = this.getCells(false, component)
     const output = {
@@ -346,6 +471,10 @@ export default class Range extends CoreFeature {
     return output
   }
 
+  /**
+   * Get range component wrapper.
+   * @returns {RangeComponent}
+   */
   getComponent() {
     if (!this.component) {
       this.component = new RangeComponent(this)
@@ -353,6 +482,11 @@ export default class Range extends CoreFeature {
     return this.component
   }
 
+  /**
+   * Destroy range and optionally notify manager.
+   * @param {boolean} [notify] Notify range manager.
+   * @returns {void}
+   */
   destroy(notify) {
     this.destroyed = true
 
@@ -367,6 +501,11 @@ export default class Range extends CoreFeature {
     }
   }
 
+  /**
+   * Guard against use-after-destroy for a method.
+   * @param {string} func Method name.
+   * @returns {boolean}
+   */
   destroyedGuard(func) {
     if (this.destroyed) {
       console.warn(`You cannot call the ${func} function on a destroyed range`)

@@ -1,3 +1,10 @@
+/**
+ * Generate PDF output from export rows.
+ * @param {Array<object>} list Export row list.
+ * @param {object} [options={}] Downloader options.
+ * @param {Function} setFileContents Callback to receive file payload.
+ * @returns {void}
+ */
 export default function (list, options = {}, setFileContents) {
   const header = []
   const body = []
@@ -43,6 +50,12 @@ export default function (list, options = {}, setFileContents) {
     }
   })
 
+  /**
+   * Convert an export row into jsPDF autoTable row cells.
+   * @param {object} row Export row.
+   * @param {object} [styles] Cell style override.
+   * @returns {Array<object>}
+   */
   function parseRow(row, styles) {
     const rowData = []
 

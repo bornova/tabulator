@@ -2,6 +2,14 @@ import maskInput from './inputMask.js'
 import urlBuilder from '../Ajax/defaults/urlGenerator.js'
 
 export default class Edit {
+  /**
+   * @param {object} editor Edit module.
+   * @param {object} cell Internal cell wrapper.
+   * @param {Function} onRendered Render callback registrar.
+   * @param {Function} success Success callback.
+   * @param {Function} cancel Cancel callback.
+   * @param {object} editorParams Editor params.
+   */
   constructor(editor, cell, onRendered, success, cancel, editorParams) {
     this.edit = editor
     this.table = editor.table
@@ -45,6 +53,10 @@ export default class Edit {
     onRendered(this._onRendered.bind(this))
   }
 
+  /**
+   * Check deprecated editor options.
+   * @returns {void}
+   */
   _deprecatedOptionsCheck() {
     // if(this.params.listItemFormatter){
     // 	this.cell.getTable().deprecationAdvisor.msg("The listItemFormatter editor param has been deprecated, please see the latest editor documentation for updated options");
@@ -60,6 +72,10 @@ export default class Edit {
     // }
   }
 
+  /**
+   * Initialize current editor value state.
+   * @returns {void}
+   */
   _initializeValue() {
     let initialValue = this.cell.getValue()
 
@@ -75,6 +91,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Post-render setup for list input.
+   * @returns {void}
+   */
   _onRendered() {
     const cellEl = this.cell.getElement()
 
@@ -96,6 +116,10 @@ export default class Edit {
     this.input.addEventListener('mousedown', this._preventPopupBlur.bind(this))
   }
 
+  /**
+   * Create list element container.
+   * @returns {HTMLDivElement}
+   */
   _createListElement() {
     const listEl = document.createElement('div')
     listEl.classList.add('tabulator-edit-list')
@@ -106,6 +130,10 @@ export default class Edit {
     return listEl
   }
 
+  /**
+   * Set list popup width constraints.
+   * @returns {void}
+   */
   _setListWidth() {
     const element = this.isFilter ? this.input : this.cell.getElement()
 
@@ -122,6 +150,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Create input element for list editor.
+   * @returns {HTMLInputElement}
+   */
   _createInputElement() {
     const attribs = this.params.elementAttributes
     const input = document.createElement('input')
@@ -158,6 +190,11 @@ export default class Edit {
     return input
   }
 
+  /**
+   * Normalize and validate editor params.
+   * @param {object} params Editor params.
+   * @returns {object}
+   */
   _initializeParams(params) {
     const valueKeys = ['values', 'valuesURL', 'valuesLookup']
     let valueCheck
@@ -232,6 +269,11 @@ export default class Edit {
   /// /////// Event Handling ////////////
   /// ///////////////////////////////////
 
+  /**
+   * Bind input event handlers.
+   * @param {HTMLInputElement} input Input element.
+   * @returns {void}
+   */
   _bindInputEvents(input) {
     input.addEventListener('focus', this._inputFocus.bind(this))
     input.addEventListener('click', this._inputClick.bind(this))
@@ -487,6 +529,10 @@ export default class Edit {
     this._generateOptions(true)
   }
 
+  /**
+   * Rebuild options and show list popup.
+   * @returns {void}
+   */
   rebuildOptionsList() {
     this._generateOptions()
       .then((options) => this._sortOptions(options))
@@ -498,6 +544,11 @@ export default class Edit {
         }
       })
   }
+  /**
+   * Generate options from configured source.
+   * @param {boolean} [silent] Silent placeholder mode.
+   * @returns {Promise<Array<object>>}
+   */
 
   _filterList() {
     this._buildList(this._filterOptions())
@@ -562,6 +613,12 @@ export default class Edit {
     }
   }
 
+  /**
+   * Fetch remote option values.
+   * @param {string} url Source URL.
+   * @param {string} term Filter term.
+   * @returns {Promise<*>}
+   */
   _ajaxRequest(url, term) {
     const params = this.params.filterRemote ? { term } : {}
     url = urlBuilder(url, {}, params)
@@ -584,6 +641,11 @@ export default class Edit {
       })
   }
 
+  /**
+   * Build unique values from a column.
+   * @param {string} [field] Field name override.
+   * @returns {Array<string>}
+   */
   _uniqueColumnValues(field) {
     let output = {}
     const data = this.table.getData(this.params.valuesLookup)
@@ -831,6 +893,11 @@ export default class Edit {
     this.displayItems = []
   }
 
+  /**
+   * Build list DOM from option data.
+   * @param {Array<object>} data Option data.
+   * @returns {void}
+   */
   _buildList(data) {
     this._clearList()
 
@@ -906,6 +973,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Show list popup.
+   * @returns {void}
+   */
   _showList() {
     const startVis = this.popup && this.popup.isVisible()
 
@@ -979,6 +1050,12 @@ export default class Edit {
     this.focusedItem = null
   }
 
+  /**
+   * Choose an item in the list.
+   * @param {object} item List item.
+   * @param {boolean} [silent] Skip auto-resolve.
+   * @returns {void}
+   */
   _chooseItem(item, silent) {
     let index
 
@@ -1014,6 +1091,11 @@ export default class Edit {
     this._focusItem(item)
   }
 
+  /**
+   * Resolve current value and call success callback.
+   * @param {boolean} [blur] Triggered by blur.
+   * @returns {void}
+   */
   _resolveValue(blur) {
     let output, initialValue
 

@@ -1,4 +1,12 @@
 // resize columns to fit data they contain and stretch row to fill table, also used for fitDataTable
+/**
+ * Resize columns to fit content and optionally update responsive layout.
+ *
+ * @this {Object}
+ * @param {Array<Object>} columns Columns to resize.
+ * @param {boolean} forced Force recalculation.
+ * @returns {void}
+ */
 export default function (columns, forced) {
   const table = this.table
 

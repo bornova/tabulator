@@ -26,16 +26,31 @@ class Tabulator extends ModuleBinder {
   // default setup options
   static defaultOptions = defaultOptions
 
+  /**
+   * Extend an existing module namespace.
+   * @param {...*} args Extension arguments.
+   * @returns {void}
+   */
   static extendModule(...args) {
     Tabulator.initializeModuleBinder()
     Tabulator._extendModule(...args)
   }
 
+  /**
+   * Register a module with Tabulator.
+   * @param {...*} args Module registration arguments.
+   * @returns {void}
+   */
   static registerModule(...args) {
     Tabulator.initializeModuleBinder()
     Tabulator._registerModule(...args)
   }
 
+  /**
+   * @param {HTMLElement|string} element Target element or selector.
+   * @param {object} options Table options.
+   * @param {Array<Function>} [modules] Module overrides.
+   */
   constructor(element, options, modules) {
     super()
 
@@ -82,6 +97,11 @@ class Tabulator extends ModuleBinder {
     this.constructor.registry.register(this) // register table for inter-device communication
   }
 
+  /**
+   * Resolve and validate table target element.
+   * @param {HTMLElement|string} element Target element or selector.
+   * @returns {boolean}
+   */
   initializeElement(element) {
     if (typeof HTMLElement !== 'undefined' && element instanceof HTMLElement) {
       this.element = element
@@ -103,6 +123,11 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Initialize core managers, options, buses, and dependencies.
+   * @param {object} options Table options.
+   * @returns {void}
+   */
   initializeCoreSystems(options) {
     this.columnManager = new ColumnManager(this)
     this.rowManager = new RowManager(this)
@@ -130,10 +155,18 @@ class Tabulator extends ModuleBinder {
   }
 
   // convert deprecated functionality to new functions
+  /**
+   * Map deprecated functionality to modern APIs.
+   * @returns {void}
+   */
   _mapDeprecatedFunctionality() {
     // all previously deprecated functionality removed in the 6.0 release
   }
 
+  /**
+   * Clear current browser text selection within the table.
+   * @returns {void}
+   */
   _clearSelection() {
     this.element.classList.add('tabulator-block-select')
 
@@ -156,6 +189,10 @@ class Tabulator extends ModuleBinder {
   }
 
   // create table
+  /**
+   * Build and initialize table internals.
+   * @returns {void}
+   */
   _create() {
     this.externalEvents.dispatch('tableBuilding')
     this.eventBus.dispatch('table-building')
@@ -174,6 +211,10 @@ class Tabulator extends ModuleBinder {
     })
   }
 
+  /**
+   * Apply RTL/LTR mode classes based on options and computed style.
+   * @returns {void}
+   */
   _rtlCheck() {
     const style = window.getComputedStyle(this.element)
 
@@ -197,6 +238,10 @@ class Tabulator extends ModuleBinder {
   }
 
   // clear pointers to objects in default config object
+  /**
+   * Clone pointer-based option values to prevent shared references.
+   * @returns {void}
+   */
   _clearObjectPointers() {
     this.options.columns = [...this.options.columns]
 
@@ -206,6 +251,10 @@ class Tabulator extends ModuleBinder {
   }
 
   // build tabulator element
+  /**
+   * Build root table element and apply size constraints.
+   * @returns {void}
+   */
   _buildElement() {
     let element = this.element
     const options = this.options
@@ -255,6 +304,10 @@ class Tabulator extends ModuleBinder {
   }
 
   // initialize core systems and modules
+  /**
+   * Initialize managers/modules and append core DOM structure.
+   * @returns {void}
+   */
   _initializeTable() {
     const element = this.element
     const options = this.options
@@ -293,6 +346,10 @@ class Tabulator extends ModuleBinder {
     this.eventBus.dispatch('table-built')
   }
 
+  /**
+   * Load initial data and align headers.
+   * @returns {Promise<*>}
+   */
   _loadInitialData() {
     return this.dataLoader.load(this.options.data).finally(() => {
       this.columnManager.verticalAlignHeaders()
@@ -300,6 +357,10 @@ class Tabulator extends ModuleBinder {
   }
 
   // deconstructor
+  /**
+   * Destroy table instance and clean DOM/events.
+   * @returns {void}
+   */
   destroy() {
     const element = this.element
 
@@ -320,6 +381,10 @@ class Tabulator extends ModuleBinder {
     this.externalEvents.dispatch('tableDestroyed')
   }
 
+  /**
+   * Detect browser and mobile environment flags.
+   * @returns {void}
+   */
   _detectBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera
 
@@ -349,6 +414,12 @@ class Tabulator extends ModuleBinder {
       )
   }
 
+  /**
+   * Warn when APIs are called before initialization.
+   * @param {string|boolean} [func] Function name.
+   * @param {string} [msg] Additional warning text.
+   * @returns {boolean}
+   */
   initGuard(func, msg) {
     let stack, line
 
@@ -378,6 +449,10 @@ class Tabulator extends ModuleBinder {
 
   /// /////////////// Data Handling //////////////////
   // block table redrawing
+  /**
+   * Block redraw operations.
+   * @returns {void}
+   */
   blockRedraw() {
     this.initGuard()
 
@@ -390,6 +465,10 @@ class Tabulator extends ModuleBinder {
   }
 
   // restore table redrawing
+  /**
+   * Restore redraw operations.
+   * @returns {void}
+   */
   restoreRedraw() {
     this.initGuard()
 
@@ -402,6 +481,13 @@ class Tabulator extends ModuleBinder {
   }
 
   // load data
+  /**
+   * Load data into the table.
+   * @param {Array<object>|string} data Data array or JSON string.
+   * @param {object} [params] Load params.
+   * @param {object} [config] Load config.
+   * @returns {Promise<*>}
+   */
   setData(data, params, config) {
     this.initGuard(false, "To set initial data please use the 'data' property in the table constructor.")
 
@@ -409,6 +495,10 @@ class Tabulator extends ModuleBinder {
   }
 
   // clear data
+  /**
+   * Clear all table data.
+   * @returns {void}
+   */
   clearData() {
     this.initGuard()
 
@@ -417,16 +507,33 @@ class Tabulator extends ModuleBinder {
   }
 
   // get table data array
+  /**
+   * Get table row data.
+   * @param {string|boolean} [active] Data scope.
+   * @returns {Array<object>}
+   */
   getData(active) {
     return this.rowManager.getData(active)
   }
 
   // get table data array count
+  /**
+   * Get row count for data scope.
+   * @param {string|boolean} [active] Data scope.
+   * @returns {number}
+   */
   getDataCount(active) {
     return this.rowManager.getDataCount(active)
   }
 
   // replace data, keeping table in position with same sort
+  /**
+   * Replace table data while preserving state.
+   * @param {Array<object>|string} data Data array or JSON string.
+   * @param {object} [params] Load params.
+   * @param {object} [config] Load config.
+   * @returns {Promise<*>}
+   */
   replaceData(data, params, config) {
     this.initGuard()
 
@@ -434,6 +541,11 @@ class Tabulator extends ModuleBinder {
   }
 
   // update table data
+  /**
+   * Update multiple existing rows.
+   * @param {Array<object>|string} data Row updates.
+   * @returns {Promise<void>}
+   */
   updateData(data) {
     let responses = 0
 
@@ -476,6 +588,13 @@ class Tabulator extends ModuleBinder {
     })
   }
 
+  /**
+   * Add multiple rows.
+   * @param {Array<object>|string} data Rows to add.
+   * @param {boolean} [pos] Insert position.
+   * @param {*} [index] Index reference.
+   * @returns {Promise<Array<object>>}
+   */
   addData(data, pos, index) {
     this.initGuard()
 
@@ -500,6 +619,11 @@ class Tabulator extends ModuleBinder {
   }
 
   // update table data
+  /**
+   * Update existing rows or add missing rows.
+   * @param {Array<object>|string} data Row data.
+   * @returns {Promise<Array<object>>}
+   */
   updateOrAddData(data) {
     const rows = []
     let responses = 0
@@ -547,6 +671,11 @@ class Tabulator extends ModuleBinder {
   }
 
   // get row object
+  /**
+   * Get row component by index/key.
+   * @param {*} index Row identifier.
+   * @returns {object|boolean}
+   */
   getRow(index) {
     const row = this.rowManager.findRow(index)
 
@@ -559,6 +688,11 @@ class Tabulator extends ModuleBinder {
   }
 
   // get row object
+  /**
+   * Get row component by display position.
+   * @param {number} position Row position.
+   * @returns {object|boolean}
+   */
   getRowFromPosition(position) {
     const row = this.rowManager.getRowFromPosition(position)
 
@@ -571,6 +705,11 @@ class Tabulator extends ModuleBinder {
   }
 
   // delete row from table
+  /**
+   * Delete one or more rows.
+   * @param {*|Array<*>} index Row id(s).
+   * @returns {Promise<void>}
+   */
   deleteRow(index) {
     const foundRows = []
 
@@ -608,6 +747,13 @@ class Tabulator extends ModuleBinder {
   }
 
   // add row to table
+  /**
+   * Add a single row.
+   * @param {object|string} data Row data.
+   * @param {boolean} [pos] Insert position.
+   * @param {*} [index] Index reference.
+   * @returns {Promise<object>}
+   */
   addRow(data, pos, index) {
     this.initGuard()
 
@@ -621,6 +767,12 @@ class Tabulator extends ModuleBinder {
   }
 
   // update a row if it exists otherwise create it
+  /**
+   * Update a row or add when missing.
+   * @param {*} index Row identifier.
+   * @param {object|string} data Row data.
+   * @returns {Promise<object>}
+   */
   updateOrAddRow(index, data) {
     const row = this.rowManager.findRow(index)
 
@@ -642,6 +794,12 @@ class Tabulator extends ModuleBinder {
   }
 
   // update row data
+  /**
+   * Update a single row.
+   * @param {*} index Row identifier.
+   * @param {object|string} data Row data.
+   * @returns {Promise<object>}
+   */
   updateRow(index, data) {
     const row = this.rowManager.findRow(index)
 
@@ -662,6 +820,13 @@ class Tabulator extends ModuleBinder {
   }
 
   // scroll to row in DOM
+  /**
+   * Scroll to a row.
+   * @param {*} index Row identifier.
+   * @param {string} [position] Scroll position.
+   * @param {boolean} [ifVisible] Skip if visible.
+   * @returns {Promise<void>}
+   */
   scrollToRow(index, position, ifVisible) {
     const row = this.rowManager.findRow(index)
 
@@ -673,6 +838,13 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Move a row relative to another row.
+   * @param {*} from Source row identifier.
+   * @param {*} to Target row identifier.
+   * @param {boolean} [after] Insert after target.
+   * @returns {void}
+   */
   moveRow(from, to, after) {
     const fromRow = this.rowManager.findRow(from)
 
@@ -685,11 +857,21 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Get row components.
+   * @param {string|boolean} [active] Row scope.
+   * @returns {Array<object>}
+   */
   getRows(active) {
     return this.rowManager.getComponents(active)
   }
 
   // get position of row in table
+  /**
+   * Get display position of a row.
+   * @param {*} index Row identifier.
+   * @returns {number|boolean}
+   */
   getRowPosition(index) {
     const row = this.rowManager.findRow(index)
 
@@ -702,16 +884,31 @@ class Tabulator extends ModuleBinder {
   }
 
   /// //////////// Column Functions  ///////////////
+  /**
+   * Set full column definitions.
+   * @param {Array<object>} definition Column definitions.
+   * @returns {void}
+   */
   setColumns(definition) {
     this.initGuard(false, "To set initial columns please use the 'columns' property in the table constructor")
 
     this.columnManager.setColumns(definition)
   }
 
+  /**
+   * Get column components.
+   * @param {boolean} [structured] Return tree structure.
+   * @returns {Array<object>}
+   */
   getColumns(structured) {
     return this.columnManager.getComponents(structured)
   }
 
+  /**
+   * Get column component by field.
+   * @param {string} field Column field.
+   * @returns {object|boolean}
+   */
   getColumn(field) {
     const column = this.columnManager.findColumn(field)
 
@@ -723,10 +920,19 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Get column definition tree.
+   * @returns {Array<object>}
+   */
   getColumnDefinitions() {
     return this.columnManager.getDefinitionTree()
   }
 
+  /**
+   * Show a column.
+   * @param {string} field Column field.
+   * @returns {boolean|void}
+   */
   showColumn(field) {
     const column = this.columnManager.findColumn(field)
 
@@ -740,6 +946,11 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Hide a column.
+   * @param {string} field Column field.
+   * @returns {boolean|void}
+   */
   hideColumn(field) {
     const column = this.columnManager.findColumn(field)
 
@@ -753,6 +964,11 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Toggle a column's visibility.
+   * @param {string} field Column field.
+   * @returns {boolean|void}
+   */
   toggleColumn(field) {
     const column = this.columnManager.findColumn(field)
 
@@ -766,6 +982,13 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Add a column definition.
+   * @param {object} definition Column definition.
+   * @param {boolean} [before] Insert before reference.
+   * @param {string} [field] Reference field.
+   * @returns {Promise<object>}
+   */
   addColumn(definition, before, field) {
     const column = this.columnManager.findColumn(field)
 
@@ -776,6 +999,11 @@ class Tabulator extends ModuleBinder {
     })
   }
 
+  /**
+   * Delete a column.
+   * @param {string} field Column field.
+   * @returns {Promise<void>}
+   */
   deleteColumn(field) {
     const column = this.columnManager.findColumn(field)
 
@@ -789,6 +1017,12 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Update a column definition.
+   * @param {string} field Column field.
+   * @param {object} definition New definition.
+   * @returns {Promise<object>}
+   */
   updateColumnDefinition(field, definition) {
     const column = this.columnManager.findColumn(field)
 
@@ -802,6 +1036,13 @@ class Tabulator extends ModuleBinder {
     }
   }
 
+  /**
+   * Move a column.
+   * @param {string} from Source field.
+   * @param {string} to Target field.
+   * @param {boolean} [after] Insert after target.
+   * @returns {void}
+   */
   moveColumn(from, to, after) {
     const fromColumn = this.columnManager.findColumn(from)
     const toColumn = this.columnManager.findColumn(to)
@@ -820,6 +1061,13 @@ class Tabulator extends ModuleBinder {
   }
 
   // scroll to column in DOM
+  /**
+   * Scroll to a column.
+   * @param {string} field Column field.
+   * @param {string} [position] Scroll position.
+   * @param {boolean} [ifVisible] Skip if visible.
+   * @returns {Promise<void>}
+   */
   scrollToColumn(field, position, ifVisible) {
     const column = this.columnManager.findColumn(field)
 
@@ -833,6 +1081,11 @@ class Tabulator extends ModuleBinder {
 
   /// ///////// General Public Functions ////////////
   // redraw list without updating data
+  /**
+   * Redraw table without data refresh.
+   * @param {boolean} [force] Force redraw.
+   * @returns {void}
+   */
   redraw(force) {
     this.initGuard()
 
@@ -840,6 +1093,11 @@ class Tabulator extends ModuleBinder {
     this.rowManager.redraw(force)
   }
 
+  /**
+   * Set table height and re-render vertical renderer.
+   * @param {string|number} height Height value.
+   * @returns {void}
+   */
   setHeight(height) {
     this.options.height = Number.isNaN(Number(height)) ? height : `${height}px`
     this.element.style.height = this.options.height
@@ -849,26 +1107,53 @@ class Tabulator extends ModuleBinder {
 
   /// ///////////////// Event Bus ///////////////////
 
+  /**
+   * Subscribe to external event.
+   * @param {string} key Event key.
+   * @param {Function} callback Event callback.
+   * @returns {void}
+   */
   on(key, callback) {
     this.externalEvents.subscribe(key, callback)
   }
 
+  /**
+   * Unsubscribe from external event.
+   * @param {string} key Event key.
+   * @param {Function} callback Event callback.
+   * @returns {void}
+   */
   off(key, callback) {
     this.externalEvents.unsubscribe(key, callback)
   }
 
+  /**
+   * Dispatch external event.
+   * @param {...*} args Event args.
+   * @returns {void}
+   */
   dispatchEvent(...args) {
     this.externalEvents.dispatch(...args)
   }
 
   /// ///////////////// Alerts ///////////////////
 
+  /**
+   * Show an alert.
+   * @param {*} contents Alert contents.
+   * @param {string} [type] Alert type.
+   * @returns {void}
+   */
   alert(contents, type) {
     this.initGuard()
 
     this.alertManager.alert(contents, type)
   }
 
+  /**
+   * Clear active alert.
+   * @returns {void}
+   */
   clearAlert() {
     this.initGuard()
 
@@ -876,6 +1161,12 @@ class Tabulator extends ModuleBinder {
   }
 
   /// /////////// Extension Management //////////////
+  /**
+   * Check if a module is installed.
+   * @param {string} plugin Module key.
+   * @param {boolean} [required] Log when missing.
+   * @returns {boolean}
+   */
   modExists(plugin, required) {
     if (this.modules[plugin]) {
       return true
@@ -888,6 +1179,11 @@ class Tabulator extends ModuleBinder {
     return false
   }
 
+  /**
+   * Get installed module by key.
+   * @param {string} key Module key.
+   * @returns {*}
+   */
   module(key) {
     const mod = this.modules[key]
 

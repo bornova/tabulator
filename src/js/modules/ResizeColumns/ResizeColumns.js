@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class ResizeColumns extends Module {
   static moduleName = 'resizeColumns'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -20,10 +23,18 @@ export default class ResizeColumns extends Module {
     this.registerTableOption('resizableColumnGuide', false)
   }
 
+  /**
+   * Initialize column resize header listener.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('column-rendered', this.layoutColumnHeader.bind(this))
   }
 
+  /**
+   * Initialize one-time resize event watchers.
+   * @returns {void}
+   */
   initializeEventWatchers() {
     if (!this.initialized) {
       this.subscribe('cell-rendered', this.layoutCellHandles.bind(this))
@@ -43,6 +54,11 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Layout cell resize handles.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   layoutCellHandles(cell) {
     if (cell.row.type === 'row') {
       this.deInitializeComponent(cell)
@@ -50,6 +66,11 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Layout column header resize handles.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   layoutColumnHeader(column) {
     if (column.definition.resizable) {
       this.initializeEventWatchers()
@@ -58,6 +79,11 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Reinitialize resize handles after column layout changes.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   columnLayoutUpdated(column) {
     const prev = column.prevColumn()
 
@@ -68,6 +94,11 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Reinitialize frozen handle offsets after width changes.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   columnWidthUpdated(column) {
     if (column.modules.frozen) {
       if (this.table.modules.frozenColumns.leftColumns.includes(column)) {
@@ -82,6 +113,11 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Compute sticky offset for frozen column resize handles.
+   * @param {object} column Internal column.
+   * @returns {string|boolean}
+   */
   frozenColumnOffset(column) {
     let offset = false
 
@@ -100,10 +136,20 @@ export default class ResizeColumns extends Module {
     return offset !== false ? offset + 'px' : false
   }
 
+  /**
+   * Get horizontal pointer coordinate from mouse or touch event.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @returns {number}
+   */
   getClientX(e) {
     return typeof e.clientX === 'undefined' ? e.touches[0].clientX : e.clientX
   }
 
+  /**
+   * Reattach column/cell resize handles after layout updates.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   reinitializeColumn(column) {
     const frozenOffset = this.frozenColumnOffset(column)
 
@@ -127,6 +173,14 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Initialize resize handle for a column header or cell.
+   * @param {string} type Handle type.
+   * @param {object} component Target component.
+   * @param {object} column Internal column.
+   * @param {HTMLElement} element Target element.
+   * @returns {void}
+   */
   initializeColumn(type, component, column, element) {
     let variableHeight = false
     const mode = column.definition.resizable
@@ -184,6 +238,11 @@ export default class ResizeColumns extends Module {
     component.modules.resize = config
   }
 
+  /**
+   * Remove resize handles for a column and its cells.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   deInitializeColumn(column) {
     this.deInitializeComponent(column)
 
@@ -192,6 +251,11 @@ export default class ResizeColumns extends Module {
     })
   }
 
+  /**
+   * Remove resize handle from a component.
+   * @param {object} component Target component.
+   * @returns {void}
+   */
   deInitializeComponent(component) {
     let handleEl
 
@@ -204,12 +268,24 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Sync resize handle height with component height.
+   * @param {object} component Target component.
+   * @param {string} height CSS height value.
+   * @returns {void}
+   */
   resizeHandle(component, height) {
     if (component.modules.resize && component.modules.resize.handleEl) {
       component.modules.resize.handleEl.style.height = height
     }
   }
 
+  /**
+   * Apply column width changes during pointer drag.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   resize(e, column) {
     const x = this.getClientX(e)
     let startDiff = x - this.startX
@@ -255,6 +331,13 @@ export default class ResizeColumns extends Module {
     }
   }
 
+  /**
+   * Calculate guide x-position during column resize.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} column Internal column.
+   * @param {HTMLElement} handle Active handle.
+   * @returns {number}
+   */
   calcGuidePosition(e, column, handle) {
     const mouseX = this.getClientX(e)
     const handleX = handle.getBoundingClientRect().x - this.table.element.getBoundingClientRect().x
@@ -270,10 +353,22 @@ export default class ResizeColumns extends Module {
     return pos
   }
 
+  /**
+   * Determine if a column is resizable.
+   * @param {object} column Internal column.
+   * @returns {boolean}
+   */
   _checkResizability(column) {
     return column.definition.resizable
   }
 
+  /**
+   * Handle column resize drag start.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} column Internal column.
+   * @param {HTMLElement} handle Active handle.
+   * @returns {void}
+   */
   _mouseDown(e, column, handle) {
     let guideEl
 

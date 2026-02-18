@@ -8,6 +8,9 @@ export default class Import extends Module {
   // load defaults
   static importers = defaultImporters
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -19,6 +22,10 @@ export default class Import extends Module {
     this.registerTableOption('importFileValidator')
   }
 
+  /**
+   * Initialize import table function and data-load hooks.
+   * @returns {void}
+   */
   initialize() {
     this.registerTableFunction('import', this.importFromFile.bind(this))
 
@@ -28,6 +35,12 @@ export default class Import extends Module {
     }
   }
 
+  /**
+   * Emit and log an import error.
+   * @param {string} message Error message.
+   * @param {...*} details Additional details.
+   * @returns {void}
+   */
   logImportError(message, ...details) {
     const error = { message, details }
 
@@ -37,6 +50,12 @@ export default class Import extends Module {
     console.error(message, ...details)
   }
 
+  /**
+   * Emit and log an import warning.
+   * @param {string} message Warning message.
+   * @param {...*} details Additional details.
+   * @returns {void}
+   */
   logImportWarning(message, ...details) {
     const warning = { message, details }
 
@@ -46,12 +65,26 @@ export default class Import extends Module {
     console.warn(message, ...details)
   }
 
+  /**
+   * Check whether incoming data should be treated as import input.
+   * @param {*} data Incoming data payload.
+   * @returns {boolean}
+   */
   loadDataCheck(data) {
     const isImportableArray = Array.isArray(data) && data.length && Array.isArray(data)
 
     return this.table.options.importFormat && (typeof data === 'string' || isImportableArray)
   }
 
+  /**
+   * Import and structure data loaded through standard data pipeline.
+   * @param {*} data Raw data.
+   * @param {object} params Load params.
+   * @param {object} config Load config.
+   * @param {boolean} silent Silent flag.
+   * @param {*} previousData Previous data.
+   * @returns {Promise<*>}
+   */
   loadData(data, params, config, silent, previousData) {
     return this.importData(this.lookupImporter(), data)
       .then(this.structureData.bind(this))
@@ -61,6 +94,11 @@ export default class Import extends Module {
       })
   }
 
+  /**
+   * Resolve importer function from option or explicit format.
+   * @param {string|Function} [importFormat] Import format key or importer function.
+   * @returns {Function|undefined}
+   */
   lookupImporter(importFormat) {
     const format = importFormat || this.table.options.importFormat
     const importer = typeof format === 'string' ? Import.importers[format] : format
@@ -72,6 +110,13 @@ export default class Import extends Module {
     return importer
   }
 
+  /**
+   * Open file picker, import selected file, and load data into the table.
+   * @param {string|Function} importFormat Import format key or importer function.
+   * @param {string} extension Accepted file extension string.
+   * @param {'text'|'buffer'|'binary'|'url'} [importReader] FileReader mode.
+   * @returns {Promise<*>|undefined}
+   */
   importFromFile(importFormat, extension, importReader) {
     const importer = this.lookupImporter(importFormat)
 
@@ -98,6 +143,12 @@ export default class Import extends Module {
       })
   }
 
+  /**
+   * Prompt user to pick a file and read its contents.
+   * @param {string} extensions Accepted file extensions.
+   * @param {'text'|'buffer'|'binary'|'url'} [importReader] FileReader mode.
+   * @returns {Promise<*>}
+   */
   pickFile(extensions, importReader) {
     return new Promise((resolve, reject) => {
       const input = document.createElement('input')
@@ -150,6 +201,12 @@ export default class Import extends Module {
     })
   }
 
+  /**
+   * Execute importer and return parsed data.
+   * @param {Function} importer Importer function.
+   * @param {*} fileContents File contents.
+   * @returns {Promise<*>}
+   */
   importData(importer, fileContents) {
     this.table.dataLoader.alertLoader()
 
@@ -166,6 +223,11 @@ export default class Import extends Module {
     })
   }
 
+  /**
+   * Normalize parsed import data shape for table consumption.
+   * @param {*} parsedData Parsed input data.
+   * @returns {*}
+   */
   structureData(parsedData) {
     if (Array.isArray(parsedData) && parsedData.length && Array.isArray(parsedData[0])) {
       return this.table.options.autoColumns
@@ -176,6 +238,11 @@ export default class Import extends Module {
     return parsedData
   }
 
+  /**
+   * Run import mutators on imported row data.
+   * @param {*} data Data to mutate.
+   * @returns {*}
+   */
   mutateData(data) {
     if (Array.isArray(data)) {
       return data.map((row) => this.table.modules.mutator.transformRow(row, 'import'))
@@ -184,6 +251,11 @@ export default class Import extends Module {
     return data
   }
 
+  /**
+   * Transform imported header values.
+   * @param {Array<*>} headers Header row.
+   * @returns {Array<*>}
+   */
   transformHeader(headers) {
     if (this.table.options.importHeaderTransform) {
       return headers.map((item) => this.table.options.importHeaderTransform.call(this.table, item, headers))
@@ -192,6 +264,11 @@ export default class Import extends Module {
     return headers
   }
 
+  /**
+   * Transform imported row values.
+   * @param {Array<*>} row Row values.
+   * @returns {Array<*>}
+   */
   transformData(row) {
     if (this.table.options.importValueTransform) {
       return row.map((item) => this.table.options.importValueTransform.call(this.table, item, row))
@@ -200,6 +277,11 @@ export default class Import extends Module {
     return row
   }
 
+  /**
+   * Convert array-based import data into row objects using first row headers.
+   * @param {Array<Array<*>>} parsedData Parsed data.
+   * @returns {Array<object>}
+   */
   structureArrayToObject(parsedData) {
     const columns = this.transformHeader(parsedData.shift())
 
@@ -217,6 +299,11 @@ export default class Import extends Module {
     return data
   }
 
+  /**
+   * Convert array-based import data into row objects using table columns.
+   * @param {Array<Array<*>>} parsedData Parsed data.
+   * @returns {Array<object>}
+   */
   structureArrayToColumns(parsedData) {
     const data = []
     const firstRow = this.transformHeader(parsedData[0])
@@ -248,6 +335,11 @@ export default class Import extends Module {
     return data
   }
 
+  /**
+   * Validate selected file before import.
+   * @param {File} file Selected file.
+   * @returns {*}
+   */
   validateFile(file) {
     if (this.table.options.importFileValidator) {
       return this.table.options.importFileValidator.call(this.table, file)
@@ -256,6 +348,11 @@ export default class Import extends Module {
     return true
   }
 
+  /**
+   * Validate imported data before setting table data.
+   * @param {*} data Imported data.
+   * @returns {Promise<*>|*}
+   */
   validateData(data) {
     if (this.table.options.importDataValidator) {
       const result = this.table.options.importDataValidator.call(this.table, data)
@@ -270,6 +367,11 @@ export default class Import extends Module {
     return data
   }
 
+  /**
+   * Dispatch import-complete events and set table data.
+   * @param {*} data Validated import data.
+   * @returns {Promise<*>}
+   */
   setData(data) {
     this.dispatch('import-imported', data)
     this.dispatchExternal('importImported', data)

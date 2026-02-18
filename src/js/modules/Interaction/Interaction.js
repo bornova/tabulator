@@ -6,6 +6,9 @@ import Column from '../../core/column/Column.js'
 export default class Interaction extends Module {
   static moduleName = 'interaction'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -129,6 +132,10 @@ export default class Interaction extends Module {
     this.registerColumnOption('cellTapHold')
   }
 
+  /**
+   * Initialize interaction subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.initializeExternalEvents()
 
@@ -138,6 +145,10 @@ export default class Interaction extends Module {
     this.subscribe('scroll-vertical', this.clearTouchWatchers.bind(this))
   }
 
+  /**
+   * Reset touch watcher state for all component types.
+   * @returns {void}
+   */
   clearTouchWatchers() {
     Object.values(this.touchWatchers).forEach((watchers) => {
       Object.keys(watchers).forEach((key) => {
@@ -146,6 +157,12 @@ export default class Interaction extends Module {
     })
   }
 
+  /**
+   * Prevent accidental editor text selection on double click.
+   * @param {Event} e DOM event.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   cellContentsSelectionFixer(e, cell) {
     let range
 
@@ -172,12 +189,22 @@ export default class Interaction extends Module {
     } catch (error) {}
   }
 
+  /**
+   * Register external subscription change handlers for interaction events.
+   * @returns {void}
+   */
   initializeExternalEvents() {
     Object.keys(this.eventMap).forEach((key) => {
       this.subscriptionChangeExternal(key, this.subscriptionChanged.bind(this, key))
     })
   }
 
+  /**
+   * Handle external subscription lifecycle for interaction events.
+   * @param {string} key External event key.
+   * @param {boolean} added Whether a subscriber was added.
+   * @returns {void}
+   */
   subscriptionChanged(key, added) {
     const eventName = this.eventMap[key]
     const isTouchEvent = !eventName.includes('-')
@@ -205,6 +232,11 @@ export default class Interaction extends Module {
     }
   }
 
+  /**
+   * Subscribe internal touchstart/touchend handlers for a touch event group.
+   * @param {string} key External event key.
+   * @returns {void}
+   */
   subscribeTouchEvents(key) {
     const type = this.eventMap[key]
     const startEvent = `${type}-touchstart`
@@ -221,6 +253,11 @@ export default class Interaction extends Module {
     this.subscribers[key] = true
   }
 
+  /**
+   * Unsubscribe touch handlers when no listeners remain.
+   * @param {string} key External event key.
+   * @returns {void}
+   */
   unsubscribeTouchEvents(key) {
     let noTouch = true
     const type = this.eventMap[key]
@@ -247,6 +284,11 @@ export default class Interaction extends Module {
     }
   }
 
+  /**
+   * Register column-level interaction callbacks.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const def = column.definition
 
@@ -263,10 +305,25 @@ export default class Interaction extends Module {
     }
   }
 
+  /**
+   * Dispatch non-touch interaction events.
+   * @param {string} action Event action key.
+   * @param {Event} e DOM event.
+   * @param {object} component Internal component.
+   * @returns {void}
+   */
   handle(action, e, component) {
     this.dispatchEvent(action, e, component)
   }
 
+  /**
+   * Track touch gesture state and emit tap/double-tap/hold events.
+   * @param {'row'|'cell'|'column'|'group'} type Component type.
+   * @param {'start'|'end'} action Touch phase.
+   * @param {Event} e DOM event.
+   * @param {object} component Internal component.
+   * @returns {void}
+   */
   handleTouch(type, action, e, component) {
     const watchers = this.touchWatchers[type]
     const dispatchType = type === 'column' ? 'header' : type
@@ -313,6 +370,13 @@ export default class Interaction extends Module {
     }
   }
 
+  /**
+   * Execute column callback and dispatch external interaction event.
+   * @param {string} action Event action key.
+   * @param {Event} e DOM event.
+   * @param {object} component Internal component.
+   * @returns {void}
+   */
   dispatchEvent(action, e, component) {
     const componentObj = component.getComponent()
     let callback

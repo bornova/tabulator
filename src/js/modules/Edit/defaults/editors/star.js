@@ -1,4 +1,13 @@
 // star rating
+/**
+ * Star-rating editor.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} editorParams Editor params.
+ * @returns {HTMLElement}
+ */
 export default function (cell, onRendered, success, cancel, editorParams) {
   const element = cell.getElement()
   let value = cell.getValue()

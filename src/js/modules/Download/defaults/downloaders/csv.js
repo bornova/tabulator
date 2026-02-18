@@ -1,3 +1,12 @@
+/**
+ * Generate CSV file contents from export rows.
+ * @param {Array<object>} list Export row list.
+ * @param {object} [options={}] Downloader options.
+ * @param {string} [options.delimiter] Field delimiter.
+ * @param {boolean} [options.bom] Include UTF-8 BOM prefix.
+ * @param {Function} setFileContents Callback to receive file payload.
+ * @returns {void}
+ */
 export default function (list, options = {}, setFileContents) {
   const delimiter = options.delimiter || ','
   let fileContents = []

@@ -5,6 +5,9 @@ export default class SelectRow extends Module {
   static moduleName = 'selectRow'
   static moduleExtensions = extensions
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -35,6 +38,10 @@ export default class SelectRow extends Module {
     this.registerComponentFunction('row', 'isSelected', this.isRowSelected.bind(this))
   }
 
+  /**
+   * Initialize row selection behavior and subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.deprecatedOptionsCheck()
 
@@ -54,6 +61,10 @@ export default class SelectRow extends Module {
     }
   }
 
+  /**
+   * Check deprecated selection options.
+   * @returns {void}
+   */
   deprecatedOptionsCheck() {
     // this.deprecationCheck("selectable", "selectableRows", true);
     // this.deprecationCheck("selectableRollingSelection", "selectableRowsRollingSelection", true);
@@ -62,14 +73,30 @@ export default class SelectRow extends Module {
     // this.deprecationCheck("selectableCheck", "selectableRowsCheck", true);
   }
 
+  /**
+   * Expose selected rows to row retrieval pipeline.
+   * @param {string} type Retrieval type.
+   * @param {*} prevValue Previous value.
+   * @returns {*}
+   */
   rowRetrieve(type, prevValue) {
     return type === 'selected' ? this.selectedRows : prevValue
   }
 
+  /**
+   * Deselect row when it is deleted.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   rowDeleted(row) {
     this._deselectRow(row, true)
   }
 
+  /**
+   * Clear all selection state.
+   * @param {boolean} [silent] Suppress selection changed event.
+   * @returns {void}
+   */
   clearSelectionData(silent) {
     const prevSelected = this.selectedRows.length
 
@@ -83,6 +110,11 @@ export default class SelectRow extends Module {
     }
   }
 
+  /**
+   * Initialize selection listeners and classes for a row.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   initializeRow(row) {
     const self = this
     const selectable = self.checkRowSelectability(row)
@@ -157,6 +189,12 @@ export default class SelectRow extends Module {
     }
   }
 
+  /**
+   * Handle range/cmd selection row click behavior.
+   * @param {object} row Internal row.
+   * @param {MouseEvent} e Mouse event.
+   * @returns {void}
+   */
   handleComplexRowClick(row, e) {
     if (e.shiftKey) {
       this.table._clearSelection()
@@ -206,6 +244,11 @@ export default class SelectRow extends Module {
     }
   }
 
+  /**
+   * Determine if a row can be selected.
+   * @param {object} row Internal row.
+   * @returns {boolean}
+   */
   checkRowSelectability(row) {
     if (row && row.type === 'row') {
       return this.table.options.selectableRowsCheck.call(this.table, row.getComponent())
@@ -214,7 +257,11 @@ export default class SelectRow extends Module {
     return false
   }
 
-  // toggle row selection
+  /**
+   * Toggle selected state of a row.
+   * @param {*} row Row lookup.
+   * @returns {void}
+   */
   toggleRow(row) {
     if (this.checkRowSelectability(row)) {
       if (row.modules.select && row.modules.select.selected) {
@@ -225,7 +272,11 @@ export default class SelectRow extends Module {
     }
   }
 
-  // select a number of rows
+  /**
+   * Select one or more rows.
+   * @param {*} rows Row lookup(s).
+   * @returns {void}
+   */
   selectRows(rows) {
     const changes = []
     let rowMatch
@@ -273,7 +324,13 @@ export default class SelectRow extends Module {
     }
   }
 
-  // select an individual row
+  /**
+   * Select an individual row.
+   * @param {*} rowInfo Row lookup.
+   * @param {boolean} [silent] Suppress changed event.
+   * @param {boolean} [force] Ignore max selection limits.
+   * @returns {object|false|undefined}
+   */
   _selectRow(rowInfo, silent, force) {
     // handle max row count
     if (!isNaN(this.table.options.selectableRows) && this.table.options.selectableRows !== true && !force) {
@@ -319,11 +376,21 @@ export default class SelectRow extends Module {
     }
   }
 
+  /**
+   * Check if a row is selected.
+   * @param {object} row Internal row.
+   * @returns {boolean}
+   */
   isRowSelected(row) {
     return this.selectedRows.indexOf(row) !== -1
   }
 
-  // deselect a number of rows
+  /**
+   * Deselect one or more rows.
+   * @param {*} rows Row lookup(s).
+   * @param {boolean} [silent] Suppress changed event.
+   * @returns {void}
+   */
   deselectRows(rows, silent) {
     const changes = []
     let rowMatch
@@ -371,7 +438,12 @@ export default class SelectRow extends Module {
     }
   }
 
-  // deselect an individual row
+  /**
+   * Deselect an individual row.
+   * @param {*} rowInfo Row lookup.
+   * @param {boolean} [silent] Suppress changed event.
+   * @returns {object|undefined}
+   */
   _deselectRow(rowInfo, silent) {
     const row = this.table.rowManager.findRow(rowInfo)
     let index
@@ -414,14 +486,29 @@ export default class SelectRow extends Module {
     }
   }
 
+  /**
+   * Get selected row data objects.
+   * @returns {Array<object>}
+   */
   getSelectedData() {
     return this.selectedRows.map((row) => row.getData())
   }
 
+  /**
+   * Get selected row components.
+   * @returns {Array<object>}
+   */
   getSelectedRows() {
     return this.selectedRows.map((row) => row.getComponent())
   }
 
+  /**
+   * Dispatch selection changed event and sync header checkbox state.
+   * @param {boolean} [silent] Suppress external event.
+   * @param {object|Array<object>} [selected=[]] Newly selected rows.
+   * @param {object|Array<object>} [deselected=[]] Newly deselected rows.
+   * @returns {void}
+   */
   _rowSelectionChanged(silent, selected = [], deselected = []) {
     if (this.headerCheckboxElement) {
       if (this.selectedRows.length === 0) {
@@ -453,6 +540,12 @@ export default class SelectRow extends Module {
     }
   }
 
+  /**
+   * Register checkbox element for a row component.
+   * @param {object} row Row component.
+   * @param {HTMLInputElement} element Checkbox element.
+   * @returns {void}
+   */
   registerRowSelectCheckbox(row, element) {
     if (!row._row.modules.select) {
       row._row.modules.select = {}
@@ -461,10 +554,21 @@ export default class SelectRow extends Module {
     row._row.modules.select.checkboxEl = element
   }
 
+  /**
+   * Register header select-all checkbox element.
+   * @param {HTMLInputElement} element Checkbox element.
+   * @returns {void}
+   */
   registerHeaderSelectCheckbox(element) {
     this.headerCheckboxElement = element
   }
 
+  /**
+   * Propagate selection state to data tree children.
+   * @param {object} row Internal row.
+   * @param {boolean} select Selection state to apply.
+   * @returns {void}
+   */
   childRowSelection(row, select) {
     const dataTree = this.table.modules.dataTree
 

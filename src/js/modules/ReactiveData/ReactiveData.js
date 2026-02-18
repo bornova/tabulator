@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class ReactiveData extends Module {
   static moduleName = 'reactiveData'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -14,6 +17,10 @@ export default class ReactiveData extends Module {
     this.registerTableOption('reactiveData', false) // enable data reactivity
   }
 
+  /**
+   * Initialize reactive data subscriptions.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.reactiveData) {
       this.subscribe('cell-value-save-before', this.block.bind(this, 'cellsave'))
@@ -27,6 +34,11 @@ export default class ReactiveData extends Module {
     }
   }
 
+  /**
+   * Watch table data array and override mutating methods.
+   * @param {Array<object>} data Active table data array.
+   * @returns {void}
+   */
   watchData(data) {
     const self = this
     let version
@@ -209,6 +221,10 @@ export default class ReactiveData extends Module {
     })
   }
 
+  /**
+   * Restore original array mutator methods.
+   * @returns {void}
+   */
   unwatchData() {
     if (this.data !== false) {
       for (const key in this.origFuncs) {
@@ -222,6 +238,11 @@ export default class ReactiveData extends Module {
     }
   }
 
+  /**
+   * Watch row data object keys for reactive updates.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   watchRow(row) {
     const data = row.getData()
 
@@ -234,6 +255,11 @@ export default class ReactiveData extends Module {
     }
   }
 
+  /**
+   * Watch data tree child array mutators for a row.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   watchTreeChildren(row) {
     const childField = row.getData()[this.table.options.dataTreeChildField]
     const origFuncs = {}
@@ -270,12 +296,24 @@ export default class ReactiveData extends Module {
     }
   }
 
+  /**
+   * Rebuild tree after reactive child updates.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   rebuildTree(row) {
     this.table.modules.dataTree.initializeRow(row)
     this.table.modules.dataTree.layoutRow(row)
     this.table.rowManager.refreshActiveData('tree', false, true)
   }
 
+  /**
+   * Watch one data key for direct assignment updates.
+   * @param {object} row Internal row.
+   * @param {object} data Row data object.
+   * @param {string} key Data key.
+   * @returns {void}
+   */
   watchKey(row, data, key) {
     const self = this
     const props = Object.getOwnPropertyDescriptor(data, key)
@@ -311,6 +349,11 @@ export default class ReactiveData extends Module {
     })
   }
 
+  /**
+   * Remove reactive accessors from row data keys.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   unwatchRow(row) {
     const data = row.getData()
 
@@ -324,12 +367,22 @@ export default class ReactiveData extends Module {
     }
   }
 
+  /**
+   * Set reactivity block flag.
+   * @param {string} key Block key.
+   * @returns {void}
+   */
   block(key) {
     if (!this.blocked) {
       this.blocked = key
     }
   }
 
+  /**
+   * Clear reactivity block flag.
+   * @param {string} key Block key.
+   * @returns {void}
+   */
   unblock(key) {
     if (this.blocked === key) {
       this.blocked = false

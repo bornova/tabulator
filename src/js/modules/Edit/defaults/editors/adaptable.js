@@ -1,3 +1,12 @@
+/**
+ * Adaptively resolve and render an editor based on cell value type.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} params Editor params.
+ * @returns {HTMLElement}
+ */
 export default function (cell, onRendered, success, cancel, params) {
   const column = cell._getSelf().column
 

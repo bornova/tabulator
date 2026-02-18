@@ -11,6 +11,24 @@ import progress from './editors/progress.js'
 import tickCross from './editors/tickCross.js'
 import adaptable from './editors/adaptable.js'
 
+/**
+ * Default editor implementations.
+ *
+ * @type {{
+ *   input: function(Object, function, function, function, Object): HTMLElement,
+ *   textarea: function(Object, function, function, function, Object): HTMLElement,
+ *   number: function(Object, function, function, function, Object): HTMLElement,
+ *   range: function(Object, function, function, function, Object): HTMLElement,
+ *   date: function(Object, function, function, function, Object): HTMLElement,
+ *   time: function(Object, function, function, function, Object): HTMLElement,
+ *   datetime: function(Object, function, function, function, Object): HTMLElement,
+ *   list: function(Object, function, function, function, Object): HTMLElement,
+ *   star: function(Object, function, function, function, Object): HTMLElement,
+ *   progress: function(Object, function, function, function, Object): HTMLElement,
+ *   tickCross: function(Object, function, function, function, Object): HTMLElement,
+ *   adaptable: function(Object, function, function, function, Object): HTMLElement
+ * }}
+ */
 export default {
   input,
   textarea,

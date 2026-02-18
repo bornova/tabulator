@@ -8,6 +8,9 @@ export default class Download extends Module {
   // load defaults
   static downloaders = defaultDownloaders
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -21,6 +24,10 @@ export default class Download extends Module {
     this.registerColumnOption('titleDownload')
   }
 
+  /**
+   * Register table download functions.
+   * @returns {void}
+   */
   initialize() {
     this.deprecatedOptionsCheck()
 
@@ -28,12 +35,24 @@ export default class Download extends Module {
     this.registerTableFunction('downloadToTab', this.downloadToTab.bind(this))
   }
 
+  /**
+   * Check deprecated download options.
+   * @returns {void}
+   */
   deprecatedOptionsCheck() {}
 
   /// ////////////////////////////////
   /// ////// Table Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * Download data and open in a new browser tab.
+   * @param {string|Function} type Download type or custom generator.
+   * @param {string} [filename] Output filename.
+   * @param {object} [options] Downloader options.
+   * @param {string} [active] Row range selector.
+   * @returns {void}
+   */
   downloadToTab(type, filename, options, active) {
     this.download(type, filename, options, active, true)
   }
@@ -42,7 +61,15 @@ export default class Download extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
-  // trigger file download
+  /**
+   * Generate and trigger a download.
+   * @param {string|Function} type Download type or custom generator.
+   * @param {string} [filename] Output filename.
+   * @param {object} [options] Downloader options.
+   * @param {string} [range] Export row range.
+   * @param {boolean|Function} [interceptCallback] Intercept callback or open-in-tab flag.
+   * @returns {void}
+   */
   download(type, filename, options, range, interceptCallback) {
     let downloadFunc = false
 
@@ -73,6 +100,11 @@ export default class Download extends Module {
     }
   }
 
+  /**
+   * Generate export list for download.
+   * @param {string} [range] Export row range.
+   * @returns {Array<object>}
+   */
   generateExportList(range) {
     const list = this.table.modules.export.generateExportList(
       this.table.options.downloadConfig,
@@ -108,6 +140,15 @@ export default class Download extends Module {
     return list
   }
 
+  /**
+   * Trigger browser download/open for generated data.
+   * @param {*} data Encoded data.
+   * @param {string} mime Mime type.
+   * @param {string|Function} type Download type.
+   * @param {string} [filename] Output filename.
+   * @param {boolean} [newTab] Open output in new tab.
+   * @returns {void}
+   */
   triggerDownload(data, mime, type, filename, newTab) {
     const element = document.createElement('a')
     const blob = this.table.options.downloadEncoder(data, mime)
@@ -140,6 +181,13 @@ export default class Download extends Module {
     }
   }
 
+  /**
+   * Handle communications messages for download actions.
+   * @param {*} table Source table.
+   * @param {string} action Action key.
+   * @param {object} data Action payload.
+   * @returns {void}
+   */
   commsReceived(table, action, data) {
     switch (action) {
       case 'intercept':

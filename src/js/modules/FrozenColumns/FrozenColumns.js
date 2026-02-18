@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class FrozenColumns extends Module {
   static moduleName = 'frozenColumns'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -16,6 +19,10 @@ export default class FrozenColumns extends Module {
   }
 
   // reset initial state
+  /**
+   * Reset frozen column state.
+   * @returns {void}
+   */
   reset() {
     this.initializationMode = 'left'
     this.leftColumns = []
@@ -23,6 +30,10 @@ export default class FrozenColumns extends Module {
     this.active = false
   }
 
+  /**
+   * Initialize frozen-column subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('cell-layout', this.layoutCell.bind(this))
     this.subscribe('column-init', this.initializeColumn.bind(this))
@@ -43,18 +54,35 @@ export default class FrozenColumns extends Module {
     this.subscribe('scrollbar-vertical', this.adjustForScrollbar.bind(this))
   }
 
+  /**
+   * Block frozen layout updates.
+   * @returns {void}
+   */
   blockLayout() {
     this.blocked = true
   }
 
+  /**
+   * Unblock frozen layout updates.
+   * @returns {void}
+   */
   unblockLayout() {
     this.blocked = false
   }
 
+  /**
+   * Apply frozen layout to a cell.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   layoutCell(cell) {
     this.layoutElement(cell.element, cell.column)
   }
 
+  /**
+   * Rebuild frozen column assignments and relayout.
+   * @returns {void}
+   */
   reinitializeColumns() {
     this.reset()
 
@@ -66,6 +94,11 @@ export default class FrozenColumns extends Module {
   }
 
   // initialize specific column
+  /**
+   * Initialize frozen config for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const config = { margin: 0, edge: false }
 
@@ -88,6 +121,11 @@ export default class FrozenColumns extends Module {
     }
   }
 
+  /**
+   * Determine whether a column should be treated as frozen.
+   * @param {object} column Internal column.
+   * @returns {boolean}
+   */
   frozenCheck(column) {
     if (column.parent.isGroup && column.definition.frozen) {
       console.warn(
@@ -103,6 +141,10 @@ export default class FrozenColumns extends Module {
   }
 
   // layout calculation rows
+  /**
+   * Apply frozen layout to calc rows.
+   * @returns {void}
+   */
   layoutCalcRows() {
     if (this.table.modExists('columnCalcs')) {
       if (this.table.modules.columnCalcs.topInitialized && this.table.modules.columnCalcs.topRow) {
@@ -119,6 +161,11 @@ export default class FrozenColumns extends Module {
     }
   }
 
+  /**
+   * Apply frozen layout to grouped calc rows recursively.
+   * @param {Array<object>} groups Group list.
+   * @returns {void}
+   */
   layoutGroupCalcs(groups) {
     groups.forEach((group) => {
       if (group.calcs.top) {
@@ -136,6 +183,11 @@ export default class FrozenColumns extends Module {
   }
 
   // calculate column positions and layout headers
+  /**
+   * Compute sticky offsets and apply frozen styles to columns/cells.
+   * @param {boolean} [allCells] Layout all existing cells.
+   * @returns {void}
+   */
   layoutColumnPosition(allCells) {
     const leftParents = []
 
@@ -210,11 +262,20 @@ export default class FrozenColumns extends Module {
     })
   }
 
+  /**
+   * Resolve top-most group parent element for a grouped column.
+   * @param {object} column Internal column.
+   * @returns {HTMLElement}
+   */
   getColGroupParentElement(column) {
     return column.parent.isGroup ? this.getColGroupParentElement(column.parent) : column.getElement()
   }
 
   // layout columns appropriately
+  /**
+   * Layout frozen columns and rows.
+   * @returns {void}
+   */
   layout() {
     if (this.active && !this.blocked) {
       // calculate left columns
@@ -226,6 +287,10 @@ export default class FrozenColumns extends Module {
     }
   }
 
+  /**
+   * Reinitialize non-visible rows and layout visible rows.
+   * @returns {void}
+   */
   reinitializeRows() {
     const visibleRows = this.table.rowManager.getVisibleRows(true)
     const otherRows = this.table.rowManager.getRows().filter((row) => !visibleRows.includes(row))
@@ -241,6 +306,11 @@ export default class FrozenColumns extends Module {
     })
   }
 
+  /**
+   * Apply frozen layout to a row.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   layoutRow(row) {
     if (this.table.options.layout === 'fitDataFill' && this.rightColumns.length) {
       this.table.rowManager.getTableElement().style.minWidth = `calc(100% - ${this.rightMargin})`
@@ -263,6 +333,12 @@ export default class FrozenColumns extends Module {
     })
   }
 
+  /**
+   * Apply sticky styles to an element for a frozen column.
+   * @param {HTMLElement} element Target element.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   layoutElement(element, column) {
     const frozen = column.modules.frozen
 
@@ -280,16 +356,31 @@ export default class FrozenColumns extends Module {
     }
   }
 
+  /**
+   * Adjust contents width for vertical scrollbar.
+   * @param {number} width Scrollbar width.
+   * @returns {void}
+   */
   adjustForScrollbar(width) {
     if (this.rightColumns.length) {
       this.table.columnManager.getContentsElement().style.width = `calc(100% - ${width}px)`
     }
   }
 
+  /**
+   * Get all frozen columns.
+   * @returns {Array<object>}
+   */
   getFrozenColumns() {
     return this.leftColumns.concat(this.rightColumns)
   }
 
+  /**
+   * Calculate occupied width before a column index.
+   * @param {Array<object>} columns Column list.
+   * @param {number} index Target index.
+   * @returns {number}
+   */
   _calcSpace(columns, index) {
     let width = 0
 

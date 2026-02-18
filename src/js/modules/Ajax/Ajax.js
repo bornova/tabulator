@@ -14,6 +14,9 @@ export default class Ajax extends Module {
   static defaultLoaderPromise = defaultLoaderPromise
   static contentTypeFormatters = defaultContentTypeFormatters
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -38,6 +41,10 @@ export default class Ajax extends Module {
   }
 
   // initialize setup options
+  /**
+   * Initialize ajax request handlers and defaults.
+   * @returns {void}
+   */
   initialize() {
     this.loaderPromise = this.table.options.ajaxRequestFunc || Ajax.defaultLoaderPromise
     this.urlGenerator = this.table.options.ajaxURLGenerator || Ajax.defaultURLGenerator
@@ -55,6 +62,14 @@ export default class Ajax extends Module {
     this.subscribe('data-load', this.requestData.bind(this))
   }
 
+  /**
+   * Merge configured ajax params into request params.
+   * @param {*} data Request data source.
+   * @param {object} config Request config.
+   * @param {boolean} silent Silent flag.
+   * @param {object} params Existing params.
+   * @returns {object}
+   */
   requestParams(data, config, silent, params) {
     let ajaxParams = this.table.options.ajaxParams
 
@@ -72,10 +87,27 @@ export default class Ajax extends Module {
     return params
   }
 
+  /**
+   * Check if data load should be handled by ajax module.
+   * @param {*} data Data source.
+   * @param {object} params Request params.
+   * @param {object} config Request config.
+   * @param {boolean} silent Silent flag.
+   * @returns {boolean}
+   */
   requestDataCheck(data, params, config, silent) {
     return (!data && this.url) || typeof data === 'string'
   }
 
+  /**
+   * Load remote data via ajax when applicable.
+   * @param {string} url Request URL.
+   * @param {object} params Request params.
+   * @param {object|string} config Request config.
+   * @param {boolean} silent Silent flag.
+   * @param {*} previousData Previously loaded data.
+   * @returns {Promise<*>|*}
+   */
   requestData(url, params, config, silent, previousData) {
     let ajaxConfig
 
@@ -92,6 +124,11 @@ export default class Ajax extends Module {
     }
   }
 
+  /**
+   * Set base ajax config.
+   * @param {object|string} [config={}] Config object or method string.
+   * @returns {void}
+   */
   setDefaultConfig(config = {}) {
     this.config = { ...Ajax.defaultConfig }
 
@@ -106,6 +143,11 @@ export default class Ajax extends Module {
   }
 
   // load config object
+  /**
+   * Generate per-request ajax config.
+   * @param {object|string} [config={}] Config override or method string.
+   * @returns {object}
+   */
   generateConfig(config = {}) {
     const ajaxConfig = { ...this.config }
 
@@ -119,16 +161,32 @@ export default class Ajax extends Module {
   }
 
   // set request url
+  /**
+   * Set ajax URL.
+   * @param {string} url Request URL.
+   * @returns {void}
+   */
   setUrl(url) {
     this.url = url
   }
 
   // get request url
+  /**
+   * Get ajax URL.
+   * @returns {string}
+   */
   getUrl() {
     return this.url
   }
 
   // send ajax request
+  /**
+   * Execute ajax request and post-process response.
+   * @param {string} url Request URL.
+   * @param {object} params Request params.
+   * @param {object} config Request config.
+   * @returns {Promise<*>}
+   */
   sendRequest(url, params, config) {
     if (this.table.options.ajaxRequesting.call(this.table, url, params) !== false) {
       return this.loaderPromise(url, config, params).then((data) => {

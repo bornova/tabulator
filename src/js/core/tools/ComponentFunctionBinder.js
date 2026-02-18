@@ -1,10 +1,20 @@
 export default class ComponentFunctionBinder {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     this.table = table
 
     this.bindings = {}
   }
 
+  /**
+   * Bind a component function handler.
+   * @param {string} type Component type key.
+   * @param {string} funcName Function name to bind.
+   * @param {Function} handler Handler function.
+   * @returns {void}
+   */
   bind(type, funcName, handler) {
     if (!this.bindings[type]) {
       this.bindings[type] = {}
@@ -22,6 +32,13 @@ export default class ComponentFunctionBinder {
     }
   }
 
+  /**
+   * Resolve a bound handler for a component function lookup.
+   * @param {string} type Component type key.
+   * @param {object} component Component instance.
+   * @param {string|symbol} name Function/property name.
+   * @returns {Function|undefined}
+   */
   handle(type, component, name) {
     if (this.bindings[type] && this.bindings[type][name] && typeof this.bindings[type][name].bind === 'function') {
       return this.bindings[type][name].bind(null, component)

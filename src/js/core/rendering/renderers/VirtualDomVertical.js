@@ -2,6 +2,9 @@ import Renderer from '../Renderer.js'
 import Helpers from '../../tools/Helpers.js'
 
 export default class VirtualDomVertical extends Renderer {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -36,6 +39,10 @@ export default class VirtualDomVertical extends Renderer {
   /// ////// Public Functions ///////////
   /// ///////////////////////////////////
 
+  /**
+   * Clear rendered rows and reset virtual DOM state and element styles.
+   * @returns {void}
+   */
   clearRows() {
     const element = this.tableElement
 
@@ -61,10 +68,19 @@ export default class VirtualDomVertical extends Renderer {
     this.vDomScrollPosBottom = 0
   }
 
+  /**
+   * Render rows using vertical virtual DOM fill.
+   * @returns {void}
+   */
   renderRows() {
     this._virtualRenderFill()
   }
 
+  /**
+   * Re-render rows while preserving approximate scroll position.
+   * @param {Function} [callback] Callback executed between deinit and render.
+   * @returns {void}
+   */
   rerenderRows(callback) {
     const scrollTop = this.elementVertical.scrollTop
     let topRow = false
@@ -105,10 +121,21 @@ export default class VirtualDomVertical extends Renderer {
     this.scrollColumns(left)
   }
 
+  /**
+   * Delegate horizontal scroll updates to row manager.
+   * @param {number} left Horizontal scroll position.
+   * @returns {void}
+   */
   scrollColumns(left) {
     this.table.rowManager.scrollHorizontal(left)
   }
 
+  /**
+   * Update virtual row window according to scroll position.
+   * @param {number} top Vertical scroll position.
+   * @param {boolean} [dir] Scroll direction flag.
+   * @returns {void}
+   */
   scrollRows(top, dir) {
     const topDiff = top - this.vDomScrollPosTop
     const bottomDiff = top - this.vDomScrollPosBottom
@@ -157,16 +184,30 @@ export default class VirtualDomVertical extends Renderer {
     }
   }
 
+  /**
+   * Recalculate row window buffer based on viewport.
+   * @returns {void}
+   */
   resize() {
     this.vDomWindowBuffer = this.table.options.renderVerticalBuffer || this.elementVertical.clientHeight
   }
 
+  /**
+   * Determine whether a row is nearer to the top rendered edge.
+   * @param {object} row Internal row instance.
+   * @returns {boolean}
+   */
   scrollToRowNearestTop(row) {
     const rowIndex = this.rows().indexOf(row)
 
     return !(Math.abs(this.vDomTop - rowIndex) > Math.abs(this.vDomBottom - rowIndex))
   }
 
+  /**
+   * Scroll and rerender so a row index is brought into view.
+   * @param {object} row Internal row instance.
+   * @returns {void}
+   */
   scrollToRow(row) {
     const index = this.rows().indexOf(row)
 
@@ -175,6 +216,11 @@ export default class VirtualDomVertical extends Renderer {
     }
   }
 
+  /**
+   * Get currently visible rows, optionally including buffer rows.
+   * @param {boolean} [includingBuffer] Include buffered rows when true.
+   * @returns {Array<object>}
+   */
   visibleRows(includingBuffer) {
     const topEdge = this.elementVertical.scrollTop
     const bottomEdge = this.elementVertical.clientHeight + topEdge
@@ -220,6 +266,13 @@ export default class VirtualDomVertical extends Renderer {
   /// ///////////////////////////////////
 
   // full virtual render
+  /**
+   * Rebuild the virtual DOM window from a target position.
+   * @param {number} [position] Target row index.
+   * @param {boolean} [forceMove] Force moving scroll position.
+   * @param {number} [offset] Offset from the target row.
+   * @returns {void}
+   */
   _virtualRenderFill(position, forceMove, offset) {
     const element = this.tableElement
     const holder = this.elementVertical
@@ -402,6 +455,12 @@ export default class VirtualDomVertical extends Renderer {
     }
   }
 
+  /**
+   * Add rows above the current window while space is available.
+   * @param {Array<object>} rows Display rows.
+   * @param {number} fillableSpace Available space to fill.
+   * @returns {void}
+   */
   _addTopRow(rows, fillableSpace) {
     const table = this.tableElement
     const addedRows = []
@@ -477,6 +536,12 @@ export default class VirtualDomVertical extends Renderer {
     }
   }
 
+  /**
+   * Remove rows from the top of the current window.
+   * @param {Array<object>} rows Display rows.
+   * @param {number} fillableSpace Available space to release.
+   * @returns {void}
+   */
   _removeTopRow(rows, fillableSpace) {
     const removableRows = []
     let paddingAdjust = 0
@@ -521,6 +586,12 @@ export default class VirtualDomVertical extends Renderer {
     }
   }
 
+  /**
+   * Add rows below the current window while space is available.
+   * @param {Array<object>} rows Display rows.
+   * @param {number} fillableSpace Available space to fill.
+   * @returns {void}
+   */
   _addBottomRow(rows, fillableSpace) {
     const table = this.tableElement
     const addedRows = []
@@ -588,6 +659,12 @@ export default class VirtualDomVertical extends Renderer {
     }
   }
 
+  /**
+   * Remove rows from the bottom of the current window.
+   * @param {Array<object>} rows Display rows.
+   * @param {number} fillableSpace Available space to release.
+   * @returns {void}
+   */
   _removeBottomRow(rows, fillableSpace) {
     const removableRows = []
     let paddingAdjust = 0
@@ -637,6 +714,11 @@ export default class VirtualDomVertical extends Renderer {
     }
   }
 
+  /**
+   * Normalize heights for a batch of rows.
+   * @param {Array<object>} rows Row instances.
+   * @returns {void}
+   */
   _quickNormalizeRowHeight(rows) {
     for (const row of rows) {
       row.calcHeight()

@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class Print extends Module {
   static moduleName = 'print'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -23,6 +26,10 @@ export default class Print extends Module {
     this.registerColumnOption('titlePrint')
   }
 
+  /**
+   * Initialize print handlers and table print API.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.printAsHtml) {
       this.beforeprintEventHandler = this.replaceTable.bind(this)
@@ -36,6 +43,10 @@ export default class Print extends Module {
     this.registerTableFunction('print', this.printFullscreen.bind(this))
   }
 
+  /**
+   * Remove print listeners on module teardown.
+   * @returns {void}
+   */
   destroy() {
     if (this.table.options.printAsHtml) {
       window.removeEventListener('beforeprint', this.beforeprintEventHandler)
@@ -51,10 +62,22 @@ export default class Print extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Resolve print section content option.
+   * @param {string|HTMLElement|Function} contentOption Content value or resolver.
+   * @returns {string|HTMLElement}
+   */
   resolvePrintContent(contentOption) {
     return typeof contentOption === 'function' ? contentOption.call(this.table) : contentOption
   }
 
+  /**
+   * Append a print section to the print root element.
+   * @param {HTMLElement} rootElement Root print wrapper.
+   * @param {HTMLElement} sectionElement Section element.
+   * @param {string|HTMLElement} content Section content.
+   * @returns {void}
+   */
   appendPrintSection(rootElement, sectionElement, content) {
     if (typeof content === 'string') {
       sectionElement.innerHTML = content
@@ -65,6 +88,10 @@ export default class Print extends Module {
     rootElement.appendChild(sectionElement)
   }
 
+  /**
+   * Replace table with printable markup for browser print events.
+   * @returns {void}
+   */
   replaceTable() {
     const { printConfig, printStyled, printRowRange } = this.table.options
 
@@ -82,6 +109,10 @@ export default class Print extends Module {
     }
   }
 
+  /**
+   * Cleanup print-only DOM and restore table display.
+   * @returns {void}
+   */
   cleanup() {
     document.body.classList.remove('tabulator-print-fullscreen-hide')
 
@@ -91,6 +122,13 @@ export default class Print extends Module {
     }
   }
 
+  /**
+   * Print the table in fullscreen print mode.
+   * @param {string} [visible] Row range to print.
+   * @param {boolean} [style] Include print styling.
+   * @param {object} [config] Print config override.
+   * @returns {void}
+   */
   printFullscreen(visible, style, config) {
     const { printConfig, printStyled, printRowRange, printHeader, printFooter, printFormatter } = this.table.options
     const scrollX = window.scrollX

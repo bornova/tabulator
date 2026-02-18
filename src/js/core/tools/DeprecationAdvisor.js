@@ -1,16 +1,30 @@
 import CoreFeature from '../CoreFeature.js'
 
 export default class DeprecationAdvisor extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
   }
 
+  /**
+   * Warn in debug mode when deprecation warnings are enabled.
+   * @returns {void}
+   */
   _warnUser() {
     if (this.options('debugDeprecation')) {
       console.warn(...arguments)
     }
   }
 
+  /**
+   * Check an old option and optionally map it to a replacement.
+   * @param {string} oldOption Deprecated option key.
+   * @param {string} [newOption] Replacement option key.
+   * @param {boolean} [convert] Copy old option value to new option.
+   * @returns {boolean}
+   */
   check(oldOption, newOption, convert) {
     let msg = ''
 
@@ -34,6 +48,12 @@ export default class DeprecationAdvisor extends CoreFeature {
     }
   }
 
+  /**
+   * Check an old option and emit a custom deprecation message.
+   * @param {string} oldOption Deprecated option key.
+   * @param {string} msg Additional warning message.
+   * @returns {boolean}
+   */
   checkMsg(oldOption, msg) {
     if (typeof this.options(oldOption) !== 'undefined') {
       this._warnUser(
@@ -49,6 +69,11 @@ export default class DeprecationAdvisor extends CoreFeature {
     }
   }
 
+  /**
+   * Emit a deprecation message in debug mode.
+   * @param {string} msg Warning message.
+   * @returns {void}
+   */
   msg(msg) {
     this._warnUser(msg)
   }

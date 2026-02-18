@@ -1,3 +1,12 @@
+/**
+ * Format datetime differences using luxon.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component.
+ * @param {{inputFormat?: string, invalidPlaceholder?: *|function(*): *, suffix?: string|boolean, unit?: string, humanize?: boolean, date?: *}} formatterParams Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {*} Formatted datetime difference.
+ */
 export default function (cell, formatterParams, onRendered) {
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const inputFormat = formatterParams.inputFormat || 'yyyy-MM-dd HH:mm:ss'

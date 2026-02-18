@@ -1,4 +1,8 @@
 export default class GridCalculator {
+  /**
+   * @param {number} columns Initial column count.
+   * @param {number} rows Initial row count.
+   */
   constructor(columns, rows) {
     this.columnCount = columns
     this.rowCount = rows
@@ -8,6 +12,11 @@ export default class GridCalculator {
     this.rows = []
   }
 
+  /**
+   * Generate spreadsheet column refs (A, B, ...).
+   * @param {Array<Array<*>>} data Sheet data.
+   * @returns {Array<string>}
+   */
   genColumns(data) {
     const maxDataColumns = Math.max(...data.map((item) => item.length))
     const colCount = Math.max(this.columnCount, maxDataColumns)
@@ -23,6 +32,11 @@ export default class GridCalculator {
     return this.columns
   }
 
+  /**
+   * Generate spreadsheet row refs.
+   * @param {Array<Array<*>>} data Sheet data.
+   * @returns {Array<number>}
+   */
   genRows(data) {
     const rowCount = Math.max(this.rowCount, data.length)
 
@@ -31,6 +45,11 @@ export default class GridCalculator {
     return this.rows
   }
 
+  /**
+   * Increment alphabetic column token.
+   * @param {number} i Token index.
+   * @returns {void}
+   */
   incrementChar(i) {
     const currentChar = this.columnString[i]
 
@@ -53,10 +72,20 @@ export default class GridCalculator {
     }
   }
 
+  /**
+   * Set row count.
+   * @param {number} count Row count.
+   * @returns {void}
+   */
   setRowCount(count) {
     this.rowCount = count
   }
 
+  /**
+   * Set column count.
+   * @param {number} count Column count.
+   * @returns {void}
+   */
   setColumnCount(count) {
     this.columnCount = count
   }

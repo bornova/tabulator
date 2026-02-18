@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class Popup extends Module {
   static moduleName = 'popup'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -30,6 +33,10 @@ export default class Popup extends Module {
     this.registerComponentFunction('group', 'popup', this._componentPopupCall.bind(this))
   }
 
+  /**
+   * Initialize popup watchers for rows, groups, and columns.
+   * @returns {void}
+   */
   initialize() {
     this.initializeRowWatchers()
     this.initializeGroupWatchers()
@@ -37,10 +44,21 @@ export default class Popup extends Module {
     this.subscribe('column-init', this.initializeColumn.bind(this))
   }
 
+  /**
+   * Invoke popup from component function API.
+   * @param {object} component Component instance.
+   * @param {*} contents Popup contents.
+   * @param {string} [position] Popup position.
+   * @returns {void}
+   */
   _componentPopupCall(component, contents, position) {
     this.loadPopupEvent(contents, null, component, position)
   }
 
+  /**
+   * Initialize row popup watchers.
+   * @returns {void}
+   */
   initializeRowWatchers() {
     if (this.table.options.rowContextPopup) {
       this.subscribe('row-contextmenu', this.loadPopupEvent.bind(this, this.table.options.rowContextPopup))
@@ -56,6 +74,10 @@ export default class Popup extends Module {
     }
   }
 
+  /**
+   * Initialize group popup watchers.
+   * @returns {void}
+   */
   initializeGroupWatchers() {
     if (this.table.options.groupContextPopup) {
       this.subscribe('group-contextmenu', this.loadPopupEvent.bind(this, this.table.options.groupContextPopup))
@@ -71,6 +93,11 @@ export default class Popup extends Module {
     }
   }
 
+  /**
+   * Initialize column and cell popup behavior.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const def = column.definition
 
@@ -112,6 +139,11 @@ export default class Popup extends Module {
     }
   }
 
+  /**
+   * Initialize header popup button for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumnHeaderPopup(column) {
     let icon = column.definition.headerPopupIcon
     const headerPopupEl = document.createElement('span')
@@ -141,6 +173,13 @@ export default class Popup extends Module {
     column.titleElement.insertBefore(headerPopupEl, column.titleElement.firstChild)
   }
 
+  /**
+   * Handle table cell popup event.
+   * @param {string} option Column option key.
+   * @param {Event} e Event object.
+   * @param {object} cell Cell component/internal cell.
+   * @returns {void}
+   */
   loadPopupTableCellEvent(option, e, cell) {
     if (cell._cell) {
       cell = cell._cell
@@ -151,6 +190,13 @@ export default class Popup extends Module {
     }
   }
 
+  /**
+   * Handle table column popup event.
+   * @param {string} option Column option key.
+   * @param {Event} e Event object.
+   * @param {object} column Column component/internal column.
+   * @returns {void}
+   */
   loadPopupTableColumnEvent(option, e, column) {
     if (column._column) {
       column = column._column
@@ -161,6 +207,14 @@ export default class Popup extends Module {
     }
   }
 
+  /**
+   * Resolve popup content and dispatch popup loading.
+   * @param {*} contents Popup content or resolver.
+   * @param {Event} e Event object.
+   * @param {object} component Internal component.
+   * @param {string} [position] Popup position.
+   * @returns {void}
+   */
   loadPopupEvent(contents, e, component, position) {
     let renderedCallback
 
@@ -181,6 +235,15 @@ export default class Popup extends Module {
     this.loadPopup(e, component, contents, renderedCallback, position)
   }
 
+  /**
+   * Render and show popup UI.
+   * @param {Event} e Event object.
+   * @param {object} component Internal component.
+   * @param {*} contents Popup contents.
+   * @param {Function} [renderedCallback] Optional render callback.
+   * @param {string} [position] Popup position.
+   * @returns {void}
+   */
   loadPopup(e, component, contents, renderedCallback, position) {
     const touch = !(e instanceof MouseEvent)
     let contentsEl

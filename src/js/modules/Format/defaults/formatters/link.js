@@ -1,5 +1,14 @@
 import Helpers from '../../../../core/tools/Helpers.js'
 
+/**
+ * Render a hyperlink from the cell value.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component.
+ * @param {Object} formatterParams Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {HTMLAnchorElement|string} Anchor element or non-breaking space.
+ */
 export default function (cell, formatterParams, onRendered) {
   let value = cell.getValue()
   const urlPrefix = formatterParams.urlPrefix || ''

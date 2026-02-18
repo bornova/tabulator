@@ -8,6 +8,9 @@ export default class Sort extends Module {
   // load defaults
   static sorters = defaultSorters
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -30,6 +33,10 @@ export default class Sort extends Module {
     this.registerColumnOption('headerSortTristate')
   }
 
+  /**
+   * Initialize sorting handlers and table APIs.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('column-layout', this.initializeColumn.bind(this))
     this.subscribe('table-built', this.tableBuilt.bind(this))
@@ -44,12 +51,24 @@ export default class Sort extends Module {
     }
   }
 
+  /**
+   * Apply initial sort after table build.
+   * @returns {void}
+   */
   tableBuilt() {
     if (this.table.options.initialSort) {
       this.setSort(this.table.options.initialSort)
     }
   }
 
+  /**
+   * Inject sort params for remote sort mode.
+   * @param {*} data Data source descriptor.
+   * @param {object} config Request config.
+   * @param {boolean} silent Silent flag.
+   * @param {object} params Request params.
+   * @returns {object}
+   */
   remoteSortParams(data, config, silent, params) {
     const sorters = this.getSort()
 
@@ -66,12 +85,22 @@ export default class Sort extends Module {
   /// ////// Table Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * User-facing sort setter.
+   * @param {*} sortList Sort descriptor(s).
+   * @param {string} [dir] Sort direction.
+   * @returns {void}
+   */
   userSetSort(sortList, dir) {
     this.setSort(sortList, dir)
     // this.table.rowManager.sorterRefresh();
     this.refreshSort()
   }
 
+  /**
+   * Clear all sorting and refresh data.
+   * @returns {void}
+   */
   clearSort() {
     this.clear()
     // this.table.rowManager.sorterRefresh();
@@ -82,7 +111,11 @@ export default class Sort extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
-  // initialize column header for sorting
+  /**
+   * Initialize sort metadata and click handlers for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     let sorter = false
     let colEl
@@ -228,6 +261,10 @@ export default class Sort extends Module {
     }
   }
 
+  /**
+   * Refresh data after sort changes.
+   * @returns {void}
+   */
   refreshSort() {
     const left = this.table.rowManager.scrollLeft
 
@@ -243,21 +280,32 @@ export default class Sort extends Module {
     }
   }
 
-  // check if the sorters have changed since last use
+  /**
+   * Check if sort config changed since last read.
+   * @returns {boolean}
+   */
   hasChanged() {
     const changed = this.changed
     this.changed = false
     return changed
   }
 
-  // return current sorters
+  /**
+   * Return current sorter list in public format.
+   * @returns {Array<object>}
+   */
   getSort() {
     return this.sortList
       .filter((item) => item.column)
       .map((item) => ({ column: item.column.getComponent(), field: item.column.getField(), dir: item.dir }))
   }
 
-  // change sort list and trigger sort
+  /**
+   * Set internal sort list.
+   * @param {*} sortList Sort descriptor(s).
+   * @param {string} [dir] Sort direction.
+   * @returns {void}
+   */
   setSort(sortList, dir) {
     const newSortList = []
 
@@ -282,12 +330,19 @@ export default class Sort extends Module {
     this.dispatch('sort-changed')
   }
 
-  // clear sorters
+  /**
+   * Clear internal sort list.
+   * @returns {void}
+   */
   clear() {
     this.setSort([])
   }
 
-  // find appropriate sorter for column
+  /**
+   * Infer a sorter for a column based on row data values.
+   * @param {object} column Internal column.
+   * @returns {Function}
+   */
   findSorter(column) {
     let row = this.table.rowManager.activeRows[0]
     let sorter = 'string'
@@ -326,7 +381,12 @@ export default class Sort extends Module {
     return Sort.sorters[sorter]
   }
 
-  // work through sort list sorting data
+  /**
+   * Sort row data using current sorter list.
+   * @param {Array<object>} data Row data array.
+   * @param {boolean} [sortOnly] Skip header updates when true.
+   * @returns {Array<object>}
+   */
   sort(data, sortOnly) {
     const sortList = this.table.options.sortOrderReverse ? this.sortList.slice().reverse() : this.sortList
     const sortListActual = []
@@ -389,7 +449,10 @@ export default class Sort extends Module {
     return data
   }
 
-  // clear sort arrows on columns
+  /**
+   * Clear sort state and icons on all columns.
+   * @returns {void}
+   */
   clearColumnHeaders() {
     this.table.columnManager.getRealColumns().forEach((column) => {
       if (column.modules.sort) {
@@ -400,13 +463,24 @@ export default class Sort extends Module {
     })
   }
 
-  // set the column header sort direction
+  /**
+   * Set header sort direction for a column.
+   * @param {object} column Internal column.
+   * @param {string} dir Sort direction.
+   * @returns {void}
+   */
   setColumnHeader(column, dir) {
     column.modules.sort.dir = dir
     column.getElement().setAttribute('aria-sort', dir === 'asc' ? 'ascending' : 'descending')
     this.setColumnHeaderSortIcon(column, dir)
   }
 
+  /**
+   * Render/refresh sort icon for a column.
+   * @param {object} column Internal column.
+   * @param {string} dir Sort direction.
+   * @returns {void}
+   */
   setColumnHeaderSortIcon(column, dir) {
     const sortEl = column.modules.sort.element
     let arrowEl
@@ -424,7 +498,12 @@ export default class Sort extends Module {
     }
   }
 
-  // sort each item in sort list
+  /**
+   * Sort row list using prepared sorters.
+   * @param {Array<object>} data Rows.
+   * @param {Array<object>} sortList Prepared sort config.
+   * @returns {void}
+   */
   _sortItems(data, sortList) {
     const sorterCount = sortList.length - 1
 
@@ -445,7 +524,15 @@ export default class Sort extends Module {
     })
   }
 
-  // process individual rows for a sort function on active data
+  /**
+   * Compare two rows using a column sorter.
+   * @param {object} a Row A.
+   * @param {object} b Row B.
+   * @param {object} column Internal column.
+   * @param {string} dir Sort direction.
+   * @param {*} params Sorter params.
+   * @returns {number}
+   */
   _sortRow(a, b, column, dir, params) {
     let el1Comp, el2Comp
 

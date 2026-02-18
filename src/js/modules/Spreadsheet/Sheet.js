@@ -3,6 +3,10 @@ import GridCalculator from './GridCalculator'
 import SheetComponent from './SheetComponent'
 
 export default class Sheet extends CoreFeature {
+  /**
+   * @param {object} spreadsheetManager Spreadsheet manager.
+   * @param {object} definition Sheet definition.
+   */
   constructor(spreadsheetManager, definition) {
     super(spreadsheetManager.table)
 
@@ -40,17 +44,29 @@ export default class Sheet extends CoreFeature {
   /// ////// Initialization //////////
   /// ////////////////////////////////
 
+  /**
+   * Initialize sheet element, columns, and rows.
+   * @returns {void}
+   */
   initialize() {
     this.initializeElement()
     this.initializeColumns()
     this.initializeRows()
   }
 
+  /**
+   * Reinitialize generated columns and rows.
+   * @returns {void}
+   */
   reinitialize() {
     this.initializeColumns()
     this.initializeRows()
   }
 
+  /**
+   * Create tab element for this sheet.
+   * @returns {void}
+   */
   initializeElement() {
     this.element = document.createElement('div')
     this.element.classList.add('tabulator-spreadsheet-tab')
@@ -61,6 +77,10 @@ export default class Sheet extends CoreFeature {
     })
   }
 
+  /**
+   * Generate column field references and defs.
+   * @returns {void}
+   */
   initializeColumns() {
     this.grid.setColumnCount(this.columnCount)
     this.columnFields = this.grid.genColumns(this.data)
@@ -72,6 +92,10 @@ export default class Sheet extends CoreFeature {
     }))
   }
 
+  /**
+   * Generate row defs from grid and data.
+   * @returns {void}
+   */
   initializeRows() {
     this.grid.setRowCount(this.rowCount)
 
@@ -95,6 +119,10 @@ export default class Sheet extends CoreFeature {
     })
   }
 
+  /**
+   * Unload active sheet state.
+   * @returns {void}
+   */
   unload() {
     this.isActive = false
     this.scrollTop = this.table.rowManager.scrollTop
@@ -103,6 +131,10 @@ export default class Sheet extends CoreFeature {
     this.element.classList.remove('tabulator-spreadsheet-tab-active')
   }
 
+  /**
+   * Load sheet data/columns into table.
+   * @returns {void}
+   */
   load() {
     const wasInactive = !this.isActive
 
@@ -127,10 +159,18 @@ export default class Sheet extends CoreFeature {
   /// ///// Helper Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * Get sheet component wrapper.
+   * @returns {SheetComponent}
+   */
   getComponent() {
     return new SheetComponent(this)
   }
 
+  /**
+   * Get serialized sheet definition.
+   * @returns {object}
+   */
   getDefinition() {
     return {
       title: this.title,
@@ -141,6 +181,11 @@ export default class Sheet extends CoreFeature {
     }
   }
 
+  /**
+   * Get sheet data array.
+   * @param {boolean} [full] Return full grid output.
+   * @returns {Array<Array<*>>}
+   */
   getData(full) {
     let output
     let rowWidths
@@ -164,6 +209,11 @@ export default class Sheet extends CoreFeature {
     return output
   }
 
+  /**
+   * Set sheet data and refresh active view.
+   * @param {Array<Array<*>>} data Sheet data.
+   * @returns {void}
+   */
   setData(data) {
     this.data = data
     this.reinitialize()
@@ -175,10 +225,19 @@ export default class Sheet extends CoreFeature {
     }
   }
 
+  /**
+   * Clear all sheet data.
+   * @returns {void}
+   */
   clear() {
     this.setData([])
   }
 
+  /**
+   * Set sheet title.
+   * @param {string} title Sheet title.
+   * @returns {void}
+   */
   setTitle(title) {
     this.title = title
     this.element.innerText = title
@@ -186,6 +245,11 @@ export default class Sheet extends CoreFeature {
     this.dispatchExternal('sheetUpdated', this.getComponent())
   }
 
+  /**
+   * Set sheet row count.
+   * @param {number} rows Row count.
+   * @returns {void}
+   */
   setRows(rows) {
     this.rowCount = rows
     this.initializeRows()
@@ -197,6 +261,11 @@ export default class Sheet extends CoreFeature {
     }
   }
 
+  /**
+   * Set sheet column count.
+   * @param {number} columns Column count.
+   * @returns {void}
+   */
   setColumns(columns) {
     this.columnCount = columns
     this.reinitialize()
@@ -208,10 +277,18 @@ export default class Sheet extends CoreFeature {
     }
   }
 
+  /**
+   * Remove sheet via manager.
+   * @returns {void}
+   */
   remove() {
     this.spreadsheetManager.removeSheet(this)
   }
 
+  /**
+   * Destroy sheet element and emit removal event.
+   * @returns {void}
+   */
   destroy() {
     if (this.element.parentNode) {
       this.element.parentNode.removeChild(this.element)
@@ -220,6 +297,10 @@ export default class Sheet extends CoreFeature {
     this.dispatchExternal('sheetRemoved', this.getComponent())
   }
 
+  /**
+   * Activate this sheet.
+   * @returns {void}
+   */
   active() {
     this.spreadsheetManager.loadSheet(this)
   }

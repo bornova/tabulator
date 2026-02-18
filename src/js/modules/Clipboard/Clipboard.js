@@ -12,6 +12,9 @@ export default class Clipboard extends Module {
   static pasteActions = defaultPasteActions
   static pasteParsers = defaultPasteParsers
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -34,6 +37,10 @@ export default class Clipboard extends Module {
     this.registerColumnOption('titleClipboard')
   }
 
+  /**
+   * Initialize clipboard copy/paste behavior and table APIs.
+   * @returns {void}
+   */
   initialize() {
     this.mode = this.table.options.clipboard
 
@@ -100,11 +107,20 @@ export default class Clipboard extends Module {
     this.registerTableFunction('copyToClipboard', this.copy.bind(this))
   }
 
+  /**
+   * Reset clipboard transient state.
+   * @returns {void}
+   */
   reset() {
     this.blocked = true
     this.customSelection = false
   }
 
+  /**
+   * Generate plain text clipboard output from export rows.
+   * @param {Array<object>} list Export rows.
+   * @returns {string}
+   */
   generatePlainContent(list) {
     const output = []
 
@@ -146,6 +162,12 @@ export default class Clipboard extends Module {
     return output.join('\n')
   }
 
+  /**
+   * Copy table content to clipboard.
+   * @param {string|Function} [range] Row range selector.
+   * @param {boolean} [internal] Preserve user selection if present.
+   * @returns {void}
+   */
   copy(range, internal) {
     let sel, textRange
     this.blocked = false
@@ -180,6 +202,11 @@ export default class Clipboard extends Module {
   }
 
   // PASTE EVENT HANDLING
+  /**
+   * Configure paste action handler.
+   * @param {string|Function} action Paste action key or function.
+   * @returns {void}
+   */
   setPasteAction(action) {
     if (typeof action === 'function') {
       this.pasteAction = action
@@ -195,6 +222,11 @@ export default class Clipboard extends Module {
     }
   }
 
+  /**
+   * Configure paste parser handler.
+   * @param {string|Function} parser Paste parser key or function.
+   * @returns {void}
+   */
   setPasteParser(parser) {
     if (typeof parser === 'function') {
       this.pasteParser = parser
@@ -210,6 +242,11 @@ export default class Clipboard extends Module {
     }
   }
 
+  /**
+   * Handle paste event, parse data, and dispatch action.
+   * @param {ClipboardEvent} e Paste event.
+   * @returns {void}
+   */
   paste(e) {
     let data, rowData, rows
 
@@ -234,6 +271,11 @@ export default class Clipboard extends Module {
     }
   }
 
+  /**
+   * Apply clipboard mutators to parsed row data.
+   * @param {*} data Parsed clipboard data.
+   * @returns {*}
+   */
   mutateData(data) {
     if (Array.isArray(data)) {
       return data.map((row) => this.table.modules.mutator.transformRow(row, 'clipboard'))
@@ -242,11 +284,21 @@ export default class Clipboard extends Module {
     return data
   }
 
+  /**
+   * Verify paste originated from an allowed target.
+   * @param {ClipboardEvent} e Paste event.
+   * @returns {boolean}
+   */
   checkPasteOrigin(e) {
     const blocked = this.confirm('clipboard-paste', [e])
     return !(blocked || !['DIV', 'SPAN'].includes(e.target.tagName))
   }
 
+  /**
+   * Extract plain text data from clipboard event.
+   * @param {ClipboardEvent} e Clipboard event.
+   * @returns {string|undefined}
+   */
   getPasteData(e) {
     let data
 

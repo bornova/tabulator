@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class Menu extends Module {
   static moduleName = 'menu'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -33,6 +36,10 @@ export default class Menu extends Module {
     this.registerColumnOption('dblClickMenu')
   }
 
+  /**
+   * Initialize menu watchers for rows, groups, and columns.
+   * @returns {void}
+   */
   initialize() {
     this.deprecatedOptionsCheck()
     this.initializeRowWatchers()
@@ -41,12 +48,20 @@ export default class Menu extends Module {
     this.subscribe('column-init', this.initializeColumn.bind(this))
   }
 
+  /**
+   * Check deprecated menu options.
+   * @returns {void}
+   */
   deprecatedOptionsCheck() {
     // if(!this.deprecationCheck("menuContainer", "popupContainer")){
     // 	this.table.options.popupContainer = this.table.options.menuContainer;
     // }
   }
 
+  /**
+   * Initialize row-level menu subscriptions.
+   * @returns {void}
+   */
   initializeRowWatchers() {
     if (this.table.options.rowContextMenu) {
       this.subscribe('row-contextmenu', this.loadMenuEvent.bind(this, this.table.options.rowContextMenu))
@@ -62,6 +77,10 @@ export default class Menu extends Module {
     }
   }
 
+  /**
+   * Initialize group-level menu subscriptions.
+   * @returns {void}
+   */
   initializeGroupWatchers() {
     if (this.table.options.groupContextMenu) {
       this.subscribe('group-contextmenu', this.loadMenuEvent.bind(this, this.table.options.groupContextMenu))
@@ -77,6 +96,11 @@ export default class Menu extends Module {
     }
   }
 
+  /**
+   * Initialize column and cell menu interactions.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const def = column.definition
 
@@ -119,6 +143,11 @@ export default class Menu extends Module {
     }
   }
 
+  /**
+   * Initialize static header-menu button for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumnHeaderMenu(column) {
     let icon = column.definition.headerMenuIcon
     const headerMenuEl = document.createElement('span')
@@ -148,6 +177,13 @@ export default class Menu extends Module {
     column.titleElement.insertBefore(headerMenuEl, column.titleElement.firstChild)
   }
 
+  /**
+   * Handle table cell menu events.
+   * @param {string} option Column option key.
+   * @param {Event} e Event object.
+   * @param {object} cell Internal/public cell.
+   * @returns {void}
+   */
   loadMenuTableCellEvent(option, e, cell) {
     if (cell._cell) {
       cell = cell._cell
@@ -158,6 +194,13 @@ export default class Menu extends Module {
     }
   }
 
+  /**
+   * Handle table column menu events.
+   * @param {string} option Column option key.
+   * @param {Event} e Event object.
+   * @param {object} column Internal/public column.
+   * @returns {void}
+   */
   loadMenuTableColumnEvent(option, e, column) {
     if (column._column) {
       column = column._column
@@ -168,6 +211,13 @@ export default class Menu extends Module {
     }
   }
 
+  /**
+   * Resolve menu content and dispatch menu loading.
+   * @param {*} menu Menu definition or resolver.
+   * @param {Event} e Event object.
+   * @param {object} component Internal component.
+   * @returns {void}
+   */
   loadMenuEvent(menu, e, component) {
     if (component._group) {
       component = component._group
@@ -181,6 +231,15 @@ export default class Menu extends Module {
     this.loadMenu(e, component, menu)
   }
 
+  /**
+   * Build and show a popup menu.
+   * @param {Event} e Trigger event.
+   * @param {object} component Internal component.
+   * @param {Array<object>} menu Menu item definitions.
+   * @param {HTMLElement} [parentEl] Parent menu item element.
+   * @param {object} [parentPopup] Parent popup instance.
+   * @returns {void}
+   */
   loadMenu(e, component, menu, parentEl, parentPopup) {
     const touch = !(e instanceof MouseEvent)
     const componentRef = component.getComponent()

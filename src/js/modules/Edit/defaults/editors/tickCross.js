@@ -1,4 +1,13 @@
 // checkbox
+/**
+ * Checkbox/tick-cross editor with optional tristate mode.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} editorParams Editor params.
+ * @returns {HTMLInputElement}
+ */
 export default function (cell, onRendered, success, cancel, editorParams) {
   const value = cell.getValue()
   const input = document.createElement('input')

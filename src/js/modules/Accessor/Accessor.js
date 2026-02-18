@@ -9,6 +9,9 @@ export default class Accessor extends Module {
   // load defaults
   static accessors = defaultAccessors
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -28,12 +31,21 @@ export default class Accessor extends Module {
     this.registerColumnOption('accessorHtmlOutputParams')
   }
 
+  /**
+   * Initialize accessor subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('column-layout', this.initializeColumn.bind(this))
     this.subscribe('row-data-retrieve', this.transformRow.bind(this))
   }
 
   // initialize column accessor
+  /**
+   * Build per-column accessor config.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     let match = false
     const config = {}
@@ -61,6 +73,11 @@ export default class Accessor extends Module {
     }
   }
 
+  /**
+   * Resolve accessor definition to function.
+   * @param {string|Function} value Accessor definition.
+   * @returns {Function|boolean}
+   */
   lookupAccessor(value) {
     if (typeof value === 'function') {
       return value
@@ -80,6 +97,12 @@ export default class Accessor extends Module {
   }
 
   // apply accessor to row
+  /**
+   * Apply accessors to row data for a given retrieval type.
+   * @param {object} row Internal row.
+   * @param {string} type Accessor type.
+   * @returns {object}
+   */
   transformRow(row, type) {
     const key = `accessor${type.charAt(0).toUpperCase() + type.slice(1)}`
     const rowComponent = row.getComponent()

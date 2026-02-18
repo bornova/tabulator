@@ -1,3 +1,8 @@
+/**
+ * Optional module export bundle.
+ *
+ * @module core/modules/optional
+ */
 export { default as AccessorModule } from '../../modules/Accessor/Accessor.js'
 export { default as AjaxModule } from '../../modules/Ajax/Ajax.js'
 export { default as ClipboardModule } from '../../modules/Clipboard/Clipboard.js'

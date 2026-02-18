@@ -1,4 +1,16 @@
 // sort alpha numeric strings
+/**
+ * Sort alpha-numeric values.
+ *
+ * @param {*} as First value.
+ * @param {*} bs Second value.
+ * @param {Object} aRow First row.
+ * @param {Object} bRow Second row.
+ * @param {Object} column Column definition.
+ * @param {string} dir Sort direction.
+ * @param {{alignEmptyValues?: string}} params Sort parameters.
+ * @returns {number} Sort result.
+ */
 export default function (as, bs, aRow, bRow, column, dir, params) {
   let a
   let b

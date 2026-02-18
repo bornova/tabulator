@@ -1,4 +1,9 @@
 export default class ExternalEventBus {
+  /**
+   * @param {object} table Tabulator table instance.
+   * @param {object} [optionsList] Optional event options map.
+   * @param {boolean|Array<string>} [debug] Debug mode or debug event list.
+   */
   constructor(table, optionsList, debug) {
     this.table = table
     this.events = {}
@@ -9,6 +14,12 @@ export default class ExternalEventBus {
     this.debug = debug
   }
 
+  /**
+   * Register a callback notified when subscription state changes for an event.
+   * @param {string} key Event key.
+   * @param {Function} callback Subscription change callback.
+   * @returns {void}
+   */
   subscriptionChange(key, callback) {
     if (!this.subscriptionNotifiers[key]) {
       this.subscriptionNotifiers[key] = []
@@ -21,6 +32,12 @@ export default class ExternalEventBus {
     }
   }
 
+  /**
+   * Subscribe to an external event.
+   * @param {string} key Event key.
+   * @param {Function} callback Event callback.
+   * @returns {void}
+   */
   subscribe(key, callback) {
     if (!this.events[key]) {
       this.events[key] = []
@@ -31,6 +48,12 @@ export default class ExternalEventBus {
     this._notifySubscriptionChange(key, true)
   }
 
+  /**
+   * Unsubscribe from an external event.
+   * @param {string} key Event key.
+   * @param {Function} [callback] Specific callback to remove; omit to remove all.
+   * @returns {void}
+   */
   unsubscribe(key, callback) {
     let index
 
@@ -57,10 +80,21 @@ export default class ExternalEventBus {
     this._notifySubscriptionChange(key, false)
   }
 
+  /**
+   * Check if an event has subscribers.
+   * @param {string} key Event key.
+   * @returns {number|boolean}
+   */
   subscribed(key) {
     return this.events[key] && this.events[key].length
   }
 
+  /**
+   * Notify subscription state change listeners.
+   * @param {string} key Event key.
+   * @param {boolean} subscribed Current subscription state.
+   * @returns {void}
+   */
   _notifySubscriptionChange(key, subscribed) {
     const notifiers = this.subscriptionNotifiers[key]
 
@@ -71,6 +105,10 @@ export default class ExternalEventBus {
     }
   }
 
+  /**
+   * Dispatch an external event.
+   * @returns {*}
+   */
   _dispatch() {
     const args = Array.from(arguments)
     const key = args.shift()
@@ -89,6 +127,10 @@ export default class ExternalEventBus {
     return result
   }
 
+  /**
+   * Dispatch with optional debug logging.
+   * @returns {*}
+   */
   _debugDispatch() {
     const args = Array.from(arguments)
     const key = args[0]

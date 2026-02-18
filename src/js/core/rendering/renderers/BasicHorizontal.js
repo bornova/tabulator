@@ -1,6 +1,12 @@
 import Renderer from '../Renderer.js'
 
 export default class BasicHorizontal extends Renderer {
+  /**
+   * Render all cells for a row into the row element.
+   * @param {object} row Internal row instance.
+   * @param {boolean} [inFragment] True when rendering inside a detached fragment.
+   * @returns {void}
+   */
   renderRowCells(row, inFragment) {
     const rowFrag = document.createDocumentFragment()
     row.cells.forEach((cell) => {
@@ -15,6 +21,11 @@ export default class BasicHorizontal extends Renderer {
     }
   }
 
+  /**
+   * Reinitialize widths for a set of columns.
+   * @param {Array<object>} columns Internal column instances.
+   * @returns {void}
+   */
   reinitializeColumnWidths(columns) {
     columns.forEach((column) => {
       column.reinitializeWidth()

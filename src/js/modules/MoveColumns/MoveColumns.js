@@ -4,6 +4,9 @@ import Helpers from '../../core/tools/Helpers.js'
 export default class MoveColumns extends Module {
   static moduleName = 'moveColumn'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -26,6 +29,10 @@ export default class MoveColumns extends Module {
     this.registerTableOption('movableColumns', false) // enable movable columns
   }
 
+  /**
+   * Create placeholder column element used during drag.
+   * @returns {HTMLDivElement}
+   */
   createPlaceholderElement() {
     const el = document.createElement('div')
 
@@ -35,6 +42,10 @@ export default class MoveColumns extends Module {
     return el
   }
 
+  /**
+   * Initialize move-column subscriptions.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.movableColumns) {
       this.subscribe('column-init', this.initializeColumn.bind(this))
@@ -42,10 +53,19 @@ export default class MoveColumns extends Module {
     }
   }
 
+  /**
+   * Abort pending drag-start timeout.
+   * @returns {void}
+   */
   abortMove() {
     clearTimeout(this.checkTimeout)
   }
 
+  /**
+   * Initialize move handlers for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const config = {}
     let colEl
@@ -97,6 +117,11 @@ export default class MoveColumns extends Module {
     column.modules.moveColumn = config
   }
 
+  /**
+   * Bind touch move handlers for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   bindTouchEvents(column) {
     const colEl = column.getElement()
     let startXMove = false // shifting center position of the cell
@@ -187,6 +212,12 @@ export default class MoveColumns extends Module {
     })
   }
 
+  /**
+   * Start moving a column.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   startMove(e, column) {
     const element = column.getElement()
     const headerElement = this.table.columnManager.getContentsElement()
@@ -232,6 +263,10 @@ export default class MoveColumns extends Module {
     this.dispatch('column-moving', e, this.moving)
   }
 
+  /**
+   * Bind mousemove listeners for all columns during drag.
+   * @returns {void}
+   */
   _bindMouseMove() {
     this.table.columnManager.columnsByIndex.forEach((column) => {
       if (column.modules.moveColumn.mousemove) {
@@ -240,6 +275,10 @@ export default class MoveColumns extends Module {
     })
   }
 
+  /**
+   * Unbind mousemove listeners for all columns after drag.
+   * @returns {void}
+   */
   _unbindMouseMove() {
     this.table.columnManager.columnsByIndex.forEach((column) => {
       if (column.modules.moveColumn.mousemove) {
@@ -248,6 +287,12 @@ export default class MoveColumns extends Module {
     })
   }
 
+  /**
+   * Update current target column and reposition moving cells.
+   * @param {object} column Target column.
+   * @param {boolean} after Insert-after flag.
+   * @returns {void}
+   */
   moveColumn(column, after) {
     const movingCells = this.moving.getCells()
 
@@ -264,6 +309,11 @@ export default class MoveColumns extends Module {
     })
   }
 
+  /**
+   * Finalize column move operation.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @returns {void}
+   */
   endMove(e) {
     if (e.which === 1 || this.touchMove) {
       this._unbindMouseMove()
@@ -289,6 +339,11 @@ export default class MoveColumns extends Module {
     }
   }
 
+  /**
+   * Move hover element and trigger edge auto-scroll.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @returns {void}
+   */
   moveHover(e) {
     const columnHolder = this.table.columnManager.getContentsElement()
     const scrollLeft = columnHolder.scrollLeft

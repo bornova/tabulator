@@ -8,6 +8,9 @@ export default class Filter extends Module {
   // load defaults
   static filters = defaultFilters
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -57,6 +60,10 @@ export default class Filter extends Module {
     this.registerComponentFunction('column', 'setHeaderFilterValue', this.setHeaderFilterValue.bind(this))
   }
 
+  /**
+   * Initialize filter subscriptions and data handler.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('column-init', this.initializeColumnHeaderFilter.bind(this))
     this.subscribe('column-width-fit-before', this.hideHeaderFilterElements.bind(this))
@@ -71,6 +78,10 @@ export default class Filter extends Module {
     this.registerDataHandler(this.filter.bind(this), 10)
   }
 
+  /**
+   * Apply initial table and header filters once the table is built.
+   * @returns {void}
+   */
   tableBuilt() {
     if (this.table.options.initialFilter) {
       this.setFilter(this.table.options.initialFilter)
@@ -92,11 +103,24 @@ export default class Filter extends Module {
     this.tableInitialized = true
   }
 
+  /**
+   * Attach active filters to remote request params.
+   * @param {Array<object>} data Data payload.
+   * @param {object} config Request config.
+   * @param {boolean} silent Silent flag.
+   * @param {object} params Request params.
+   * @returns {object}
+   */
   remoteFilterParams(data, config, silent, params) {
     params.filter = this.getFilters(true, true)
     return params
   }
 
+  /**
+   * Generate header filter placeholder text.
+   * @param {string} text Default placeholder text.
+   * @returns {string|undefined}
+   */
   generatePlaceholder(text) {
     if (this.table.options.placeholderHeaderFilter && Object.keys(this.headerFilters).length) {
       return this.table.options.placeholderHeaderFilter
@@ -108,22 +132,47 @@ export default class Filter extends Module {
   /// ////////////////////////////////
 
   // set standard filters
+  /**
+   * Set table filters from the public API and refresh.
+   * @param {*} field Field, callback, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @param {object} [params] Filter params.
+   * @returns {void}
+   */
   userSetFilter(field, type, value, params) {
     this.setFilter(field, type, value, params)
     this.refreshFilter()
   }
 
   // set standard filters
+  /**
+   * Refresh active filters from the public API.
+   * @returns {void}
+   */
   userRefreshFilter() {
     this.refreshFilter()
   }
 
   // add filter to array
+  /**
+   * Add a filter from the public API and refresh.
+   * @param {*} field Field, callback, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @param {object} [params] Filter params.
+   * @returns {void}
+   */
   userAddFilter(field, type, value, params) {
     this.addFilter(field, type, value, params)
     this.refreshFilter()
   }
 
+  /**
+   * Focus a column header filter by field.
+   * @param {string} field Column field.
+   * @returns {boolean|void}
+   */
   userSetHeaderFilterFocus(field) {
     const column = this.table.columnManager.findColumn(field)
 
@@ -135,6 +184,11 @@ export default class Filter extends Module {
     }
   }
 
+  /**
+   * Get a column header filter value by field.
+   * @param {string} field Column field.
+   * @returns {*}
+   */
   userGetHeaderFilterValue(field) {
     const column = this.table.columnManager.findColumn(field)
 
@@ -145,6 +199,12 @@ export default class Filter extends Module {
     }
   }
 
+  /**
+   * Set a column header filter value by field.
+   * @param {string} field Column field.
+   * @param {*} value Filter value.
+   * @returns {boolean|void}
+   */
   userSetHeaderFilterValue(field, value) {
     const column = this.table.columnManager.findColumn(field)
 
@@ -157,29 +217,59 @@ export default class Filter extends Module {
   }
 
   // remove filter from array
+  /**
+   * Remove filters from the public API and refresh.
+   * @param {*} field Field, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @returns {void}
+   */
   userRemoveFilter(field, type, value) {
     this.removeFilter(field, type, value)
     this.refreshFilter()
   }
 
   // clear filters
+  /**
+   * Clear filters from the public API and refresh.
+   * @param {boolean} all Clear header filters as well.
+   * @returns {void}
+   */
   userClearFilter(all) {
     this.clearFilter(all)
     this.refreshFilter()
   }
 
   // clear header filters
+  /**
+   * Clear header filters from the public API and refresh.
+   * @returns {void}
+   */
   userClearHeaderFilter() {
     this.clearHeaderFilter()
     this.refreshFilter()
   }
 
   // search for specific row components
+  /**
+   * Search rows and return matching row components.
+   * @param {*} field Field, callback, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @returns {Array<object>}
+   */
   searchRows(field, type, value) {
     return this.search('rows', field, type, value)
   }
 
   // search for specific data
+  /**
+   * Search rows and return matching row data.
+   * @param {*} field Field, callback, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @returns {Array<object>}
+   */
   searchData(field, type, value) {
     return this.search('data', field, type, value)
   }
@@ -188,6 +278,11 @@ export default class Filter extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Initialize header filter support for a column when enabled.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumnHeaderFilter(column) {
     const def = column.definition
 
@@ -197,6 +292,12 @@ export default class Filter extends Module {
   }
 
   // initialize column header filter
+  /**
+   * Build column filter state and success handler.
+   * @param {object} column Internal column.
+   * @param {*} [value] Initial value.
+   * @returns {void}
+   */
   initializeColumn(column, value) {
     const field = column.getField()
 
@@ -304,6 +405,13 @@ export default class Filter extends Module {
     this.generateHeaderFilterElement(column)
   }
 
+  /**
+   * Generate and attach the header filter editor element.
+   * @param {object} column Internal column.
+   * @param {*} [initialValue] Initial filter value.
+   * @param {boolean} [reinitialize] Rebuild existing filter element.
+   * @returns {void}
+   */
   generateHeaderFilterElement(column, initialValue, reinitialize) {
     const success = column.modules.filter.success
     const field = column.getField()
@@ -533,6 +641,10 @@ export default class Filter extends Module {
   }
 
   // hide all header filter elements (used to ensure correct column widths in "fitData" layout mode)
+  /**
+   * Hide all header filter elements.
+   * @returns {void}
+   */
   hideHeaderFilterElements() {
     this.headerFilterColumns.forEach((column) => {
       if (column.modules.filter && column.modules.filter.headerElement) {
@@ -542,6 +654,10 @@ export default class Filter extends Module {
   }
 
   // show all header filter elements (used to ensure correct column widths in "fitData" layout mode)
+  /**
+   * Show all header filter elements.
+   * @returns {void}
+   */
   showHeaderFilterElements() {
     this.headerFilterColumns.forEach((column) => {
       if (column.modules.filter && column.modules.filter.headerElement) {
@@ -551,6 +667,11 @@ export default class Filter extends Module {
   }
 
   // programmatically set focus of header filter
+  /**
+   * Focus a column header filter element.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   setHeaderFilterFocus(column) {
     if (column.modules.filter && column.modules.filter.headerElement) {
       column.modules.filter.headerElement.focus()
@@ -560,6 +681,11 @@ export default class Filter extends Module {
   }
 
   // programmatically get value of header filter
+  /**
+   * Read a column header filter value.
+   * @param {object} column Internal column.
+   * @returns {*}
+   */
   getHeaderFilterValue(column) {
     if (column.modules.filter && column.modules.filter.headerElement) {
       return column.modules.filter.value
@@ -569,6 +695,12 @@ export default class Filter extends Module {
   }
 
   // programmatically set value of header filter
+  /**
+   * Set a column header filter value.
+   * @param {object} column Internal column.
+   * @param {*} value Filter value.
+   * @returns {void}
+   */
   setHeaderFilterValue(column, value) {
     if (column) {
       if (column.modules.filter && column.modules.filter.headerElement) {
@@ -580,6 +712,11 @@ export default class Filter extends Module {
     }
   }
 
+  /**
+   * Recreate a column header filter editor with its current value.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   reloadHeaderFilter(column) {
     if (column) {
       if (column.modules.filter && column.modules.filter.headerElement) {
@@ -590,6 +727,10 @@ export default class Filter extends Module {
     }
   }
 
+  /**
+   * Refresh table data after filter changes.
+   * @returns {void}
+   */
   refreshFilter() {
     const left = this.table.rowManager.scrollLeft
 
@@ -608,12 +749,20 @@ export default class Filter extends Module {
   }
 
   // check if the filters has changed since last use
+  /**
+   * Mark filters as changed and emit change event.
+   * @returns {void}
+   */
   trackChanges() {
     this.changed = true
     this.dispatch('filter-changed')
   }
 
   // check if the filters has changed since last use
+  /**
+   * Return and reset the changed flag.
+   * @returns {boolean}
+   */
   hasChanged() {
     const changed = this.changed
     this.changed = false
@@ -621,6 +770,14 @@ export default class Filter extends Module {
   }
 
   // set standard filters
+  /**
+   * Replace active filters.
+   * @param {*} field Field, callback, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @param {object} [params] Filter params.
+   * @returns {void}
+   */
   setFilter(field, type, value, params) {
     this.filterList = []
 
@@ -632,6 +789,14 @@ export default class Filter extends Module {
   }
 
   // add filter to array
+  /**
+   * Add filters to the active filter list.
+   * @param {*} field Field, callback, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @param {object} [params] Filter params.
+   * @returns {void}
+   */
   addFilter(field, type, value, params) {
     let changed = false
 
@@ -653,6 +818,11 @@ export default class Filter extends Module {
     }
   }
 
+  /**
+   * Normalize a filter descriptor into an executable filter.
+   * @param {*} filter Filter descriptor or group.
+   * @returns {object|Array<object>|boolean}
+   */
   findFilter(filter) {
     let column
 
@@ -689,6 +859,11 @@ export default class Filter extends Module {
     return filter.func ? filter : false
   }
 
+  /**
+   * Normalize nested OR-filter groups.
+   * @param {Array<object>} filters Nested filter descriptors.
+   * @returns {Array<object>|boolean}
+   */
   findSubFilters(filters) {
     const output = []
 
@@ -704,6 +879,12 @@ export default class Filter extends Module {
   }
 
   // get all filters
+  /**
+   * Return active filters in API format.
+   * @param {boolean} [all] Include header filters.
+   * @param {boolean} [ajax] Normalize function types for remote mode.
+   * @returns {Array<object>}
+   */
   getFilters(all, ajax) {
     let output = []
 
@@ -725,6 +906,12 @@ export default class Filter extends Module {
   }
 
   // filter to Object
+  /**
+   * Convert internal filter structures into plain objects.
+   * @param {Array<object>} filterList Filter list.
+   * @param {boolean} [ajax] Normalize function types for remote mode.
+   * @returns {Array<object>}
+   */
   filtersToArray(filterList, ajax) {
     const output = []
 
@@ -750,6 +937,10 @@ export default class Filter extends Module {
   }
 
   // get all filters
+  /**
+   * Return active header filters in API format.
+   * @returns {Array<object>}
+   */
   getHeaderFilters() {
     const output = []
 
@@ -761,6 +952,13 @@ export default class Filter extends Module {
   }
 
   // remove filter from array
+  /**
+   * Remove matching filters from the active list.
+   * @param {*} field Field, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @returns {void}
+   */
   removeFilter(field, type, value) {
     if (!Array.isArray(field)) {
       field = [{ field, type, value }]
@@ -790,6 +988,11 @@ export default class Filter extends Module {
   }
 
   // clear filters
+  /**
+   * Clear all standard filters and optionally header filters.
+   * @param {boolean} all Clear header filters as well.
+   * @returns {void}
+   */
   clearFilter(all) {
     this.filterList = []
 
@@ -801,6 +1004,10 @@ export default class Filter extends Module {
   }
 
   // clear header filters
+  /**
+   * Clear all header filters and reset header filter editors.
+   * @returns {void}
+   */
   clearHeaderFilter() {
     this.headerFilters = {}
     this.prevHeaderFilterChangeCheck = '{}'
@@ -817,6 +1024,14 @@ export default class Filter extends Module {
   }
 
   // search data and return matching rows
+  /**
+   * Search row data with temporary filter criteria.
+   * @param {'rows'|'data'} searchType Output type.
+   * @param {*} field Field, callback, filter object, or array.
+   * @param {*} type Filter type.
+   * @param {*} value Filter value.
+   * @returns {Array<object>}
+   */
   search(searchType, field, type, value) {
     const activeRows = []
     const filterList = []
@@ -851,6 +1066,12 @@ export default class Filter extends Module {
   }
 
   // filter row array
+  /**
+   * Filter row list using active standard and header filters.
+   * @param {Array<object>} rowList Candidate row list.
+   * @param {*} filters Unused legacy arg.
+   * @returns {Array<object>}
+   */
   filter(rowList, filters) {
     let activeRows = []
     const activeRowComponents = []
@@ -884,6 +1105,12 @@ export default class Filter extends Module {
   }
 
   // filter individual row
+  /**
+   * Check whether a single row matches active filters.
+   * @param {object} row Internal row.
+   * @param {*} filters Unused legacy arg.
+   * @returns {boolean}
+   */
   filterRow(row, filters) {
     let match = true
     const data = row.getData()
@@ -903,6 +1130,12 @@ export default class Filter extends Module {
     return match
   }
 
+  /**
+   * Evaluate a filter or nested filter group against row data.
+   * @param {object|Array<object>} filter Filter descriptor or OR-group.
+   * @param {object} data Row data.
+   * @returns {boolean}
+   */
   filterRecurse(filter, data) {
     let match = false
 

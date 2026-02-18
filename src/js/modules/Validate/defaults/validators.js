@@ -1,8 +1,25 @@
+/**
+ * Check whether a value is considered empty for validation.
+ * @param {*} value Value to check.
+ * @returns {boolean}
+ */
 const isEmptyValue = (value) => value === '' || value === null || typeof value === 'undefined'
+
+/**
+ * Alphanumeric validation regex.
+ * @type {RegExp}
+ */
 const alphaNumericPattern = /^[a-z0-9]+$/i
 
 export default {
   // is integer
+  /**
+   * Validate integer values.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Validator params.
+   * @returns {boolean}
+   */
   integer(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -14,6 +31,13 @@ export default {
   },
 
   // is float
+  /**
+   * Validate floating-point values.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Validator params.
+   * @returns {boolean}
+   */
   float(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -25,6 +49,13 @@ export default {
   },
 
   // must be a number
+  /**
+   * Validate numeric values.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Validator params.
+   * @returns {boolean}
+   */
   numeric(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -34,6 +65,13 @@ export default {
   },
 
   // must be a string
+  /**
+   * Validate non-numeric/string-like values.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Validator params.
+   * @returns {boolean}
+   */
   string(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -43,6 +81,13 @@ export default {
   },
 
   // must be alphanumeric
+  /**
+   * Validate alphanumeric values.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Validator params.
+   * @returns {boolean}
+   */
   alphanumeric(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -52,6 +97,13 @@ export default {
   },
 
   // maximum value
+  /**
+   * Validate value does not exceed max.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {number} parameters Max value.
+   * @returns {boolean}
+   */
   max(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -61,6 +113,13 @@ export default {
   },
 
   // minimum value
+  /**
+   * Validate value is at least min.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {number} parameters Min value.
+   * @returns {boolean}
+   */
   min(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -70,6 +129,13 @@ export default {
   },
 
   // starts with  value
+  /**
+   * Validate value starts with parameter.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Prefix.
+   * @returns {boolean}
+   */
   starts(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -79,6 +145,13 @@ export default {
   },
 
   // ends with  value
+  /**
+   * Validate value ends with parameter.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Suffix.
+   * @returns {boolean}
+   */
   ends(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -88,6 +161,13 @@ export default {
   },
 
   // minimum string length
+  /**
+   * Validate minimum string length.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {number} parameters Minimum length.
+   * @returns {boolean}
+   */
   minLength(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -97,6 +177,13 @@ export default {
   },
 
   // maximum string length
+  /**
+   * Validate maximum string length.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {number} parameters Maximum length.
+   * @returns {boolean}
+   */
   maxLength(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -106,6 +193,13 @@ export default {
   },
 
   // in provided value list
+  /**
+   * Validate value exists in provided list.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {Array<*>|string} parameters Allowed values.
+   * @returns {boolean}
+   */
   in(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -119,6 +213,13 @@ export default {
   },
 
   // must match provided regex
+  /**
+   * Validate value against regex pattern.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {string} parameters Regex source string.
+   * @returns {boolean}
+   */
   regex(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -130,6 +231,13 @@ export default {
   },
 
   // value must be unique in this column
+  /**
+   * Validate value uniqueness within column.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Validator params.
+   * @returns {boolean}
+   */
   unique(cell, value, parameters) {
     if (isEmptyValue(value)) {
       return true
@@ -150,6 +258,13 @@ export default {
   },
 
   // must have a value
+  /**
+   * Validate value is required and non-empty.
+   * @param {object} cell Cell component.
+   * @param {*} value Cell value.
+   * @param {*} parameters Validator params.
+   * @returns {boolean}
+   */
   required(cell, value, parameters) {
     return !isEmptyValue(value)
   }

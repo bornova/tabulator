@@ -2,12 +2,19 @@ import CoreFeature from './CoreFeature.js'
 import Popup from './tools/Popup.js'
 
 export default class Module extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
     this._handler = null
   }
 
+  /**
+   * Initialize module lifecycle hook.
+   * @returns {void}
+   */
   initialize() {
     // setup module when table is initialized, to be overridden in module
   }
@@ -16,10 +23,22 @@ export default class Module extends CoreFeature {
   /// /// Options Registration ///////
   /// ////////////////////////////////
 
+  /**
+   * Register a table option default.
+   * @param {string} key Option key.
+   * @param {*} value Default value.
+   * @returns {void}
+   */
   registerTableOption(key, value) {
     this.table.optionsList.register(key, value)
   }
 
+  /**
+   * Register a column option default.
+   * @param {string} key Option key.
+   * @param {*} value Default value.
+   * @returns {void}
+   */
   registerColumnOption(key, value) {
     this.table.columnManager.optionsList.register(key, value)
   }
@@ -28,6 +47,12 @@ export default class Module extends CoreFeature {
   /// Public Function Registration ///
   /// ////////////////////////////////
 
+  /**
+   * Register a public table function.
+   * @param {string} name Function name.
+   * @param {Function} func Function handler.
+   * @returns {void}
+   */
   registerTableFunction(name, func) {
     if (typeof this.table[name] === 'undefined') {
       this.table[name] = (...args) => {
@@ -40,6 +65,13 @@ export default class Module extends CoreFeature {
     }
   }
 
+  /**
+   * Register a component function binding.
+   * @param {string} component Component type.
+   * @param {string} func Function name.
+   * @param {Function} handler Function handler.
+   * @returns {*}
+   */
   registerComponentFunction(component, func, handler) {
     return this.table.componentFunctionBinder.bind(component, func, handler)
   }
@@ -48,16 +80,33 @@ export default class Module extends CoreFeature {
   /// /////// Data Pipeline //////////
   /// ////////////////////////////////
 
+  /**
+   * Register data pipeline handler.
+   * @param {Function} handler Pipeline handler.
+   * @param {number} priority Handler priority.
+   * @returns {void}
+   */
   registerDataHandler(handler, priority) {
     this.table.rowManager.registerDataPipelineHandler(handler, priority)
     this._handler = handler
   }
 
+  /**
+   * Register display pipeline handler.
+   * @param {Function} handler Pipeline handler.
+   * @param {number} priority Handler priority.
+   * @returns {void}
+   */
   registerDisplayHandler(handler, priority) {
     this.table.rowManager.registerDisplayPipelineHandler(handler, priority)
     this._handler = handler
   }
 
+  /**
+   * Get display rows at handler stage.
+   * @param {number} [adjust] Stage offset.
+   * @returns {Array<object>}
+   */
   displayRows(adjust) {
     let index = this.table.rowManager.displayRows.length - 1
 
@@ -80,10 +129,20 @@ export default class Module extends CoreFeature {
     }
   }
 
+  /**
+   * Get active rows.
+   * @returns {Array<object>}
+   */
   activeRows() {
     return this.table.rowManager.activeRows
   }
 
+  /**
+   * Refresh active data pipeline.
+   * @param {boolean} renderInPosition Render-in-position flag.
+   * @param {Function} [handler] Pipeline handler.
+   * @returns {void}
+   */
   refreshData(renderInPosition, handler) {
     handler ??= this._handler
 
@@ -96,14 +155,29 @@ export default class Module extends CoreFeature {
   /// ///// Footer Management ////////
   /// ////////////////////////////////
 
+  /**
+   * Append element to footer.
+   * @param {HTMLElement} element Element to append.
+   * @returns {*}
+   */
   footerAppend(element) {
     return this.table.footerManager.append(element)
   }
 
+  /**
+   * Prepend element to footer.
+   * @param {HTMLElement} element Element to prepend.
+   * @returns {*}
+   */
   footerPrepend(element) {
     return this.table.footerManager.prepend(element)
   }
 
+  /**
+   * Remove element from footer.
+   * @param {HTMLElement} element Element to remove.
+   * @returns {*}
+   */
   footerRemove(element) {
     return this.table.footerManager.remove(element)
   }
@@ -112,6 +186,12 @@ export default class Module extends CoreFeature {
   /// ///// Popups Management ////////
   /// ////////////////////////////////
 
+  /**
+   * Create popup helper.
+   * @param {HTMLElement} menuEl Popup content element.
+   * @param {HTMLElement} [menuContainer] Popup container.
+   * @returns {Popup}
+   */
   popup(menuEl, menuContainer) {
     return new Popup(this.table, menuEl, menuContainer)
   }
@@ -120,10 +200,20 @@ export default class Module extends CoreFeature {
   /// ///// Alert Management ////////
   /// ////////////////////////////////
 
+  /**
+   * Show alert content.
+   * @param {*} content Alert content.
+   * @param {string} type Alert type.
+   * @returns {*}
+   */
   alert(content, type) {
     return this.table.alertManager.alert(content, type)
   }
 
+  /**
+   * Clear active alert.
+   * @returns {*}
+   */
   clearAlert() {
     return this.table.alertManager.clear()
   }

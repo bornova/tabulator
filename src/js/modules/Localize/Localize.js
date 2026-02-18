@@ -10,6 +10,9 @@ export default class Localize extends Module {
   // load defaults
   static langs = defaultLangs
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -22,6 +25,10 @@ export default class Localize extends Module {
     this.registerTableOption('langs', {})
   }
 
+  /**
+   * Initialize localization data and table-level localization functions.
+   * @returns {void}
+   */
   initialize() {
     this.langList = Helpers.deepClone(Localize.langs)
 
@@ -41,11 +48,22 @@ export default class Localize extends Module {
   }
 
   // set header placeholder
+  /**
+   * Override the default header filter placeholder text.
+   * @param {string} placeholder Placeholder text.
+   * @returns {void}
+   */
   setHeaderFilterPlaceholder(placeholder) {
     this.langList.default.headerFilters.default = placeholder
   }
 
   // setup a lang description object
+  /**
+   * Install or merge a locale definition.
+   * @param {string} locale Locale key.
+   * @param {object} lang Locale definition object.
+   * @returns {void}
+   */
   installLang(locale, lang) {
     if (this.langList[locale]) {
       this._setLangProp(this.langList[locale], lang)
@@ -54,6 +72,12 @@ export default class Localize extends Module {
     }
   }
 
+  /**
+   * Recursively merge localized values into an existing language tree.
+   * @param {object} lang Target language object.
+   * @param {object} values Source values.
+   * @returns {void}
+   */
   _setLangProp(lang, values) {
     for (const key in values) {
       if (lang[key] && typeof lang[key] === 'object') {
@@ -65,6 +89,11 @@ export default class Localize extends Module {
   }
 
   // set current locale
+  /**
+   * Set active locale and rebuild the language map.
+   * @param {string|boolean} desiredLocale Locale key or true for browser locale.
+   * @returns {void}
+   */
   setLocale(desiredLocale) {
     let locale = desiredLocale || 'default'
 
@@ -118,16 +147,31 @@ export default class Localize extends Module {
   }
 
   // get current locale
+  /**
+   * Get active locale key.
+   * @returns {string}
+   */
   getLocale() {
     return this.locale
   }
 
   // get lang object for given local or current if none provided
+  /**
+   * Get language object for a locale or the currently active language.
+   * @param {string} [locale] Locale key.
+   * @returns {object|boolean}
+   */
   getLang(locale) {
     return locale ? this.langList[locale] : this.lang
   }
 
   // get text for current locale
+  /**
+   * Resolve localized text for a language path.
+   * @param {string} path Dot-path-like key.
+   * @param {string} [value] Optional sub-key or value segment.
+   * @returns {string}
+   */
   getText(path, value) {
     const fillPath = value ? `${path}|${value}` : path
     const pathArray = fillPath.split('|')
@@ -141,6 +185,11 @@ export default class Localize extends Module {
   }
 
   // traverse langs object and find localized copy
+  /**
+   * Traverse active language object and return a nested value.
+   * @param {Array<string>} path Path segments.
+   * @returns {*}
+   */
   _getLangElement(path) {
     let root = this.lang
 
@@ -157,6 +206,12 @@ export default class Localize extends Module {
   }
 
   // set update binding
+  /**
+   * Bind a callback to locale updates for a language key.
+   * @param {string} path Translation key path.
+   * @param {Function} callback Update callback.
+   * @returns {void}
+   */
   bind(path, callback) {
     if (!this.bindings[path]) {
       this.bindings[path] = []
@@ -168,6 +223,10 @@ export default class Localize extends Module {
   }
 
   // iterate through bindings and trigger updates
+  /**
+   * Execute all registered localization bindings.
+   * @returns {void}
+   */
   _executeBindings() {
     for (const path in this.bindings) {
       this.bindings[path].forEach((binding) => {

@@ -7,6 +7,11 @@ import Cell from '../cell/Cell.js'
 export default class Column extends CoreFeature {
   static defaultOptionList = defaultOptions
 
+  /**
+   * @param {object} def Column definition.
+   * @param {object} parent Parent column manager or column group.
+   * @param {boolean} [rowHeader] Whether this column is the row header.
+   */
   constructor(def, parent, rowHeader) {
     super(parent.table)
 
@@ -70,6 +75,10 @@ export default class Column extends CoreFeature {
     this._initialize()
   }
 
+  /**
+   * Create the header element for this column.
+   * @returns {HTMLDivElement}
+   */
   createElement() {
     const el = document.createElement('div')
 
@@ -93,6 +102,10 @@ export default class Column extends CoreFeature {
     return el
   }
 
+  /**
+   * Create the element that contains group child columns.
+   * @returns {HTMLDivElement}
+   */
   createGroupElement() {
     const el = document.createElement('div')
 
@@ -101,6 +114,10 @@ export default class Column extends CoreFeature {
     return el
   }
 
+  /**
+   * Merge defaults and generate normalized definition options.
+   * @returns {void}
+   */
   mapDefinitions() {
     const defaults = this.table.options.columnDefaults
 
@@ -116,6 +133,10 @@ export default class Column extends CoreFeature {
     this.definition = this.table.columnManager.optionsList.generate(Column.defaultOptionList, this.definition)
   }
 
+  /**
+   * Validate definition keys against known column options.
+   * @returns {void}
+   */
   checkDefinition() {
     Object.keys(this.definition).forEach((key) => {
       if (!Column.defaultOptionList.includes(key)) {
@@ -124,6 +145,11 @@ export default class Column extends CoreFeature {
     })
   }
 
+  /**
+   * Set field access strategy for this column.
+   * @param {string} field Column field path.
+   * @returns {void}
+   */
   setField(field) {
     this.field = field
     this.fieldStructure = field
@@ -135,17 +161,28 @@ export default class Column extends CoreFeature {
     this.setFieldValue = this.fieldStructure.length > 1 ? this._setNestedData : this._setFlatData
   }
 
-  // register column position with column manager
+  /**
+   * Register column position with the parent manager.
+   * @param {Column} column Column instance.
+   * @returns {void}
+   */
   registerColumnPosition(column) {
     this.parent.registerColumnPosition(column)
   }
 
-  // register column position with column manager
+  /**
+   * Register column field with the parent manager.
+   * @param {Column} column Column instance.
+   * @returns {void}
+   */
   registerColumnField(column) {
     this.parent.registerColumnField(column)
   }
 
-  // trigger position registration
+  /**
+   * Trigger position registration recursively for child columns.
+   * @returns {void}
+   */
   reRegisterPosition() {
     if (this.isGroup) {
       this.columns.forEach((column) => {
@@ -156,7 +193,10 @@ export default class Column extends CoreFeature {
     }
   }
 
-  // build header element
+  /**
+   * Build and initialize the header element.
+   * @returns {void}
+   */
   _initialize() {
     const def = this.definition
 
@@ -183,7 +223,10 @@ export default class Column extends CoreFeature {
     this.dispatch('column-init', this)
   }
 
-  // build header element for header
+  /**
+   * Build header details for a non-group column.
+   * @returns {void}
+   */
   _buildColumnHeader() {
     const def = this.definition
 
@@ -230,6 +273,10 @@ export default class Column extends CoreFeature {
     this.titleElement.style.textAlign = this.definition.headerHozAlign
   }
 
+  /**
+   * Build the column header content wrapper and title holder.
+   * @returns {HTMLDivElement}
+   */
   _buildColumnHeaderContent() {
     const contentElement = document.createElement('div')
     contentElement.classList.add('tabulator-col-content')
@@ -246,7 +293,10 @@ export default class Column extends CoreFeature {
     return contentElement
   }
 
-  // build title element of column
+  /**
+   * Build the title element for the column header.
+   * @returns {HTMLDivElement}
+   */
   _buildColumnHeaderTitle() {
     const def = this.definition
 
@@ -297,6 +347,12 @@ export default class Column extends CoreFeature {
     return titleHolderElement
   }
 
+  /**
+   * Format and apply column header title content.
+   * @param {HTMLElement} el Target title element.
+   * @param {string} title Title text.
+   * @returns {void}
+   */
   _formatColumnHeaderTitle(el, title) {
     const contents = this.chain('column-format', [this, title, el], null, () => title)
 
@@ -320,7 +376,10 @@ export default class Column extends CoreFeature {
     }
   }
 
-  // build header element for column group
+  /**
+   * Build header details for a grouped column.
+   * @returns {void}
+   */
   _buildGroupHeader() {
     this.element.classList.add('tabulator-col-group')
     this.element.setAttribute('role', 'columngroup')
@@ -339,12 +398,20 @@ export default class Column extends CoreFeature {
     this.element.appendChild(this.groupElement)
   }
 
-  // flat field lookup
+  /**
+   * Get a value from a flat data object using this column field.
+   * @param {object} data Row data object.
+   * @returns {*}
+   */
   _getFlatData(data) {
     return data[this.field]
   }
 
-  // nested field lookup
+  /**
+   * Get a value from nested row data using the field structure.
+   * @param {object} data Row data object.
+   * @returns {*}
+   */
   _getNestedData(data) {
     let dataObj = data
     const structure = this.fieldStructure
@@ -364,14 +431,24 @@ export default class Column extends CoreFeature {
     return output
   }
 
-  // flat field set
+  /**
+   * Set a value on a flat data object.
+   * @param {object} data Row data object.
+   * @param {*} value Value to set.
+   * @returns {void}
+   */
   _setFlatData(data, value) {
     if (this.field) {
       data[this.field] = value
     }
   }
 
-  // nested field set
+  /**
+   * Set a value on nested row data using the field structure.
+   * @param {object} data Row data object.
+   * @param {*} value Value to set.
+   * @returns {void}
+   */
   _setNestedData(data, value) {
     let dataObj = data
     const structure = this.fieldStructure
@@ -394,7 +471,11 @@ export default class Column extends CoreFeature {
     }
   }
 
-  // attach column to this group
+  /**
+   * Attach a child column to this group column.
+   * @param {Column} column Child column.
+   * @returns {void}
+   */
   attachColumn(column) {
     if (this.groupElement) {
       this.columns.push(column)
@@ -406,7 +487,12 @@ export default class Column extends CoreFeature {
     }
   }
 
-  // vertically align header in column
+  /**
+   * Apply vertical alignment and height to this column header.
+   * @param {string} alignment Vertical alignment mode.
+   * @param {number} [height] Optional explicit parent header height.
+   * @returns {void}
+   */
   verticalAlign(alignment, height) {
     // calculate height of column header and group holder element
     const parentHeight = this.parent.isGroup
@@ -436,7 +522,10 @@ export default class Column extends CoreFeature {
     })
   }
 
-  // clear vertical alignment
+  /**
+   * Clear vertical alignment and related sizing styles.
+   * @returns {void}
+   */
   clearVerticalAlign() {
     this.element.style.paddingTop = ''
     this.element.style.height = ''
@@ -451,36 +540,59 @@ export default class Column extends CoreFeature {
   }
 
   /// / Retrieve Column Information ////
-  // return column header element
+  /**
+   * Return the header element.
+   * @returns {HTMLElement|null}
+   */
   getElement() {
     return this.element
   }
 
-  // return column group element
+  /**
+   * Return the group child container element.
+   * @returns {HTMLElement|null}
+   */
   getGroupElement() {
     return this.groupElement
   }
 
-  // return field name
+  /**
+   * Return the column field.
+   * @returns {string}
+   */
   getField() {
     return this.field
   }
 
+  /**
+   * Return the title text used during downloads.
+   * @returns {string|null}
+   */
   getTitleDownload() {
     return this.titleDownload
   }
 
-  // return the first column in a group
+  /**
+   * Return the first leaf column in this group.
+   * @returns {Column|boolean}
+   */
   getFirstColumn() {
     return !this.isGroup ? this : this.columns.length ? this.columns[0].getFirstColumn() : false
   }
 
-  // return the last column in a group
+  /**
+   * Return the last leaf column in this group.
+   * @returns {Column|boolean}
+   */
   getLastColumn() {
     return !this.isGroup ? this : this.columns.length ? this.columns[this.columns.length - 1].getLastColumn() : false
   }
 
-  // return all columns in a group
+  /**
+   * Return all child columns or a flattened tree.
+   * @param {boolean} [traverse] Include nested descendants when true.
+   * @returns {Array<Column>}
+   */
   getColumns(traverse) {
     let columns = []
 
@@ -497,12 +609,18 @@ export default class Column extends CoreFeature {
     return columns
   }
 
-  // return all columns in a group
+  /**
+   * Return all cells mapped to this column.
+   * @returns {Array<Cell>}
+   */
   getCells() {
     return this.cells
   }
 
-  // retrieve the top column in a group of columns
+  /**
+   * Retrieve the top-most parent column in this group hierarchy.
+   * @returns {Column}
+   */
   getTopColumn() {
     if (this.parent.isGroup) {
       return this.parent.getTopColumn()
@@ -511,7 +629,11 @@ export default class Column extends CoreFeature {
     }
   }
 
-  // return column definition object
+  /**
+   * Return the definition for this column.
+   * @param {boolean} [updateBranches] Refresh grouped child definitions when true.
+   * @returns {object}
+   */
   getDefinition(updateBranches) {
     const colDefs = []
 
@@ -527,6 +649,10 @@ export default class Column extends CoreFeature {
   }
 
   /// ///////////////// Actions ////////////////////
+  /**
+   * Update group visibility state based on child visibility.
+   * @returns {void}
+   */
   checkColumnVisibility() {
     const visible = this.columns.some((column) => column.visible)
 
@@ -538,7 +664,12 @@ export default class Column extends CoreFeature {
     }
   }
 
-  // show column
+  /**
+   * Show this column.
+   * @param {boolean} [silent] Suppress external visibility event when true.
+   * @param {boolean} [responsiveToggle] Visibility change caused by responsive module.
+   * @returns {void}
+   */
   show(silent, responsiveToggle) {
     if (!this.visible) {
       this.visible = true
@@ -575,7 +706,12 @@ export default class Column extends CoreFeature {
     }
   }
 
-  // hide column
+  /**
+   * Hide this column.
+   * @param {boolean} [silent] Suppress external visibility event when true.
+   * @param {boolean} [responsiveToggle] Visibility change caused by responsive module.
+   * @returns {void}
+   */
   hide(silent, responsiveToggle) {
     if (this.visible) {
       this.visible = false
@@ -608,6 +744,10 @@ export default class Column extends CoreFeature {
     }
   }
 
+  /**
+   * Recompute grouped column width based on visible child widths.
+   * @returns {void}
+   */
   matchChildWidths() {
     let childWidth = 0
 
@@ -629,6 +769,11 @@ export default class Column extends CoreFeature {
     }
   }
 
+  /**
+   * Remove a child column from this group.
+   * @param {Column} child Child column.
+   * @returns {void}
+   */
   removeChild(child) {
     const index = this.columns.indexOf(child)
 
@@ -641,11 +786,21 @@ export default class Column extends CoreFeature {
     }
   }
 
+  /**
+   * Set explicit width on this column.
+   * @param {number|string} width Width value in pixels or percentage.
+   * @returns {void}
+   */
   setWidth(width) {
     this.widthFixed = true
     this.setWidthActual(width)
   }
 
+  /**
+   * Apply width constraints and update related cell widths.
+   * @param {number|string} width Width value in pixels or percentage.
+   * @returns {void}
+   */
   setWidthActual(width) {
     if (Number.isNaN(Number(width))) {
       width = Math.floor((this.table.element.clientWidth / 100) * Number.parseInt(width, 10))
@@ -679,6 +834,10 @@ export default class Column extends CoreFeature {
     }
   }
 
+  /**
+   * Recalculate row heights for rows bound to this column.
+   * @returns {void}
+   */
   checkCellHeights() {
     const rows = []
 
@@ -702,6 +861,10 @@ export default class Column extends CoreFeature {
     })
   }
 
+  /**
+   * Return computed width for this column or group.
+   * @returns {number}
+   */
   getWidth() {
     let width = 0
 
@@ -718,6 +881,10 @@ export default class Column extends CoreFeature {
     return width
   }
 
+  /**
+   * Return cumulative left offset of this column.
+   * @returns {number}
+   */
   getLeftOffset() {
     let offset = this.element.offsetLeft
 
@@ -728,10 +895,19 @@ export default class Column extends CoreFeature {
     return offset
   }
 
+  /**
+   * Return rendered column height.
+   * @returns {number}
+   */
   getHeight() {
     return Math.ceil(this.element.getBoundingClientRect().height)
   }
 
+  /**
+   * Set minimum width constraint.
+   * @param {number} minWidth Minimum width in pixels.
+   * @returns {void}
+   */
   setMinWidth(minWidth) {
     if (this.maxWidth && minWidth > this.maxWidth) {
       minWidth = this.maxWidth
@@ -757,6 +933,11 @@ export default class Column extends CoreFeature {
     })
   }
 
+  /**
+   * Set maximum width constraint.
+   * @param {number} maxWidth Maximum width in pixels.
+   * @returns {void}
+   */
   setMaxWidth(maxWidth) {
     if (this.minWidth && maxWidth < this.minWidth) {
       maxWidth = this.minWidth
@@ -782,6 +963,10 @@ export default class Column extends CoreFeature {
     })
   }
 
+  /**
+   * Delete the column and all bound cells.
+   * @returns {Promise<void>}
+   */
   delete() {
     return new Promise((resolve) => {
       if (this.isGroup) {
@@ -821,6 +1006,10 @@ export default class Column extends CoreFeature {
     })
   }
 
+  /**
+   * Dispatch render-complete hooks for this column.
+   * @returns {void}
+   */
   columnRendered() {
     if (this.titleFormatterRendered) {
       this.titleFormatterRendered()
@@ -830,7 +1019,11 @@ export default class Column extends CoreFeature {
   }
 
   /// ///////////// Cell Management /////////////////
-  // generate cell for this column
+  /**
+   * Generate and register a cell for this column.
+   * @param {object} row Internal row instance.
+   * @returns {Cell}
+   */
   generateCell(row) {
     const cell = new Cell(this, row)
 
@@ -839,26 +1032,49 @@ export default class Column extends CoreFeature {
     return cell
   }
 
+  /**
+   * Get the next visible column.
+   * @returns {Column|boolean}
+   */
   nextColumn() {
     const index = this.table.columnManager.findColumnIndex(this)
     return index > -1 ? this._nextVisibleColumn(index + 1) : false
   }
 
+  /**
+   * Find next visible column from a starting index.
+   * @param {number} index Start index.
+   * @returns {Column|undefined}
+   */
   _nextVisibleColumn(index) {
     const column = this.table.columnManager.getColumnByIndex(index)
     return !column || column.visible ? column : this._nextVisibleColumn(index + 1)
   }
 
+  /**
+   * Get the previous visible column.
+   * @returns {Column|boolean}
+   */
   prevColumn() {
     const index = this.table.columnManager.findColumnIndex(this)
     return index > -1 ? this._prevVisibleColumn(index - 1) : false
   }
 
+  /**
+   * Find previous visible column from a starting index.
+   * @param {number} index Start index.
+   * @returns {Column|undefined}
+   */
   _prevVisibleColumn(index) {
     const column = this.table.columnManager.getColumnByIndex(index)
     return !column || column.visible ? column : this._prevVisibleColumn(index - 1)
   }
 
+  /**
+   * Reinitialize width state and refit to content.
+   * @param {boolean} [force] Force width handling regardless of explicit width settings.
+   * @returns {void}
+   */
   reinitializeWidth(force) {
     this.widthFixed = false
 
@@ -875,7 +1091,11 @@ export default class Column extends CoreFeature {
     this.dispatch('column-width-fit-after', this)
   }
 
-  // set column width to maximum cell width for non group columns
+  /**
+   * Resize this column to fit content width.
+   * @param {boolean} [force] Force width application.
+   * @returns {void}
+   */
   fitToData(force) {
     if (this.isGroup) {
       return
@@ -915,6 +1135,11 @@ export default class Column extends CoreFeature {
     }
   }
 
+  /**
+   * Update definition by replacing this column with a regenerated one.
+   * @param {object} updates Partial definition updates.
+   * @returns {Promise<object>}
+   */
   updateDefinition(updates) {
     let definition
 
@@ -948,6 +1173,11 @@ export default class Column extends CoreFeature {
     }
   }
 
+  /**
+   * Remove a cell from this column's cell collection.
+   * @param {Cell} cell Cell instance.
+   * @returns {void}
+   */
   deleteCell(cell) {
     const index = this.cells.indexOf(cell)
 
@@ -957,6 +1187,10 @@ export default class Column extends CoreFeature {
   }
 
   /// ///////////// Object Generation /////////////////
+  /**
+   * Get or lazily create the public column component.
+   * @returns {ColumnComponent}
+   */
   getComponent() {
     if (!this.component) {
       this.component = new ColumnComponent(this)
@@ -965,10 +1199,18 @@ export default class Column extends CoreFeature {
     return this.component
   }
 
+  /**
+   * Return visible position (1-based) among currently visible columns.
+   * @returns {number}
+   */
   getPosition() {
     return this.table.columnManager.getVisibleColumnsByIndex().indexOf(this) + 1
   }
 
+  /**
+   * Return parent column component when nested in a group.
+   * @returns {object|boolean}
+   */
   getParentComponent() {
     return this.parent instanceof Column ? this.parent.getComponent() : false
   }

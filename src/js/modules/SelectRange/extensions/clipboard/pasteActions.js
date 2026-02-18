@@ -1,4 +1,16 @@
+/**
+ * SelectRange clipboard paste actions.
+ *
+ * @type {{range: function(Array<object>): Array<object>}}
+ */
 export default {
+  /**
+   * Paste data into the currently active range.
+   *
+   * @this {object}
+   * @param {Array<object>} data Parsed clipboard rows.
+   * @returns {Array<object>} Rows updated by the paste action.
+   */
   range(data) {
     const range = this.table.modules.selectRange.activeRange
     if (!range) {

@@ -8,10 +8,18 @@ export default class ModuleBinder extends TableRegistry {
 
   static defaultModules = false
 
+  /**
+   * Create a module binder instance.
+   */
   constructor() {
     super()
   }
 
+  /**
+   * Initialize global module registrations.
+   * @param {object|Array<object>} [defaultModules] Additional modules to register.
+   * @returns {void}
+   */
   static initializeModuleBinder(defaultModules) {
     if (!ModuleBinder.modulesRegistered) {
       ModuleBinder.modulesRegistered = true
@@ -23,6 +31,13 @@ export default class ModuleBinder extends TableRegistry {
     }
   }
 
+  /**
+   * Extend a module property with provided values.
+   * @param {string} name Target module name.
+   * @param {string} property Target module property.
+   * @param {object} values Extension values.
+   * @returns {void}
+   */
   static _extendModule(name, property, values) {
     if (ModuleBinder.moduleBindings[name]) {
       const source = ModuleBinder.moduleBindings[name][property]
@@ -43,6 +58,12 @@ export default class ModuleBinder extends TableRegistry {
     }
   }
 
+  /**
+   * Register a module collection.
+   * @param {object} modules Module map or object.
+   * @param {boolean} [core] Mark modules as core modules.
+   * @returns {void}
+   */
   static _registerModules(modules, core) {
     const mods = Object.values(modules)
 
@@ -55,6 +76,11 @@ export default class ModuleBinder extends TableRegistry {
     ModuleBinder._registerModule(mods)
   }
 
+  /**
+   * Register one or more module constructors.
+   * @param {object|Array<object>} modules Module constructor(s).
+   * @returns {void}
+   */
   static _registerModule(modules) {
     if (!Array.isArray(modules)) {
       modules = [modules]
@@ -66,6 +92,11 @@ export default class ModuleBinder extends TableRegistry {
     })
   }
 
+  /**
+   * Register a module by its `moduleName` binding.
+   * @param {object} mod Module constructor.
+   * @returns {void}
+   */
   static _registerModuleBinding(mod) {
     if (mod.moduleName) {
       ModuleBinder.moduleBindings[mod.moduleName] = mod
@@ -74,6 +105,11 @@ export default class ModuleBinder extends TableRegistry {
     }
   }
 
+  /**
+   * Register module extensions and queue unresolved extensions.
+   * @param {object} mod Module constructor.
+   * @returns {void}
+   */
   static _registerModuleExtensions(mod) {
     const extensions = mod.moduleExtensions
 
@@ -104,6 +140,11 @@ export default class ModuleBinder extends TableRegistry {
     ModuleBinder._extendModuleFromQueue(mod)
   }
 
+  /**
+   * Apply queued extensions for a newly registered module.
+   * @param {object} mod Module constructor.
+   * @returns {void}
+   */
   static _extendModuleFromQueue(mod) {
     const extensions = ModuleBinder.moduleExtensions[mod.moduleName]
 
@@ -115,6 +156,10 @@ export default class ModuleBinder extends TableRegistry {
   }
 
   // ensure that module are bound to instantiated function
+  /**
+   * Instantiate and order all registered modules for this table.
+   * @returns {void}
+   */
   _bindModules() {
     const orderedStartMods = []
     const orderedEndMods = []

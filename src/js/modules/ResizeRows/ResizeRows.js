@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class ResizeRows extends Module {
   static moduleName = 'resizeRows'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -16,16 +19,30 @@ export default class ResizeRows extends Module {
     this.registerTableOption('resizableRowGuide', false)
   }
 
+  /**
+   * Initialize row resize handlers.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.resizableRows) {
       this.subscribe('row-layout-after', this.initializeRow.bind(this))
     }
   }
 
+  /**
+   * Get vertical screen coordinate from mouse or touch event.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @returns {number}
+   */
   getScreenY(e) {
     return typeof e.screenY === 'undefined' ? e.touches[0].screenY : e.screenY
   }
 
+  /**
+   * Attach row resize handles to a row element.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   initializeRow(row) {
     const rowEl = row.getElement()
 
@@ -67,10 +84,23 @@ export default class ResizeRows extends Module {
     rowEl.appendChild(prevHandle)
   }
 
+  /**
+   * Apply row height resize based on pointer movement.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   resize(e, row) {
     row.setHeight(this.startHeight + (this.getScreenY(e) - this.startY))
   }
 
+  /**
+   * Calculate guide position during row resize.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} row Internal row.
+   * @param {HTMLElement} handle Active handle.
+   * @returns {number}
+   */
   calcGuidePosition(e, row, handle) {
     const mouseY = this.getScreenY(e)
     const handleY = handle.getBoundingClientRect().y - this.table.element.getBoundingClientRect().y
@@ -81,6 +111,13 @@ export default class ResizeRows extends Module {
     return Math.max(handleY + mouseDiff, rowY)
   }
 
+  /**
+   * Handle row resize drag start.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} row Internal row.
+   * @param {HTMLElement} handle Active handle.
+   * @returns {void}
+   */
   _mouseDown(e, row, handle) {
     let guideEl
 

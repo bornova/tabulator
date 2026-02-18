@@ -1,5 +1,14 @@
 import CellComponent from '../../../../core/cell/CellComponent.js'
 
+/**
+ * Render a progress bar formatter.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component.
+ * @param {Object} [formatterParams={}] Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {string} Empty string.
+ */
 export default function (cell, formatterParams = {}, onRendered) {
   // progress bar
   const value = this.sanitizeHTML(cell.getValue()) || 0

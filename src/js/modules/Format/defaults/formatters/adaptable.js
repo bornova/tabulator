@@ -1,3 +1,12 @@
+/**
+ * Dynamically choose a formatter based on cell value and parameters.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component.
+ * @param {Object} params Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {*} Formatter result.
+ */
 export default function (cell, params, onRendered) {
   const defaultLookup = (cell) => {
     const value = cell.getValue()

@@ -1,3 +1,9 @@
+/**
+ * Parse JSON input into row data.
+ *
+ * @param {string} input JSON input text.
+ * @returns {Array<Object>|Promise<never>} Parsed data or rejected promise when invalid.
+ */
 export default function (input) {
   try {
     return JSON.parse(input)

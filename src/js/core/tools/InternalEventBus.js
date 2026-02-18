@@ -1,4 +1,7 @@
 export default class InternalEventBus {
+  /**
+   * @param {boolean|Array<string>} [debug] Debug mode or debug event list.
+   */
   constructor(debug) {
     this.events = {}
     this.subscriptionNotifiers = {}
@@ -9,6 +12,12 @@ export default class InternalEventBus {
     this.debug = debug
   }
 
+  /**
+   * Register a subscription-state notifier for an event key.
+   * @param {string} key Event key.
+   * @param {Function} callback Notifier callback.
+   * @returns {void}
+   */
   subscriptionChange(key, callback) {
     if (!this.subscriptionNotifiers[key]) {
       this.subscriptionNotifiers[key] = []
@@ -21,6 +30,13 @@ export default class InternalEventBus {
     }
   }
 
+  /**
+   * Subscribe to an internal event.
+   * @param {string} key Event key.
+   * @param {Function} callback Subscriber callback.
+   * @param {number} [priority=10000] Subscriber priority (lower runs first).
+   * @returns {void}
+   */
   subscribe(key, callback, priority = 10000) {
     if (!this.events[key]) {
       this.events[key] = []
@@ -35,6 +51,12 @@ export default class InternalEventBus {
     this._notifySubscriptionChange(key, true)
   }
 
+  /**
+   * Unsubscribe from an internal event.
+   * @param {string} key Event key.
+   * @param {Function} callback Subscriber callback.
+   * @returns {void}
+   */
   unsubscribe(key, callback) {
     let index
 
@@ -59,10 +81,23 @@ export default class InternalEventBus {
     this._notifySubscriptionChange(key, false)
   }
 
+  /**
+   * Check whether an event key has active subscribers.
+   * @param {string} key Event key.
+   * @returns {number|boolean}
+   */
   subscribed(key) {
     return this.events[key] && this.events[key].length
   }
 
+  /**
+   * Run a chained event pipeline, passing previous value to each subscriber.
+   * @param {string} key Event key.
+   * @param {Array|*} args Subscriber arguments.
+   * @param {*} initialValue Initial chain value.
+   * @param {Function|*} fallback Fallback value/function when unsubscribed.
+   * @returns {*}
+   */
   _chain(key, args, initialValue, fallback) {
     let value = initialValue
 
@@ -81,6 +116,12 @@ export default class InternalEventBus {
     }
   }
 
+  /**
+   * Check whether any subscriber confirms a condition.
+   * @param {string} key Event key.
+   * @param {Array|*} args Subscriber arguments.
+   * @returns {boolean}
+   */
   _confirm(key, args) {
     let confirmed = false
 
@@ -99,6 +140,12 @@ export default class InternalEventBus {
     return confirmed
   }
 
+  /**
+   * Notify subscription change listeners for an event key.
+   * @param {string} key Event key.
+   * @param {boolean} subscribed Current subscription state.
+   * @returns {void}
+   */
   _notifySubscriptionChange(key, subscribed) {
     const notifiers = this.subscriptionNotifiers[key]
 
@@ -109,6 +156,10 @@ export default class InternalEventBus {
     }
   }
 
+  /**
+   * Dispatch an internal event to all subscribers.
+   * @returns {void}
+   */
   _dispatch() {
     const args = Array.from(arguments)
     const key = args.shift()
@@ -120,6 +171,10 @@ export default class InternalEventBus {
     }
   }
 
+  /**
+   * Dispatch with optional debug logging.
+   * @returns {void}
+   */
   _debugDispatch() {
     const args = Array.from(arguments)
     const key = args[0]
@@ -133,6 +188,10 @@ export default class InternalEventBus {
     return this._dispatch(...arguments)
   }
 
+  /**
+   * Chain-dispatch with optional debug logging.
+   * @returns {*}
+   */
   _debugChain() {
     const args = Array.from(arguments)
     const key = args[0]
@@ -146,6 +205,10 @@ export default class InternalEventBus {
     return this._chain(...arguments)
   }
 
+  /**
+   * Confirm-dispatch with optional debug logging.
+   * @returns {boolean}
+   */
   _debugConfirm() {
     const args = Array.from(arguments)
     const key = args[0]

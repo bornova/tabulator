@@ -1,6 +1,9 @@
 import CoreFeature from './CoreFeature.js'
 
 export default class FooterManager extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -10,10 +13,18 @@ export default class FooterManager extends CoreFeature {
     this.external = false
   }
 
+  /**
+   * Initialize footer element state.
+   * @returns {void}
+   */
   initialize() {
     this.initializeElement()
   }
 
+  /**
+   * Create footer root element.
+   * @returns {HTMLDivElement}
+   */
   createElement() {
     const element = document.createElement('div')
 
@@ -22,6 +33,10 @@ export default class FooterManager extends CoreFeature {
     return element
   }
 
+  /**
+   * Create footer content container.
+   * @returns {HTMLDivElement}
+   */
   createContainerElement() {
     const element = document.createElement('div')
 
@@ -32,6 +47,10 @@ export default class FooterManager extends CoreFeature {
     return element
   }
 
+  /**
+   * Initialize footer from configured external/inline element.
+   * @returns {void}
+   */
   initializeElement() {
     if (this.table.options.footerElement) {
       switch (typeof this.table.options.footerElement) {
@@ -51,10 +70,19 @@ export default class FooterManager extends CoreFeature {
     }
   }
 
+  /**
+   * Get footer root element.
+   * @returns {HTMLElement}
+   */
   getElement() {
     return this.element
   }
 
+  /**
+   * Append content to footer.
+   * @param {HTMLElement} element Element to append.
+   * @returns {void}
+   */
   append(element) {
     this.activate()
 
@@ -62,6 +90,11 @@ export default class FooterManager extends CoreFeature {
     this.table.rowManager.adjustTableSize()
   }
 
+  /**
+   * Prepend content to footer.
+   * @param {HTMLElement} element Element to prepend.
+   * @returns {void}
+   */
   prepend(element) {
     this.activate()
 
@@ -69,6 +102,11 @@ export default class FooterManager extends CoreFeature {
     this.table.rowManager.adjustTableSize()
   }
 
+  /**
+   * Remove content from footer.
+   * @param {HTMLElement} element Element to remove.
+   * @returns {void}
+   */
   remove(element) {
     if (element.parentNode) {
       element.parentNode.removeChild(element)
@@ -77,6 +115,11 @@ export default class FooterManager extends CoreFeature {
     this.deactivate()
   }
 
+  /**
+   * Deactivate footer if empty or forced.
+   * @param {boolean} [force] Force deactivation.
+   * @returns {void}
+   */
   deactivate(force) {
     if (!this.element.firstChild || force) {
       if (!this.external) {
@@ -88,6 +131,10 @@ export default class FooterManager extends CoreFeature {
     }
   }
 
+  /**
+   * Activate footer rendering.
+   * @returns {void}
+   */
   activate() {
     if (!this.active) {
       this.active = true
@@ -98,6 +145,10 @@ export default class FooterManager extends CoreFeature {
     }
   }
 
+  /**
+   * Dispatch footer redraw event.
+   * @returns {void}
+   */
   redraw() {
     this.dispatch('footer-redraw')
   }

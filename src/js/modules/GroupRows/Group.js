@@ -3,6 +3,15 @@ import GroupComponent from './GroupComponent.js'
 
 // Group functions
 export default class Group {
+  /**
+   * @param {object} groupManager Group manager.
+   * @param {Group|false} parent Parent group.
+   * @param {number} level Group level.
+   * @param {*} key Group key.
+   * @param {string|false} field Group field.
+   * @param {Function} generator Header generator.
+   * @param {Group|false} oldGroup Previous group instance.
+   */
   constructor(groupManager, parent, level, key, field, generator, oldGroup) {
     this.groupManager = groupManager
     this.parent = parent
@@ -40,6 +49,11 @@ export default class Group {
     this.createValueGroups()
   }
 
+  /**
+   * Wipe group state and optionally only elements.
+   * @param {boolean} [elementsOnly] Only wipe elements.
+   * @returns {void}
+   */
   wipe(elementsOnly) {
     if (!elementsOnly) {
       if (this.groupList.length) {
@@ -60,6 +74,10 @@ export default class Group {
     this.elementContents = false
   }
 
+  /**
+   * Create group header elements.
+   * @returns {void}
+   */
   createElements() {
     const arrow = document.createElement('div')
     arrow.classList.add('tabulator-arrow')
@@ -78,6 +96,10 @@ export default class Group {
     }
   }
 
+  /**
+   * Create allowed child groups for next level.
+   * @returns {void}
+   */
   createValueGroups() {
     const level = this.level + 1
     if (this.groupManager.allowedValues && this.groupManager.allowedValues[level]) {
@@ -87,6 +109,10 @@ export default class Group {
     }
   }
 
+  /**
+   * Add click bindings for group toggle behavior.
+   * @returns {void}
+   */
   addBindings() {
     let toggleElement
 
@@ -107,6 +133,12 @@ export default class Group {
     }
   }
 
+  /**
+   * Create a child group.
+   * @param {*} groupID Group key.
+   * @param {number} level Group level.
+   * @returns {void}
+   */
   _createGroup(groupID, level) {
     const groupKey = `${level}_${groupID}`
     const group = new Group(
@@ -123,6 +155,11 @@ export default class Group {
     this.groupList.push(group)
   }
 
+  /**
+   * Add row into nested child groups.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   _addRowToGroup(row) {
     const level = this.level + 1
 
@@ -144,11 +181,23 @@ export default class Group {
     }
   }
 
+  /**
+   * Add row to this leaf group.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   _addRow(row) {
     this.rows.push(row)
     row.modules.group = this
   }
 
+  /**
+   * Insert row relative to another row in this group.
+   * @param {object} row Row to insert.
+   * @param {object} to Target row.
+   * @param {boolean} after Insert-after flag.
+   * @returns {void}
+   */
   insertRow(row, to, after) {
     const data = this.conformRowData({})
 
@@ -181,6 +230,11 @@ export default class Group {
     this.groupManager.updateGroupRows(true)
   }
 
+  /**
+   * Sync group header horizontal offset.
+   * @param {string} left Left offset CSS value.
+   * @returns {void}
+   */
   scrollHeader(left) {
     if (this.arrowElement) {
       this.arrowElement.style.marginLeft = left
@@ -191,9 +245,19 @@ export default class Group {
     }
   }
 
+  /**
+   * Placeholder row index lookup.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   getRowIndex(row) {}
 
   // update row data to match grouping constraints
+  /**
+   * Conform row data to current group path.
+   * @param {object} data Row data.
+   * @returns {object}
+   */
   conformRowData(data) {
     if (this.field) {
       data[this.field] = this.key
@@ -208,6 +272,11 @@ export default class Group {
     return data
   }
 
+  /**
+   * Remove a row from group.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   removeRow(row) {
     const index = this.rows.indexOf(row)
     const el = row.getElement()
@@ -242,6 +311,11 @@ export default class Group {
     }
   }
 
+  /**
+   * Remove a child group from this group.
+   * @param {Group} group Child group.
+   * @returns {void}
+   */
   removeGroup(group) {
     const groupKey = `${group.level}_${group.key}`
     let index
@@ -265,6 +339,10 @@ export default class Group {
     }
   }
 
+  /**
+   * Get flattened headers and rows for rendering.
+   * @returns {Array<object>}
+   */
   getHeadersAndRows() {
     let output = []
 
@@ -331,6 +409,12 @@ export default class Group {
     return output
   }
 
+  /**
+   * Get group row data.
+   * @param {boolean} [visible] Restrict to visible.
+   * @param {string} [transform] Transform mode.
+   * @returns {Array<object>}
+   */
   getData(visible, transform) {
     const output = []
 
@@ -345,6 +429,10 @@ export default class Group {
     return output
   }
 
+  /**
+   * Get recursive row count for this group.
+   * @returns {number}
+   */
   getRowCount() {
     let count = 0
 
@@ -358,6 +446,10 @@ export default class Group {
     return count
   }
 
+  /**
+   * Toggle group visibility.
+   * @returns {void}
+   */
   toggleVisibility() {
     if (this.visible) {
       this.hide()
@@ -366,6 +458,10 @@ export default class Group {
     }
   }
 
+  /**
+   * Hide group rows.
+   * @returns {void}
+   */
   hide() {
     this.visible = false
 
@@ -393,6 +489,10 @@ export default class Group {
     this.groupManager.table.externalEvents.dispatch('groupVisibilityChanged', this.getComponent(), false)
   }
 
+  /**
+   * Show group rows.
+   * @returns {void}
+   */
   show() {
     this.visible = true
 
@@ -427,6 +527,10 @@ export default class Group {
     this.groupManager.table.externalEvents.dispatch('groupVisibilityChanged', this.getComponent(), true)
   }
 
+  /**
+   * Resolve dynamic visibility callback values.
+   * @returns {void}
+   */
   _visSet() {
     const data = []
 
@@ -439,6 +543,11 @@ export default class Group {
     }
   }
 
+  /**
+   * Find nested group containing a row.
+   * @param {object} row Internal row.
+   * @returns {Group|boolean}
+   */
   getRowGroup(row) {
     let match = false
     if (this.groupList.length) {
@@ -458,6 +567,11 @@ export default class Group {
     return match
   }
 
+  /**
+   * Get direct child groups.
+   * @param {boolean} component Return components.
+   * @returns {Array<object>}
+   */
   getSubGroups(component) {
     const output = []
 
@@ -468,6 +582,12 @@ export default class Group {
     return output
   }
 
+  /**
+   * Get rows from this group.
+   * @param {boolean} component Return row components.
+   * @param {boolean} includeChildren Include child rows recursively.
+   * @returns {Array<object>}
+   */
   getRows(component, includeChildren) {
     let output = []
 
@@ -484,6 +604,10 @@ export default class Group {
     return output
   }
 
+  /**
+   * Generate group header content.
+   * @returns {void}
+   */
   generateGroupHeaderContents() {
     const data = []
 
@@ -506,6 +630,11 @@ export default class Group {
     this.element.insertBefore(this.arrowElement, this.element.firstChild)
   }
 
+  /**
+   * Get group key path from root to this group.
+   * @param {Array<*>} [path=[]] Existing path.
+   * @returns {Array<*>}
+   */
   getPath(path = []) {
     path.unshift(this.key)
     if (this.parent) {
@@ -516,10 +645,18 @@ export default class Group {
 
   /// /////////// Standard Row Functions //////////////
 
+  /**
+   * Get group header element.
+   * @returns {HTMLElement}
+   */
   getElement() {
     return this.elementContents ? this.element : this.generateElement()
   }
 
+  /**
+   * Generate and return group header element.
+   * @returns {HTMLElement}
+   */
   generateElement() {
     this.addBindings = false
 
@@ -542,6 +679,10 @@ export default class Group {
     return this.element
   }
 
+  /**
+   * Detach group element from DOM.
+   * @returns {void}
+   */
   detachElement() {
     if (this.element && this.element.parentNode) {
       this.element.parentNode.removeChild(this.element)
@@ -549,10 +690,19 @@ export default class Group {
   }
 
   // normalize the height of elements in the row
+  /**
+   * Normalize cached height values.
+   * @returns {void}
+   */
   normalizeHeight() {
     this.setHeight(this.element.clientHeight)
   }
 
+  /**
+   * Initialize group size state.
+   * @param {boolean} [force] Force reinitialize.
+   * @returns {void}
+   */
   initialize(force) {
     if (!this.initialized || force) {
       this.normalizeHeight()
@@ -560,6 +710,10 @@ export default class Group {
     }
   }
 
+  /**
+   * Reinitialize group height state.
+   * @returns {void}
+   */
   reinitialize() {
     this.initialized = false
     this.height = 0
@@ -569,6 +723,11 @@ export default class Group {
     }
   }
 
+  /**
+   * Set group height cache.
+   * @param {number} height Height in px.
+   * @returns {void}
+   */
   setHeight(height) {
     if (this.height !== height) {
       this.height = height
@@ -577,27 +736,45 @@ export default class Group {
   }
 
   // return rows outer height
+  /**
+   * Get outer rendered height.
+   * @returns {number}
+   */
   getHeight() {
     return this.outerHeight
   }
 
+  /**
+   * Get this group instance.
+   * @returns {Group}
+   */
   getGroup() {
     return this
   }
 
+  /** @returns {void} */
   reinitializeHeight() {}
 
+  /** @returns {void} */
   calcHeight() {}
 
+  /** @returns {void} */
   setCellHeight() {}
 
+  /** @returns {void} */
   clearCellHeight() {}
 
+  /** @returns {void} */
   deinitializeHeight() {}
 
+  /** @returns {void} */
   rendered() {}
 
   /// ///////////// Object Generation /////////////////
+  /**
+   * Get group component wrapper.
+   * @returns {GroupComponent}
+   */
   getComponent() {
     if (!this.component) {
       this.component = new GroupComponent(this)

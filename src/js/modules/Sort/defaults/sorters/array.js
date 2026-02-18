@@ -1,6 +1,19 @@
 import Helpers from '../../../../core/tools/Helpers.js'
 
 // sort if element contains any data
+/**
+ * Sort array values using configured aggregation.
+ *
+ * @this {Object}
+ * @param {*} a First value.
+ * @param {*} b Second value.
+ * @param {Object} aRow First row.
+ * @param {Object} bRow Second row.
+ * @param {Object} column Column definition.
+ * @param {string} dir Sort direction.
+ * @param {{type?: string, alignEmptyValues?: string, valueMap?: string|function(Array<*>): Array<*>}} params Sort parameters.
+ * @returns {number} Sort result.
+ */
 export default function (a, b, aRow, bRow, column, dir, params) {
   const type = params.type || 'length'
   const alignEmptyValues = params.alignEmptyValues

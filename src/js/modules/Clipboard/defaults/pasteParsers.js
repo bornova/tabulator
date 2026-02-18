@@ -1,4 +1,16 @@
+/**
+ * Default clipboard paste parsers.
+ *
+ * @type {{table: function(string): Array<Object>|boolean}}
+ */
 export default {
+  /**
+   * Parse tabular clipboard text into row objects.
+   *
+   * @this {Object}
+   * @param {string} clipboard Clipboard text.
+   * @returns {Array<Object>|boolean} Parsed rows or false if clipboard content is invalid.
+   */
   table(clipboard) {
     const data = []
     let headerFindSuccess = true

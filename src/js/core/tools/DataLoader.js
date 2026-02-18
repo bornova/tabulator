@@ -1,6 +1,9 @@
 import CoreFeature from '../CoreFeature.js'
 
 export default class DataLoader extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -8,8 +11,22 @@ export default class DataLoader extends CoreFeature {
     this.loading = false
   }
 
+  /**
+   * Initialize data loader lifecycle.
+   * @returns {void}
+   */
   initialize() {}
 
+  /**
+   * Load data through the configured data pipeline.
+   * @param {Array|object|string} data Data source payload or request descriptor.
+   * @param {object} [params] Request params.
+   * @param {object} [config] Request config.
+   * @param {boolean} [replace] Replace existing table data.
+   * @param {boolean} [silent] Suppress loading alerts.
+   * @param {boolean} [columnsChanged] Force columns changed state.
+   * @returns {Promise<void>}
+   */
   load(data, params, config, replace, silent, columnsChanged) {
     const requestNo = ++this.requestOrder
 
@@ -94,6 +111,12 @@ export default class DataLoader extends CoreFeature {
     }
   }
 
+  /**
+   * Remap object keys using a provided map.
+   * @param {object} params Source object.
+   * @param {object} map Key mapping object.
+   * @returns {object}
+   */
   mapParams(params, map) {
     const output = {}
 
@@ -104,6 +127,11 @@ export default class DataLoader extends CoreFeature {
     return output
   }
 
+  /**
+   * Invert an object's keys and values.
+   * @param {object} obj Source object.
+   * @returns {object}
+   */
   objectInvert(obj) {
     const output = {}
 
@@ -114,10 +142,18 @@ export default class DataLoader extends CoreFeature {
     return output
   }
 
+  /**
+   * Invalidate any in-flight load response.
+   * @returns {void}
+   */
   blockActiveLoad() {
     this.requestOrder++
   }
 
+  /**
+   * Show loading alert if enabled.
+   * @returns {void}
+   */
   alertLoader() {
     const shouldLoad =
       typeof this.table.options.dataLoader === 'function'
@@ -129,10 +165,18 @@ export default class DataLoader extends CoreFeature {
     }
   }
 
+  /**
+   * Show data-load error alert.
+   * @returns {void}
+   */
   alertError() {
     this.table.alertManager.alert(this.table.options.dataLoaderError || this.langText('data|error'), 'error')
   }
 
+  /**
+   * Clear active loader/alert message.
+   * @returns {void}
+   */
   clearAlert() {
     this.table.alertManager.clear()
   }

@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class FrozenRows extends Module {
   static moduleName = 'frozenRows'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -19,6 +22,10 @@ export default class FrozenRows extends Module {
     this.registerTableOption('frozenRows', false) // holder for frozen row identifiers
   }
 
+  /**
+   * Initialize frozen row container, subscriptions, and handlers.
+   * @returns {void}
+   */
   initialize() {
     const fragment = document.createDocumentFragment()
 
@@ -50,16 +57,29 @@ export default class FrozenRows extends Module {
     this.resizeHolderWidth()
   }
 
+  /**
+   * Sync frozen-row holder width to headers.
+   * @returns {void}
+   */
   resizeHolderWidth() {
     this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
   }
 
+  /**
+   * Initialize configured frozen rows from existing rows.
+   * @returns {void}
+   */
   initializeRows() {
     this.table.rowManager.getRows().forEach((row) => {
       this.initializeRow(row)
     })
   }
 
+  /**
+   * Check whether a row should be frozen from config.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   initializeRow(row) {
     const frozenRows = this.table.options.frozenRows
 
@@ -78,15 +98,30 @@ export default class FrozenRows extends Module {
     }
   }
 
+  /**
+   * Check if a row is currently frozen.
+   * @param {object} row Internal row.
+   * @returns {boolean}
+   */
   isRowFrozen(row) {
     const index = this.rows.indexOf(row)
     return index > -1
   }
 
+  /**
+   * Check if any rows are frozen.
+   * @returns {boolean}
+   */
   isFrozen() {
     return !!this.rows.length
   }
 
+  /**
+   * Append frozen rows to visible row list.
+   * @param {Array<object>} viewable Viewable rows.
+   * @param {Array<object>} rows Display rows.
+   * @returns {Array<object>}
+   */
   visibleRows(viewable, rows) {
     this.rows.forEach((row) => {
       rows.push(row)
@@ -96,6 +131,11 @@ export default class FrozenRows extends Module {
   }
 
   // filter frozen rows out of display data
+  /**
+   * Filter frozen rows from normal display rows.
+   * @param {Array<object>} rows Display rows.
+   * @returns {Array<object>}
+   */
   getRows(rows) {
     const output = rows.slice(0)
 
@@ -110,6 +150,11 @@ export default class FrozenRows extends Module {
     return output
   }
 
+  /**
+   * Freeze a row at the top of the table.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   freezeRow(row) {
     if (!row.modules.frozen) {
       row.modules.frozen = true
@@ -129,6 +174,11 @@ export default class FrozenRows extends Module {
     }
   }
 
+  /**
+   * Unfreeze a previously frozen row.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   unfreezeRow(row) {
     if (row.modules.frozen) {
       row.modules.frozen = false
@@ -147,6 +197,11 @@ export default class FrozenRows extends Module {
     }
   }
 
+  /**
+   * Detach a frozen row from internal list and DOM.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   detachRow(row) {
     const index = this.rows.indexOf(row)
 
@@ -161,6 +216,10 @@ export default class FrozenRows extends Module {
     }
   }
 
+  /**
+   * Apply row striping/styles to frozen rows.
+   * @returns {void}
+   */
   styleRows() {
     this.rows.forEach((row, i) => {
       this.table.rowManager.styleRow(row, i)

@@ -8,6 +8,9 @@ export default class Layout extends Module {
   // load defaults
   static modes = defaultModes
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table, 'layout')
 
@@ -21,6 +24,10 @@ export default class Layout extends Module {
   }
 
   // initialize layout system
+  /**
+   * Initialize the configured layout mode.
+   * @returns {void}
+   */
   initialize() {
     const layout = this.table.options.layout
     const modeExists = Boolean(Layout.modes[layout])
@@ -35,6 +42,11 @@ export default class Layout extends Module {
     this.subscribe('column-init', this.initializeColumn.bind(this))
   }
 
+  /**
+   * Normalize column width configuration values.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     if (column.definition.widthGrow) {
       column.definition.widthGrow = Number(column.definition.widthGrow)
@@ -44,11 +56,20 @@ export default class Layout extends Module {
     }
   }
 
+  /**
+   * Get the active layout mode.
+   * @returns {string|null}
+   */
   getMode() {
     return this.mode
   }
 
   // trigger table layout
+  /**
+   * Run the current layout strategy.
+   * @param {boolean} dataChanged Whether data has changed.
+   * @returns {void}
+   */
   layout(dataChanged) {
     const hasVariableHeightColumns = this.table.columnManager.columnsByIndex.find(
       (column) => column.definition.variableHeight || column.definition.formatter === 'textarea'

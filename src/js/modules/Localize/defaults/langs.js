@@ -1,3 +1,8 @@
+/**
+ * Default language packs.
+ *
+ * @type {Object<string, Object>}
+ */
 export default {
   default: {
     // hold default locale text

@@ -1,3 +1,9 @@
+/**
+ * Parse CSV text into a two-dimensional array.
+ *
+ * @param {string} input CSV input text.
+ * @returns {Array<Array<string>>} Parsed CSV rows.
+ */
 export default function (input) {
   const data = []
   let row = 0

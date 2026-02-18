@@ -1,4 +1,7 @@
 export default class CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     this.table = table
   }
@@ -7,6 +10,13 @@ export default class CoreFeature {
   /// //////////// DataLoad /////////////////
   /// ///////////////////////////////////////
 
+  /**
+   * Reload table data through data loader.
+   * @param {*} data Data source.
+   * @param {boolean} silent Silent mode.
+   * @param {boolean} columnsChanged Columns changed flag.
+   * @returns {Promise<*>}
+   */
   reloadData(data, silent, columnsChanged) {
     return this.table.dataLoader.load(data, undefined, undefined, undefined, silent, columnsChanged)
   }
@@ -15,14 +25,29 @@ export default class CoreFeature {
   /// ////////// Localization ///////////////
   /// ///////////////////////////////////////
 
+  /**
+   * Get localized text.
+   * @param {...*} args Localization args.
+   * @returns {string}
+   */
   langText(...args) {
     return this.table.modules.localize.getText(...args)
   }
 
+  /**
+   * Bind localized text updates.
+   * @param {...*} args Binding args.
+   * @returns {void}
+   */
   langBind(...args) {
     return this.table.modules.localize.bind(...args)
   }
 
+  /**
+   * Get active locale.
+   * @param {...*} args Locale args.
+   * @returns {string}
+   */
   langLocale(...args) {
     return this.table.modules.localize.getLocale(...args)
   }
@@ -31,10 +56,20 @@ export default class CoreFeature {
   /// /////// Inter Table Comms /////////////
   /// ///////////////////////////////////////
 
+  /**
+   * Resolve inter-table connections.
+   * @param {...*} args Connection selectors.
+   * @returns {Array<object>}
+   */
   commsConnections(...args) {
     return this.table.modules.comms.getConnections(...args)
   }
 
+  /**
+   * Send inter-table message.
+   * @param {...*} args Message args.
+   * @returns {void}
+   */
   commsSend(...args) {
     return this.table.modules.comms.send(...args)
   }
@@ -43,10 +78,19 @@ export default class CoreFeature {
   /// ///////////// Layout  /////////////////
   /// ///////////////////////////////////////
 
+  /**
+   * Get active layout mode.
+   * @returns {string}
+   */
   layoutMode() {
     return this.table.modules.layout.getMode()
   }
 
+  /**
+   * Trigger layout refresh.
+   * @param {boolean} force Force layout.
+   * @returns {void}
+   */
   layoutRefresh(force) {
     return this.table.modules.layout.layout(force)
   }
@@ -55,10 +99,20 @@ export default class CoreFeature {
   /// //////////// Event Bus ////////////////
   /// ///////////////////////////////////////
 
+  /**
+   * Subscribe to internal event bus.
+   * @param {...*} args Subscription args.
+   * @returns {*}
+   */
   subscribe(...args) {
     return this.table.eventBus.subscribe(...args)
   }
 
+  /**
+   * Unsubscribe from internal event bus.
+   * @param {...*} args Unsubscribe args.
+   * @returns {*}
+   */
   unsubscribe(...args) {
     return this.table.eventBus.unsubscribe(...args)
   }
@@ -99,10 +153,21 @@ export default class CoreFeature {
   /// ///////////// Options /////////////////
   /// ///////////////////////////////////////
 
+  /**
+   * Read option value.
+   * @param {string} key Option key.
+   * @returns {*}
+   */
   options(key) {
     return this.table.options[key]
   }
 
+  /**
+   * Set/read option value.
+   * @param {string} key Option key.
+   * @param {*} value Option value.
+   * @returns {*}
+   */
   setOption(key, value) {
     if (value !== undefined) {
       this.table.options[key] = value
@@ -130,6 +195,11 @@ export default class CoreFeature {
   /// ///////////// Modules /////////////////
   /// ///////////////////////////////////////
 
+  /**
+   * Resolve module by key.
+   * @param {string} key Module key.
+   * @returns {*}
+   */
   module(key) {
     return this.table.module(key)
   }

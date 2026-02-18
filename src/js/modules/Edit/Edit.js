@@ -9,6 +9,9 @@ export default class Edit extends Module {
   // load defaults
   static editors = defaultEditors
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -57,6 +60,10 @@ export default class Edit extends Module {
     this.registerComponentFunction('cell', 'navigateDown', this.navigateDown.bind(this))
   }
 
+  /**
+   * Initialize edit module subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('cell-init', this.bindEditor.bind(this))
     this.subscribe('cell-delete', this.clearEdited.bind(this))
@@ -85,6 +92,11 @@ export default class Edit extends Module {
   /// ////// Paste Negation //////////
   /// ////////////////////////////////
 
+  /**
+   * Block clipboard paste while a cell is actively editing.
+   * @param {ClipboardEvent} e Paste event.
+   * @returns {boolean|undefined}
+   */
   pasteBlocker(e) {
     if (this.currentCell) {
       return true
@@ -95,6 +107,11 @@ export default class Edit extends Module {
   /// /// Keybinding Functions ///////
   /// ////////////////////////////////
 
+  /**
+   * Handle keyboard navigate-next behavior and optional new-row creation.
+   * @param {KeyboardEvent} e Keyboard event.
+   * @returns {void}
+   */
   keybindingNavigateNext(e) {
     const cell = this.currentCell
     let newRow = this.options('tabEndNewRow')
@@ -130,10 +147,20 @@ export default class Edit extends Module {
   /// ////// Cell Functions //////////
   /// ////////////////////////////////
 
+  /**
+   * Check if a cell has been edited.
+   * @param {object} cell Internal cell.
+   * @returns {boolean}
+   */
   cellIsEdited(cell) {
     return !!cell.modules.edit && cell.modules.edit.edited
   }
 
+  /**
+   * Cancel edit for a specific cell component if active.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   cellCancelEdit(cell) {
     if (cell === this.currentCell) {
       this.table.modules.edit.cancelEdit()
@@ -145,6 +172,11 @@ export default class Edit extends Module {
   /// ////////////////////////////////
   /// ////// Table Functions /////////
   /// ////////////////////////////////
+  /**
+   * Toggle editable CSS state on a cell.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   updateCellClass(cell) {
     if (this.allowEdit(cell)) {
       cell.getElement().classList.add('tabulator-editable')
@@ -153,6 +185,11 @@ export default class Edit extends Module {
     }
   }
 
+  /**
+   * Clear edited-state tracking for one or more cells.
+   * @param {object|Array<object>} [cells] Cell component(s).
+   * @returns {void}
+   */
   clearCellEdited(cells) {
     if (!cells) {
       cells = this.table.modules.edit.getEditedCells()
@@ -167,6 +204,12 @@ export default class Edit extends Module {
     })
   }
 
+  /**
+   * Navigate to previous editable cell.
+   * @param {object} [cell=this.currentCell] Starting cell.
+   * @param {Event} [e] Trigger event.
+   * @returns {boolean}
+   */
   navigatePrev(cell = this.currentCell, e) {
     let nextCell, prevRow
 
@@ -196,6 +239,12 @@ export default class Edit extends Module {
     return false
   }
 
+  /**
+   * Navigate to next editable cell.
+   * @param {object} [cell=this.currentCell] Starting cell.
+   * @param {Event} [e] Trigger event.
+   * @returns {boolean}
+   */
   navigateNext(cell = this.currentCell, e) {
     let nextCell, nextRow
 
@@ -225,6 +274,12 @@ export default class Edit extends Module {
     return false
   }
 
+  /**
+   * Navigate left to previous editable cell in row.
+   * @param {object} [cell=this.currentCell] Starting cell.
+   * @param {Event} [e] Trigger event.
+   * @returns {boolean}
+   */
   navigateLeft(cell = this.currentCell, e) {
     let index, nextCell
 
@@ -245,6 +300,12 @@ export default class Edit extends Module {
     return false
   }
 
+  /**
+   * Navigate right to next editable cell in row.
+   * @param {object} [cell=this.currentCell] Starting cell.
+   * @param {Event} [e] Trigger event.
+   * @returns {boolean}
+   */
   navigateRight(cell = this.currentCell, e) {
     let index, nextCell
 
@@ -265,6 +326,12 @@ export default class Edit extends Module {
     return false
   }
 
+  /**
+   * Navigate up to editable cell in previous display row.
+   * @param {object} [cell=this.currentCell] Starting cell.
+   * @param {Event} [e] Trigger event.
+   * @returns {boolean}
+   */
   navigateUp(cell = this.currentCell, e) {
     let index, nextRow
 
@@ -285,6 +352,12 @@ export default class Edit extends Module {
     return false
   }
 
+  /**
+   * Navigate down to editable cell in next display row.
+   * @param {object} [cell=this.currentCell] Starting cell.
+   * @param {Event} [e] Trigger event.
+   * @returns {boolean}
+   */
   navigateDown(cell = this.currentCell, e) {
     let index, nextRow
 
@@ -305,6 +378,12 @@ export default class Edit extends Module {
     return false
   }
 
+  /**
+   * Find next editable cell in a row after an index.
+   * @param {object} row Internal row.
+   * @param {number} index Start index.
+   * @returns {object|boolean}
+   */
   findNextEditableCell(row, index) {
     let nextCell = false
 
@@ -326,6 +405,12 @@ export default class Edit extends Module {
     return nextCell
   }
 
+  /**
+   * Find previous editable cell in a row before an index.
+   * @param {object} row Internal row.
+   * @param {number} index Start index.
+   * @returns {object|boolean}
+   */
   findPrevEditableCell(row, index) {
     let prevCell = false
 
@@ -351,24 +436,44 @@ export default class Edit extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Initialize column editing configuration when editor is defined.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumnCheck(column) {
     if (typeof column.definition.editor !== 'undefined') {
       this.initializeColumn(column)
     }
   }
 
+  /**
+   * Cancel editing if the active column is deleted.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   columnDeleteCheck(column) {
     if (this.currentCell && this.currentCell.column === column) {
       this.cancelEdit()
     }
   }
 
+  /**
+   * Cancel editing if the active row is deleted.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   rowDeleteCheck(row) {
     if (this.currentCell && this.currentCell.row === row) {
       this.cancelEdit()
     }
   }
 
+  /**
+   * Re-evaluate editable state for all cells in a row.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   rowEditableCheck(row) {
     row.getCells().forEach((cell) => {
       if (cell.column.modules.edit && typeof cell.column.modules.edit.check === 'function') {
@@ -378,6 +483,11 @@ export default class Edit extends Module {
   }
 
   // initialize column editor
+  /**
+   * Initialize edit module config for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const convertEmpty = Object.keys(column.definition).includes('editorEmptyValue')
 
@@ -399,6 +509,12 @@ export default class Edit extends Module {
     }
   }
 
+  /**
+   * Resolve editor definition into an editor function.
+   * @param {string|Function|boolean} editor Editor definition.
+   * @param {object} column Internal column.
+   * @returns {Function|undefined}
+   */
   lookupEditor(editor, column) {
     let editorFunc
 
@@ -436,10 +552,19 @@ export default class Edit extends Module {
     return editorFunc
   }
 
+  /**
+   * Get currently edited cell component.
+   * @returns {object|boolean}
+   */
   getCurrentCell() {
     return this.currentCell ? this.currentCell.getComponent() : false
   }
 
+  /**
+   * Clear active editor UI state.
+   * @param {boolean} [cancel] Whether edit is being canceled.
+   * @returns {void}
+   */
   clearEditor(cancel) {
     const cell = this.currentCell
     let cellEl
@@ -462,6 +587,10 @@ export default class Edit extends Module {
     }
   }
 
+  /**
+   * Cancel the active cell edit and restore value.
+   * @returns {void}
+   */
   cancelEdit() {
     if (this.currentCell) {
       const cell = this.currentCell
@@ -485,6 +614,11 @@ export default class Edit extends Module {
   }
 
   // return a formatted value for a cell
+  /**
+   * Bind edit trigger handlers to a cell element.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   bindEditor(cell) {
     if (cell.column.modules.edit) {
       const element = cell.getElement(true)
@@ -528,6 +662,12 @@ export default class Edit extends Module {
     }
   }
 
+  /**
+   * Focus a cell element without triggering recursion.
+   * @param {object} cell Internal cell.
+   * @param {boolean} [block] Block focus in IE scenarios.
+   * @returns {void}
+   */
   focusCellNoEvent(cell, block) {
     this.recursionBlock = true
 
@@ -538,11 +678,22 @@ export default class Edit extends Module {
     this.recursionBlock = false
   }
 
+  /**
+   * Programmatically start editing a cell.
+   * @param {object} cell Internal cell.
+   * @param {boolean} [forceEdit] Force edit even if not editable.
+   * @returns {void}
+   */
   editCell(cell, forceEdit) {
     this.focusCellNoEvent(cell)
     this.edit(cell, false, forceEdit)
   }
 
+  /**
+   * Ensure the editing cell is visible in virtual render mode.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   focusScrollAdjust(cell) {
     if (this.table.rowManager.getRenderMode() === 'virtual') {
       const topEdge = this.table.rowManager.element.scrollTop
@@ -581,6 +732,11 @@ export default class Edit extends Module {
     }
   }
 
+  /**
+   * Determine if a cell is currently editable.
+   * @param {object} cell Internal cell.
+   * @returns {boolean}
+   */
   allowEdit(cell) {
     let check = !!cell.column.modules.edit
 
@@ -605,6 +761,13 @@ export default class Edit extends Module {
     return check
   }
 
+  /**
+   * Open cell editor and manage edit lifecycle callbacks.
+   * @param {object} cell Internal cell.
+   * @param {Event|boolean} e Trigger event.
+   * @param {boolean} forceEdit Force edit for non-editable cells.
+   * @returns {boolean|undefined}
+   */
   edit(cell, e, forceEdit) {
     let allowEdit = true
     let rendered = () => {}
@@ -758,10 +921,21 @@ export default class Edit extends Module {
     }
   }
 
+  /**
+   * Default empty-value check for editor values.
+   * @param {*} value Editor value.
+   * @returns {boolean}
+   */
   emptyValueCheck(value) {
     return value === '' || value === null || value === undefined
   }
 
+  /**
+   * Convert configured empty editor values.
+   * @param {*} value Editor value.
+   * @param {object} cell Internal cell.
+   * @returns {*}
+   */
   transformEmptyValues(value, cell) {
     const mod = cell.column.modules.edit
     const convert = mod.convertEmptyValues || this.convertEmptyValues
@@ -778,12 +952,21 @@ export default class Edit extends Module {
     return value
   }
 
+  /**
+   * Blur an element unless blur is canceled by listeners.
+   * @param {HTMLElement} element Target element.
+   * @returns {void}
+   */
   blur(element) {
     if (!this.confirm('edit-blur', [element])) {
       element.blur()
     }
   }
 
+  /**
+   * Get all edited cell components.
+   * @returns {Array<object>}
+   */
   getEditedCells() {
     const output = []
 
@@ -794,6 +977,11 @@ export default class Edit extends Module {
     return output
   }
 
+  /**
+   * Clear edited state tracking for a cell.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   clearEdited(cell) {
     let editIndex
 

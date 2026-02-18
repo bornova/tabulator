@@ -10,6 +10,9 @@ export default class Mutator extends Module {
 
   static keyPrefix = 'mutator'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -29,6 +32,10 @@ export default class Mutator extends Module {
     this.registerColumnOption('mutateLink')
   }
 
+  /**
+   * Initialize mutator event subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('cell-value-changing', this.transformCell.bind(this))
     this.subscribe('cell-value-changed', this.mutateLink.bind(this))
@@ -37,11 +44,23 @@ export default class Mutator extends Module {
     this.subscribe('row-data-changing', this.rowDataChanged.bind(this))
   }
 
+  /**
+   * Apply row-level data mutators.
+   * @param {object} row Internal row.
+   * @param {object} tempData Working row data.
+   * @param {object} [updatedData] Explicit updated data.
+   * @returns {object}
+   */
   rowDataChanged(row, tempData, updatedData) {
     return this.transformRow(tempData, 'data', updatedData)
   }
 
   // initialize column mutator
+  /**
+   * Build per-column mutator config.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     let match = false
     const config = {}
@@ -69,6 +88,11 @@ export default class Mutator extends Module {
     }
   }
 
+  /**
+   * Resolve mutator definition to function.
+   * @param {string|Function} value Mutator identifier or function.
+   * @returns {Function|boolean}
+   */
   lookupMutator(value) {
     // set column mutator
     switch (typeof value) {
@@ -89,6 +113,13 @@ export default class Mutator extends Module {
   }
 
   // apply mutator to row
+  /**
+   * Apply configured mutators to row data for a mutation type.
+   * @param {object} data Row data.
+   * @param {string} type Mutation type.
+   * @param {object} [updatedData] Source updated data.
+   * @returns {object}
+   */
   transformRow(data, type, updatedData) {
     const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
     const sourceData = typeof updatedData !== 'undefined' ? updatedData : data
@@ -123,6 +154,12 @@ export default class Mutator extends Module {
   }
 
   // apply mutator to new cell value
+  /**
+   * Apply edit mutator for a single cell value change.
+   * @param {object} cell Internal cell.
+   * @param {*} value Incoming cell value.
+   * @returns {*}
+   */
   transformCell(cell, value) {
     if (!cell.column.modules.mutate) {
       return value
@@ -140,6 +177,11 @@ export default class Mutator extends Module {
     return value
   }
 
+  /**
+   * Re-trigger linked mutator cells when a source cell changes.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   mutateLink(cell) {
     let links = cell.column.definition.mutateLink
 
@@ -158,10 +200,18 @@ export default class Mutator extends Module {
     }
   }
 
+  /**
+   * Enable mutator processing.
+   * @returns {void}
+   */
   enable() {
     this.enabled = true
   }
 
+  /**
+   * Disable mutator processing.
+   * @returns {void}
+   */
   disable() {
     this.enabled = false
   }

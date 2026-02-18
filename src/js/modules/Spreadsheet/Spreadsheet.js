@@ -5,6 +5,9 @@ import SheetComponent from './SheetComponent'
 export default class Spreadsheet extends Module {
   static moduleName = 'spreadsheet'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -37,6 +40,10 @@ export default class Spreadsheet extends Module {
   /// /// Module Initialization //////
   /// ////////////////////////////////
 
+  /**
+   * Initialize spreadsheet mode and related lifecycle hooks.
+   * @returns {void}
+   */
   initialize() {
     if (this.options('spreadsheet')) {
       this.subscribe('table-initialized', this.tableInitialized.bind(this))
@@ -58,6 +65,10 @@ export default class Spreadsheet extends Module {
     }
   }
 
+  /**
+   * Warn about incompatible options with spreadsheet mode.
+   * @returns {void}
+   */
   compatibilityCheck() {
     if (this.options('data')) {
       console.warn(
@@ -78,6 +89,10 @@ export default class Spreadsheet extends Module {
     }
   }
 
+  /**
+   * Initialize sheet tab container.
+   * @returns {void}
+   */
   initializeTabset() {
     this.element = document.createElement('div')
     this.element.classList.add('tabulator-spreadsheet-tabs')
@@ -101,6 +116,10 @@ export default class Spreadsheet extends Module {
     }
   }
 
+  /**
+   * Load initial spreadsheet data/sheets after table initialization.
+   * @returns {void}
+   */
   tableInitialized() {
     if (this.sheets.length) {
       this.loadSheet(this.sheets[0])
@@ -118,6 +137,11 @@ export default class Spreadsheet extends Module {
   /// //////// Ajax Parsing //////////
   /// ////////////////////////////////
 
+  /**
+   * Parse remote payload for spreadsheet data.
+   * @param {Array<*>} data Remote data payload.
+   * @returns {boolean}
+   */
   loadRemoteData(data, data1, data2) {
     console.log('data', data, data1, data2)
 
@@ -146,6 +170,11 @@ export default class Spreadsheet extends Module {
   /// ////// Sheet Management ////////
   /// ////////////////////////////////
 
+  /**
+   * Load a single-sheet data matrix.
+   * @param {Array<*>} data Spreadsheet data matrix.
+   * @returns {void}
+   */
   loadData(data) {
     const def = {
       data
@@ -154,6 +183,10 @@ export default class Spreadsheet extends Module {
     this.loadSheet(this.newSheet(def))
   }
 
+  /**
+   * Destroy all sheet instances.
+   * @returns {void}
+   */
   destroySheets() {
     this.sheets.forEach((sheet) => {
       sheet.destroy()
@@ -163,6 +196,11 @@ export default class Spreadsheet extends Module {
     this.activeSheet = null
   }
 
+  /**
+   * Load and initialize multiple sheet definitions.
+   * @param {Array<object>} sheets Sheet definitions.
+   * @returns {void}
+   */
   loadSheets(sheets) {
     if (!Array.isArray(sheets)) {
       sheets = []
@@ -179,6 +217,11 @@ export default class Spreadsheet extends Module {
     }
   }
 
+  /**
+   * Activate a sheet.
+   * @param {Sheet} sheet Sheet instance.
+   * @returns {void}
+   */
   loadSheet(sheet) {
     if (!sheet) {
       this.activeSheet = null
@@ -196,6 +239,11 @@ export default class Spreadsheet extends Module {
     }
   }
 
+  /**
+   * Create a new sheet from a definition.
+   * @param {object} [definition={}] Sheet definition.
+   * @returns {Sheet}
+   */
   newSheet(definition = {}) {
     if (!definition.rows) {
       definition.rows = this.options('spreadsheetRows')
@@ -216,6 +264,11 @@ export default class Spreadsheet extends Module {
     return sheet
   }
 
+  /**
+   * Remove a sheet instance.
+   * @param {Sheet} sheet Sheet instance.
+   * @returns {void}
+   */
   removeSheet(sheet) {
     const index = this.sheets.indexOf(sheet)
 
@@ -242,6 +295,11 @@ export default class Spreadsheet extends Module {
     }
   }
 
+  /**
+   * Resolve sheet by key/component/instance.
+   * @param {*} key Sheet lookup value.
+   * @returns {Sheet|boolean|null}
+   */
   lookupSheet(key) {
     if (!key) {
       return this.activeSheet
@@ -262,30 +320,59 @@ export default class Spreadsheet extends Module {
   /// ///// Public Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * Replace all sheets with a new sheet set.
+   * @param {Array<object>} sheets Sheet definitions.
+   * @returns {Array<object>}
+   */
   setSheets(sheets) {
     this.loadSheets(sheets)
 
     return this.getSheets()
   }
 
+  /**
+   * Add a new sheet definition.
+   * @param {object} sheet Sheet definition.
+   * @returns {object}
+   */
   addSheet(sheet) {
     return this.newSheet(sheet).getComponent()
   }
 
+  /**
+   * Get definitions for all sheets.
+   * @returns {Array<object>}
+   */
   getSheetDefinitions() {
     return this.sheets.map((sheet) => sheet.getDefinition())
   }
 
+  /**
+   * Get all sheet components.
+   * @returns {Array<object>}
+   */
   getSheets() {
     return this.sheets.map((sheet) => sheet.getComponent())
   }
 
+  /**
+   * Get one sheet component.
+   * @param {*} key Sheet lookup value.
+   * @returns {object|boolean}
+   */
   getSheet(key) {
     const sheet = this.lookupSheet(key)
 
     return sheet ? sheet.getComponent() : false
   }
 
+  /**
+   * Set data for a target sheet or active sheet.
+   * @param {*} key Sheet key or data when omitted.
+   * @param {*} data Sheet data.
+   * @returns {Promise<void>|void|boolean}
+   */
   setSheetData(key, data) {
     if (key && !data) {
       data = key
@@ -297,18 +384,33 @@ export default class Spreadsheet extends Module {
     return sheet ? sheet.setData(data) : false
   }
 
+  /**
+   * Get data for a target sheet.
+   * @param {*} key Sheet lookup value.
+   * @returns {*|boolean}
+   */
   getSheetData(key) {
     const sheet = this.lookupSheet(key)
 
     return sheet ? sheet.getData() : false
   }
 
+  /**
+   * Clear a target sheet.
+   * @param {*} key Sheet lookup value.
+   * @returns {Promise<void>|void|boolean}
+   */
   clearSheet(key) {
     const sheet = this.lookupSheet(key)
 
     return sheet ? sheet.clear() : false
   }
 
+  /**
+   * Remove a target sheet.
+   * @param {*} key Sheet lookup value.
+   * @returns {void}
+   */
   removeSheetFunc(key) {
     const sheet = this.lookupSheet(key)
 
@@ -317,6 +419,11 @@ export default class Spreadsheet extends Module {
     }
   }
 
+  /**
+   * Activate a target sheet.
+   * @param {*} key Sheet lookup value.
+   * @returns {void|boolean}
+   */
   activeSheetFunc(key) {
     const sheet = this.lookupSheet(key)
 

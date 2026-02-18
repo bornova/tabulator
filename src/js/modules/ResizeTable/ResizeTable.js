@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class ResizeTable extends Module {
   static moduleName = 'resizeTable'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -26,6 +29,10 @@ export default class ResizeTable extends Module {
     this.registerTableOption('autoResize', true) // auto resize table
   }
 
+  /**
+   * Initialize resize and visibility observers.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.autoResize) {
       const table = this.table
@@ -114,6 +121,10 @@ export default class ResizeTable extends Module {
     }
   }
 
+  /**
+   * Initialize table visibility observer.
+   * @returns {void}
+   */
   initializeVisibilityObserver() {
     this.visibilityObserver = new IntersectionObserver((entries) => {
       this.visible = entries[entries.length - 1].isIntersecting
@@ -132,6 +143,11 @@ export default class ResizeTable extends Module {
     this.visibilityObserver.observe(this.table.element)
   }
 
+  /**
+   * Trigger table redraw after resize changes.
+   * @param {boolean} [force] Force redraw.
+   * @returns {void}
+   */
   redrawTable(force) {
     if (this.initialized && this.visible) {
       this.table.columnManager.rerenderColumns(true)
@@ -139,10 +155,18 @@ export default class ResizeTable extends Module {
     }
   }
 
+  /**
+   * Handle table-resize event by redrawing rows.
+   * @returns {void}
+   */
   tableResized() {
     this.table.rowManager.redraw()
   }
 
+  /**
+   * Clear bound listeners and observers.
+   * @returns {void}
+   */
   clearBindings() {
     const tableElement = this.table.element
 

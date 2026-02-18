@@ -1,4 +1,17 @@
 // sort datetime
+/**
+ * Sort datetime values using luxon.
+ *
+ * @this {Object}
+ * @param {*} a First value.
+ * @param {*} b Second value.
+ * @param {Object} aRow First row.
+ * @param {Object} bRow Second row.
+ * @param {Object} column Column definition.
+ * @param {string} dir Sort direction.
+ * @param {{format?: string, alignEmptyValues?: string}} params Sort parameters.
+ * @returns {number} Sort result.
+ */
 export default function (a, b, aRow, bRow, column, dir, params) {
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const format = params.format || 'dd/MM/yyyy HH:mm:ss'

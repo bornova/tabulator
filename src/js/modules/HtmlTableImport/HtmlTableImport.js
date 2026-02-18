@@ -3,6 +3,9 @@ import Module from '../../core/Module.js'
 export default class HtmlTableImport extends Module {
   static moduleName = 'htmlTableImport'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -10,10 +13,18 @@ export default class HtmlTableImport extends Module {
     this.hasIndex = false
   }
 
+  /**
+   * Initialize table-element import check.
+   * @returns {void}
+   */
   initialize() {
     this.tableElementCheck()
   }
 
+  /**
+   * Validate original element and trigger table parsing.
+   * @returns {void}
+   */
   tableElementCheck() {
     if (!(this.table.originalElement && this.table.originalElement.tagName === 'TABLE')) {
       return
@@ -28,6 +39,10 @@ export default class HtmlTableImport extends Module {
     }
   }
 
+  /**
+   * Parse source HTML table into Tabulator columns and data.
+   * @returns {void}
+   */
   parseTable() {
     const element = this.table.originalElement
     const options = this.table.options
@@ -77,6 +92,13 @@ export default class HtmlTableImport extends Module {
   }
 
   // extract tabulator attribute options
+  /**
+   * Extract inline Tabulator attributes from an element.
+   * @param {HTMLElement} element Source element.
+   * @param {object} options Target options object.
+   * @param {object} [defaultOptions] Optional defaults map.
+   * @returns {void}
+   */
   _extractOptions(element, options, defaultOptions) {
     const attributes = element.attributes
     const optionsArr = defaultOptions ? Object.keys(defaultOptions) : Object.keys(options)
@@ -100,6 +122,11 @@ export default class HtmlTableImport extends Module {
   }
 
   // get value of attribute
+  /**
+   * Parse a string attribute value to boolean or string.
+   * @param {string} value Attribute value.
+   * @returns {boolean|string}
+   */
   _attribValue(value) {
     if (value === 'true') {
       return true
@@ -113,11 +140,21 @@ export default class HtmlTableImport extends Module {
   }
 
   // find column if it has already been defined
+  /**
+   * Find existing column by title.
+   * @param {string} title Column title.
+   * @returns {object|boolean}
+   */
   _findCol(title) {
     return this.table.options.columns.find((column) => column.title === title) || false
   }
 
   // extract column from headers
+  /**
+   * Extract or create column definitions from header cells.
+   * @param {HTMLCollection} headers Header elements.
+   * @returns {void}
+   */
   _extractHeaders(headers) {
     for (let index = 0; index < headers.length; index++) {
       const header = headers[index]
@@ -155,6 +192,11 @@ export default class HtmlTableImport extends Module {
   }
 
   // generate blank headers
+  /**
+   * Generate placeholder column definitions when no headers are defined.
+   * @param {HTMLCollection} headers Header elements.
+   * @returns {void}
+   */
   _generateBlankHeaders(headers) {
     for (let index = 0; index < headers.length; index++) {
       const header = headers[index]

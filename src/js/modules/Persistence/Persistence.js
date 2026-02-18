@@ -12,6 +12,9 @@ export default class Persistence extends Module {
   static readers = defaultReaders
   static writers = defaultWriters
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -31,6 +34,10 @@ export default class Persistence extends Module {
   }
 
   // Test for whether localStorage is available for use.
+  /**
+   * Test if localStorage is available.
+   * @returns {boolean}
+   */
   localStorageTest() {
     const testKey = '_tabulator_test'
 
@@ -44,6 +51,10 @@ export default class Persistence extends Module {
   }
 
   // setup parameters
+  /**
+   * Initialize persistence configuration and subscriptions.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.persistence) {
       // determine persistent layout storage type
@@ -174,12 +185,21 @@ export default class Persistence extends Module {
     this.registerTableFunction('setColumnLayout', this.setColumnLayout.bind(this))
   }
 
+  /**
+   * Persist data for event type when configured.
+   * @param {string} type Persistence type key.
+   * @returns {void}
+   */
   eventSave(type) {
     if (this.config[type]) {
       this.save(type)
     }
   }
 
+  /**
+   * Apply persisted startup sort/filter values.
+   * @returns {void}
+   */
   tableBuilt() {
     let sorters, filters, headerFilters
 
@@ -208,6 +228,11 @@ export default class Persistence extends Module {
     }
   }
 
+  /**
+   * Persist columns on forced redraw.
+   * @param {boolean} force Force redraw flag.
+   * @returns {void}
+   */
   tableRedraw(force) {
     if (force && this.config.columns) {
       this.save('columns')
@@ -218,10 +243,19 @@ export default class Persistence extends Module {
   /// ////// Table Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * Get current column layout in persistence format.
+   * @returns {Array<object>}
+   */
   getColumnLayout() {
     return this.parseColumns(this.table.columnManager.getColumns())
   }
 
+  /**
+   * Set column layout from persisted structure.
+   * @param {Array<object>} layout Column layout.
+   * @returns {boolean}
+   */
   setColumnLayout(layout) {
     this.table.columnManager.setColumns(this.mergeDefinition(this.table.options.columns, layout, true))
     return true
@@ -231,6 +265,11 @@ export default class Persistence extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Initialize definition watchers for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     let def, keys
 
@@ -273,6 +312,12 @@ export default class Persistence extends Module {
   }
 
   // load saved definitions
+  /**
+   * Load persisted data and optionally merge with current values.
+   * @param {string} type Persistence type.
+   * @param {*} [current] Current value.
+   * @returns {*}
+   */
   load(type, current) {
     let data = this.retrieveData(type)
 
@@ -284,11 +329,23 @@ export default class Persistence extends Module {
   }
 
   // retrieve data from memory
+  /**
+   * Retrieve persisted data for a type.
+   * @param {string} type Persistence type.
+   * @returns {*}
+   */
   retrieveData(type) {
     return this.readFunc ? this.readFunc(this.id, type) : false
   }
 
   // merge old and new column definitions
+  /**
+   * Merge persisted column definition data into current columns.
+   * @param {Array<object>} oldCols Current columns.
+   * @param {Array<object>} newCols Persisted columns.
+   * @param {boolean} [mergeAllNew] Merge all incoming keys.
+   * @returns {Array<object>}
+   */
   mergeDefinition(oldCols, newCols, mergeAllNew) {
     const output = []
 
@@ -338,6 +395,12 @@ export default class Persistence extends Module {
   }
 
   // find matching columns
+  /**
+   * Find a matching column definition.
+   * @param {Array<object>} columns Column list.
+   * @param {object} subject Column definition.
+   * @returns {object|undefined}
+   */
   _findColumn(columns, subject) {
     const type = subject.columns ? 'group' : subject.field ? 'field' : 'object'
 
@@ -356,6 +419,11 @@ export default class Persistence extends Module {
   }
 
   // save data
+  /**
+   * Save persistence payload for a type.
+   * @param {string} type Persistence type.
+   * @returns {void}
+   */
   save(type) {
     let data = {}
 
@@ -391,6 +459,11 @@ export default class Persistence extends Module {
   }
 
   // ensure sorters contain no function data
+  /**
+   * Normalize sorters for persistence storage.
+   * @param {Array<object>} data Sorter data.
+   * @returns {Array<object>}
+   */
   validateSorters(data) {
     data.forEach((item) => {
       item.column = item.field
@@ -400,6 +473,10 @@ export default class Persistence extends Module {
     return data
   }
 
+  /**
+   * Build persisted group config payload.
+   * @returns {object}
+   */
   getGroupConfig() {
     const data = {}
 
@@ -420,6 +497,10 @@ export default class Persistence extends Module {
     return data
   }
 
+  /**
+   * Build persisted pagination config payload.
+   * @returns {object}
+   */
   getPageConfig() {
     const data = {}
 
@@ -437,6 +518,11 @@ export default class Persistence extends Module {
   }
 
   // parse columns for data to store
+  /**
+   * Convert columns into persistable layout structure.
+   * @param {Array<object>} columns Internal columns.
+   * @returns {Array<object>}
+   */
   parseColumns(columns) {
     const definitions = []
     const excludedKeys = ['headerContextMenu', 'headerMenu', 'contextMenu', 'clickMenu']

@@ -8,6 +8,9 @@ export default class Page extends Module {
   // load defaults
   static pageCounters = defaultPageCounters
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -62,6 +65,12 @@ export default class Page extends Module {
     this.registerComponentFunction('row', 'pageTo', this.setPageToRow.bind(this))
   }
 
+  /**
+   * Dispatch page error to internal/external listeners and console.
+   * @param {string} message Error message.
+   * @param {...*} details Extra detail values.
+   * @returns {void}
+   */
   logPageError(message, ...details) {
     const error = { message, details }
 
@@ -71,6 +80,12 @@ export default class Page extends Module {
     console.error(message, ...details)
   }
 
+  /**
+   * Dispatch page warning to internal/external listeners and console.
+   * @param {string} message Warning message.
+   * @param {...*} details Extra detail values.
+   * @returns {void}
+   */
   logPageWarning(message, ...details) {
     const warning = { message, details }
 
@@ -80,6 +95,10 @@ export default class Page extends Module {
     console.warn(message, ...details)
   }
 
+  /**
+   * Initialize pagination/progressive-load subscriptions and UI.
+   * @returns {void}
+   */
   initialize() {
     if (this.table.options.pagination) {
       this.subscribe('row-deleted', this.rowsUpdated.bind(this))
@@ -121,6 +140,12 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Resolve insertion anchor for add-row when paginated.
+   * @param {object} row Internal row.
+   * @param {boolean} top Insert at top flag.
+   * @returns {{index:object|undefined,top:boolean}}
+   */
   rowAddingPosition(row, top) {
     const rowManager = this.table.rowManager
     const displayRows = rowManager.getDisplayRows()
@@ -145,6 +170,10 @@ export default class Page extends Module {
     return { index, top }
   }
 
+  /**
+   * Calculate pagination size from option or viewport.
+   * @returns {void}
+   */
   calculatePageSizes() {
     let testElRow, testElCell
 
@@ -173,10 +202,22 @@ export default class Page extends Module {
     this.generatePageSizeSelectList()
   }
 
+  /**
+   * Mark initial data load as complete.
+   * @returns {void}
+   */
   initialLoadComplete() {
     this.initialLoad = false
   }
 
+  /**
+   * Inject pagination params into remote data requests.
+   * @param {*} data Data source descriptor.
+   * @param {object} config Request config.
+   * @param {boolean} silent Silent flag.
+   * @param {object} params Request params.
+   * @returns {object}
+   */
   remotePageParams(data, config, silent, params) {
     if (!this.initialLoad) {
       if ((this.progressiveLoad && !silent) || (!this.progressiveLoad && !this.dataChanging)) {
@@ -199,6 +240,11 @@ export default class Page extends Module {
   /// ////// Table Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * User-facing set-page-to-row helper.
+   * @param {*} row Row lookup.
+   * @returns {Promise<void>}
+   */
   userSetPageToRow(row) {
     if (this.table.options.pagination) {
       row = this.table.rowManager.findRow(row)
@@ -211,6 +257,11 @@ export default class Page extends Module {
     return Promise.reject()
   }
 
+  /**
+   * User-facing page-size setter.
+   * @param {number|boolean} size Page size.
+   * @returns {Promise<void>|boolean}
+   */
   userSetPageSize(size) {
     if (this.table.options.pagination) {
       this.setPageSize(size)
@@ -223,6 +274,12 @@ export default class Page extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Trigger next page while progressive scroll nears bottom.
+   * @param {number} top Scroll top.
+   * @param {boolean} dir Scroll direction.
+   * @returns {void}
+   */
   scrollVertical(top, dir) {
     let element, diff, margin
     if (!dir && !this.table.dataLoader.loading) {
@@ -236,6 +293,12 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Reset page before render in local pagination mode.
+   * @param {Array<object>} rows Display rows.
+   * @param {boolean} renderInPosition Render-in-position flag.
+   * @returns {Array<object>}
+   */
   restOnRenderBefore(rows, renderInPosition) {
     if (!renderInPosition) {
       if (this.mode === 'local') {
@@ -246,10 +309,18 @@ export default class Page extends Module {
     return rows
   }
 
+  /**
+   * Refresh data after row count changes.
+   * @returns {void}
+   */
   rowsUpdated() {
     this.refreshData(true, 'all')
   }
 
+  /**
+   * Create paginator DOM elements.
+   * @returns {void}
+   */
   createElements() {
     let button
 
@@ -284,6 +355,10 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Regenerate page-size selector options.
+   * @returns {void}
+   */
   generatePageSizeSelectList() {
     let pageSizes = []
 
@@ -330,6 +405,10 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Initialize configured page counter element.
+   * @returns {void}
+   */
   initializePageCounter() {
     const counter = this.table.options.paginationCounter
     let pageCounter = null
@@ -353,6 +432,11 @@ export default class Page extends Module {
   }
 
   // setup pagination
+  /**
+   * Initialize paginator controls and bindings.
+   * @param {boolean} [hidden] Build in hidden mode for progressive loading.
+   * @returns {void}
+   */
   initializePaginator(hidden) {
     let pageSelectLabel, paginationCounterHolder
 
@@ -475,17 +559,31 @@ export default class Page extends Module {
     this.mode = this.table.options.paginationMode
   }
 
+  /**
+   * Initialize progressive load mode.
+   * @param {string} mode Progressive mode key.
+   * @returns {void}
+   */
   initializeProgressive(mode) {
     this.initializePaginator(true)
     this.mode = 'progressive_' + mode
     this.progressiveLoad = true
   }
 
+  /**
+   * Dispatch page-changed internal event.
+   * @returns {void}
+   */
   trackChanges() {
     this.dispatch('page-changed')
   }
 
   // calculate maximum page from number of rows
+  /**
+   * Calculate max page from row count.
+   * @param {number} rowCount Row count.
+   * @returns {void}
+   */
   setMaxRows(rowCount) {
     if (!rowCount) {
       this.max = 1
@@ -499,6 +597,11 @@ export default class Page extends Module {
   }
 
   // reset to first page without triggering action
+  /**
+   * Reset to first page without triggering action when applicable.
+   * @param {boolean} [force] Force reset in non-local mode.
+   * @returns {void}
+   */
   reset(force) {
     if (!this.initialLoad) {
       if (this.mode === 'local' || force) {
@@ -509,6 +612,11 @@ export default class Page extends Module {
   }
 
   // set the maximum page
+  /**
+   * Set maximum page number.
+   * @param {number|string} max Maximum page.
+   * @returns {void}
+   */
   setMaxPage(max) {
     max = parseInt(max, 10)
 
@@ -521,6 +629,11 @@ export default class Page extends Module {
   }
 
   // set current page number
+  /**
+   * Set current page and trigger page load.
+   * @param {number|string} page Page number or keyword.
+   * @returns {Promise<void>}
+   */
   setPage(page) {
     switch (page) {
       case 'first':
@@ -550,6 +663,11 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Navigate to page containing a specific row.
+   * @param {object} row Internal row.
+   * @returns {Promise<void>}
+   */
   setPageToRow(row) {
     const rows = this.displayRows(-1)
     const index = rows.indexOf(row)
@@ -564,6 +682,11 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Set active page size.
+   * @param {number|boolean|string} size Page size.
+   * @returns {void}
+   */
   setPageSize(size) {
     if (size !== true) {
       size = parseInt(size, 10)
@@ -582,6 +705,13 @@ export default class Page extends Module {
     this.trackChanges()
   }
 
+  /**
+   * Render pagination counter content.
+   * @param {number} totalRows Total rows.
+   * @param {number} size Page size.
+   * @param {number} currentRow Current row index.
+   * @returns {void}
+   */
   _setPageCounter(totalRows, size, currentRow) {
     let content
 
@@ -624,6 +754,10 @@ export default class Page extends Module {
   }
 
   // setup the pagination buttons
+  /**
+   * Build visible page buttons and navigation state.
+   * @returns {void}
+   */
   _setPageButtons() {
     const leftSize = Math.floor((this.count - 1) / 2)
     const rightSize = Math.ceil((this.count - 1) / 2)
@@ -658,6 +792,11 @@ export default class Page extends Module {
     this.footerRedraw()
   }
 
+  /**
+   * Create a single page button element.
+   * @param {number} page Page number.
+   * @returns {HTMLButtonElement}
+   */
   _generatePageButton(page) {
     const button = document.createElement('button')
 
@@ -685,6 +824,10 @@ export default class Page extends Module {
   }
 
   // previous page
+  /**
+   * Navigate to previous page.
+   * @returns {Promise<void>}
+   */
   previousPage() {
     if (this.page > 1) {
       this.page--
@@ -699,6 +842,10 @@ export default class Page extends Module {
   }
 
   // next page
+  /**
+   * Navigate to next page.
+   * @returns {Promise<void>}
+   */
   nextPage() {
     if (this.page < this.max) {
       this.page++
@@ -718,24 +865,45 @@ export default class Page extends Module {
   }
 
   // return current page number
+  /**
+   * Get current page number.
+   * @returns {number}
+   */
   getPage() {
     return this.page
   }
 
   // return max page number
+  /**
+   * Get maximum available page number.
+   * @returns {number}
+   */
   getPageMax() {
     return this.max
   }
 
+  /**
+   * Get current page size.
+   * @returns {number|boolean}
+   */
   getPageSize() {
     return this.size
   }
 
+  /**
+   * Get active pagination mode.
+   * @returns {string}
+   */
   getMode() {
     return this.mode
   }
 
   // return appropriate rows for current page
+  /**
+   * Return rows for current page context.
+   * @param {Array<object>} data Input row set.
+   * @returns {Array<object>}
+   */
   getRows(data) {
     let actualRowPageSize = 0
     let output
@@ -793,6 +961,10 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Trigger data load/render for current pagination mode.
+   * @returns {Promise<void>}
+   */
   trigger() {
     let left
 
@@ -823,6 +995,11 @@ export default class Page extends Module {
     }
   }
 
+  /**
+   * Parse and apply remote pagination response payload.
+   * @param {object} data Remote response.
+   * @returns {Array<object>|boolean|Promise<void>}
+   */
   _parseRemoteData(data) {
     let margin, paginationOutOfRange
 
@@ -909,6 +1086,10 @@ export default class Page extends Module {
   }
 
   // handle the footer element being redrawn
+  /**
+   * Handle footer redraw and hide/show page list on overflow.
+   * @returns {void}
+   */
   footerRedraw() {
     const footer = this.table.footerManager.containerElement
 

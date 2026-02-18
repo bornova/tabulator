@@ -8,6 +8,9 @@ export default class Validate extends Module {
   // load defaults
   static validators = defaultValidators
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -29,6 +32,10 @@ export default class Validate extends Module {
     this.registerComponentFunction('row', 'validate', this.rowValidate.bind(this))
   }
 
+  /**
+   * Bind validation lifecycle events.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('cell-delete', this.clearValidation.bind(this))
     this.subscribe('column-layout', this.initializeColumnCheck.bind(this))
@@ -42,6 +49,13 @@ export default class Validate extends Module {
   /// ////// Event Handling //////////
   /// ////////////////////////////////
 
+  /**
+   * Validate edited cell value.
+   * @param {object} cell Internal cell.
+   * @param {*} value New value.
+   * @param {*} previousValue Previous value.
+   * @returns {boolean|Array<object>}
+   */
   editValidate(cell, value, previousValue) {
     const valid =
       this.table.options.validationMode !== 'manual' ? this.validate(cell.column.modules.validate, cell, value) : true
@@ -57,6 +71,12 @@ export default class Validate extends Module {
     return valid
   }
 
+  /**
+   * Clear editor validation state.
+   * @param {object} cell Internal cell.
+   * @param {boolean} cancelled Whether edit was cancelled.
+   * @returns {void}
+   */
   editorClear(cell, cancelled) {
     if (cancelled) {
       if (cell.column.modules.validate) {
@@ -67,6 +87,11 @@ export default class Validate extends Module {
     cell.getElement().classList.remove('tabulator-validation-fail')
   }
 
+  /**
+   * Clear edited marker validation state.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   editedClear(cell) {
     if (cell.modules.validate) {
       cell.modules.validate.invalid = false
@@ -77,10 +102,20 @@ export default class Validate extends Module {
   /// /////// Cell Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * Determine if a cell is valid.
+   * @param {object} cell Internal cell.
+   * @returns {boolean}
+   */
   cellIsValid(cell) {
     return !(cell.modules.validate && cell.modules.validate.invalid)
   }
 
+  /**
+   * Validate current value for a cell.
+   * @param {object} cell Internal cell.
+   * @returns {boolean|Array<object>}
+   */
   cellValidate(cell) {
     return this.validate(cell.column.modules.validate, cell, cell.getValue())
   }
@@ -89,6 +124,11 @@ export default class Validate extends Module {
   /// ////// Column Functions ////////
   /// ////////////////////////////////
 
+  /**
+   * Validate all cells in a column.
+   * @param {object} column Internal column.
+   * @returns {true|Array<object>}
+   */
   columnValidate(column) {
     const invalid = []
 
@@ -105,6 +145,11 @@ export default class Validate extends Module {
   /// /////// Row Functions //////////
   /// ////////////////////////////////
 
+  /**
+   * Validate all cells in a row.
+   * @param {object} row Internal row.
+   * @returns {true|Array<object>}
+   */
   rowValidate(row) {
     const invalid = []
 
@@ -121,6 +166,11 @@ export default class Validate extends Module {
   /// ////// Table Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * Clear validation state for one or more cells.
+   * @param {object|Array<object>} [cells] Cell component(s).
+   * @returns {void}
+   */
   userClearCellValidation(cells) {
     if (!cells) {
       cells = this.getInvalidCells()
@@ -135,6 +185,11 @@ export default class Validate extends Module {
     })
   }
 
+  /**
+   * Validate all rows in the table.
+   * @param {*} cells Unused parameter kept for API compatibility.
+   * @returns {true|Array<object>}
+   */
   userValidate(cells) {
     let output = []
 
@@ -154,13 +209,22 @@ export default class Validate extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Initialize column validator config when column defines validators.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumnCheck(column) {
     if (typeof column.definition.validator !== 'undefined') {
       this.initializeColumn(column)
     }
   }
 
-  // validate
+  /**
+   * Build validator config for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     const config = []
 
@@ -185,6 +249,11 @@ export default class Validate extends Module {
     }
   }
 
+  /**
+   * Extract validator config from a validator descriptor.
+   * @param {string|Function|object} value Validator descriptor.
+   * @returns {object|false|undefined}
+   */
   _extractValidator(value) {
     let type, params, pos
 
@@ -209,6 +278,12 @@ export default class Validate extends Module {
     }
   }
 
+  /**
+   * Build normalized validator config object.
+   * @param {string|Function} type Validator type or function.
+   * @param {*} [params] Validator params.
+   * @returns {object|false}
+   */
   _buildValidator(type, params) {
     const func = typeof type === 'function' ? type : Validate.validators[type]
 
@@ -224,6 +299,13 @@ export default class Validate extends Module {
     }
   }
 
+  /**
+   * Validate a value against validator config.
+   * @param {Array<object>|false} validators Validator config list.
+   * @param {object} cell Internal cell.
+   * @param {*} value Value to validate.
+   * @returns {true|Array<object>}
+   */
   validate(validators, cell, value) {
     const failedValidators = []
     const invalidIndex = this.invalidCells.indexOf(cell)
@@ -265,10 +347,19 @@ export default class Validate extends Module {
     return failedValidators.length ? failedValidators : true
   }
 
+  /**
+   * Return invalid cell components.
+   * @returns {Array<object>}
+   */
   getInvalidCells() {
     return this.invalidCells.map((cell) => cell.getComponent())
   }
 
+  /**
+   * Clear validation state for an internal cell.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   clearValidation(cell) {
     let invalidIndex
 

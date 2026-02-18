@@ -14,6 +14,10 @@ const HORIZONTAL_ALIGN_TO_FLEX = {
 }
 
 export default class Cell extends CoreFeature {
+  /**
+   * @param {object} column Column instance that owns this cell.
+   * @param {object} row Row instance that owns this cell.
+   */
   constructor(column, row) {
     super(column.table)
 
@@ -39,7 +43,10 @@ export default class Cell extends CoreFeature {
   }
 
   /// ///////////// Setup Functions /////////////////
-  // generate element
+  /**
+   * Build the cell element and initialize its value.
+   * @returns {void}
+   */
   build() {
     this.generateElement()
 
@@ -52,6 +59,10 @@ export default class Cell extends CoreFeature {
     this.initialValue = this.value
   }
 
+  /**
+   * Create the base DOM element used by the cell.
+   * @returns {void}
+   */
   generateElement() {
     this.element = document.createElement('div')
     this.element.className = 'tabulator-cell'
@@ -62,6 +73,10 @@ export default class Cell extends CoreFeature {
     }
   }
 
+  /**
+   * Apply display attributes and classes to the cell element.
+   * @returns {void}
+   */
   _configureCell() {
     const element = this.element
     const field = this.column.getField()
@@ -99,7 +114,10 @@ export default class Cell extends CoreFeature {
     }
   }
 
-  // generate cell contents
+  /**
+   * Generate and render the formatted cell contents.
+   * @returns {void}
+   */
   _generateContents() {
     const val = this.chain('cell-format', this, null, () => (this.element.innerHTML = this.value))
 
@@ -126,11 +144,20 @@ export default class Cell extends CoreFeature {
     }
   }
 
+  /**
+   * Dispatch the rendered hook for the cell.
+   * @returns {void}
+   */
   cellRendered() {
     this.dispatch('cell-rendered', this)
   }
 
   /// ///////////////// Getters ////////////////////
+  /**
+   * Get the cell DOM element, laying it out the first time it is requested.
+   * @param {boolean} [containerOnly] Skip layout when true.
+   * @returns {HTMLElement|null}
+   */
   getElement(containerOnly) {
     if (!this.loaded) {
       this.loaded = true
@@ -142,15 +169,30 @@ export default class Cell extends CoreFeature {
     return this.element
   }
 
+  /**
+   * Get the current cell value.
+   * @returns {*}
+   */
   getValue() {
     return this.value
   }
 
+  /**
+   * Get the previous cell value.
+   * @returns {*}
+   */
   getOldValue() {
     return this.oldValue
   }
 
   /// ///////////////// Actions ////////////////////
+  /**
+   * Update the cell value and dispatch edit/data change events.
+   * @param {*} value New value.
+   * @param {boolean} [mutate] Run value mutation pipeline when true.
+   * @param {boolean} [force] Force update even if value is unchanged.
+   * @returns {void}
+   */
   setValue(value, mutate, force) {
     const changed = this.setValueProcessData(value, mutate, force)
 
@@ -171,6 +213,13 @@ export default class Cell extends CoreFeature {
     }
   }
 
+  /**
+   * Process value changes and trigger internal change events.
+   * @param {*} value New value.
+   * @param {boolean} [mutate] Run value mutation pipeline when true.
+   * @param {boolean} [force] Force update even if value is unchanged.
+   * @returns {boolean} True when the value is considered changed.
+   */
   setValueProcessData(value, mutate, force) {
     let changed = false
 
@@ -191,6 +240,11 @@ export default class Cell extends CoreFeature {
     return changed
   }
 
+  /**
+   * Persist the value onto row data and update rendered content when needed.
+   * @param {*} value New value.
+   * @returns {void}
+   */
   setValueActual(value) {
     this.oldValue = this.value
 
@@ -207,41 +261,73 @@ export default class Cell extends CoreFeature {
     }
   }
 
+  /**
+   * Rebuild the cell layout and notify listeners.
+   * @returns {void}
+   */
   layoutElement() {
     this._generateContents()
 
     this.dispatch('cell-layout', this)
   }
 
+  /**
+   * Apply current column width to the cell element.
+   * @returns {void}
+   */
   setWidth() {
     this.width = this.column.width
     this.element.style.width = this.column.widthStyled
   }
 
+  /**
+   * Remove explicit width from the cell element.
+   * @returns {void}
+   */
   clearWidth() {
     this.width = ''
     this.element.style.width = ''
   }
 
+  /**
+   * Get the computed cell width.
+   * @returns {number|string}
+   */
   getWidth() {
     return this.width || this.element.offsetWidth
   }
 
+  /**
+   * Apply current column minimum width to the cell element.
+   * @returns {void}
+   */
   setMinWidth() {
     this.minWidth = this.column.minWidth
     this.element.style.minWidth = this.column.minWidthStyled
   }
 
+  /**
+   * Apply current column maximum width to the cell element.
+   * @returns {void}
+   */
   setMaxWidth() {
     this.maxWidth = this.column.maxWidth
     this.element.style.maxWidth = this.column.maxWidthStyled
   }
 
+  /**
+   * Trigger row height recalculation.
+   * @returns {void}
+   */
   checkHeight() {
     // var height = this.element.css("height");
     this.row.reinitializeHeight()
   }
 
+  /**
+   * Clear any explicitly applied cell height.
+   * @returns {void}
+   */
   clearHeight() {
     this.element.style.height = ''
     this.height = null
@@ -249,6 +335,10 @@ export default class Cell extends CoreFeature {
     this.dispatch('cell-height', this, '')
   }
 
+  /**
+   * Apply current row height to the cell element.
+   * @returns {void}
+   */
   setHeight() {
     this.height = this.row.height
     this.element.style.height = this.row.heightStyled
@@ -256,18 +346,34 @@ export default class Cell extends CoreFeature {
     this.dispatch('cell-height', this, this.row.heightStyled)
   }
 
+  /**
+   * Get the computed cell height.
+   * @returns {number|null}
+   */
   getHeight() {
     return this.height || this.element.offsetHeight
   }
 
+  /**
+   * Show the cell element.
+   * @returns {void}
+   */
   show() {
     this.element.style.display = this.column.vertAlign ? 'inline-flex' : ''
   }
 
+  /**
+   * Hide the cell element.
+   * @returns {void}
+   */
   hide() {
     this.element.style.display = 'none'
   }
 
+  /**
+   * Remove the cell and clean up row/column references.
+   * @returns {void}
+   */
   delete() {
     this.dispatch('cell-delete', this)
 
@@ -281,11 +387,19 @@ export default class Cell extends CoreFeature {
     this.calcs = {}
   }
 
+  /**
+   * Get the index of this cell in its row.
+   * @returns {number}
+   */
   getIndex() {
     return this.row.getCellIndex(this)
   }
 
   /// ///////////// Object Generation /////////////////
+  /**
+   * Get or lazily create the public cell component wrapper.
+   * @returns {CellComponent}
+   */
   getComponent() {
     if (!this.component) {
       this.component = new CellComponent(this)

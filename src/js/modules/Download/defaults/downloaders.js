@@ -5,6 +5,18 @@ import xlsx from './downloaders/xlsx.js'
 import html from './downloaders/html.js'
 import jsonLines from './downloaders/jsonLines.js'
 
+/**
+ * Default downloader implementations.
+ *
+ * @type {{
+ *   csv: function(Object, Array<Object>, Object): void,
+ *   json: function(Object, Array<Object>, Object): void,
+ *   jsonLines: function(Object, Array<Object>, Object): void,
+ *   pdf: function(Object, Array<Object>, Object): void,
+ *   xlsx: function(Object, Array<Object>, Object): void,
+ *   html: function(Object, Array<Object>, Object): void
+ * }}
+ */
 export default {
   csv,
   json,

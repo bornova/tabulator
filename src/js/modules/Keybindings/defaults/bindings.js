@@ -1,3 +1,19 @@
+/**
+ * Default keybinding definitions.
+ *
+ * @type {{
+ *   navPrev: string,
+ *   navNext: number,
+ *   navUp: number,
+ *   navDown: number,
+ *   navLeft: number,
+ *   navRight: number,
+ *   scrollPageUp: number,
+ *   scrollPageDown: number,
+ *   scrollToStart: number,
+ *   scrollToEnd: number
+ * }}
+ */
 export default {
   navPrev: 'shift + 9',
   navNext: 9,

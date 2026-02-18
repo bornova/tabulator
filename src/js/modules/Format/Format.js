@@ -19,6 +19,9 @@ export default class Format extends Module {
   // load defaults
   static formatters = defaultFormatters
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -35,6 +38,10 @@ export default class Format extends Module {
     this.registerColumnOption('titleFormatterParams')
   }
 
+  /**
+   * Bind formatter lifecycle events.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('cell-format', this.formatValue.bind(this))
     this.subscribe('cell-rendered', this.cellRendered.bind(this))
@@ -42,7 +49,11 @@ export default class Format extends Module {
     this.subscribe('column-format', this.formatHeader.bind(this))
   }
 
-  // initialize column formatter
+  /**
+   * Initialize formatter config for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     column.modules.format = this.lookupTypeFormatter(column, '')
 
@@ -59,6 +70,12 @@ export default class Format extends Module {
     }
   }
 
+  /**
+   * Resolve formatter config for a specific output type.
+   * @param {object} column Internal column.
+   * @param {string} type Formatter suffix type.
+   * @returns {{params:object,formatter:Function}}
+   */
   lookupTypeFormatter(column, type) {
     const config = { params: column.definition[`formatter${type}Params`] || {} }
     const formatter = column.definition[`formatter${type}`]
@@ -68,6 +85,11 @@ export default class Format extends Module {
     return config
   }
 
+  /**
+   * Resolve formatter function by name or function reference.
+   * @param {string|Function} formatter Formatter descriptor.
+   * @returns {Function}
+   */
   lookupFormatter(formatter) {
     // set column formatter
     switch (typeof formatter) {
@@ -87,6 +109,11 @@ export default class Format extends Module {
     }
   }
 
+  /**
+   * Trigger formatter rendered callback for a cell.
+   * @param {object} cell Internal cell.
+   * @returns {void}
+   */
   cellRendered(cell) {
     if (cell.modules.format && cell.modules.format.renderedCallback && !cell.modules.format.rendered) {
       cell.modules.format.renderedCallback()
@@ -94,6 +121,11 @@ export default class Format extends Module {
     }
   }
 
+  /**
+   * Generate callback setter used by formatters for post-render hooks.
+   * @param {object} cell Internal cell.
+   * @returns {Function}
+   */
   generateOnRenderedCallback(cell) {
     return (callback) => {
       if (!cell.modules.format) {
@@ -105,7 +137,13 @@ export default class Format extends Module {
     }
   }
 
-  // return a formatted value for a column header
+  /**
+   * Format a column header title value.
+   * @param {object} column Internal column.
+   * @param {string} title Header title.
+   * @param {HTMLElement} el Header element.
+   * @returns {*}
+   */
   formatHeader(column, title, el) {
     if (!column.definition.titleFormatter) {
       return title
@@ -141,7 +179,11 @@ export default class Format extends Module {
     return formatter.call(this, mockCell, params, onRendered)
   }
 
-  // return a formatted value for a cell
+  /**
+   * Format a cell value.
+   * @param {object} cell Internal cell.
+   * @returns {*}
+   */
   formatValue(cell) {
     const component = cell.getComponent()
     const params =
@@ -153,6 +195,12 @@ export default class Format extends Module {
     return cell.column.modules.format.formatter.call(this, component, params, onRendered)
   }
 
+  /**
+   * Format a cell value for export context.
+   * @param {object} cell Internal cell.
+   * @param {string} type Export format key.
+   * @returns {*}
+   */
   formatExportValue(cell, type) {
     const formatter = cell.column.modules.format[type]
 
@@ -167,6 +215,11 @@ export default class Format extends Module {
     return formatter.formatter.call(this, component, params, onRendered)
   }
 
+  /**
+   * Escape HTML entities in a value.
+   * @param {*} value Input value.
+   * @returns {*}
+   */
   sanitizeHTML(value) {
     if (value) {
       return String(value).replace(/[&<>"'`=/]/g, (character) => entityMap[character])
@@ -175,6 +228,11 @@ export default class Format extends Module {
     return value
   }
 
+  /**
+   * Convert empty values to a non-breaking space.
+   * @param {*} value Input value.
+   * @returns {*}
+   */
   emptyToSpace(value) {
     return value === null || typeof value === 'undefined' || value === '' ? '&nbsp;' : value
   }

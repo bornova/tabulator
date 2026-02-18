@@ -5,6 +5,9 @@ import Group from './Group.js'
 export default class GroupRows extends Module {
   static moduleName = 'groupRows'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -53,6 +56,10 @@ export default class GroupRows extends Module {
   }
 
   // initialize group configuration
+  /**
+   * Initialize grouping subscriptions and handlers.
+   * @returns {void}
+   */
   initialize() {
     this.subscribe('table-destroy', this._blockRedrawing.bind(this))
     this.subscribe('rows-wipe', this._blockRedrawing.bind(this))
@@ -84,14 +91,26 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Temporarily block grouped redraw output generation.
+   * @returns {void}
+   */
   _blockRedrawing() {
     this.blockRedraw = true
   }
 
+  /**
+   * Restore grouped redraw output generation.
+   * @returns {void}
+   */
   _restoreRedrawing() {
     this.blockRedraw = false
   }
 
+  /**
+   * Build group lookup/generator configuration from table options.
+   * @returns {void}
+   */
   configureGroupSetup() {
     if (this.table.options.groupBy) {
       let groupBy = this.table.options.groupBy
@@ -200,6 +219,12 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Add a grouped sample row to sample output.
+   * @param {Array<object>} rows Sample rows.
+   * @param {Array<object>} prevValue Existing samples.
+   * @returns {Array<object>}
+   */
   rowSample(rows, prevValue) {
     if (this.table.options.groupBy) {
       const group = this.getGroups(false)[0]
@@ -210,6 +235,10 @@ export default class GroupRows extends Module {
     return prevValue
   }
 
+  /**
+   * Adjust virtual render width when only group headers are visible.
+   * @returns {Array<object>|undefined}
+   */
   virtualRenderFill() {
     const el = this.table.rowManager.tableElement
     let rows = this.table.rowManager.getVisibleRows()
@@ -225,6 +254,13 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Resolve insertion index within grouped rows.
+   * @param {object} row Internal row.
+   * @param {object} index Target index row.
+   * @param {boolean} top Insert-at-top flag.
+   * @returns {object|undefined}
+   */
   rowAddingIndex(row, index, top) {
     if (this.table.options.groupBy) {
       this.assignRowToGroup(row)
@@ -253,6 +289,10 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Emit grouped data change event.
+   * @returns {void}
+   */
   trackChanges() {
     this.dispatch('group-changed')
   }
@@ -261,6 +301,11 @@ export default class GroupRows extends Module {
   /// ////// Table Functions /////////
   /// ////////////////////////////////
 
+  /**
+   * Set grouping definition.
+   * @param {*} groups Group definition.
+   * @returns {void}
+   */
   setGroupBy(groups) {
     this.table.options.groupBy = groups
 
@@ -279,6 +324,11 @@ export default class GroupRows extends Module {
     this.trackChanges()
   }
 
+  /**
+   * Set allowed group values.
+   * @param {*} groupValues Group values config.
+   * @returns {void}
+   */
   setGroupValues(groupValues) {
     this.table.options.groupValues = groupValues
     this.configureGroupSetup()
@@ -287,6 +337,11 @@ export default class GroupRows extends Module {
     this.trackChanges()
   }
 
+  /**
+   * Set initial open/closed state rules for groups.
+   * @param {*} values Open-state config.
+   * @returns {void}
+   */
   setGroupStartOpen(values) {
     this.table.options.groupStartOpen = values
     this.configureGroupSetup()
@@ -300,6 +355,11 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Set group header generator config.
+   * @param {*} values Group header config.
+   * @returns {void}
+   */
   setGroupHeader(values) {
     this.table.options.groupHeader = values
     this.configureGroupSetup()
@@ -313,11 +373,20 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Get top-level groups as components.
+   * @param {*} values Unused argument.
+   * @returns {Array<object>}
+   */
   userGetGroups(values) {
     return this.getGroups(true)
   }
 
   // get grouped table data in the same format as getData()
+  /**
+   * Get grouped data payload.
+   * @returns {Array<object>}
+   */
   userGetGroupedData() {
     return this.table.options.groupBy ? this.getGroupedData() : this.getData()
   }
@@ -326,6 +395,11 @@ export default class GroupRows extends Module {
   /// ////// Component Functions /////////
   /// ////////////////////////////////////
 
+  /**
+   * Get row's group component.
+   * @param {object} row Internal row.
+   * @returns {object|boolean}
+   */
   rowGetGroup(row) {
     return row.modules.group ? row.modules.group.getComponent() : false
   }
@@ -334,6 +408,13 @@ export default class GroupRows extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Handle row move operations within/across groups.
+   * @param {object} from Source row/group.
+   * @param {object} to Target row/group.
+   * @param {boolean} after Insert-after flag.
+   * @returns {void}
+   */
   rowMoving(from, to, after) {
     if (this.table.options.groupBy) {
       if (!after && to instanceof Group) {
@@ -355,6 +436,11 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Remove row from its group before deletion.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   rowDeleting(row) {
     // remove from group
     if (this.table.options.groupBy && row.modules.group) {
@@ -362,12 +448,22 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Refresh grouped rows after row updates.
+   * @param {object} row Updated row.
+   * @returns {void}
+   */
   rowsUpdated(row) {
     if (this.table.options.groupBy) {
       this.updateGroupRows(true)
     }
   }
 
+  /**
+   * Reassign row when grouped field values change.
+   * @param {object} cell Updated cell.
+   * @returns {void}
+   */
   cellUpdated(cell) {
     if (this.table.options.groupBy) {
       this.reassignRowToGroup(cell.row)
@@ -375,6 +471,11 @@ export default class GroupRows extends Module {
   }
 
   // return appropriate rows with group headers
+  /**
+   * Build grouped display rows.
+   * @param {Array<object>} rows Source rows.
+   * @returns {Array<object>}
+   */
   getRows(rows) {
     if (this.table.options.groupBy && this.groupIDLookups.length) {
       this.dispatchExternal('dataGrouping')
@@ -391,6 +492,11 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Get groups list.
+   * @param {boolean} component Return components when true.
+   * @returns {Array<object>}
+   */
   getGroups(component) {
     const groupComponents = []
 
@@ -401,6 +507,11 @@ export default class GroupRows extends Module {
     return groupComponents
   }
 
+  /**
+   * Get leaf child groups recursively.
+   * @param {object} [group] Group container.
+   * @returns {Array<object>}
+   */
   getChildGroups(group) {
     let groupComponents = []
 
@@ -419,6 +530,10 @@ export default class GroupRows extends Module {
     return groupComponents
   }
 
+  /**
+   * Clear all group state.
+   * @returns {void}
+   */
   wipe() {
     if (this.table.options.groupBy) {
       this.groupList.forEach((group) => {
@@ -430,6 +545,11 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Convert group list to grouped data output.
+   * @param {Array<object>} groupList Internal groups.
+   * @returns {Array<object>}
+   */
   pullGroupListData(groupList) {
     let groupListData = []
 
@@ -465,10 +585,19 @@ export default class GroupRows extends Module {
     return groupListData
   }
 
+  /**
+   * Get grouped data tree.
+   * @returns {Array<object>}
+   */
   getGroupedData() {
     return this.pullGroupListData(this.groupList)
   }
 
+  /**
+   * Find group that contains a row.
+   * @param {object} row Internal row.
+   * @returns {object|boolean}
+   */
   getRowGroup(row) {
     let match = false
 
@@ -487,10 +616,19 @@ export default class GroupRows extends Module {
     return match
   }
 
+  /**
+   * Count top-level groups.
+   * @returns {number}
+   */
   countGroups() {
     return this.groupList.length
   }
 
+  /**
+   * Generate groups and assign rows.
+   * @param {Array<object>} rows Source rows.
+   * @returns {void}
+   */
   generateGroups(rows) {
     const oldGroups = this.groups
 
@@ -516,6 +654,13 @@ export default class GroupRows extends Module {
     })
   }
 
+  /**
+   * Create a top-level group.
+   * @param {*} groupID Group key.
+   * @param {number} level Group level.
+   * @param {object} oldGroups Previous group map.
+   * @returns {void}
+   */
   createGroup(groupID, level, oldGroups) {
     const groupKey = `${level}_${groupID}`
     let group
@@ -536,6 +681,12 @@ export default class GroupRows extends Module {
     this.groupList.push(group)
   }
 
+  /**
+   * Assign row to an existing pre-created group.
+   * @param {object} row Internal row.
+   * @param {object} oldGroups Previous group map.
+   * @returns {void}
+   */
   assignRowToExistingGroup(row, oldGroups) {
     const groupID = this.groupIDLookups[0].func(row.getData())
     const groupKey = `0_${groupID}`
@@ -545,6 +696,12 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Assign row to a group, creating one if needed.
+   * @param {object} row Internal row.
+   * @param {object} oldGroups Previous group map.
+   * @returns {boolean}
+   */
   assignRowToGroup(row, oldGroups) {
     const groupID = this.groupIDLookups[0].func(row.getData())
     const groupKey = `0_${groupID}`
@@ -559,6 +716,11 @@ export default class GroupRows extends Module {
     return !newGroupNeeded
   }
 
+  /**
+   * Move row to correct group when grouping values change.
+   * @param {object} row Internal row.
+   * @returns {void}
+   */
   reassignRowToGroup(row) {
     if (row.type === 'row') {
       const oldRowGroup = row.modules.group
@@ -582,6 +744,11 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Compute expected group key path for a row.
+   * @param {object} row Internal row.
+   * @returns {Array<*>}
+   */
   getExpectedPath(row) {
     const groupPath = []
     const rowData = row.getData()
@@ -593,6 +760,11 @@ export default class GroupRows extends Module {
     return groupPath
   }
 
+  /**
+   * Build flattened grouped header/row display list.
+   * @param {boolean} force Trigger refresh after build.
+   * @returns {Array<object>}
+   */
   updateGroupRows(force) {
     let output = []
 
@@ -609,6 +781,11 @@ export default class GroupRows extends Module {
     return output
   }
 
+  /**
+   * Sync grouped header horizontal positions.
+   * @param {number} left Horizontal scroll offset.
+   * @returns {void}
+   */
   scrollHeaders(left) {
     if (this.table.options.groupBy) {
       if (this.table.options.renderHorizontal === 'virtual') {
@@ -623,6 +800,11 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Remove a group from registry and list.
+   * @param {object} group Internal group.
+   * @returns {void}
+   */
   removeGroup(group) {
     const groupKey = `${group.level}_${group.key}`
     let index
@@ -638,6 +820,10 @@ export default class GroupRows extends Module {
     }
   }
 
+  /**
+   * Ensure table width when only group headers render.
+   * @returns {void}
+   */
   checkBasicModeGroupHeaderWidth() {
     const element = this.table.rowManager.tableElement
     let onlyGroupHeaders = true

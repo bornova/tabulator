@@ -4,6 +4,9 @@ import Cell from '../../core/cell/Cell.js'
 export default class Tooltip extends Module {
   static moduleName = 'tooltip'
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -19,16 +22,29 @@ export default class Tooltip extends Module {
     this.registerColumnOption('headerTooltip')
   }
 
+  /**
+   * Initialize tooltip subscriptions.
+   * @returns {void}
+   */
   initialize() {
     this.deprecatedOptionsCheck()
 
     this.subscribe('column-init', this.initializeColumn.bind(this))
   }
 
+  /**
+   * Check deprecated tooltip options.
+   * @returns {void}
+   */
   deprecatedOptionsCheck() {
     // this.deprecationCheckMsg("tooltipGenerationMode", "This option is no longer needed as tooltips are always generated on hover now");
   }
 
+  /**
+   * Initialize tooltip listeners for a column.
+   * @param {object} column Internal column.
+   * @returns {void}
+   */
   initializeColumn(column) {
     if (column.definition.headerTooltip && !this.headerSubscriber) {
       this.headerSubscriber = true
@@ -45,6 +61,13 @@ export default class Tooltip extends Module {
     }
   }
 
+  /**
+   * Handle mouse move and schedule tooltip rendering.
+   * @param {string} action Tooltip type key.
+   * @param {MouseEvent} e Mouse event.
+   * @param {object} component Cell or column component.
+   * @returns {void}
+   */
   mousemoveCheck(action, e, component) {
     const tooltip = action === 'tooltip' ? component.column.definition.tooltip : component.definition.headerTooltip
 
@@ -54,12 +77,20 @@ export default class Tooltip extends Module {
     }
   }
 
+  /**
+   * Handle mouseout for tooltip cancellation.
+   * @returns {void}
+   */
   mouseoutCheck(_action, _e, _component) {
     if (!this.popupInstance) {
       this.clearPopup()
     }
   }
 
+  /**
+   * Clear pending tooltip timeout and hide active popup.
+   * @returns {void}
+   */
   clearPopup(_action, _e, _component) {
     clearTimeout(this.timeout)
     this.timeout = null
@@ -69,6 +100,13 @@ export default class Tooltip extends Module {
     }
   }
 
+  /**
+   * Build and show tooltip popup content.
+   * @param {MouseEvent} e Mouse event.
+   * @param {object} component Internal cell/column component.
+   * @param {boolean|string|HTMLElement|Function} tooltip Tooltip definition.
+   * @returns {void}
+   */
   loadTooltip(e, component, tooltip) {
     let contentsEl
     let renderedCallback

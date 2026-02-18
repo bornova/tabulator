@@ -7,6 +7,9 @@ import RendererBasicVertical from './rendering/renderers/BasicVertical.js'
 import RendererVirtualDomVertical from './rendering/renderers/VirtualDomVertical.js'
 
 export default class RowManager extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -45,6 +48,10 @@ export default class RowManager extends CoreFeature {
 
   /// ///////////// Setup Functions /////////////////
 
+  /**
+   * Create row holder element.
+   * @returns {HTMLDivElement}
+   */
   createHolderElement() {
     const element = document.createElement('div')
 
@@ -55,6 +62,10 @@ export default class RowManager extends CoreFeature {
     return element
   }
 
+  /**
+   * Create table body element.
+   * @returns {HTMLDivElement}
+   */
   createTableElement() {
     const element = document.createElement('div')
 
@@ -64,6 +75,10 @@ export default class RowManager extends CoreFeature {
     return element
   }
 
+  /**
+   * Initialize placeholder element from options.
+   * @returns {void}
+   */
   initializePlaceholder() {
     let placeholder = this.table.options.placeholder
 
@@ -100,15 +115,27 @@ export default class RowManager extends CoreFeature {
   }
 
   // return containing element
+  /**
+   * Get row holder element.
+   * @returns {HTMLElement}
+   */
   getElement() {
     return this.element
   }
 
   // return table element
+  /**
+   * Get table body element.
+   * @returns {HTMLElement}
+   */
   getTableElement() {
     return this.tableElement
   }
 
+  /**
+   * Initialize row manager DOM and scroll handling.
+   * @returns {void}
+   */
   initialize() {
     this.initializePlaceholder()
     this.initializeRenderer()
@@ -148,6 +175,11 @@ export default class RowManager extends CoreFeature {
   }
 
   /// /////////////// Row Manipulation //////////////////
+  /**
+   * Find row by object/component/element/index.
+   * @param {*} subject Row identifier.
+   * @returns {object|boolean}
+   */
   findRow(subject) {
     if (typeof subject === 'object') {
       if (subject instanceof Row) {
@@ -181,6 +213,11 @@ export default class RowManager extends CoreFeature {
     return false
   }
 
+  /**
+   * Find row by raw data object identity.
+   * @param {object} data Data object.
+   * @returns {object|boolean}
+   */
   getRowFromDataObject(data) {
     const match = this.rows.find((row) => {
       return row.data === data
@@ -189,17 +226,36 @@ export default class RowManager extends CoreFeature {
     return match || false
   }
 
+  /**
+   * Find displayed row by visible position.
+   * @param {number} position Row display position.
+   * @returns {object|undefined}
+   */
   getRowFromPosition(position) {
     return this.getDisplayRows().find((row) => {
       return row.type === 'row' && row.getPosition() === position && row.isDisplayed()
     })
   }
 
+  /**
+   * Scroll to a row position.
+   * @param {object} row Internal row.
+   * @param {string} position Scroll position mode.
+   * @param {boolean} ifVisible Skip if visible.
+   * @returns {Promise<void>}
+   */
   scrollToRow(row, position, ifVisible) {
     return this.renderer.scrollToRowPosition(row, position, ifVisible)
   }
 
   /// /////////////// Data Handling //////////////////
+  /**
+   * Set table data.
+   * @param {Array<object>} data Data rows.
+   * @param {boolean} renderInPosition Preserve render position.
+   * @param {boolean} columnsChanged Column schema changed.
+   * @returns {Promise<void>}
+   */
   setData(data, renderInPosition, columnsChanged) {
     return new Promise((resolve, reject) => {
       if (renderInPosition && this.getDisplayRows().length) {
@@ -223,6 +279,12 @@ export default class RowManager extends CoreFeature {
     })
   }
 
+  /**
+   * Apply data array to internal row models.
+   * @param {Array<object>} data Data rows.
+   * @param {boolean} [renderInPosition] Preserve render position.
+   * @returns {void}
+   */
   _setDataActual(data, renderInPosition) {
     this.dispatchExternal('dataProcessing', data)
 

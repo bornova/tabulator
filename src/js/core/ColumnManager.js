@@ -10,6 +10,9 @@ import RendererVirtualDomHorizontal from './rendering/renderers/VirtualDomHorizo
 import defaultColumnOptions from './column/defaults/options.js'
 
 export default class ColumnManager extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -32,6 +35,10 @@ export default class ColumnManager extends CoreFeature {
 
   /// /////////// Setup Functions /////////////////
 
+  /**
+   * Initialize column manager renderer and DOM.
+   * @returns {void}
+   */
   initialize() {
     this.initializeRenderer()
 
@@ -48,6 +55,11 @@ export default class ColumnManager extends CoreFeature {
     this.subscribe('scrollbar-vertical', this.padVerticalScrollbar.bind(this))
   }
 
+  /**
+   * Pad header for vertical scrollbar width.
+   * @param {number} width Scrollbar width.
+   * @returns {void}
+   */
   padVerticalScrollbar(width) {
     if (this.table.rtl) {
       this.headersElement.style.marginLeft = `${width}px`
@@ -56,6 +68,10 @@ export default class ColumnManager extends CoreFeature {
     }
   }
 
+  /**
+   * Initialize horizontal renderer.
+   * @returns {void}
+   */
   initializeRenderer() {
     let renderClass
 
@@ -78,6 +94,10 @@ export default class ColumnManager extends CoreFeature {
     }
   }
 
+  /**
+   * Create headers element.
+   * @returns {HTMLDivElement}
+   */
   createHeadersElement() {
     const element = document.createElement('div')
 
@@ -87,6 +107,10 @@ export default class ColumnManager extends CoreFeature {
     return element
   }
 
+  /**
+   * Create header contents element.
+   * @returns {HTMLDivElement}
+   */
   createHeaderContentsElement() {
     const element = document.createElement('div')
 
@@ -96,6 +120,10 @@ export default class ColumnManager extends CoreFeature {
     return element
   }
 
+  /**
+   * Create header root element.
+   * @returns {HTMLDivElement}
+   */
   createHeaderElement() {
     const element = document.createElement('div')
 
@@ -110,21 +138,38 @@ export default class ColumnManager extends CoreFeature {
   }
 
   // return containing element
+  /**
+   * Get header root element.
+   * @returns {HTMLElement}
+   */
   getElement() {
     return this.element
   }
 
   // return containing contents element
+  /**
+   * Get header contents element.
+   * @returns {HTMLElement}
+   */
   getContentsElement() {
     return this.contentsElement
   }
 
   // return header containing element
+  /**
+   * Get headers element.
+   * @returns {HTMLElement}
+   */
   getHeadersElement() {
     return this.headersElement
   }
 
   // scroll horizontally to match table body
+  /**
+   * Sync horizontal scroll position.
+   * @param {number} left Horizontal scroll offset.
+   * @returns {void}
+   */
   scrollHorizontal(left) {
     this.contentsElement.scrollLeft = left
 
@@ -133,6 +178,10 @@ export default class ColumnManager extends CoreFeature {
     this.renderer.scrollColumns(left)
   }
 
+  /**
+   * Bind wheel scrolling for horizontal sync.
+   * @returns {void}
+   */
   initializeScrollWheelWatcher() {
     this.contentsElement.addEventListener('wheel', (e) => {
       let left
@@ -147,6 +196,11 @@ export default class ColumnManager extends CoreFeature {
   }
 
   /// ////////// Column Setup Functions /////////////
+  /**
+   * Auto-generate columns from row data.
+   * @param {Array<object>} data Source data.
+   * @returns {void}
+   */
   generateColumnsFromRowData(data) {
     const cols = []
     const collProgress = {}
@@ -213,6 +267,11 @@ export default class ColumnManager extends CoreFeature {
     }
   }
 
+  /**
+   * Infer default sorter type from a value.
+   * @param {*} value Source value.
+   * @returns {string}
+   */
   calculateSorterFromValue(value) {
     let sorter
 

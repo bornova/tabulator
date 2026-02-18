@@ -1,3 +1,11 @@
+/**
+ * Render a row handle icon and class.
+ *
+ * @param {Object} cell Cell component.
+ * @param {Object} formatterParams Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {string} Handle markup.
+ */
 export default function (cell, formatterParams, onRendered) {
   const element = cell.getElement()
   const handleIcon =

@@ -1,3 +1,10 @@
+/**
+ * Parse XLSX input into a two-dimensional array.
+ *
+ * @this {Object}
+ * @param {*} input XLSX input payload.
+ * @returns {Array<Array<*>>} Parsed worksheet rows.
+ */
 export default function (input) {
   const xlsxLib = this.dependencyRegistry.lookup('XLSX')
   const workbook = xlsxLib.read(input)

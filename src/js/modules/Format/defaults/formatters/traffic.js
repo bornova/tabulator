@@ -1,3 +1,12 @@
+/**
+ * Render a traffic-light indicator.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component.
+ * @param {Object} formatterParams Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {HTMLElement|undefined} Indicator element.
+ */
 export default function (cell, formatterParams, onRendered) {
   const value = this.sanitizeHTML(cell.getValue()) || 0
   const el = document.createElement('span')

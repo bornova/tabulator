@@ -1,3 +1,12 @@
+/**
+ * Default ajax loader that fetches JSON data and resolves with parsed content.
+ *
+ * @this {Object}
+ * @param {string} url Request url.
+ * @param {RequestInit} config Fetch configuration.
+ * @param {Object} params Request parameters.
+ * @returns {Promise<*>} Promise resolving to response data.
+ */
 export default function (url, config, params) {
   return new Promise((resolve, reject) => {
     // set url

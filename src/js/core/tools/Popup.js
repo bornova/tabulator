@@ -2,6 +2,11 @@ import CoreFeature from '../CoreFeature.js'
 import Helpers from './Helpers.js'
 
 export default class Popup extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   * @param {HTMLElement} element Popup content element.
+   * @param {Popup} [parent] Parent popup for nested popup trees.
+   */
   constructor(table, element, parent) {
     super(table)
 
@@ -29,11 +34,19 @@ export default class Popup extends CoreFeature {
     this.destroyed = false
   }
 
+  /**
+   * Handle table destruction.
+   * @returns {void}
+   */
   tableDestroyed() {
     this.destroyed = true
     this.hide(true)
   }
 
+  /**
+   * Resolve popup container from table options.
+   * @returns {HTMLElement}
+   */
   _lookupContainer() {
     let container = this.table.options.popupContainer
 
@@ -67,6 +80,12 @@ export default class Popup extends CoreFeature {
     return container
   }
 
+  /**
+   * Check if container is an ancestor of the table element.
+   * @param {HTMLElement} container Candidate container.
+   * @param {HTMLElement} [element=this.table.element] Current element in traversal.
+   * @returns {boolean}
+   */
   _checkContainerIsParent(container, element = this.table.element) {
     if (container === element) {
       return true
@@ -75,10 +94,20 @@ export default class Popup extends CoreFeature {
     }
   }
 
+  /**
+   * Set a callback to run after popup is rendered.
+   * @param {Function} callback Render callback.
+   * @returns {void}
+   */
   renderCallback(callback) {
     this.renderedCallback = callback
   }
 
+  /**
+   * Convert event coordinates into popup-container-relative coordinates.
+   * @param {MouseEvent|TouchEvent} e Source event.
+   * @returns {{x:number,y:number}}
+   */
   containerEventCoords(e) {
     const touch = !(e instanceof MouseEvent)
 
@@ -95,6 +124,12 @@ export default class Popup extends CoreFeature {
     return { x, y }
   }
 
+  /**
+   * Calculate popup coordinates from an origin element.
+   * @param {HTMLElement} element Origin element.
+   * @param {string} [position='right'] Anchor position.
+   * @returns {{x:number,y:number,offset:object}}
+   */
   elementPositionCoords(element, position = 'right') {
     const offset = Helpers.elOffset(element)
     let containerOffset
@@ -138,6 +173,12 @@ export default class Popup extends CoreFeature {
     return { x, y, offset }
   }
 
+  /**
+   * Show the popup from an element, coordinate pair, or event.
+   * @param {HTMLElement|number|MouseEvent|TouchEvent} origin Popup origin.
+   * @param {string|number} [position] Position mode or y-coordinate when origin is numeric.
+   * @returns {Popup}
+   */
   show(origin, position) {
     let x, y, parentEl, parentOffset, coords
 
@@ -187,6 +228,15 @@ export default class Popup extends CoreFeature {
     return this
   }
 
+  /**
+   * Adjust popup position to keep it within container bounds.
+   * @param {number} x Horizontal position.
+   * @param {number} y Vertical position.
+   * @param {HTMLElement} [parentEl] Parent element used for anchored positioning.
+   * @param {object} [parentOffset] Parent element offset.
+   * @param {string} [position] Anchor position.
+   * @returns {void}
+   */
   _fitToScreen(x, y, parentEl, parentOffset, position) {
     const scrollTop = this.container === document.body ? document.documentElement.scrollTop : this.container.scrollTop
 
@@ -223,10 +273,19 @@ export default class Popup extends CoreFeature {
     }
   }
 
+  /**
+   * Check whether popup is currently visible.
+   * @returns {boolean}
+   */
   isVisible() {
     return this.visible
   }
 
+  /**
+   * Enable hide-on-blur behavior and optional callback.
+   * @param {Function} [callback] Callback fired when popup is blurred.
+   * @returns {Popup}
+   */
   hideOnBlur(callback) {
     this.blurable = true
 
@@ -251,20 +310,38 @@ export default class Popup extends CoreFeature {
     return this
   }
 
+  /**
+   * Close popup when escape is pressed.
+   * @param {KeyboardEvent} e Keyboard event.
+   * @returns {void}
+   */
   _escapeCheck(e) {
     if (e.keyCode == 27) {
       this.hide()
     }
   }
 
+  /**
+   * Temporarily prevent popup hide.
+   * @returns {void}
+   */
   blockHide() {
     this.hideable = false
   }
 
+  /**
+   * Restore popup hide behavior.
+   * @returns {void}
+   */
   restoreHide() {
     this.hideable = true
   }
 
+  /**
+   * Hide the popup and clean up listeners.
+   * @param {boolean} [silent=false] Suppress blur callback.
+   * @returns {Popup}
+   */
   hide(silent = false) {
     if (this.visible && this.hideable) {
       if (this.blurable && this.blurEventsBound) {
@@ -303,6 +380,11 @@ export default class Popup extends CoreFeature {
     return this
   }
 
+  /**
+   * Create a child popup attached to this popup.
+   * @param {HTMLElement} element Child popup content element.
+   * @returns {Popup}
+   */
   child(element) {
     if (this.childPopup) {
       this.childPopup.hide()

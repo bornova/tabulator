@@ -1,6 +1,15 @@
 import maskInput from '../../inputMask.js'
 
 // input element with type of number
+/**
+ * Number input editor.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} editorParams Editor params.
+ * @returns {HTMLInputElement}
+ */
 export default function (cell, onRendered, success, cancel, editorParams) {
   let cellValue = cell.getValue()
   const vertNav = editorParams.verticalNavigation || 'editor'

@@ -1,3 +1,10 @@
+/**
+ * Flatten nested values into key/value pairs for query-string generation.
+ *
+ * @param {*} data Data to flatten.
+ * @param {string} [prefix=''] Key prefix.
+ * @returns {Array<{key: string|number, value: *}>} Flattened key/value pairs.
+ */
 function generateParamsList(data, prefix = '') {
   let output = []
 
@@ -16,6 +23,12 @@ function generateParamsList(data, prefix = '') {
   return output
 }
 
+/**
+ * Serialize parameter values into a query string.
+ *
+ * @param {Object} params Request parameters.
+ * @returns {string} Encoded query-string.
+ */
 function serializeParams(params) {
   const output = generateParamsList(params)
   const encoded = []
@@ -27,6 +40,14 @@ function serializeParams(params) {
   return encoded.join('&')
 }
 
+/**
+ * Default ajax url generator.
+ *
+ * @param {string} url Request url.
+ * @param {RequestInit} config Fetch configuration.
+ * @param {Object} params Request parameters.
+ * @returns {string} Generated request url.
+ */
 export default function (url, config, params) {
   if (url) {
     if (params && Object.keys(params).length) {

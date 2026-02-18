@@ -3,6 +3,11 @@ import RowComponent from './RowComponent.js'
 import Helpers from '../tools/Helpers.js'
 
 export default class Row extends CoreFeature {
+  /**
+   * @param {object} data Row data object.
+   * @param {object} parent Parent row manager or group.
+   * @param {string} [type='row'] Row type identifier.
+   */
   constructor(data, parent, type = 'row') {
     super(parent.table)
 
@@ -28,6 +33,10 @@ export default class Row extends CoreFeature {
     this.setData(data)
   }
 
+  /**
+   * Lazily create the row DOM element.
+   * @returns {void}
+   */
   create() {
     if (!this.created) {
       this.created = true
@@ -35,6 +44,10 @@ export default class Row extends CoreFeature {
     }
   }
 
+  /**
+   * Create the base row DOM element.
+   * @returns {void}
+   */
   createElement() {
     const element = document.createElement('div')
 
@@ -44,27 +57,48 @@ export default class Row extends CoreFeature {
     this.element = element
   }
 
+  /**
+   * Return row DOM element, creating it when needed.
+   * @returns {HTMLElement|boolean}
+   */
   getElement() {
     this.create()
     return this.element
   }
 
+  /**
+   * Detach the row element from the DOM if currently attached.
+   * @returns {void}
+   */
   detachElement() {
     if (this.element && this.element.parentNode) {
       this.element.parentNode.removeChild(this.element)
     }
   }
 
+  /**
+   * Generate row element and emit initialization event.
+   * @returns {void}
+   */
   generateElement() {
     this.createElement()
     this.dispatch('row-init', this)
   }
 
+  /**
+   * Generate cell objects for this row.
+   * @returns {void}
+   */
   generateCells() {
     this.cells = this.table.columnManager.generateCells(this)
   }
 
-  // functions to setup on first render
+  /**
+   * Initialize row cells and layout.
+   * @param {boolean} [force] Force reinitialization.
+   * @param {boolean} [inFragment] Render in a detached fragment when true.
+   * @returns {void}
+   */
   initialize(force, inFragment) {
     this.create()
 
@@ -97,12 +131,20 @@ export default class Row extends CoreFeature {
     }
   }
 
+  /**
+   * Dispatch rendered hooks for all row cells.
+   * @returns {void}
+   */
   rendered() {
     this.cells.forEach((cell) => {
       cell.cellRendered()
     })
   }
 
+  /**
+   * Mark height as stale and normalize if row is currently in the document flow.
+   * @returns {void}
+   */
   reinitializeHeight() {
     this.heightInitialized = false
 
@@ -111,14 +153,27 @@ export default class Row extends CoreFeature {
     }
   }
 
+  /**
+   * Mark this row as not initialized.
+   * @returns {void}
+   */
   deinitialize() {
     this.initialized = false
   }
 
+  /**
+   * Mark row height as not initialized.
+   * @returns {void}
+   */
   deinitializeHeight() {
     this.heightInitialized = false
   }
 
+  /**
+   * Reinitialize row layout state.
+   * @param {boolean} [children] Unused legacy parameter.
+   * @returns {void}
+   */
   reinitialize(children) {
     this.initialized = false
     this.heightInitialized = false
@@ -135,7 +190,11 @@ export default class Row extends CoreFeature {
     this.dispatch('row-relayout', this)
   }
 
-  // get heights when doing bulk row style calcs in virtual DOM
+  /**
+   * Calculate row height and cache styled/outer heights.
+   * @param {boolean} [force] Ignore manual height and recalculate when true.
+   * @returns {void}
+   */
   calcHeight(force) {
     let maxHeight = 0
     let minHeight = 0
@@ -157,10 +216,18 @@ export default class Row extends CoreFeature {
     this.outerHeight = this.element.offsetHeight
   }
 
+  /**
+   * Calculate minimum row height.
+   * @returns {number}
+   */
   calcMinHeight() {
     return this.table.options.resizableRows ? this.element.clientHeight : 0
   }
 
+  /**
+   * Calculate maximum cell height in this row.
+   * @returns {number}
+   */
   calcMaxHeight() {
     let maxHeight = 0
 
@@ -175,7 +242,10 @@ export default class Row extends CoreFeature {
     return maxHeight
   }
 
-  // set of cells
+  /**
+   * Apply current row height to all cells.
+   * @returns {void}
+   */
   setCellHeight() {
     this.cells.forEach((cell) => {
       cell.setHeight()
@@ -184,13 +254,21 @@ export default class Row extends CoreFeature {
     this.heightInitialized = true
   }
 
+  /**
+   * Clear explicit height on all row cells.
+   * @returns {void}
+   */
   clearCellHeight() {
     this.cells.forEach((cell) => {
       cell.clearHeight()
     })
   }
 
-  // normalize the height of elements in the row
+  /**
+   * Normalize row and cell heights.
+   * @param {boolean} [force] Clear existing cell heights before recalculating.
+   * @returns {void}
+   */
   normalizeHeight(force) {
     if (force && !this.table.options.rowHeight) {
       this.clearCellHeight()
@@ -201,7 +279,12 @@ export default class Row extends CoreFeature {
     this.setCellHeight()
   }
 
-  // set height of rows
+  /**
+   * Set row height explicitly.
+   * @param {number} height Row height in pixels.
+   * @param {boolean} [force] Force update when true.
+   * @returns {void}
+   */
   setHeight(height, force) {
     if (this.height !== height || force) {
       this.manualHeight = true
@@ -220,17 +303,28 @@ export default class Row extends CoreFeature {
     }
   }
 
-  // return rows outer height
+  /**
+   * Return rendered outer row height.
+   * @returns {number}
+   */
   getHeight() {
     return this.outerHeight
   }
 
-  // return rows outer Width
+  /**
+   * Return rendered row width.
+   * @returns {number}
+   */
   getWidth() {
     return this.element.offsetWidth
   }
 
   /// ///////////// Cell Management /////////////////
+  /**
+   * Remove a cell from the row cell collection.
+   * @param {object} cell Internal cell instance.
+   * @returns {void}
+   */
   deleteCell(cell) {
     const index = this.cells.indexOf(cell)
 
@@ -240,13 +334,22 @@ export default class Row extends CoreFeature {
   }
 
   /// ///////////// Data Management /////////////////
+  /**
+   * Set initial row data with lifecycle hooks.
+   * @param {object} data Row data object.
+   * @returns {void}
+   */
   setData(data) {
     this.data = this.chain('row-data-init-before', [this, data], undefined, data)
 
     this.dispatch('row-data-init-after', this)
   }
 
-  // update the rows data
+  /**
+   * Patch row data and refresh impacted cells.
+   * @param {object|string} updatedData Partial update object or serialized JSON.
+   * @returns {Promise<void>}
+   */
   updateData(updatedData) {
     const visible = this.element && Helpers.elVisible(this.element)
     let tempData = {}
@@ -322,6 +425,11 @@ export default class Row extends CoreFeature {
     })
   }
 
+  /**
+   * Return row data optionally transformed.
+   * @param {string|boolean} [transform] Optional transform lookup key.
+   * @returns {object}
+   */
   getData(transform) {
     if (transform) {
       return this.chain('row-data-retrieve', [this, transform], null, this.data)
@@ -330,6 +438,11 @@ export default class Row extends CoreFeature {
     return this.data
   }
 
+  /**
+   * Get a cell by column lookup input.
+   * @param {*} column Column lookup accepted by column manager.
+   * @returns {object|undefined}
+   */
   getCell(column) {
     let match = false
 
@@ -346,18 +459,32 @@ export default class Row extends CoreFeature {
     return match
   }
 
+  /**
+   * Get index of the provided cell.
+   * @param {object} findCell Cell instance to find.
+   * @returns {number}
+   */
   getCellIndex(findCell) {
     return this.cells.findIndex((cell) => {
       return cell === findCell
     })
   }
 
+  /**
+   * Find a cell by DOM element reference.
+   * @param {HTMLElement} subject Cell element.
+   * @returns {object|undefined}
+   */
   findCell(subject) {
     return this.cells.find((cell) => {
       return cell.element === subject
     })
   }
 
+  /**
+   * Return all cells in this row.
+   * @returns {Array<object>}
+   */
   getCells() {
     if (!this.initialized && this.cells.length === 0) {
       this.generateCells()
@@ -366,16 +493,30 @@ export default class Row extends CoreFeature {
     return this.cells
   }
 
+  /**
+   * Get the next displayed row.
+   * @returns {object|boolean}
+   */
   nextRow() {
     const row = this.table.rowManager.nextDisplayRow(this, true)
     return row || false
   }
 
+  /**
+   * Get the previous displayed row.
+   * @returns {object|boolean}
+   */
   prevRow() {
     const row = this.table.rowManager.prevDisplayRow(this, true)
     return row || false
   }
 
+  /**
+   * Move this row before or after another row.
+   * @param {*} to Target row lookup value.
+   * @param {boolean} before Insert before when true.
+   * @returns {void}
+   */
   moveToRow(to, before) {
     const toRow = this.table.rowManager.findRow(to)
 
@@ -388,6 +529,10 @@ export default class Row extends CoreFeature {
   }
 
   /// ////////////////// Actions  /////////////////////
+  /**
+   * Delete this row.
+   * @returns {Promise<void>}
+   */
   delete() {
     this.dispatch('row-delete', this)
 
@@ -396,6 +541,11 @@ export default class Row extends CoreFeature {
     return Promise.resolve()
   }
 
+  /**
+   * Delete row internals and unregister from row manager.
+   * @param {boolean} [blockRedraw] Prevent redraw while deleting.
+   * @returns {void}
+   */
   deleteActual(blockRedraw) {
     this.detachModules()
 
@@ -410,10 +560,18 @@ export default class Row extends CoreFeature {
     this.dispatch('row-deleted', this)
   }
 
+  /**
+   * Detach module state before deletion.
+   * @returns {void}
+   */
   detachModules() {
     this.dispatch('row-deleting', this)
   }
 
+  /**
+   * Delete all cells owned by this row.
+   * @returns {void}
+   */
   deleteCells() {
     const cellCount = this.cells.length
 
@@ -422,6 +580,10 @@ export default class Row extends CoreFeature {
     }
   }
 
+  /**
+   * Remove all row DOM/module state without row-manager deletion.
+   * @returns {void}
+   */
   wipe() {
     this.detachModules()
     this.deleteCells()
@@ -438,14 +600,27 @@ export default class Row extends CoreFeature {
     this.modules = {}
   }
 
+  /**
+   * Determine if this row is in current display rows.
+   * @returns {boolean}
+   */
   isDisplayed() {
     return this.table.rowManager.getDisplayRows().includes(this)
   }
 
+  /**
+   * Return display position when row is displayed.
+   * @returns {number|boolean}
+   */
   getPosition() {
     return this.isDisplayed() ? this.position : false
   }
 
+  /**
+   * Set row display position and notify watchers.
+   * @param {number} position New position index.
+   * @returns {void}
+   */
   setPosition(position) {
     if (position !== this.position) {
       this.position = position
@@ -456,17 +631,30 @@ export default class Row extends CoreFeature {
     }
   }
 
+  /**
+   * Subscribe to row position updates.
+   * @param {Function} callback Position callback.
+   * @returns {void}
+   */
   watchPosition(callback) {
     this.positionWatchers.push(callback)
 
     callback(this.position)
   }
 
+  /**
+   * Get group module wrapper for this row.
+   * @returns {object|boolean}
+   */
   getGroup() {
     return this.modules.group || false
   }
 
   /// ///////////// Object Generation /////////////////
+  /**
+   * Get or lazily create the public row component.
+   * @returns {RowComponent}
+   */
   getComponent() {
     if (!this.component) {
       this.component = new RowComponent(this)

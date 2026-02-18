@@ -1,5 +1,14 @@
 import RowComponent from '../../../../core/row/RowComponent.js'
 
+/**
+ * Render a row selection checkbox formatter.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component or header context.
+ * @param {{rowRange?: string|Array<Object>|function}} formatterParams Formatter parameters.
+ * @param {function(function): void} _onRendered Render callback registrar.
+ * @returns {HTMLInputElement|string} Checkbox element or empty string.
+ */
 export default function (cell, formatterParams, _onRendered) {
   const checkbox = document.createElement('input')
   let blocked = false

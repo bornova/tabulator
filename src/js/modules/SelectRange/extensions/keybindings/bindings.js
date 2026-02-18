@@ -1,3 +1,8 @@
+/**
+ * SelectRange keybinding definitions.
+ *
+ * @type {Object<string, string|Array<string>>}
+ */
 export default {
   rangeJumpUp: ['ctrl + 38', 'meta + 38'],
   rangeJumpDown: ['ctrl + 40', 'meta + 40'],

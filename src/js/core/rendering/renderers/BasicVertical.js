@@ -2,6 +2,9 @@ import Renderer from '../Renderer.js'
 import Helpers from '../../tools/Helpers.js'
 
 export default class BasicVertical extends Renderer {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -11,6 +14,10 @@ export default class BasicVertical extends Renderer {
     this.scrollLeft = 0
   }
 
+  /**
+   * Clear all rendered rows and reset table element styles.
+   * @returns {void}
+   */
   clearRows() {
     const element = this.tableElement
 
@@ -25,6 +32,10 @@ export default class BasicVertical extends Renderer {
     element.style.visibility = ''
   }
 
+  /**
+   * Render all display rows into the table element.
+   * @returns {void}
+   */
   renderRows() {
     const element = this.tableElement
     let onlyGroupHeaders = true
@@ -61,6 +72,11 @@ export default class BasicVertical extends Renderer {
     element.style.minWidth = onlyGroupHeaders ? `${this.table.columnManager.getWidth()}px` : ''
   }
 
+  /**
+   * Re-render all rows with an optional callback between clear and render.
+   * @param {Function} [callback] Callback executed after clear and before render.
+   * @returns {void}
+   */
   rerenderRows(callback) {
     this.clearRows()
 
@@ -75,6 +91,11 @@ export default class BasicVertical extends Renderer {
     }
   }
 
+  /**
+   * Determine whether a row is nearer to the top edge than the bottom edge.
+   * @param {object} row Internal row instance.
+   * @returns {boolean}
+   */
   scrollToRowNearestTop(row) {
     const rowTop = Helpers.elOffset(row.getElement()).top
 
@@ -84,6 +105,11 @@ export default class BasicVertical extends Renderer {
     )
   }
 
+  /**
+   * Scroll vertically to bring a row into view.
+   * @param {object} row Internal row instance.
+   * @returns {void}
+   */
   scrollToRow(row) {
     const rowEl = row.getElement()
 
@@ -91,6 +117,11 @@ export default class BasicVertical extends Renderer {
       Helpers.elOffset(rowEl).top - Helpers.elOffset(this.elementVertical).top + this.elementVertical.scrollTop
   }
 
+  /**
+   * Return rows currently considered visible.
+   * @param {boolean} [includingBuffer] Included for renderer API compatibility.
+   * @returns {Array<object>}
+   */
   visibleRows(includingBuffer) {
     return this.rows()
   }

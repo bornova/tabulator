@@ -1,3 +1,11 @@
+/**
+ * Render a toggle switch display.
+ *
+ * @param {Object} cell Cell component.
+ * @param {Object} formatterParams Formatter parameters.
+ * @param {function(function): void} onRendered Render callback registrar.
+ * @returns {HTMLDivElement} Toggle element.
+ */
 export default function (cell, formatterParams, onRendered) {
   const value = cell.getValue()
   const size = formatterParams.size || 15

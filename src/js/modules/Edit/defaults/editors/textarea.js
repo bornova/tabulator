@@ -1,6 +1,15 @@
 import maskInput from '../../inputMask.js'
 
 // resizable text area element
+/**
+ * Resizable textarea editor.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} editorParams Editor params.
+ * @returns {HTMLTextAreaElement}
+ */
 export default function (cell, onRendered, success, cancel, editorParams) {
   let cellValue = cell.getValue()
   const vertNav = editorParams.verticalNavigation || 'hybrid'

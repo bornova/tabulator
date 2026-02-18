@@ -1,4 +1,12 @@
 // resize columns to fit
+/**
+ * Resize columns to fit the available table width.
+ *
+ * @this {Object}
+ * @param {Array<Object>} columns Columns to resize.
+ * @param {boolean} forced Force recalculation.
+ * @returns {void}
+ */
 export default function (columns, forced) {
   let totalWidth = this.table.rowManager.element.getBoundingClientRect().width // table element width
   let fixedWidth = 0 // total width of columns with a defined width

@@ -12,6 +12,9 @@ export default class Export extends Module {
   static columnLookups = columnLookups
   static rowLookups = rowLookups
 
+  /**
+   * @param {object} table Tabulator table instance.
+   */
   constructor(table) {
     super(table)
 
@@ -26,6 +29,10 @@ export default class Export extends Module {
     this.registerColumnOption('titleHtmlOutput')
   }
 
+  /**
+   * Register export table functions.
+   * @returns {void}
+   */
   initialize() {
     this.registerTableFunction('getHtml', this.getHtml.bind(this))
   }
@@ -34,6 +41,14 @@ export default class Export extends Module {
   /// ////// Internal Logic //////////
   /// ////////////////////////////////
 
+  /**
+   * Build export row list for a range.
+   * @param {object} config Export config.
+   * @param {boolean} style Clone table style flag.
+   * @param {string|Function} range Row range selector.
+   * @param {string} colVisProp Column visibility option name.
+   * @returns {Array<object>}
+   */
   generateExportList(config, style, range, colVisProp) {
     let headers, body, columns, colLookup
 
@@ -61,12 +76,25 @@ export default class Export extends Module {
     return headers.concat(body)
   }
 
+  /**
+   * Generate export table element from range/config.
+   * @param {object} config Export config.
+   * @param {boolean} style Clone table style flag.
+   * @param {string|Function} range Row range selector.
+   * @param {string} colVisProp Column visibility option name.
+   * @returns {HTMLTableElement}
+   */
   generateTable(config, style, range, colVisProp) {
     const list = this.generateExportList(config, style, range, colVisProp)
 
     return this.generateTableElement(list)
   }
 
+  /**
+   * Resolve rows for export from range value.
+   * @param {string|Function} range Range lookup key or callback.
+   * @returns {Array<object>}
+   */
   rowLookup(range) {
     let rows = []
     let rowLookup
@@ -88,6 +116,11 @@ export default class Export extends Module {
     return Object.assign([], rows)
   }
 
+  /**
+   * Build nested export metadata for column groups.
+   * @param {Array<object>} [columns] Internal columns.
+   * @returns {Array<object>}
+   */
   generateColumnGroupHeaders(columns) {
     const output = []
 
@@ -107,6 +140,11 @@ export default class Export extends Module {
     return output
   }
 
+  /**
+   * Recursively convert a column/group into export metadata.
+   * @param {object} column Internal column.
+   * @returns {object|boolean}
+   */
   processColumnGroup(column) {
     const subGroups = column.columns
     let maxDepth = 0
@@ -151,6 +189,11 @@ export default class Export extends Module {
     return groupData
   }
 
+  /**
+   * Determine if a column should be included in export.
+   * @param {object} column Internal column.
+   * @returns {boolean}
+   */
   columnVisCheck(column) {
     let visProp = column.definition[this.colVisProp]
 
@@ -169,6 +212,11 @@ export default class Export extends Module {
     return column.visible && column.field
   }
 
+  /**
+   * Convert grouped columns into export header rows.
+   * @param {Array<object>} columns Column group metadata.
+   * @returns {Array<ExportRow>}
+   */
   headersToExportRows(columns) {
     const headers = []
     let headerDepth = 0
@@ -237,6 +285,12 @@ export default class Export extends Module {
     return exportRows
   }
 
+  /**
+   * Convert table rows into export row structures.
+   * @param {Array<object>} rows Internal rows.
+   * @param {Array<object>} [columns=[]] Column components.
+   * @returns {Array<ExportRow>}
+   */
   bodyToExportRows(rows, columns = []) {
     const exportRows = []
 
@@ -302,6 +356,11 @@ export default class Export extends Module {
     return exportRows
   }
 
+  /**
+   * Generate HTML table element from export rows.
+   * @param {Array<ExportRow>} list Export rows.
+   * @returns {HTMLTableElement}
+   */
   generateTableElement(list) {
     const table = document.createElement('table')
     const headerEl = document.createElement('thead')
@@ -386,6 +445,10 @@ export default class Export extends Module {
     return table
   }
 
+  /**
+   * Lookup source table/cell styles for export cloning.
+   * @returns {object}
+   */
   lookupTableStyles() {
     const styles = {}
 
@@ -410,6 +473,13 @@ export default class Export extends Module {
     return styles
   }
 
+  /**
+   * Generate an exported table header row element.
+   * @param {ExportRow} row Export row.
+   * @param {object} setup Export setup options.
+   * @param {object} styles Style lookup cache.
+   * @returns {HTMLTableRowElement}
+   */
   generateHeaderElement(row, setup, styles) {
     const rowEl = document.createElement('tr')
 
@@ -477,6 +547,13 @@ export default class Export extends Module {
     return rowEl
   }
 
+  /**
+   * Generate an exported group row element.
+   * @param {ExportRow} row Export row.
+   * @param {object} setup Export setup options.
+   * @param {object} styles Style lookup cache.
+   * @returns {HTMLTableRowElement}
+   */
   generateGroupElement(row, setup, styles) {
     const rowEl = document.createElement('tr')
     const cellEl = document.createElement('td')
@@ -530,6 +607,13 @@ export default class Export extends Module {
     return rowEl
   }
 
+  /**
+   * Generate an exported calc row element.
+   * @param {ExportRow} row Export row.
+   * @param {object} setup Export setup options.
+   * @param {object} styles Style lookup cache.
+   * @returns {HTMLTableRowElement}
+   */
   generateCalcElement(row, setup, styles) {
     const rowEl = this.generateRowElement(row, setup, styles)
 
@@ -549,6 +633,13 @@ export default class Export extends Module {
     return rowEl
   }
 
+  /**
+   * Generate an exported data row element.
+   * @param {ExportRow} row Export row.
+   * @param {object} setup Export setup options.
+   * @param {object} styles Style lookup cache.
+   * @returns {HTMLTableRowElement}
+   */
   generateRowElement(row, setup, styles) {
     const rowEl = document.createElement('tr')
 
@@ -688,6 +779,11 @@ export default class Export extends Module {
     return rowEl
   }
 
+  /**
+   * Render export rows to an HTML table string.
+   * @param {Array<ExportRow>} list Export rows.
+   * @returns {string}
+   */
   generateHTMLTable(list) {
     const holder = document.createElement('div')
 
@@ -696,6 +792,14 @@ export default class Export extends Module {
     return holder.innerHTML
   }
 
+  /**
+   * Get HTML output for an export range.
+   * @param {string|Function} visible Row range selector.
+   * @param {boolean} style Clone table style flag.
+   * @param {object} config Export config.
+   * @param {string} colVisProp Column visibility option name.
+   * @returns {string}
+   */
   getHtml(visible, style, config, colVisProp) {
     const list = this.generateExportList(
       config || this.table.options.htmlOutputConfig,
@@ -707,6 +811,13 @@ export default class Export extends Module {
     return this.generateHTMLTable(list)
   }
 
+  /**
+   * Copy selected computed styles from one element to another.
+   * @param {HTMLElement} from Source element.
+   * @param {HTMLElement} to Target element.
+   * @param {Array<string>} props CSS property list.
+   * @returns {void}
+   */
   mapElementStyles(from, to, props) {
     if (this.cloneTableStyle && from && to) {
       const lookup = {

@@ -1,4 +1,16 @@
+/**
+ * SelectRange clipboard paste parsers.
+ *
+ * @type {{range: function(string): Array<object>|boolean}}
+ */
 export default {
+  /**
+   * Parse tab-separated clipboard data relative to the active range.
+   *
+   * @this {object}
+   * @param {string} clipboard Clipboard text.
+   * @returns {Array<object>|boolean} Parsed row data or false when parsing cannot be applied.
+   */
   range(clipboard) {
     const range = this.table.modules.selectRange.activeRange
     if (!range) {
