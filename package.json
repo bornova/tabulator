@@ -59,8 +59,8 @@
   },
   "homepage": "https://tabulator.info/",
   "devDependencies": {
-    "@playwright/test": "^1.52.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "eslint": "^10.0.0",

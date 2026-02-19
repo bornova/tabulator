@@ -58,7 +58,7 @@
       }
 
       // Generate and log the data
-      const tableData = generateData(100)
+      const tableData = generateData(1000)
 
       const table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
@@ -80,7 +80,12 @@
           { title: 'State', field: 'state', sorter: 'string' },
           { title: 'Country', field: 'country', sorter: 'string' },
           { title: 'Progress', field: 'progress', formatter: 'progress' }
-        ]
+        ],
+        pagination: 'local',
+        paginationSize: 100,
+        paginationSizeSelector: [10, 50, 100, 250, 500],
+        movableColumns: true,
+        paginationCounter: 'rows'
       })
     </script>
   </body>
