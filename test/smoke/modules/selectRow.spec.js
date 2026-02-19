@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { attachErrorCollectors, expectNoBrowserErrors, getSmokeFixtureUrl } from '../smokeTestUtils.js'
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('selectRow module options smoke', async ({ page }) => {
+test('selectRow module', async ({ page }) => {
   const { pageErrors, consoleErrors } = attachErrorCollectors(page)
 
   await test.step('selectableRows false skips selection row initialization', async () => {

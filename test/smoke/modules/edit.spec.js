@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('edit module smoke - all default editors', async ({ page }) => {
+test('edit module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

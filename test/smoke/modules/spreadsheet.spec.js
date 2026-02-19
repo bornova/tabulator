@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('spreadsheet module options smoke', async ({ page }) => {
+test('spreadsheet module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

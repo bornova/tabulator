@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { attachErrorCollectors, expectNoBrowserErrors, getSmokeFixtureUrl } from '../smokeTestUtils.js'
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('resizeTable module options smoke', async ({ page }) => {
+test('resizeTable module', async ({ page }) => {
   const { pageErrors, consoleErrors } = attachErrorCollectors(page)
 
   await test.step('autoResize false disables resize observers and window binding', async () => {

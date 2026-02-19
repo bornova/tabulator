@@ -192,7 +192,7 @@ async function checkFrozenRowsCustomField(page) {
   expect(result.frozenCodes).toEqual(['B2', 'C3'])
 }
 
-test('frozenRows module options smoke', async ({ page }) => {
+test('frozenRows module', async ({ page }) => {
   await test.step('number mode', async () => {
     await checkFrozenRowsNumber(page)
   })

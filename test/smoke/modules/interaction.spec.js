@@ -34,7 +34,7 @@ const cellOptions = [
   'cellTapHold'
 ]
 
-test('interaction module options smoke', async ({ page }) => {
+test('interaction module', async ({ page }) => {
   const { pageErrors, consoleErrors } = attachErrorCollectors(page)
 
   await test.step('module is present', async () => {

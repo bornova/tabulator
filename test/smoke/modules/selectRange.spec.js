@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { attachErrorCollectors, expectNoBrowserErrors, getSmokeFixtureUrl } from '../smokeTestUtils.js'
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('selectRange module options smoke', async ({ page }) => {
+test('selectRange module', async ({ page }) => {
   const { pageErrors, consoleErrors } = attachErrorCollectors(page)
 
   await test.step('selectableRange false does not initialize range overlay', async () => {

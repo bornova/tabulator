@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('localize module is present', async ({ page }) => {
+test('localize module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

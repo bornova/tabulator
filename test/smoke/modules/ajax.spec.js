@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('ajax module loads', async ({ page }) => {
+test('ajax module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

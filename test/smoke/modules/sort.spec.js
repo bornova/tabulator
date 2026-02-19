@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('sort module smoke - all default sorters', async ({ page }) => {
+test('sort module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

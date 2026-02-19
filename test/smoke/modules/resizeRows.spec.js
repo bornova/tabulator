@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { attachErrorCollectors, expectNoBrowserErrors, getSmokeFixtureUrl } from '../smokeTestUtils.js'
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('resizeRows module options smoke', async ({ page }) => {
+test('resizeRows module', async ({ page }) => {
   const { pageErrors, consoleErrors } = attachErrorCollectors(page)
 
   await test.step('resizableRows false does not add resize handles', async () => {

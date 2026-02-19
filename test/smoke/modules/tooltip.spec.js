@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { attachErrorCollectors, expectNoBrowserErrors, getSmokeFixtureUrl } from '../smokeTestUtils.js'
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('tooltip module options smoke', async ({ page }) => {
+test('tooltip module', async ({ page }) => {
   const { pageErrors, consoleErrors } = attachErrorCollectors(page)
 
   await test.step('tooltipDelay controls deferred tooltip loading', async () => {

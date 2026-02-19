@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test.describe('reactiveData module options', () => {
+test.describe('reactiveData module', () => {
   test('reactiveData: true enables reactivity (array mutators and property assignment)', async ({ page }) => {
     const pageErrors = []
     const consoleErrors = []

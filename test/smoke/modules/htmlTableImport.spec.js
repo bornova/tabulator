@@ -318,7 +318,7 @@ async function checkHtmlImportTabulatorIndexAttribute(page) {
   ])
 }
 
-test('htmlTableImport module options smoke', async ({ page }) => {
+test('htmlTableImport module', async ({ page }) => {
   await test.step('basic parsing', async () => {
     await checkHtmlImportBasicParsing(page)
   })

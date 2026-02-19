@@ -264,7 +264,7 @@ async function checkInvalidFrozenChildWarning(page) {
   expect(result.warningCount).toBeGreaterThan(0)
 }
 
-test('frozenColumns module options smoke', async ({ page }) => {
+test('frozenColumns module', async ({ page }) => {
   await test.step('left frozen columns', async () => {
     await checkLeftFrozenColumns(page)
   })

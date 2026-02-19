@@ -614,7 +614,7 @@ async function checkDataTreeSelectPropagate(page) {
   expect(result.withPropagate.selectedAfterDeselect).toEqual([])
 }
 
-test('dataTree module options smoke', async ({ page }) => {
+test('dataTree module', async ({ page }) => {
   await test.step('dataTree enablement', async () => {
     await checkDataTreeEnabled(page)
   })

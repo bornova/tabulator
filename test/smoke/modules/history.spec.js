@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('history module options smoke', async ({ page }) => {
+test('history module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

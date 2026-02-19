@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('format module smoke - all default formatters', async ({ page }) => {
+test('format module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

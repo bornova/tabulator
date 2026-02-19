@@ -478,7 +478,7 @@ async function checkGroupHeaderOutputOptions(page) {
   expect(result.hasDownloadHeader).toBe(true)
 }
 
-test('groupRows module options smoke', async ({ page }) => {
+test('groupRows module', async ({ page }) => {
   await test.step('groupBy', async () => {
     await checkGroupBy(page)
   })

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { attachErrorCollectors, expectNoBrowserErrors, getSmokeFixtureUrl } from '../smokeTestUtils.js'
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('popup module options smoke', async ({ page }) => {
+test('popup module', async ({ page }) => {
   const { pageErrors, consoleErrors } = attachErrorCollectors(page)
   await page.goto(fixtureUrl)
 

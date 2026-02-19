@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('layout module smoke - all layout modes', async ({ page }) => {
+test('layout module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

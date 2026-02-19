@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('columnCalcs module smoke - all default calculations', async ({ page }) => {
+test('columnCalcs module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 

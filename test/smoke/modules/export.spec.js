@@ -3,7 +3,7 @@ import { getSmokeFixtureUrl } from '../smokeTestUtils.js'
 
 const fixtureUrl = getSmokeFixtureUrl(import.meta.url)
 
-test('export module options smoke', async ({ page }) => {
+test('export module', async ({ page }) => {
   const pageErrors = []
   const consoleErrors = []
 
