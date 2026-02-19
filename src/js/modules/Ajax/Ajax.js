@@ -96,6 +96,9 @@ export default class Ajax extends Module {
    * @returns {boolean}
    */
   requestDataCheck(data, params, config, silent) {
+    void params
+    void config
+    void silent
     return (!data && this.url) || typeof data === 'string'
   }
 
@@ -187,7 +190,7 @@ export default class Ajax extends Module {
    * @param {object} config Request config.
    * @returns {Promise<*>}
    */
-  sendRequest(url, params, config) {
+  async sendRequest(url, params, config) {
     if (this.table.options.ajaxRequesting.call(this.table, url, params) !== false) {
       return this.loaderPromise(url, config, params).then((data) => {
         if (this.table.options.ajaxResponse) {

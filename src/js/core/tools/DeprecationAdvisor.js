@@ -26,7 +26,7 @@ export default class DeprecationAdvisor extends CoreFeature {
    * @returns {boolean}
    */
   check(oldOption, newOption, convert) {
-    let msg = ''
+    let msg
 
     if (typeof this.options(oldOption) !== 'undefined') {
       msg = 'Deprecated Setup Option - Use of the %c' + oldOption + '%c option is now deprecated'

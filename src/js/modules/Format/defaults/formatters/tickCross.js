@@ -7,6 +7,7 @@
  * @returns {string} Tick, cross, or empty content.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const value = cell.getValue()
   const element = cell.getElement()
   const empty = formatterParams.allowEmpty

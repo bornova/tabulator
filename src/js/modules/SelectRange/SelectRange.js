@@ -289,6 +289,7 @@ export default class SelectRange extends Module {
    * @returns {void}
    */
   _handleMouseUp(_e) {
+    void _e
     this.mousedown = false
     document.removeEventListener('mouseup', this.mouseUpEvent)
   }
@@ -345,14 +346,16 @@ export default class SelectRange extends Module {
         window.getSelection().removeAllRanges()
         window.getSelection().addRange(range)
       }
-    } catch (_error) {}
+    } catch (_error) {
+      void _error
+    }
   }
 
   /**
    * Restore focus to the row manager element.
    * @returns {boolean}
    */
-  restoreFocus(element) {
+  restoreFocus() {
     this.table.rowManager.element.focus()
 
     return true
@@ -393,6 +396,8 @@ export default class SelectRange extends Module {
 
   /**
    * Start column move handling while maintaining range state.
+   * @param {Event} _event Trigger event.
+   * @param {object} column Internal column.
    * @returns {void}
    */
   handleColumnMoving(_event, column) {
@@ -402,9 +407,14 @@ export default class SelectRange extends Module {
 
   /**
    * Finalize column move range bounds.
+   * @param {object} from Source column after move.
+   * @param {object} _to Destination column before move.
+   * @param {boolean} _after Destination placement flag.
    * @returns {void}
    */
   handleColumnMoved(from, _to, _after) {
+    void _to
+    void _after
     this.activeRange.setBounds(from)
     this.layoutElement()
   }
@@ -581,7 +591,7 @@ export default class SelectRange extends Module {
    * @returns {boolean}
    */
   navigate(jump, expand, dir) {
-    let moved = false
+    let moved
     let range
     let rangeEdge
     let prevRect

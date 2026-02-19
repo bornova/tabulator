@@ -67,7 +67,14 @@ test('columnCalcs module', async ({ page }) => {
           { title: 'Avg', field: 'avgVal', topCalc: 'avg', topCalcParams: () => ({ precision: false }) },
           { title: 'Max', field: 'maxVal', bottomCalc: 'max' },
           { title: 'Min', field: 'minVal', bottomCalc: 'min' },
-          { title: 'Sum', field: 'sumVal', bottomCalc: 'sum', bottomCalcParams: { precision: 1 } },
+          {
+            title: 'Sum',
+            field: 'sumVal',
+            bottomCalc: 'sum',
+            bottomCalcParams: { precision: 1 },
+            bottomCalcFormatter: 'money',
+            bottomCalcFormatterParams: { symbol: '$' }
+          },
           { title: 'Concat', field: 'concatVal', bottomCalc: 'concat' },
           { title: 'Count', field: 'countVal', bottomCalc: 'count' },
           { title: 'Unique', field: 'uniqueVal', bottomCalc: 'unique' },
@@ -91,14 +98,24 @@ test('columnCalcs module', async ({ page }) => {
     const calcResults = table.getCalcResults()
 
     const topCell = holder.querySelector('.tabulator-calcs-top .tabulator-cell[tabulator-field="customVal"]')
+    const bottomSumCell = holder.querySelector('.tabulator-calcs-bottom .tabulator-cell[tabulator-field="sumVal"]')
+
+    const recalcBefore = table.getCalcResults().bottom.sumVal
+    table.getRow(1).getData().sumVal = 100
+    table.recalc()
+    const recalcAfter = table.getCalcResults().bottom.sumVal
 
     return {
       modulePresent: !!table.modules.columnCalcs,
+      recalcFunctionPresent: typeof table.recalc === 'function',
       hasTopRow: !!holder.querySelector('.tabulator-calcs-top'),
       hasBottomRow: !!holder.querySelector('.tabulator-calcs-bottom'),
       top: calcResults.top,
       bottom: calcResults.bottom,
-      customTopFormatted: topCell ? topCell.textContent : ''
+      customTopFormatted: topCell ? topCell.textContent : '',
+      bottomSumFormatted: bottomSumCell ? bottomSumCell.textContent : '',
+      recalcBefore,
+      recalcAfter
     }
   })
 
@@ -106,6 +123,7 @@ test('columnCalcs module', async ({ page }) => {
   expect(consoleErrors).toEqual([])
 
   expect(result.modulePresent).toBe(true)
+  expect(result.recalcFunctionPresent).toBe(true)
   expect(result.hasTopRow).toBe(true)
   expect(result.hasBottomRow).toBe(true)
 
@@ -118,4 +136,7 @@ test('columnCalcs module', async ({ page }) => {
   expect(result.bottom.uniqueVal).toBe(2)
   expect(result.top.customVal).toBe(300)
   expect(result.customTopFormatted.includes('$300')).toBe(true)
+  expect(result.bottomSumFormatted.includes('$60')).toBe(true)
+  expect(result.recalcBefore).toBe('60.0')
+  expect(result.recalcAfter).toBe('150.0')
 })

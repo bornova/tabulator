@@ -8,6 +8,7 @@
  * @returns {void}
  */
 export default function (columns, forced) {
+  void forced
   const table = this.table
 
   columns.forEach((column) => {

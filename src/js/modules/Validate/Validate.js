@@ -57,6 +57,7 @@ export default class Validate extends Module {
    * @returns {boolean|Array<object>}
    */
   editValidate(cell, value, previousValue) {
+    void previousValue
     const valid =
       this.table.options.validationMode !== 'manual' ? this.validate(cell.column.modules.validate, cell, value) : true
 
@@ -191,6 +192,7 @@ export default class Validate extends Module {
    * @returns {true|Array<object>}
    */
   userValidate(cells) {
+    void cells
     let output = []
 
     // clear row data

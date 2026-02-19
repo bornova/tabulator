@@ -77,6 +77,27 @@ test('download module', async ({ page }) => {
     expect(allRows).toContain('B')
   })
 
+  await test.step('downloadToTab API function opens generated blob url', async () => {
+    const opened = await page.evaluate(() => {
+      let openedUrl = null
+      const originalOpen = window.open
+
+      window.open = (url) => {
+        openedUrl = String(url)
+        return null
+      }
+
+      window.tabulatorInstance.downloadToTab('csv', 'test.csv')
+
+      window.open = originalOpen
+
+      return openedUrl
+    })
+
+    expect(typeof opened).toBe('string')
+    expect(opened.startsWith('blob:')).toBe(true)
+  })
+
   await test.step('column download and titleDownload options present', async () => {
     const colOpts = await page.evaluate(() => {
       const col = window.tabulatorInstance.getColumn('id')

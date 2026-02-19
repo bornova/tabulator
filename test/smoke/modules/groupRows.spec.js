@@ -478,6 +478,94 @@ async function checkGroupHeaderOutputOptions(page) {
   expect(result.hasDownloadHeader).toBe(true)
 }
 
+async function checkGroupTableFunctions(page) {
+  const { pageErrors, consoleErrors } = attachErrorCollectors(page)
+  await page.goto(fixtureUrl)
+
+  const result = await page.evaluate(async () => {
+    const root = document.getElementById('smoke-root')
+    const holder = document.createElement('div')
+
+    holder.style.width = '900px'
+    root.appendChild(holder)
+
+    const table = await new Promise((resolve) => {
+      const instance = new Tabulator(holder, {
+        data: [
+          { id: 1, group: 'A', name: 'Alice' },
+          { id: 2, group: 'A', name: 'Cara' },
+          { id: 3, group: 'B', name: 'Bob' }
+        ],
+        columns: [
+          { title: 'ID', field: 'id' },
+          { title: 'Group', field: 'group' },
+          { title: 'Name', field: 'name' }
+        ],
+        groupBy: 'group'
+      })
+
+      const timeout = setTimeout(() => resolve(instance), 1500)
+      instance.on('tableBuilt', () => {
+        clearTimeout(timeout)
+        resolve(instance)
+      })
+    })
+
+    const functionPresence = {
+      setGroupBy: typeof table.setGroupBy === 'function',
+      setGroupValues: typeof table.setGroupValues === 'function',
+      setGroupStartOpen: typeof table.setGroupStartOpen === 'function',
+      setGroupHeader: typeof table.setGroupHeader === 'function',
+      getGroups: typeof table.getGroups === 'function',
+      getGroupedData: typeof table.getGroupedData === 'function'
+    }
+
+    const initialGroupCount = table.getGroups().length
+
+    table.setGroupBy('name')
+    await new Promise((resolve) => setTimeout(resolve, 30))
+    const groupCountAfterSetGroupBy = table.getGroups().length
+
+    table.setGroupBy('group')
+    table.setGroupHeader((value, count) => `API-${value}-${count}`)
+    table.setGroupStartOpen(false)
+    table.setGroupValues([['A', 'B', 'C']])
+    await new Promise((resolve) => setTimeout(resolve, 40))
+
+    const headerText = holder.querySelector('.tabulator-group')?.textContent || ''
+    const groupCountAfterSetValues = table.getGroups().length
+    const groupedData = table.getGroupedData()
+
+    return {
+      functionPresence,
+      initialGroupCount,
+      groupCountAfterSetGroupBy,
+      groupCountAfterSetValues,
+      groupStartOpenOption: table.options.groupStartOpen,
+      headerText,
+      groupedDataIsArray: Array.isArray(groupedData),
+      groupedDataLength: groupedData.length
+    }
+  })
+
+  expectNoBrowserErrors(pageErrors, consoleErrors)
+  expect(result.functionPresence).toEqual({
+    setGroupBy: true,
+    setGroupValues: true,
+    setGroupStartOpen: true,
+    setGroupHeader: true,
+    getGroups: true,
+    getGroupedData: true
+  })
+  expect(result.initialGroupCount).toBe(2)
+  expect(result.groupCountAfterSetGroupBy).toBe(3)
+  expect(result.groupCountAfterSetValues).toBe(3)
+  expect(result.groupStartOpenOption).toBe(false)
+  expect(result.headerText.includes('API-A-2')).toBe(true)
+  expect(result.groupedDataIsArray).toBe(true)
+  expect(result.groupedDataLength).toBeGreaterThanOrEqual(3)
+}
+
 test('groupRows module', async ({ page }) => {
   await test.step('groupBy', async () => {
     await checkGroupBy(page)
@@ -509,5 +597,9 @@ test('groupRows module', async ({ page }) => {
 
   await test.step('groupHeader output options', async () => {
     await checkGroupHeaderOutputOptions(page)
+  })
+
+  await test.step('group table functions', async () => {
+    await checkGroupTableFunctions(page)
   })
 })

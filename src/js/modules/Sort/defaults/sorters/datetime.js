@@ -16,7 +16,7 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const format = params.format || 'dd/MM/yyyy HH:mm:ss'
   const alignEmptyValues = params.alignEmptyValues
-  let emptyAlign = 0
+  let emptyAlign
 
   const parseDateTime = (value) => {
     if (DT.isDateTime(value)) {

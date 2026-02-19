@@ -7,6 +7,7 @@
  * @returns {HTMLDivElement} Toggle element.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const value = cell.getValue()
   const size = formatterParams.size || 15
   const sizePx = `${size}px`

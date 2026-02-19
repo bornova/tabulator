@@ -15,6 +15,8 @@ export default {
    * @returns {boolean} True if values are equal.
    */
   '='(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     return rowVal == filterVal
   },
 
@@ -29,6 +31,8 @@ export default {
    * @returns {boolean} True if row value is less than filter value.
    */
   '<'(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     return rowVal < filterVal
   },
 
@@ -43,6 +47,8 @@ export default {
    * @returns {boolean} True if row value is less than or equal to filter value.
    */
   '<='(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     return rowVal <= filterVal
   },
 
@@ -57,6 +63,8 @@ export default {
    * @returns {boolean} True if row value is greater than filter value.
    */
   '>'(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     return rowVal > filterVal
   },
 
@@ -71,6 +79,8 @@ export default {
    * @returns {boolean} True if row value is greater than or equal to filter value.
    */
   '>='(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     return rowVal >= filterVal
   },
 
@@ -85,6 +95,8 @@ export default {
    * @returns {boolean} True if values are not equal.
    */
   '!='(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     return rowVal != filterVal
   },
 
@@ -98,6 +110,8 @@ export default {
    * @returns {boolean} True if regex matches row value.
    */
   regex(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     if (typeof filterVal === 'string') {
       filterVal = new RegExp(filterVal)
     }
@@ -116,6 +130,8 @@ export default {
    * @returns {boolean} True if row value contains filter text.
    */
   like(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
     }
@@ -162,6 +178,8 @@ export default {
    * @returns {boolean} True if row value starts with filter text.
    */
   starts(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
     }
@@ -184,6 +202,8 @@ export default {
    * @returns {boolean} True if row value ends with filter text.
    */
   ends(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
     }
@@ -206,6 +226,8 @@ export default {
    * @returns {boolean} True if row value is in filter array.
    */
   in(filterVal, rowVal, rowData, filterParams) {
+    void rowData
+    void filterParams
     if (Array.isArray(filterVal)) {
       return filterVal.length ? filterVal.includes(rowVal) : true
     }

@@ -82,6 +82,9 @@ export default class Tooltip extends Module {
    * @returns {void}
    */
   mouseoutCheck(_action, _e, _component) {
+    void _action
+    void _e
+    void _component
     if (!this.popupInstance) {
       this.clearPopup()
     }
@@ -92,6 +95,9 @@ export default class Tooltip extends Module {
    * @returns {void}
    */
   clearPopup(_action, _e, _component) {
+    void _action
+    void _e
+    void _component
     clearTimeout(this.timeout)
     this.timeout = null
 

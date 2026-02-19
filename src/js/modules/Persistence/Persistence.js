@@ -46,6 +46,7 @@ export default class Persistence extends Module {
       window.localStorage.removeItem(testKey)
       return true
     } catch (e) {
+      void e
       return false
     }
   }
@@ -352,6 +353,7 @@ export default class Persistence extends Module {
     newCols = newCols || []
 
     newCols.forEach((column, to) => {
+      void to
       const from = this._findColumn(oldCols, column)
       let keys
 

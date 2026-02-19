@@ -51,7 +51,7 @@ export default class DataTree extends Module {
    */
   initialize() {
     if (this.table.options.dataTree) {
-      let dummyEl = null
+      let dummyEl
       const options = this.table.options
 
       this.field = options.dataTreeChildField
@@ -113,7 +113,7 @@ export default class DataTree extends Module {
 
       switch (typeof options.dataTreeStartExpanded) {
         case 'boolean':
-          this.startOpen = (row, index) => options.dataTreeStartExpanded
+          this.startOpen = () => options.dataTreeStartExpanded
           break
 
         case 'function':
@@ -121,7 +121,7 @@ export default class DataTree extends Module {
           break
 
         default:
-          this.startOpen = (row, index) => options.dataTreeStartExpanded[index]
+          this.startOpen = (_row, index) => options.dataTreeStartExpanded[index]
           break
       }
 
@@ -375,6 +375,7 @@ export default class DataTree extends Module {
     const output = []
 
     rows.forEach((row, i) => {
+      void i
       let config, children
 
       output.push(row)
@@ -407,7 +408,7 @@ export default class DataTree extends Module {
    */
   getChildren(row, allChildren, sortOnly) {
     const config = row.modules.dataTree
-    let children = []
+    let children
     const output = []
 
     if (!config) {
@@ -481,6 +482,7 @@ export default class DataTree extends Module {
    * @returns {void}
    */
   expandRow(row, silent) {
+    void silent
     const config = row.modules.dataTree
 
     if (config.children !== false) {

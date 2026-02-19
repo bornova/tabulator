@@ -328,6 +328,7 @@ export default class Export extends Module {
     })
 
     rows.forEach((row, i) => {
+      void i
       const rowData = row.getData(this.colVisProp)
       const exportCols = []
       let indent = 0
@@ -481,6 +482,8 @@ export default class Export extends Module {
    * @returns {HTMLTableRowElement}
    */
   generateHeaderElement(row, setup, styles) {
+    void setup
+    void styles
     const rowEl = document.createElement('tr')
 
     row.columns.forEach((column) => {

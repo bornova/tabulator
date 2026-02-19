@@ -175,6 +175,7 @@ export default class Row extends CoreFeature {
    * @returns {void}
    */
   reinitialize(children) {
+    void children
     this.initialized = false
     this.heightInitialized = false
 
@@ -196,8 +197,8 @@ export default class Row extends CoreFeature {
    * @returns {void}
    */
   calcHeight(force) {
-    let maxHeight = 0
-    let minHeight = 0
+    let maxHeight
+    let minHeight
 
     if (this.table.options.rowHeight) {
       this.height = this.table.options.rowHeight
@@ -354,8 +355,10 @@ export default class Row extends CoreFeature {
     const visible = this.element && Helpers.elVisible(this.element)
     let tempData = {}
     let newRowData
+    let component
 
     return new Promise((resolve, reject) => {
+      void reject
       if (typeof updatedData === 'string') {
         updatedData = JSON.parse(updatedData)
       }
@@ -403,7 +406,8 @@ export default class Row extends CoreFeature {
         this.normalizeHeight(true)
 
         if (this.table.options.rowFormatter) {
-          this.table.options.rowFormatter(this.getComponent())
+          component = this.getComponent()
+          this.table.options.rowFormatter(component)
         }
       } else {
         this.initialized = false
@@ -415,7 +419,7 @@ export default class Row extends CoreFeature {
 
       // this.reinitialize();
 
-      this.dispatchExternal('rowUpdated', this.getComponent())
+      this.dispatchExternal('rowUpdated', component || this.getComponent())
 
       if (this.subscribedExternal('dataChanged')) {
         this.dispatchExternal('dataChanged', this.table.rowManager.getData())
@@ -444,7 +448,7 @@ export default class Row extends CoreFeature {
    * @returns {object|undefined}
    */
   getCell(column) {
-    let match = false
+    let match
 
     column = this.table.columnManager.findColumn(column)
 

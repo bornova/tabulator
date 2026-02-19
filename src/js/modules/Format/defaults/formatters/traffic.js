@@ -8,6 +8,7 @@
  * @returns {HTMLElement|undefined} Indicator element.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const value = this.sanitizeHTML(cell.getValue()) || 0
   const el = document.createElement('span')
   const max = formatterParams && formatterParams.max ? formatterParams.max : 100

@@ -63,6 +63,7 @@ export default class Column extends CoreFeature {
       this.isGroup = true
 
       this.definition.columns.forEach((def, i) => {
+        void i
         const newCol = new Column(def, this)
         this.attachColumn(newCol)
       })
@@ -758,9 +759,18 @@ export default class Column extends CoreFeature {
         }
       })
 
-      this.contentElement.style.maxWidth = `${childWidth - 1}px`
+      const maxWidth = `${childWidth - 1}px`
+
+      if (this.contentElement.style.maxWidth !== maxWidth) {
+        this.contentElement.style.maxWidth = maxWidth
+      }
+
       if (this.table.initialized) {
-        this.element.style.width = `${childWidth}px`
+        const width = `${childWidth}px`
+
+        if (this.element.style.width !== width) {
+          this.element.style.width = width
+        }
       }
 
       if (this.parent.isGroup) {
@@ -815,7 +825,9 @@ export default class Column extends CoreFeature {
     this.width = width
     this.widthStyled = width ? width + 'px' : ''
 
-    this.element.style.width = this.widthStyled
+    if (this.element.style.width !== this.widthStyled) {
+      this.element.style.width = this.widthStyled
+    }
 
     if (!this.isGroup) {
       this.cells.forEach((cell) => {
@@ -926,7 +938,9 @@ export default class Column extends CoreFeature {
     this.minWidth = minWidth
     this.minWidthStyled = minWidth ? minWidth + 'px' : ''
 
-    this.element.style.minWidth = this.minWidthStyled
+    if (this.element.style.minWidth !== this.minWidthStyled) {
+      this.element.style.minWidth = this.minWidthStyled
+    }
 
     this.cells.forEach((cell) => {
       cell.setMinWidth()
@@ -956,7 +970,9 @@ export default class Column extends CoreFeature {
     this.maxWidth = maxWidth
     this.maxWidthStyled = maxWidth ? maxWidth + 'px' : ''
 
-    this.element.style.maxWidth = this.maxWidthStyled
+    if (this.element.style.maxWidth !== this.maxWidthStyled) {
+      this.element.style.maxWidth = this.maxWidthStyled
+    }
 
     this.cells.forEach((cell) => {
       cell.setMaxWidth()
@@ -1140,7 +1156,7 @@ export default class Column extends CoreFeature {
    * @param {object} updates Partial definition updates.
    * @returns {Promise<object>}
    */
-  updateDefinition(updates) {
+  async updateDefinition(updates) {
     let definition
 
     if (!this.isGroup) {

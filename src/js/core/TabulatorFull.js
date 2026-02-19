@@ -29,6 +29,7 @@ class TabulatorFull extends Tabulator {
    * @param {Array<Function>} [modules] Ignored in full build.
    */
   constructor(element, options, modules) {
+    void modules
     super(element, options, allModules)
   }
 }

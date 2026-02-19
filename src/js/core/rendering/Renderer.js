@@ -49,6 +49,7 @@ export default class Renderer extends CoreFeature {
    * @returns {void}
    */
   reinitializeColumnWidths(columns) {
+    void columns
     // resize columns to fit data
   }
 
@@ -85,6 +86,8 @@ export default class Renderer extends CoreFeature {
    * @returns {void}
    */
   rerenderColumns(update, blockRedraw) {
+    void update
+    void blockRedraw
     // rerender columns
   }
 
@@ -94,6 +97,7 @@ export default class Renderer extends CoreFeature {
    * @returns {void}
    */
   renderRowCells(row) {
+    void row
     // render the cells in a row
   }
 
@@ -104,6 +108,8 @@ export default class Renderer extends CoreFeature {
    * @returns {void}
    */
   rerenderRowCells(row, force) {
+    void row
+    void force
     // rerender the cells in a row
   }
 
@@ -114,6 +120,8 @@ export default class Renderer extends CoreFeature {
    * @returns {void}
    */
   scrollColumns(left, dir) {
+    void left
+    void dir
     // handle horizontal scrolling
   }
 
@@ -124,6 +132,8 @@ export default class Renderer extends CoreFeature {
    * @returns {void}
    */
   scrollRows(top, dir) {
+    void top
+    void dir
     // handle vertical scrolling
   }
 
@@ -141,15 +151,17 @@ export default class Renderer extends CoreFeature {
    * @returns {void}
    */
   scrollToRow(row) {
+    void row
     // scroll to a specific row
   }
 
   /**
    * Determine whether a row is closer to the top edge than the bottom edge.
    * @param {object} row Internal row instance.
-   * @returns {boolean}
+   * @returns {void}
    */
   scrollToRowNearestTop(row) {
+    void row
     // determine weather the row is nearest the top or bottom of the table, return true for top or false for bottom
   }
 
@@ -159,6 +171,7 @@ export default class Renderer extends CoreFeature {
    * @returns {Array<object>}
    */
   visibleRows(includingBuffer) {
+    void includingBuffer
     // return the visible rows
     return []
   }

@@ -360,7 +360,7 @@ export default class Page extends Module {
    * @returns {void}
    */
   generatePageSizeSelectList() {
-    let pageSizes = []
+    let pageSizes
 
     if (this.pageSizeSelect) {
       if (Array.isArray(this.table.options.paginationSizeSelector)) {
@@ -411,7 +411,7 @@ export default class Page extends Module {
    */
   initializePageCounter() {
     const counter = this.table.options.paginationCounter
-    let pageCounter = null
+    let pageCounter
 
     if (counter) {
       if (typeof counter === 'function') {
@@ -514,6 +514,7 @@ export default class Page extends Module {
         this.element.appendChild(this.pageSizeSelect)
 
         this.pageSizeSelect.addEventListener('change', (e) => {
+          void e
           this.setPageSize(this.pageSizeSelect.value === 'true' ? true : this.pageSizeSelect.value)
           this.setPage(1)
         })
@@ -817,6 +818,7 @@ export default class Page extends Module {
     button.textContent = page
 
     button.addEventListener('click', (e) => {
+      void e
       this.setPage(page)
     })
 
@@ -965,7 +967,7 @@ export default class Page extends Module {
    * Trigger data load/render for current pagination mode.
    * @returns {Promise<void>}
    */
-  trigger() {
+  async trigger() {
     let left
 
     switch (this.mode) {
@@ -981,9 +983,11 @@ export default class Page extends Module {
 
       case 'remote':
         this.dataChanging = true
-        return this.reloadData(null).finally(() => {
+        try {
+          return await this.reloadData(null)
+        } finally {
           this.dataChanging = false
-        })
+        }
 
       case 'progressive_load':
       case 'progressive_scroll':

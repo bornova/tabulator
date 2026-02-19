@@ -120,14 +120,17 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   starChange(value)
 
   starsHolder.addEventListener('mousemove', (e) => {
+    void e
     starChange(0)
   })
 
   starsHolder.addEventListener('click', (e) => {
+    void e
     success(0)
   })
 
   element.addEventListener('blur', (e) => {
+    void e
     cancel()
   })
 

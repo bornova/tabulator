@@ -7,6 +7,7 @@
  * @returns {*} Lookup result.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const value = cell.getValue()
 
   if (typeof formatterParams[value] === 'undefined') {

@@ -12,6 +12,11 @@
  * @returns {number} Sort result.
  */
 export default function (a, b, aRow, bRow, column, dir, params) {
+  void aRow
+  void bRow
+  void column
+  void dir
+  void params
   const toSortValue = (value) => (typeof value === 'undefined' ? 0 : 1)
 
   const el1 = toSortValue(a)

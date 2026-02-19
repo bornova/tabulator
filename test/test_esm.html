@@ -62,15 +62,29 @@
 
       const table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
+        layout: 'fitData',
         height: 600,
-        movableRows: true,
         columnDefaults: {
           headerSortTristate: true
         },
+        rowContextMenu: [
+          {
+            label: 'Delete Row',
+            action: function (e, row) {
+              row.delete()
+            }
+          },
+          {
+            label: 'Duplicate Row',
+            action: function (e, row) {
+              table.addRow({ name: 'Billy Bob', age: '23', gender: 'male' }, false)
+            }
+          }
+        ],
         columns: [
-          { title: 'Id', field: 'id' },
-          { title: 'Name', field: 'name', sorter: 'string' },
-          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+          { title: 'Id', field: 'id', frozen: 'true' },
+          { title: 'Name', field: 'name', editor: 'input', headerFilter: 'input', sorter: 'string' },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right', bottomCalc: 'min', topCalc: 'max' },
           { title: 'Gender', field: 'gender', sorter: 'string' },
           { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
           { title: 'Color', field: 'col', sorter: 'string' },
@@ -78,7 +92,7 @@
           { title: 'Car', field: 'car', sorter: 'string' },
           { title: 'Address', field: 'address', sorter: 'string' },
           { title: 'State', field: 'state', sorter: 'string' },
-          { title: 'Country', field: 'country', sorter: 'string' },
+          { title: 'Country', field: 'country', editor: 'list', sorter: 'string' },
           { title: 'Progress', field: 'progress', formatter: 'progress' }
         ],
         pagination: 'local',

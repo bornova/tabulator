@@ -7,6 +7,7 @@
  * @returns {HTMLSpanElement} Star container element.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const value = cell.getValue()
   const element = cell.getElement()
   const maxStars = formatterParams && formatterParams.stars ? formatterParams.stars : 5

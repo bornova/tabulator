@@ -279,21 +279,21 @@ export default class VirtualDomVertical extends Renderer {
     let topPad = 0
     let rowsHeight = 0
     let rowHeight = 0
-    let heightOccupied = 0
+    let heightOccupied
     let topPadHeight = 0
-    let i = 0
+    let i
     const rows = this.rows()
     const rowsCount = rows.length
-    let index = 0
+    let index
     let row
     let rowFragment
-    let renderedRows = []
+    let renderedRows
     let totalRowsRendered = 0
     let rowsToRender = 0
     const fixedHeight = this.table.rowManager.fixedHeight
     let containerHeight = this.elementVertical.clientHeight
     let avgRowHeight = this.table.options.rowHeight
-    let resized = true
+    let resized
 
     position = position || 0
 

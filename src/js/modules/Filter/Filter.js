@@ -121,7 +121,8 @@ export default class Filter extends Module {
    * @param {string} text Default placeholder text.
    * @returns {string|undefined}
    */
-  generatePlaceholder(text) {
+  generatePlaceholder(_text) {
+    void _text
     if (this.table.options.placeholderHeaderFilter && Object.keys(this.headerFilters).length) {
       return this.table.options.placeholderHeaderFilter
     }
@@ -295,10 +296,9 @@ export default class Filter extends Module {
   /**
    * Build column filter state and success handler.
    * @param {object} column Internal column.
-   * @param {*} [value] Initial value.
    * @returns {void}
    */
-  initializeColumn(column, value) {
+  initializeColumn(column) {
     const field = column.getField()
 
     // handle successfully value change
@@ -309,7 +309,6 @@ export default class Filter extends Module {
           ? 'partial'
           : 'match'
       let type = ''
-      let filterChangeCheck = ''
       let filterFunc
 
       if (typeof column.modules.filter.prevSuccess === 'undefined' || column.modules.filter.prevSuccess !== value) {
@@ -382,7 +381,7 @@ export default class Filter extends Module {
 
         column.modules.filter.value = value
 
-        filterChangeCheck = JSON.stringify(this.headerFilters)
+        const filterChangeCheck = JSON.stringify(this.headerFilters)
 
         if (this.prevHeaderFilterChangeCheck !== filterChangeCheck) {
           this.prevHeaderFilterChangeCheck = filterChangeCheck
@@ -555,7 +554,7 @@ export default class Filter extends Module {
           editorElement.focus()
         })
 
-        editorElement.addEventListener('focus', (e) => {
+        editorElement.addEventListener('focus', () => {
           const left = this.table.columnManager.contentsElement.scrollLeft
 
           const headerPos = this.table.rowManager.element.scrollLeft
@@ -965,17 +964,14 @@ export default class Filter extends Module {
     }
 
     field.forEach((filter) => {
-      let index = -1
-
-      if (typeof filter.field === 'object') {
-        index = this.filterList.findIndex((element) => {
-          return filter === element
-        })
-      } else {
-        index = this.filterList.findIndex((element) => {
-          return filter.field === element.field && filter.type === element.type && filter.value === element.value
-        })
-      }
+      const index =
+        typeof filter.field === 'object'
+          ? this.filterList.findIndex((element) => {
+              return filter === element
+            })
+          : this.filterList.findIndex((element) => {
+              return filter.field === element.field && filter.type === element.type && filter.value === element.value
+            })
 
       if (index > -1) {
         this.filterList.splice(index, 1)
@@ -1072,7 +1068,8 @@ export default class Filter extends Module {
    * @param {*} filters Unused legacy arg.
    * @returns {Array<object>}
    */
-  filter(rowList, filters) {
+  filter(rowList, _filters) {
+    void _filters
     let activeRows = []
     const activeRowComponents = []
 
@@ -1111,7 +1108,8 @@ export default class Filter extends Module {
    * @param {*} filters Unused legacy arg.
    * @returns {boolean}
    */
-  filterRow(row, filters) {
+  filterRow(row, _filters) {
+    void _filters
     let match = true
     const data = row.getData()
 

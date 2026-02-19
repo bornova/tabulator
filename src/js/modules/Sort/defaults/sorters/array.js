@@ -17,7 +17,7 @@ import Helpers from '../../../../core/tools/Helpers.js'
 export default function (a, b, aRow, bRow, column, dir, params) {
   const type = params.type || 'length'
   const alignEmptyValues = params.alignEmptyValues
-  let emptyAlign = 0
+  let emptyAlign
   const table = this.table
   let valueMap
 

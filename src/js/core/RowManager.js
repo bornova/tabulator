@@ -258,6 +258,7 @@ export default class RowManager extends CoreFeature {
    */
   setData(data, renderInPosition, columnsChanged) {
     return new Promise((resolve, reject) => {
+      void reject
       if (renderInPosition && this.getDisplayRows().length) {
         if (this.table.options.pagination) {
           this._setDataActual(data, true)
@@ -294,6 +295,7 @@ export default class RowManager extends CoreFeature {
       this.dispatch('data-processing', data)
 
       data.forEach((def, i) => {
+        void i
         if (def && typeof def === 'object') {
           const row = new Row(def, this)
           this.rows.push(row)
@@ -391,6 +393,7 @@ export default class RowManager extends CoreFeature {
     const rows = []
 
     return new Promise((resolve, reject) => {
+      void reject
       pos = this.findAddRowPos(pos)
 
       if (!Array.isArray(data)) {
@@ -402,6 +405,7 @@ export default class RowManager extends CoreFeature {
       }
 
       data.forEach((item, i) => {
+        void i
         const row = this.addRow(item, pos, index, true)
         rows.push(row)
         this.dispatch('row-added', row, item, pos, index)
@@ -695,8 +699,8 @@ export default class RowManager extends CoreFeature {
   // set active data set
   refreshActiveData(handler, skipStage, renderInPosition) {
     const table = this.table
-    let stage = ''
-    let index = 0
+    let stage
+    let index
     const cascadeOrder = ['all', 'dataPipeline', 'display', 'displayPipeline', 'end']
 
     if (!this.table.destroyed) {
@@ -792,6 +796,7 @@ export default class RowManager extends CoreFeature {
     switch (stage) {
       case 'all':
       // handle case where all data needs refreshing
+      // falls through
 
       case 'dataPipeline':
         for (let i = index; i < this.dataPipeline.length; i++) {
@@ -801,10 +806,12 @@ export default class RowManager extends CoreFeature {
         }
 
         this.setActiveRows(this.activeRowsPipeline[this.dataPipeline.length])
+      // falls through
 
       case 'display':
         index = 0
         this.resetDisplayRows()
+      // falls through
 
       case 'displayPipeline':
         for (let i = index; i < this.displayPipeline.length; i++) {
@@ -815,6 +822,7 @@ export default class RowManager extends CoreFeature {
 
           this.setDisplayRows(result || this.getDisplayRows(i - 1).slice(0), i)
         }
+      // falls through
 
       case 'end':
         // case to handle scenario when trying to skip past end stage
@@ -890,7 +898,7 @@ export default class RowManager extends CoreFeature {
 
   // return only actual rows (not group headers etc)
   getRows(type) {
-    let rows = []
+    let rows
 
     switch (type) {
       case 'active':

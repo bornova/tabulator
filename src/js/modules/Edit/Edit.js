@@ -98,6 +98,7 @@ export default class Edit extends Module {
    * @returns {boolean|undefined}
    */
   pasteBlocker(e) {
+    void e
     if (this.currentCell) {
       return true
     }
@@ -769,7 +770,7 @@ export default class Edit extends Module {
    * @returns {boolean|undefined}
    */
   edit(cell, e, forceEdit) {
-    let allowEdit = true
+    let allowEdit
     let rendered = () => {}
     const element = cell.getElement()
     const editModule = cell.column.modules.edit

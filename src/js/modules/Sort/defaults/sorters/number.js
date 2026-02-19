@@ -15,7 +15,7 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   const alignEmptyValues = params.alignEmptyValues
   const decimal = params.decimalSeparator
   const thousand = params.thousandSeparator
-  let emptyAlign = 0
+  let emptyAlign
 
   const normalizeNumber = (value) => {
     let normalized = String(value)

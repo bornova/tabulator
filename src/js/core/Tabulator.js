@@ -238,6 +238,8 @@ class Tabulator extends ModuleBinder {
           break
         }
 
+      // falls through
+
       case 'rtl':
         this.element.classList.add('tabulator-rtl')
         this.rtl = true
@@ -245,6 +247,8 @@ class Tabulator extends ModuleBinder {
 
       case 'ltr':
         this.element.classList.add('tabulator-ltr')
+
+      // falls through
 
       default:
         this.rtl = false
@@ -768,16 +772,15 @@ class Tabulator extends ModuleBinder {
    * @param {*} [index] Index reference.
    * @returns {Promise<object>}
    */
-  addRow(data, pos, index) {
+  async addRow(data, pos, index) {
     this.initGuard()
 
     if (typeof data === 'string') {
       data = JSON.parse(data)
     }
 
-    return this.rowManager.addRows(data, pos, index, true).then((rows) => {
-      return rows[0].getComponent()
-    })
+    const rows = await this.rowManager.addRows(data, pos, index, true)
+    return rows[0].getComponent()
   }
 
   // update a row if it exists otherwise create it
@@ -787,7 +790,7 @@ class Tabulator extends ModuleBinder {
    * @param {object|string} data Row data.
    * @returns {Promise<object>}
    */
-  updateOrAddRow(index, data) {
+  async updateOrAddRow(index, data) {
     const row = this.rowManager.findRow(index)
 
     this.initGuard()
@@ -814,7 +817,7 @@ class Tabulator extends ModuleBinder {
    * @param {object|string} data Row data.
    * @returns {Promise<object>}
    */
-  updateRow(index, data) {
+  async updateRow(index, data) {
     const row = this.rowManager.findRow(index)
 
     this.initGuard()
@@ -1003,14 +1006,13 @@ class Tabulator extends ModuleBinder {
    * @param {string} [field] Reference field.
    * @returns {Promise<object>}
    */
-  addColumn(definition, before, field) {
+  async addColumn(definition, before, field) {
     const column = this.columnManager.findColumn(field)
 
     this.initGuard()
 
-    return this.columnManager.addColumn(definition, before, column).then((column) => {
-      return column.getComponent()
-    })
+    const column_1 = await this.columnManager.addColumn(definition, before, column)
+    return column_1.getComponent()
   }
 
   /**

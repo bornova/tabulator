@@ -86,6 +86,10 @@ export default class Import extends Module {
    * @returns {Promise<*>}
    */
   loadData(data, params, config, silent, previousData) {
+    void params
+    void config
+    void silent
+    void previousData
     return this.importData(this.lookupImporter(), data)
       .then(this.structureData.bind(this))
       .catch((err) => {

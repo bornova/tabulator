@@ -250,5 +250,83 @@ test('selectRow module', async ({ page }) => {
     expect(result.selectedIds).toEqual([1, 2, 3])
   })
 
+  await test.step('selectRow table APIs expose selection operations', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          selectableRows: true,
+          data: [
+            { id: 1, name: 'alice' },
+            { id: 2, name: 'bob' },
+            { id: 3, name: 'charlie' }
+          ],
+          columns: [
+            { title: 'ID', field: 'id' },
+            { title: 'Name', field: 'name' }
+          ]
+        })
+
+        const timeout = setTimeout(() => resolve(instance), 1500)
+        instance.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve(instance)
+        })
+      })
+
+      const functionPresence = {
+        selectRow: typeof table.selectRow === 'function',
+        deselectRow: typeof table.deselectRow === 'function',
+        toggleSelectRow: typeof table.toggleSelectRow === 'function',
+        getSelectedRows: typeof table.getSelectedRows === 'function',
+        getSelectedData: typeof table.getSelectedData === 'function'
+      }
+
+      const row1 = table.rowManager.findRow(1)
+      const row2 = table.rowManager.findRow(2)
+      const row3 = table.rowManager.findRow(3)
+
+      table.toggleSelectRow(row1)
+      const selectedAfterToggle = table.getSelectedRows().map((row) => row.getData().id)
+
+      table.selectRow([row2, row3])
+      const selectedAfterSelect = table.getSelectedRows().map((row) => row.getData().id)
+      const selectedDataAfterSelect = table.getSelectedData().map((row) => row.id)
+
+      table.deselectRow(row2)
+      const selectedAfterDeselect = table.getSelectedRows().map((row) => row.getData().id)
+
+      table.toggleSelectRow(row1)
+      const selectedAfterSecondToggle = table.getSelectedRows().map((row) => row.getData().id)
+
+      return {
+        functionPresence,
+        selectedAfterToggle,
+        selectedAfterSelect,
+        selectedDataAfterSelect,
+        selectedAfterDeselect,
+        selectedAfterSecondToggle
+      }
+    })
+
+    expect(result.functionPresence).toEqual({
+      selectRow: true,
+      deselectRow: true,
+      toggleSelectRow: true,
+      getSelectedRows: true,
+      getSelectedData: true
+    })
+    expect(result.selectedAfterToggle).toEqual([1])
+    expect(result.selectedAfterSelect).toEqual(expect.arrayContaining([1, 2, 3]))
+    expect(result.selectedDataAfterSelect).toEqual(expect.arrayContaining([1, 2, 3]))
+    expect(result.selectedAfterDeselect).toEqual(expect.arrayContaining([1, 3]))
+    expect(result.selectedAfterSecondToggle).toEqual([3])
+  })
+
   expectNoBrowserErrors(pageErrors, consoleErrors)
 })

@@ -91,6 +91,22 @@ test('clipboard module', async ({ page }) => {
     expect(colOpts.titleClipboard).toBe('Identifier')
   })
 
+  await test.step('clipboard paste parser/action options initialize handlers', async () => {
+    const pasteOpts = await page.evaluate(() => {
+      return {
+        parserOption: window.tabulatorInstance.options.clipboardPasteParser,
+        actionOption: window.tabulatorInstance.options.clipboardPasteAction,
+        parserType: typeof window.tabulatorInstance.modules.clipboard.pasteParser,
+        actionType: typeof window.tabulatorInstance.modules.clipboard.pasteAction
+      }
+    })
+
+    expect(pasteOpts.parserOption).toBe('table')
+    expect(pasteOpts.actionOption).toBe('insert')
+    expect(pasteOpts.parserType).toBe('function')
+    expect(pasteOpts.actionType).toBe('function')
+  })
+
   expect(pageErrors).toEqual([])
   expect(consoleErrors).toEqual([])
 })

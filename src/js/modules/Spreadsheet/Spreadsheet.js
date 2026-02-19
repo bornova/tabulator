@@ -142,9 +142,7 @@ export default class Spreadsheet extends Module {
    * @param {Array<*>} data Remote data payload.
    * @returns {boolean}
    */
-  loadRemoteData(data, data1, data2) {
-    console.log('data', data, data1, data2)
-
+  loadRemoteData(data) {
     if (Array.isArray(data)) {
       this.table.dataLoader.clearAlert()
       this.dispatchExternal('dataLoaded', data)

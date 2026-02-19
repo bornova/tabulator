@@ -93,6 +93,8 @@ export default class VirtualDomHorizontal extends Renderer {
    * @returns {void}
    */
   renderColumns(row, force) {
+    void row
+    void force
     this.dataChange()
   }
 
@@ -103,6 +105,7 @@ export default class VirtualDomHorizontal extends Renderer {
    * @returns {void}
    */
   scrollColumns(left, dir) {
+    void dir
     if (this.scrollLeft !== left) {
       this.scrollLeft = left
 
@@ -250,6 +253,7 @@ export default class VirtualDomHorizontal extends Renderer {
    * @returns {void}
    */
   reinitializeColumnWidths(columns) {
+    void columns
     for (let i = this.leftCol; i <= this.rightCol; i++) {
       const col = this.columns[i]
 

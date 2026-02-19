@@ -8,11 +8,12 @@
  * @returns {void}
  */
 export default function (columns, forced) {
+  void forced
   const table = this.table
   const hasResponsiveLayout = table.options.responsiveLayout && table.modExists('responsiveLayout', true)
   let colsWidth = 0
   const tableWidth = table.rowManager.element.clientWidth
-  let gap = 0
+  let gap
   let lastCol = false
 
   columns.forEach((column) => {

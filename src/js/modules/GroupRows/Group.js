@@ -247,10 +247,9 @@ export default class Group {
 
   /**
    * Placeholder row index lookup.
-   * @param {object} row Internal row.
    * @returns {void}
    */
-  getRowIndex(row) {}
+  getRowIndex() {}
 
   // update row data to match grouping constraints
   /**

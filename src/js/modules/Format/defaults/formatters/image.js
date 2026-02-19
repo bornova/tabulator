@@ -7,6 +7,7 @@
  * @returns {HTMLImageElement} Image element.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const el = document.createElement('img')
   let src = cell.getValue()
 

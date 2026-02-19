@@ -193,9 +193,9 @@ export default class Sort extends Module {
       const el = this.table.options.headerSortClickElement === 'icon' ? arrowEl : colEl
 
       el.addEventListener('click', (e) => {
-        let dir = ''
-        let sorters = []
-        let match = false
+        let dir
+        let sorters
+        let match
 
         if (column.modules.sort) {
           if (column.modules.sort.tristate) {

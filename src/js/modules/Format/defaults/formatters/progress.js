@@ -49,6 +49,7 @@ export default function (cell, formatterParams = {}, onRendered) {
         color = formatterParams.color[index]
         break
       }
+    // falls through
     default:
       color = '#2DC214'
   }

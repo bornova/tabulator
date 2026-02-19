@@ -8,16 +8,17 @@
  * @returns {void}
  */
 export default function (columns, forced) {
+  void forced
   let totalWidth = this.table.rowManager.element.getBoundingClientRect().width // table element width
   let fixedWidth = 0 // total width of columns with a defined width
   let flexWidth = 0 // total width available to flexible columns
   let flexGrowUnits = 0 // total number of widthGrow blocks across all columns
-  let flexColWidth = 0 // desired width of flexible columns
+  let flexColWidth // desired width of flexible columns
   const flexColumns = [] // array of flexible width columns
   const fixedShrinkColumns = [] // array of fixed width columns that can shrink
   let flexShrinkUnits = 0 // total number of widthShrink blocks across all columns
-  let overflowWidth = 0 // horizontal overflow width
-  let gapFill = 0 // number of pixels to be added to final column to close and half pixel gaps
+  let overflowWidth // horizontal overflow width
+  let gapFill // number of pixels to be added to final column to close and half pixel gaps
 
   function calcWidth(width) {
     let colWidth
@@ -39,10 +40,10 @@ export default function (columns, forced) {
   function scaleColumns(columns, freeSpace, colWidth, shrinkCols) {
     const oversizeCols = []
     let oversizeSpace = 0
-    let remainingSpace = 0
-    let nextColWidth = 0
+    let remainingSpace
+    let nextColWidth
     let remainingFlexGrowUnits = flexGrowUnits
-    let gap = 0
+    let gap
     let changeUnits = 0
     const undersizeCols = []
     const getChangeUnit = (col) =>

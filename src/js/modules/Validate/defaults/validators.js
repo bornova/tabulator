@@ -21,6 +21,7 @@ export default {
    * @returns {boolean}
    */
   integer(cell, value, parameters) {
+    void parameters
     if (isEmptyValue(value)) {
       return true
     }
@@ -39,6 +40,7 @@ export default {
    * @returns {boolean}
    */
   float(cell, value, parameters) {
+    void parameters
     if (isEmptyValue(value)) {
       return true
     }
@@ -57,6 +59,7 @@ export default {
    * @returns {boolean}
    */
   numeric(cell, value, parameters) {
+    void parameters
     if (isEmptyValue(value)) {
       return true
     }
@@ -73,6 +76,7 @@ export default {
    * @returns {boolean}
    */
   string(cell, value, parameters) {
+    void parameters
     if (isEmptyValue(value)) {
       return true
     }
@@ -89,6 +93,7 @@ export default {
    * @returns {boolean}
    */
   alphanumeric(cell, value, parameters) {
+    void parameters
     if (isEmptyValue(value)) {
       return true
     }
@@ -239,6 +244,7 @@ export default {
    * @returns {boolean}
    */
   unique(cell, value, parameters) {
+    void parameters
     if (isEmptyValue(value)) {
       return true
     }
@@ -266,6 +272,7 @@ export default {
    * @returns {boolean}
    */
   required(cell, value, parameters) {
+    void parameters
     return !isEmptyValue(value)
   }
 }

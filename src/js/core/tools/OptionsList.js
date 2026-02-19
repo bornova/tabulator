@@ -33,7 +33,7 @@ export default class OptionsList {
     Object.assign(output, defaultOptions)
 
     for (const key in userOptions) {
-      if (!output.hasOwnProperty(key)) {
+      if (!Object.prototype.hasOwnProperty.call(output, key)) {
         if (warn) {
           console.warn('Invalid ' + this.msgType + ' option:', key)
         }

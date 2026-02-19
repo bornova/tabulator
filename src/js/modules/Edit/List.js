@@ -287,6 +287,7 @@ export default class Edit {
   }
 
   _inputFocus(e) {
+    void e
     this.rebuildOptionsList()
   }
 
@@ -307,6 +308,7 @@ export default class Edit {
   }
 
   _inputBlur(e) {
+    void e
     if (this.blurable) {
       if (this.popup) {
         this.popup.hide()
@@ -397,6 +399,7 @@ export default class Edit {
   /// ///////////////////////////////////
 
   _keyTab(e) {
+    void e
     if (this.params.autocomplete && this.lastAction === 'typing') {
       this._resolveValue(true)
     } else {
@@ -450,6 +453,7 @@ export default class Edit {
   }
 
   _keyEnter(e) {
+    void e
     if (this.params.autocomplete && this.lastAction === 'typing') {
       this._resolveValue(true)
     } else {
@@ -460,6 +464,7 @@ export default class Edit {
   }
 
   _keyEsc(e) {
+    void e
     this._cancel()
   }
 
@@ -483,6 +488,7 @@ export default class Edit {
   }
 
   _keyAutoCompLetter(e) {
+    void e
     this._filter()
     this.lastAction = 'typing'
     this.typing = true
@@ -544,18 +550,17 @@ export default class Edit {
         }
       })
   }
-  /**
-   * Generate options from configured source.
-   * @param {boolean} [silent] Silent placeholder mode.
-   * @returns {Promise<Array<object>>}
-   */
-
   _filterList() {
     this._buildList(this._filterOptions())
     this._showList()
   }
 
-  _generateOptions(silent) {
+  /**
+   * Generate options from configured source.
+   * @param {boolean} [silent] Silent placeholder mode.
+   * @returns {Promise<Array<object>>}
+   */
+  async _generateOptions(silent) {
     let values = []
     const iteration = ++this.listIteration
 
@@ -578,13 +583,12 @@ export default class Edit {
         this._addPlaceholder(this.params.placeholderLoading)
       }
 
-      return values.then((responseValues) => {
-        if (this.listIteration === iteration) {
-          return this._parseList(responseValues)
-        } else {
-          return Promise.reject(iteration)
-        }
-      })
+      const responseValues = await values
+      if (this.listIteration === iteration) {
+        return this._parseList(responseValues)
+      } else {
+        return Promise.reject(iteration)
+      }
     } else {
       return Promise.resolve(this._parseList(values))
     }
@@ -619,7 +623,7 @@ export default class Edit {
    * @param {string} term Filter term.
    * @returns {Promise<*>}
    */
-  _ajaxRequest(url, term) {
+  async _ajaxRequest(url, term) {
     const params = this.params.filterRemote ? { term } : {}
     url = urlBuilder(url, {}, params)
 
@@ -720,7 +724,7 @@ export default class Edit {
   }
 
   _parseListItem(option, data, level) {
-    let item = {}
+    let item
 
     if (option.options) {
       item = this._parseListGroup(option, level + 1)
@@ -798,7 +802,7 @@ export default class Edit {
     let L
     const rx = /(\d+)|(\D+)/g
     const rd = /\d/
-    let emptyAlign = 0
+    let emptyAlign
 
     if (this.params.sort === 'desc') {
       ;[as, bs] = [bs, as]
@@ -872,6 +876,7 @@ export default class Edit {
   }
 
   _defaultFilterFunc(term, label, value, item) {
+    void item
     term = String(term).toLowerCase()
 
     if (label !== null && label !== undefined) {

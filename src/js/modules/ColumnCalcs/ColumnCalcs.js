@@ -716,7 +716,7 @@ export default class ColumnCalcs extends Module {
     const groupObj = group._getSelf()
     const subGroups = group.getSubGroups()
     const subGroupResults = {}
-    let results = {}
+    let results
 
     subGroups.forEach((subgroup) => {
       subGroupResults[subgroup.getKey()] = this.getGroupResults(subgroup)

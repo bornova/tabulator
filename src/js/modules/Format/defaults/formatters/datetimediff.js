@@ -8,6 +8,7 @@
  * @returns {*} Formatted datetime difference.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const inputFormat = formatterParams.inputFormat || 'yyyy-MM-dd HH:mm:ss'
   const invalid = typeof formatterParams.invalidPlaceholder !== 'undefined' ? formatterParams.invalidPlaceholder : ''

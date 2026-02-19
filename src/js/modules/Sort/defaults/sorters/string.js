@@ -14,7 +14,7 @@
  */
 export default function (a, b, aRow, bRow, column, dir, params) {
   const alignEmptyValues = params.alignEmptyValues
-  let emptyAlign = 0
+  let emptyAlign
   let locale
 
   const resolveLocale = () => {

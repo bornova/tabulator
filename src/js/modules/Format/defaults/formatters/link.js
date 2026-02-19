@@ -10,6 +10,7 @@ import Helpers from '../../../../core/tools/Helpers.js'
  * @returns {HTMLAnchorElement|string} Anchor element or non-breaking space.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   let value = cell.getValue()
   const urlPrefix = formatterParams.urlPrefix || ''
   let download = formatterParams.download

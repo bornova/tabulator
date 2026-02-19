@@ -7,6 +7,7 @@
  * @returns {string} JSON-formatted value.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const indent = formatterParams.indent || '\t'
   const multiline = typeof formatterParams.multiline === 'undefined' ? true : formatterParams.multiline
   const replacer = formatterParams.replacer || null

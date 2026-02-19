@@ -197,15 +197,17 @@ export default class Cell extends CoreFeature {
     const changed = this.setValueProcessData(value, mutate, force)
 
     if (changed) {
+      const component = this.getComponent()
+
       this.dispatch('cell-value-updated', this)
 
       this.cellRendered()
 
       if (this.column.definition.cellEdited) {
-        this.column.definition.cellEdited.call(this.table, this.getComponent())
+        this.column.definition.cellEdited.call(this.table, component)
       }
 
-      this.dispatchExternal('cellEdited', this.getComponent())
+      this.dispatchExternal('cellEdited', component)
 
       if (this.subscribedExternal('dataChanged')) {
         this.dispatchExternal('dataChanged', this.table.rowManager.getData())
@@ -231,9 +233,8 @@ export default class Cell extends CoreFeature {
       }
     }
 
-    this.setValueActual(value)
-
     if (changed) {
+      this.setValueActual(value)
       this.dispatch('cell-value-changed', this)
     }
 
@@ -276,8 +277,14 @@ export default class Cell extends CoreFeature {
    * @returns {void}
    */
   setWidth() {
-    this.width = this.column.width
-    this.element.style.width = this.column.widthStyled
+    const width = this.column.width
+    const widthStyled = this.column.widthStyled
+
+    this.width = width
+
+    if (this.element.style.width !== widthStyled) {
+      this.element.style.width = widthStyled
+    }
   }
 
   /**
@@ -302,8 +309,14 @@ export default class Cell extends CoreFeature {
    * @returns {void}
    */
   setMinWidth() {
-    this.minWidth = this.column.minWidth
-    this.element.style.minWidth = this.column.minWidthStyled
+    const minWidth = this.column.minWidth
+    const minWidthStyled = this.column.minWidthStyled
+
+    this.minWidth = minWidth
+
+    if (this.element.style.minWidth !== minWidthStyled) {
+      this.element.style.minWidth = minWidthStyled
+    }
   }
 
   /**
@@ -311,8 +324,14 @@ export default class Cell extends CoreFeature {
    * @returns {void}
    */
   setMaxWidth() {
-    this.maxWidth = this.column.maxWidth
-    this.element.style.maxWidth = this.column.maxWidthStyled
+    const maxWidth = this.column.maxWidth
+    const maxWidthStyled = this.column.maxWidthStyled
+
+    this.maxWidth = maxWidth
+
+    if (this.element.style.maxWidth !== maxWidthStyled) {
+      this.element.style.maxWidth = maxWidthStyled
+    }
   }
 
   /**
@@ -348,7 +367,7 @@ export default class Cell extends CoreFeature {
 
   /**
    * Get the computed cell height.
-   * @returns {number|null}
+   * @returns {number}
    */
   getHeight() {
     return this.height || this.element.offsetHeight
@@ -359,7 +378,11 @@ export default class Cell extends CoreFeature {
    * @returns {void}
    */
   show() {
-    this.element.style.display = this.column.vertAlign ? 'inline-flex' : ''
+    const display = this.column.vertAlign ? 'inline-flex' : ''
+
+    if (this.element.style.display !== display) {
+      this.element.style.display = display
+    }
   }
 
   /**
@@ -367,7 +390,9 @@ export default class Cell extends CoreFeature {
    * @returns {void}
    */
   hide() {
-    this.element.style.display = 'none'
+    if (this.element.style.display !== 'none') {
+      this.element.style.display = 'none'
+    }
   }
 
   /**
@@ -384,7 +409,6 @@ export default class Cell extends CoreFeature {
     this.element = null
     this.column.deleteCell(this)
     this.row.deleteCell(this)
-    this.calcs = {}
   }
 
   /**

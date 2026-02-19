@@ -111,6 +111,8 @@ export default {
    * @returns {string|number} Concatenated value.
    */
   concat(values, data, calcParams) {
+    void data
+    void calcParams
     let output = 0
 
     if (values.length) {
@@ -130,6 +132,8 @@ export default {
    * @returns {number} Count of truthy values.
    */
   count(values, data, calcParams) {
+    void data
+    void calcParams
     let output = 0
 
     if (values.length) {
@@ -151,6 +155,8 @@ export default {
    * @returns {number} Number of unique values.
    */
   unique(values, data, calcParams) {
+    void data
+    void calcParams
     const unique = values.filter((value, index) => {
       return (values || value === 0) && values.indexOf(value) === index
     })

@@ -13,6 +13,8 @@ export default {
    * @returns {void}
    */
   delete(fromRow, toRow, toTable) {
+    void toRow
+    void toTable
     fromRow.delete()
   }
 }

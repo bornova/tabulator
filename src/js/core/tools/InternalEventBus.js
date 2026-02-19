@@ -107,6 +107,7 @@ export default class InternalEventBus {
 
     if (this.subscribed(key)) {
       this.events[key].forEach((subscriber, i) => {
+        void i
         value = subscriber.callback.apply(this, args.concat([value]))
       })
 
@@ -131,6 +132,7 @@ export default class InternalEventBus {
 
     if (this.subscribed(key)) {
       this.events[key].forEach((subscriber, i) => {
+        void i
         if (subscriber.callback.apply(this, args)) {
           confirmed = true
         }

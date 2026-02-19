@@ -7,6 +7,8 @@
  * @returns {HTMLDivElement} Toggle element.
  */
 export default function (cell, formatterParams, onRendered) {
+  void formatterParams
+  void onRendered
   const el = document.createElement('div')
   const config = cell.getRow()._row.modules.responsiveLayout
   const table = cell.getTable()

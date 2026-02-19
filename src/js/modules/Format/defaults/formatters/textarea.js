@@ -8,6 +8,8 @@
  * @returns {string} Sanitized text.
  */
 export default function (cell, formatterParams, onRendered) {
+  void formatterParams
+  void onRendered
   const element = cell.getElement()
 
   element.style.whiteSpace = 'pre-wrap'

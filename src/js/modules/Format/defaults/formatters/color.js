@@ -8,6 +8,8 @@
  * @returns {string} Empty string.
  */
 export default function (cell, formatterParams, onRendered) {
+  void formatterParams
+  void onRendered
   const element = cell.getElement()
   const color = this.sanitizeHTML(cell.getValue())
 

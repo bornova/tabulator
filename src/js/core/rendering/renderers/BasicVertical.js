@@ -123,6 +123,7 @@ export default class BasicVertical extends Renderer {
    * @returns {Array<object>}
    */
   visibleRows(includingBuffer) {
+    void includingBuffer
     return this.rows()
   }
 }

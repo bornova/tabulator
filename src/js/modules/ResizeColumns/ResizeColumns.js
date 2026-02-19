@@ -182,7 +182,7 @@ export default class ResizeColumns extends Module {
    * @returns {void}
    */
   initializeColumn(type, component, column, element) {
-    let variableHeight = false
+    let variableHeight
     const mode = column.definition.resizable
     let config = {}
     const nearestColumn = column.getLastColumn()

@@ -7,6 +7,7 @@
  * @returns {HTMLSpanElement} Row number element.
  */
 export default function (cell, formatterParams, onRendered) {
+  void onRendered
   const content = document.createElement('span')
   const row = cell.getRow()
   const table = cell.getTable()

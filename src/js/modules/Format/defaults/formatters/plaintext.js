@@ -8,6 +8,8 @@
  * @returns {string} Sanitized plain text value.
  */
 export default function (cell, formatterParams, onRendered) {
+  void formatterParams
+  void onRendered
   const value = this.sanitizeHTML(cell.getValue())
 
   return this.emptyToSpace(value)

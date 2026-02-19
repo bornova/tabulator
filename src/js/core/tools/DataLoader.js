@@ -27,7 +27,7 @@ export default class DataLoader extends CoreFeature {
    * @param {boolean} [columnsChanged] Force columns changed state.
    * @returns {Promise<void>}
    */
-  load(data, params, config, replace, silent, columnsChanged) {
+  async load(data, params, config, replace, silent, columnsChanged) {
     const requestNo = ++this.requestOrder
 
     if (this.table.destroyed) {
@@ -121,7 +121,7 @@ export default class DataLoader extends CoreFeature {
     const output = {}
 
     for (const key in params) {
-      output[map.hasOwnProperty(key) ? map[key] : key] = params[key]
+      output[Object.prototype.hasOwnProperty.call(map, key) ? map[key] : key] = params[key]
     }
 
     return output

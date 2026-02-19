@@ -329,6 +329,7 @@ export default class Menu extends Module {
     })
 
     menuEl.addEventListener('click', (e) => {
+      void e
       if (this.rootPopup) {
         this.rootPopup.hide()
       }

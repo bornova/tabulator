@@ -10,6 +10,7 @@
  * @returns {HTMLElement} Counter element.
  */
 export default function (pageSize, currentRow, currentPage, totalRows, totalPages) {
+  void totalPages
   const el = document.createElement('span')
   const showingEl = document.createElement('span')
   const valueEl = document.createElement('span')

@@ -104,7 +104,8 @@ test('format module', async ({ page }) => {
             toggle: true,
             adaptable: true,
             array: [{ name: 'one' }, { name: 'two' }],
-            json: { a: 1 }
+            json: { a: 1 },
+            exportVal: 5
           }
         ],
         columns: [
@@ -159,6 +160,27 @@ test('format module', async ({ page }) => {
             field: 'json',
             formatter: 'json',
             formatterParams: { multiline: false, indent: 0 }
+          },
+          {
+            title: 'Export',
+            field: 'exportVal',
+            titleFormatter(cell, params) {
+              return `${params.prefix}${cell.getValue()}`
+            },
+            titleFormatterParams: { prefix: 'TF:' },
+            formatter: 'plaintext',
+            formatterPrint(cell, params) {
+              return `P:${cell.getValue() * params.multiplier}`
+            },
+            formatterPrintParams: { multiplier: 2 },
+            formatterClipboard(cell, params) {
+              return `C:${cell.getValue() * params.multiplier}`
+            },
+            formatterClipboardParams: { multiplier: 3 },
+            formatterHtmlOutput(cell, params) {
+              return `H:${cell.getValue() * params.multiplier}`
+            },
+            formatterHtmlOutputParams: { multiplier: 4 }
           }
         ]
       })
@@ -194,6 +216,30 @@ test('format module', async ({ page }) => {
     const adaptableCell = cellFor('adaptable')
     const arrayCell = cellFor('array')
     const jsonCell = cellFor('json')
+    const exportHeader = holder.querySelector('.tabulator-col[tabulator-field="exportVal"] .tabulator-col-title')
+
+    const extractExportCell = (tableEl) => {
+      const headerCells = Array.from(tableEl.querySelectorAll('thead tr:last-child th')).map((th) =>
+        th.textContent.trim()
+      )
+      const exportIndex = headerCells.findIndex((title) => title === 'Export' || title === 'TF:Export')
+
+      if (exportIndex < 0) {
+        return null
+      }
+
+      const bodyRow = tableEl.querySelector('tbody tr')
+      if (!bodyRow) {
+        return null
+      }
+
+      const bodyCells = Array.from(bodyRow.querySelectorAll('td'))
+      return bodyCells[exportIndex]?.textContent.trim() || null
+    }
+
+    const printTable = table.modules.export.generateTable({}, false, 'active', 'print')
+    const clipboardTable = table.modules.export.generateTable({}, false, 'active', 'clipboard')
+    const htmlOutputTable = table.modules.export.generateTable({}, false, 'active', 'htmlOutput')
 
     return {
       modulePresent: !!table.modules.format,
@@ -219,7 +265,11 @@ test('format module', async ({ page }) => {
         !!handleCell.querySelector('.tabulator-row-handle-bar'),
       adaptableRendered: !!adaptableCell.querySelector('svg'),
       arrayRendered: arrayCell.textContent.trim() === 'one|two',
-      jsonRendered: /"a"\s*:\s*1/.test(jsonCell.textContent)
+      jsonRendered: /"a"\s*:\s*1/.test(jsonCell.textContent),
+      titleFormatterRendered: exportHeader?.textContent.trim() === 'TF:Export',
+      printExportValue: extractExportCell(printTable),
+      clipboardExportValue: extractExportCell(clipboardTable),
+      htmlOutputExportValue: extractExportCell(htmlOutputTable)
     }
   })
 
@@ -248,4 +298,8 @@ test('format module', async ({ page }) => {
   expect(result.adaptableRendered).toBe(true)
   expect(result.arrayRendered).toBe(true)
   expect(result.jsonRendered).toBe(true)
+  expect(result.titleFormatterRendered).toBe(true)
+  expect(result.printExportValue).toBe('P:10')
+  expect(result.clipboardExportValue).toBe('C:15')
+  expect(result.htmlOutputExportValue).toBe('H:20')
 })

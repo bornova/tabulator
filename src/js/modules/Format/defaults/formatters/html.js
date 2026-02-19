@@ -7,6 +7,8 @@
  * @returns {*} Raw cell value.
  */
 export default function (cell, formatterParams, onRendered) {
+  void formatterParams
+  void onRendered
   const value = cell.getValue()
 
   return value

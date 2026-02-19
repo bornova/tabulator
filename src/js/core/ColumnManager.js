@@ -313,6 +313,7 @@ export default class ColumnManager extends CoreFeature {
   }
 
   setColumns(cols, row) {
+    void row
     this.headersElement.replaceChildren()
 
     this.columns = []
@@ -330,6 +331,7 @@ export default class ColumnManager extends CoreFeature {
     }
 
     cols.forEach((def, i) => {
+      void i
       this._addColumn(def)
     })
 
@@ -591,7 +593,7 @@ export default class ColumnManager extends CoreFeature {
   _moveColumnInArray(columns, from, to, after, updateRows) {
     const fromIndex = columns.indexOf(from)
     let toIndex
-    let rows = []
+    let rows
 
     if (fromIndex > -1) {
       columns.splice(fromIndex, 1)
@@ -720,6 +722,7 @@ export default class ColumnManager extends CoreFeature {
 
   addColumn(definition, before, nextToColumn) {
     return new Promise((resolve, reject) => {
+      void reject
       const column = this._addColumn(definition, before, nextToColumn)
 
       this._reIndexColumns()

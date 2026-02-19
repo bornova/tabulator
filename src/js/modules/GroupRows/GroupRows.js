@@ -136,6 +136,7 @@ export default class GroupRows extends Module {
 
       this.langBind('groups|item', (langValue, lang) => {
         this.headerGenerator[0] = (value, count, data) => {
+          void data
           // header layout function
           return (
             (typeof value === 'undefined' ? '' : value) +
@@ -379,6 +380,7 @@ export default class GroupRows extends Module {
    * @returns {Array<object>}
    */
   userGetGroups(values) {
+    void values
     return this.getGroups(true)
   }
 
@@ -454,6 +456,7 @@ export default class GroupRows extends Module {
    * @returns {void}
    */
   rowsUpdated(row) {
+    void row
     if (this.table.options.groupBy) {
       this.updateGroupRows(true)
     }
@@ -558,7 +561,7 @@ export default class GroupRows extends Module {
       groupHeader.level = 0
       groupHeader.rowCount = 0
       groupHeader.headerContent = ''
-      let childData = []
+      let childData
 
       if (group.hasSubGroups) {
         childData = this.pullGroupListData(group.groupList)
@@ -688,6 +691,7 @@ export default class GroupRows extends Module {
    * @returns {void}
    */
   assignRowToExistingGroup(row, oldGroups) {
+    void oldGroups
     const groupID = this.groupIDLookups[0].func(row.getData())
     const groupKey = `0_${groupID}`
 

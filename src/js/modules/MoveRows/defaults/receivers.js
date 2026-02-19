@@ -19,6 +19,7 @@ export default {
    * @returns {boolean} True when action succeeds.
    */
   insert(fromRow, toRow, fromTable) {
+    void fromTable
     this.table.addRow(fromRow.getData(), undefined, toRow)
 
     return true
@@ -34,6 +35,8 @@ export default {
    * @returns {boolean} True when action succeeds.
    */
   add(fromRow, toRow, fromTable) {
+    void toRow
+    void fromTable
     this.table.addRow(fromRow.getData())
 
     return true
@@ -48,6 +51,7 @@ export default {
    * @returns {boolean} True when update succeeds.
    */
   update(fromRow, toRow, fromTable) {
+    void fromTable
     if (!toRow) {
       return false
     }
@@ -67,6 +71,7 @@ export default {
    * @returns {boolean} True when replace succeeds.
    */
   replace(fromRow, toRow, fromTable) {
+    void fromTable
     if (!toRow) {
       return false
     }

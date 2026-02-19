@@ -69,6 +69,28 @@ test('layout module', async ({ page }) => {
       }
     }
 
+    const holderOptions = document.createElement('div')
+    holderOptions.id = 'layout-options'
+    holderOptions.style.width = '900px'
+    root.appendChild(holderOptions)
+
+    const optionsTable = await buildTable(holderOptions, {
+      layout: 'fitColumns',
+      layoutColumnsOnNewData: true,
+      data: [{ id: 1, a: 'x', b: 'y' }],
+      columns: [
+        { title: 'A', field: 'a', widthGrow: '3', widthShrink: '2' },
+        { title: 'B', field: 'b' }
+      ]
+    })
+
+    const defs = optionsTable.getColumnDefinitions()
+    summaries.layoutOptions = {
+      layoutColumnsOnNewData: optionsTable.options.layoutColumnsOnNewData,
+      widthGrow: defs.find((col) => col.field === 'a')?.widthGrow,
+      widthShrink: defs.find((col) => col.field === 'a')?.widthShrink
+    }
+
     return summaries
   })
 
@@ -92,4 +114,8 @@ test('layout module', async ({ page }) => {
     result.fitDataStretch.widths[result.fitDataStretch.widths.length - 1] > result.fitDataStretch.widths[0],
     'fitDataStretch should stretch the last visible column when space is available'
   ).toBe(true)
+
+  expect(result.layoutOptions.layoutColumnsOnNewData).toBe(true)
+  expect(result.layoutOptions.widthGrow).toBe(3)
+  expect(result.layoutOptions.widthShrink).toBe(2)
 })

@@ -18,7 +18,7 @@ export default function (as, bs, aRow, bRow, column, dir, params) {
   const rx = /(\d+)|(\D+)/g
   const rd = /\d/
   const alignEmptyValues = params.alignEmptyValues
-  let emptyAlign = 0
+  let emptyAlign
 
   // handle empty values
   if (!as && as !== 0) {
