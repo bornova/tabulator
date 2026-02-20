@@ -19,7 +19,8 @@ export default function (cell, formatterParams, onRendered) {
     '<polygon fill="#D2D2D2" stroke="#686868" stroke-width="37.6152" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="259.216,29.942 330.27,173.919 489.16,197.007 374.185,309.08 401.33,467.31 259.216,392.612 117.104,467.31 144.25,309.08 29.274,197.007 188.165,173.919 "/>'
 
   // style stars holder
-  stars.style.verticalAlign = 'middle'
+  stars.style.display = 'inline-flex'
+  stars.style.alignItems = 'center'
 
   // style star
   star.setAttribute('width', '14')

@@ -18,8 +18,8 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   border-collapse: collapse;
 
   .tabulator-data-tree-branch {
-    display: inline-block;
-    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
     margin-top: -9px;
     margin-right: 5px;
     border-bottom: 2px solid $color-slate-100;
@@ -51,10 +51,10 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     &.tabulator-group-visible {
       .tabulator-arrow {
         margin-right: 10px;
-        border-top: 6px solid $color-gray-800;
-        border-right: 6px solid transparent;
+        border-top: 5px solid $color-gray-800;
+        border-right: 5px solid transparent;
         border-bottom: 0;
-        border-left: 6px solid transparent;
+        border-left: 5px solid transparent;
       }
     }
 
@@ -89,18 +89,19 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     }
 
     .tabulator-group-toggle {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
     }
 
     //sorting arrow
     .tabulator-arrow {
-      display: inline-block;
-      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
       margin-right: 16px;
-      border-top: 6px solid transparent;
+      border-top: 5px solid transparent;
       border-right: 0;
-      border-bottom: 6px solid transparent;
-      border-left: 6px solid $color-gray-800;
+      border-bottom: 5px solid transparent;
+      border-left: 5px solid $color-gray-800;
       width: 0;
       height: 0;
     }
@@ -115,7 +116,6 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    vertical-align: middle;
     margin-right: 5px;
     border: 1px solid $color-gray-900;
     border-radius: 2px;
@@ -132,7 +132,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     }
 
     .tabulator-data-tree-control-collapse {
-      display: inline-block;
+      display: inline-flex;
       position: relative;
       background: transparent;
       width: 1px;
@@ -150,7 +150,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     }
 
     .tabulator-data-tree-control-expand {
-      display: inline-block;
+      display: inline-flex;
       position: relative;
       background: $color-gray-900;
       width: 1px;

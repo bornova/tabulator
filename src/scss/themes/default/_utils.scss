@@ -2,9 +2,9 @@
 
 //column resize handles
 .tabulator-col-resize-handle {
-  display: inline-block;
+  display: inline-flex;
   position: relative;
-  vertical-align: middle;
+  align-items: center;
   z-index: 11;
   margin-right: -3px;
   margin-left: -3px;
@@ -85,8 +85,9 @@
 
 // Popup Container
 .tabulator-popup-container {
-  display: inline-block;
+  display: inline-flex;
   position: absolute;
+  flex-direction: column;
   box-sizing: border-box;
   box-shadow: 0 0 5px 0 $color-black-alpha-200;
   border: 1px solid $color-slate-100;
@@ -112,7 +113,9 @@
 
 .tabulator-menu {
   .tabulator-menu-item {
+    display: inline-flex;
     position: relative;
+    align-items: center;
     box-sizing: border-box;
     padding: 5px 10px;
     user-select: none;
@@ -132,17 +135,14 @@
       padding-right: 25px;
 
       &::after {
-        display: inline-block;
         position: absolute;
-        top: calc(5px + 0.4em);
         right: 10px;
-        vertical-align: top;
         transform: rotate(45deg);
         border-width: 1px 1px 0 0;
         border-style: solid;
-        border-color: $color-slate-100;
-        width: 7px;
-        height: 7px;
+        border-color: $color-slate-600;
+        width: 5px;
+        height: 5px;
         content: '';
       }
     }
@@ -235,7 +235,7 @@
 
   //loading message element
   .tabulator-alert-msg {
-    display: inline-block;
+    display: inline-flex;
     margin: 0 auto;
     border-radius: 5px;
     background: $color-white;

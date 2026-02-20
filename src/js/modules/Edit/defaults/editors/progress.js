@@ -50,7 +50,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   handle.classList.add('tabulator-progress-handle')
 
   // style bar
-  bar.style.display = 'inline-block'
+  bar.style.display = 'inline-flex'
   bar.style.position = 'relative'
   // bar.style.top = "8px";
   // bar.style.bottom = "8px";

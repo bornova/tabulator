@@ -26,7 +26,7 @@
     overflow-x: auto;
 
     .tabulator-spreadsheet-tab {
-      display: inline-block;
+      display: inline-flex;
       border: $color-slate-200 1px solid;
       border-top: none;
       border-bottom-right-radius: 5px;
@@ -46,14 +46,15 @@
   }
 
   .tabulator-calcs-holder {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
     box-sizing: border-box;
     width: 100%;
     overflow: hidden;
     text-align: left;
 
     .tabulator-row {
-      display: inline-block;
+      display: inline-flex;
       border-bottom: 1px solid $color-slate-100;
       background: $color-white;
 
@@ -114,7 +115,7 @@
 
   //pagination container element
   .tabulator-page-size {
-    display: inline-block;
+    display: inline-flex;
     margin: 0 8px;
     border: 1px solid $color-slate-200;
     border-radius: 3px;
@@ -132,7 +133,7 @@
 
   //pagination button
   .tabulator-page {
-    display: inline-block;
+    display: inline-flex;
     background: $color-white;
     padding: 6px 10px;
 

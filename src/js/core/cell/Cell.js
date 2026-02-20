@@ -233,8 +233,9 @@ export default class Cell extends CoreFeature {
       }
     }
 
+    this.setValueActual(value)
+
     if (changed) {
-      this.setValueActual(value)
       this.dispatch('cell-value-changed', this)
     }
 

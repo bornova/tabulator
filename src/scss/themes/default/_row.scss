@@ -2,6 +2,7 @@
 
 //row element
 .tabulator-row {
+  display: flex;
   position: relative;
   box-sizing: border-box;
   border-bottom: 1px solid $color-slate-100;
@@ -82,10 +83,10 @@
     &.tabulator-group-visible {
       .tabulator-arrow {
         margin-right: 10px;
-        border-top: 6px solid $color-gray-800;
-        border-right: 6px solid transparent;
+        border-top: 5px solid $color-gray-800;
+        border-right: 5px solid transparent;
         border-bottom: 0;
-        border-left: 6px solid transparent;
+        border-left: 5px solid transparent;
       }
     }
 
@@ -110,19 +111,19 @@
     }
 
     .tabulator-group-toggle {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
     }
 
     //sorting arrow
     .tabulator-arrow {
-      display: inline-block;
-      vertical-align: middle;
-      margin-top: -2px;
+      display: inline-flex;
+      align-items: center;
       margin-right: 16px;
-      border-top: 6px solid transparent;
+      border-top: 5px solid transparent;
       border-right: 0;
-      border-bottom: 6px solid transparent;
-      border-left: 6px solid $color-gray-800;
+      border-bottom: 5px solid transparent;
+      border-left: 5px solid $color-gray-800;
       width: 0;
       height: 0;
     }
@@ -158,9 +159,9 @@
 
   //cell element
   .tabulator-cell {
-    display: inline-block;
+    display: inline-flex;
     position: relative;
-    vertical-align: middle;
+    align-items: center;
     box-sizing: border-box;
     outline: none;
     border-right: 1px solid $color-slate-100;
@@ -174,7 +175,7 @@
     }
 
     &.tabulator-frozen {
-      display: inline-block;
+      display: inline-flex;
       position: sticky;
       left: 0;
       z-index: 11;
@@ -231,9 +232,10 @@
         //Hamburger element
         .tabulator-row-handle-bar {
           margin-top: 2px;
-          background: $color-gray-800;
+          background: $color-gray-600;
           width: 100%;
-          height: 3px;
+          max-width: 12px;
+          height: 2px;
         }
       }
     }
@@ -243,13 +245,13 @@
     }
 
     .tabulator-data-tree-branch-empty {
-      display: inline-block;
+      display: inline-flex;
       width: 7px;
     }
 
     .tabulator-data-tree-branch {
-      display: inline-block;
-      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
       margin-top: -9px;
       margin-right: 5px;
       border-bottom: 2px solid $color-slate-100;
@@ -263,7 +265,6 @@
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      vertical-align: middle;
       margin-right: 5px;
       border: 1px solid $color-gray-900;
       border-radius: 2px;
@@ -280,7 +281,7 @@
       }
 
       .tabulator-data-tree-control-collapse {
-        display: inline-block;
+        display: inline-flex;
         position: relative;
         background: transparent;
         width: 1px;
@@ -298,7 +299,7 @@
       }
 
       .tabulator-data-tree-control-expand {
-        display: inline-block;
+        display: inline-flex;
         position: relative;
         background: $color-gray-900;
         width: 1px;
@@ -356,7 +357,7 @@
     }
 
     .tabulator-traffic-light {
-      display: inline-block;
+      display: inline-flex;
       border-radius: 14px;
       width: 14px;
       height: 14px;

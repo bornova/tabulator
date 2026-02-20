@@ -86,8 +86,8 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   element.style.textOverflow = 'ellipsis'
 
   // style holding element
-  starsHolder.style.verticalAlign = 'middle'
-  starsHolder.style.display = 'inline-block'
+  starsHolder.style.alignItems = 'center'
+  starsHolder.style.display = 'inline-flex'
   starsHolder.style.padding = '4px'
 
   // style star

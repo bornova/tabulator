@@ -97,7 +97,7 @@ export default function (cell, formatterParams = {}, onRendered) {
   element.setAttribute('aria-label', percentValue)
 
   const barEl = document.createElement('div')
-  barEl.style.display = 'inline-block'
+  barEl.style.display = 'inline-flex'
   barEl.style.width = `${percentValue}%`
   barEl.style.backgroundColor = color
   barEl.style.height = '100%'

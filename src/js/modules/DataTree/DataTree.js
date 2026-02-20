@@ -491,6 +491,7 @@ export default class DataTree extends Module {
       row.reinitialize()
 
       this.refreshData(true)
+      this.refitTreeElementColumn()
 
       this.dispatchExternal('dataTreeRowExpanded', row.getComponent(), row.modules.dataTree.index)
     }
@@ -510,8 +511,29 @@ export default class DataTree extends Module {
       row.reinitialize()
 
       this.refreshData(true)
+      this.refitTreeElementColumn()
 
       this.dispatchExternal('dataTreeRowCollapsed', row.getComponent(), row.modules.dataTree.index)
+    }
+  }
+
+  /**
+   * Refit the data tree element column after expand/collapse in fit-data layouts.
+   * @returns {void}
+   */
+  refitTreeElementColumn() {
+    const mode = this.layoutMode()
+
+    if (!['fitData', 'fitDataFill', 'fitDataTable', 'fitDataStretch'].includes(mode)) {
+      return
+    }
+
+    const column = this.elementField
+      ? this.table.columnManager.getColumnByField(this.elementField)
+      : this.table.columnManager.getFirstVisibleColumn()
+
+    if (column && !column.isGroup) {
+      column.reinitializeWidth()
     }
   }
 

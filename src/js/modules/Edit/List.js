@@ -419,6 +419,7 @@ export default class Edit {
 
       if (index > 0) {
         this._focusItem(this.displayItems[index - 1])
+        this._syncFocusedSelection()
       }
     }
   }
@@ -440,8 +441,32 @@ export default class Edit {
         } else {
           this._focusItem(this.displayItems[index + 1])
         }
+
+        this._syncFocusedSelection()
       }
     }
+  }
+
+  /**
+   * Keep active item highlight in sync when navigating with keyboard.
+   * @returns {void}
+   */
+  _syncFocusedSelection() {
+    if (this.params.autocomplete || this.params.multiselect || !this.focusedItem) {
+      return
+    }
+
+    this.currentItems.forEach((item) => {
+      if (item !== this.focusedItem) {
+        item.selected = false
+        this._styleItem(item)
+      }
+    })
+
+    this.currentItems = [this.focusedItem]
+    this.focusedItem.selected = true
+    this.input.value = this.focusedItem.label
+    this._styleItem(this.focusedItem)
   }
 
   _keySide(e) {

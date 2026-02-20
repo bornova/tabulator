@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link href="./../../dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-size: 0.75em;
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="example-table"></div>
+
+    <script type="module">
+      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { generateData } from './utils.js'
+
+      // Generate and log the data
+      const tableData = generateData(100)
+
+      const table = new Tabulator('#example-table', {
+        data: tableData, //assign data to table
+        height: 600,
+        columnDefaults: {
+          headerSortTristate: true
+        },
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name', editor: 'input', headerFilter: 'input', sorter: 'string' },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+          { title: 'Gender', field: 'gender', sorter: 'string' },
+          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+          { title: 'Color', field: 'col', sorter: 'string' },
+          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+          { title: 'Car', field: 'car', sorter: 'string' },
+          { title: 'Address', field: 'address', sorter: 'string' },
+          { title: 'State', field: 'state', sorter: 'string' },
+          { title: 'Country', field: 'country', sorter: 'string' },
+          { title: 'Progress', field: 'progress', formatter: 'progress' }
+        ],
+        pagination: 'local',
+        paginationSize: 25,
+        paginationSizeSelector: [10, 25, 50, 100],
+        movableColumns: true,
+        paginationCounter: 'rows'
+      })
+    </script>
+  </body>
+</html>
