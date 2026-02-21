@@ -302,7 +302,11 @@ export default class Cell extends CoreFeature {
    * @returns {number|string}
    */
   getWidth() {
-    return this.width || this.element.offsetWidth
+    if (this.width) {
+      return this.width
+    }
+
+    return Math.max(this.element.offsetWidth, this.element.scrollWidth)
   }
 
   /**
