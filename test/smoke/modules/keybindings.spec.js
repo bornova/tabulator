@@ -28,7 +28,7 @@ test('keybindings module', async ({ page }) => {
       })
 
       const module = table.modules.keybindings
-      const key9Bindings = module.watchKeys[9] || []
+      const key9Bindings = module.watchKeys.tab || []
 
       return {
         modulePresent: !!module,
@@ -110,9 +110,9 @@ test('keybindings module', async ({ page }) => {
       })
 
       const module = table.modules.keybindings
-      const tabBindings = module.watchKeys[9] || []
-      const key65Bindings = module.watchKeys[65] || []
-      const key66Bindings = module.watchKeys[66] || []
+      const tabBindings = module.watchKeys.tab || []
+      const key65Bindings = module.watchKeys.a || []
+      const key66Bindings = module.watchKeys.b || []
 
       return {
         tabHasNavNext: tabBindings.some((binding) => binding.action === module.constructor.actions.navNext),

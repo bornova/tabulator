@@ -136,20 +136,20 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   // allow key based navigation
   element.addEventListener('keydown', (e) => {
-    switch (e.keyCode) {
-      case 39: // right arrow
+    switch (e.key) {
+      case 'ArrowRight': // right arrow
         changeValue(value + 1)
         break
 
-      case 37: // left arrow
+      case 'ArrowLeft': // left arrow
         changeValue(value - 1)
         break
 
-      case 13: // enter
+      case 'Enter': // enter
         success(value)
         break
 
-      case 27: // escape
+      case 'Escape': // escape
         cancel()
         break
     }

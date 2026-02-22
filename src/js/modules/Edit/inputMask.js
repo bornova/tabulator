@@ -22,8 +22,9 @@ export default function maskInput(el, options) {
   el.addEventListener('keydown', (e) => {
     const index = el.value.length
     const char = e.key
+    const isInputCharacter = char && char.length === 1
 
-    if (e.keyCode > 46 && !e.ctrlKey && !e.metaKey) {
+    if (isInputCharacter && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (index >= mask.length) {
         e.preventDefault()
         e.stopPropagation()
@@ -61,7 +62,7 @@ export default function maskInput(el, options) {
   })
 
   el.addEventListener('keyup', (e) => {
-    if (e.keyCode > 46) {
+    if (e.key && e.key.length === 1) {
       if (options.maskAutoFill) {
         fillSymbols(el.value.length)
       }

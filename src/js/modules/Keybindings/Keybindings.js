@@ -104,17 +104,103 @@ export default class Keybindings extends Module {
           break
 
         default: {
-          const keyCode = isNaN(symbol) ? symbol.toUpperCase().charCodeAt(0) : parseInt(symbol)
-          binding.keys.push(keyCode)
+          const key = this._normalizeBindingSymbol(symbol)
 
-          if (!this.watchKeys[keyCode]) {
-            this.watchKeys[keyCode] = []
+          if (!key) {
+            return
           }
 
-          this.watchKeys[keyCode].push(binding)
+          binding.keys.push(key)
+
+          if (!this.watchKeys[key]) {
+            this.watchKeys[key] = []
+          }
+
+          this.watchKeys[key].push(binding)
         }
       }
     })
+  }
+
+  _normalizeBindingSymbol(symbol) {
+    if (!isNaN(symbol)) {
+      return this._keyFromLegacyCode(parseInt(symbol, 10))
+    }
+
+    const aliases = {
+      up: 'arrowup',
+      down: 'arrowdown',
+      left: 'arrowleft',
+      right: 'arrowright',
+      esc: 'escape',
+      del: 'delete',
+      return: 'enter',
+      pgup: 'pageup',
+      pgdn: 'pagedown',
+      space: ' ',
+      spacebar: ' '
+    }
+
+    return aliases[symbol] || symbol
+  }
+
+  _keyFromLegacyCode(code) {
+    const knownCodes = {
+      8: 'backspace',
+      9: 'tab',
+      13: 'enter',
+      27: 'escape',
+      32: ' ',
+      33: 'pageup',
+      34: 'pagedown',
+      35: 'end',
+      36: 'home',
+      37: 'arrowleft',
+      38: 'arrowup',
+      39: 'arrowright',
+      40: 'arrowdown',
+      45: 'insert',
+      46: 'delete'
+    }
+
+    if (knownCodes[code]) {
+      return knownCodes[code]
+    }
+
+    if (code >= 48 && code <= 90) {
+      return String.fromCharCode(code).toLowerCase()
+    }
+
+    if (code >= 96 && code <= 105) {
+      return String(code - 96)
+    }
+
+    if (code >= 112 && code <= 123) {
+      return `f${code - 111}`
+    }
+
+    return null
+  }
+
+  _normalizeEventKey(e) {
+    const key = e.key
+
+    if (!key) {
+      return null
+    }
+
+    if (key.length === 1) {
+      return key.toLowerCase()
+    }
+
+    const loweredKey = key.toLowerCase()
+    const aliases = {
+      esc: 'escape',
+      spacebar: ' ',
+      space: ' '
+    }
+
+    return aliases[loweredKey] || loweredKey
   }
 
   /**
@@ -123,11 +209,11 @@ export default class Keybindings extends Module {
    */
   bindEvents() {
     this.keyupBinding = (e) => {
-      const code = e.keyCode
-      const bindings = this.watchKeys[code]
+      const key = this._normalizeEventKey(e)
+      const bindings = this.watchKeys[key]
 
       if (bindings) {
-        this.pressedKeys.push(code)
+        this.pressedKeys.push(key)
 
         bindings.forEach((binding) => {
           this.checkBinding(e, binding)
@@ -136,11 +222,11 @@ export default class Keybindings extends Module {
     }
 
     this.keydownBinding = (e) => {
-      const code = e.keyCode
-      const bindings = this.watchKeys[code]
+      const key = this._normalizeEventKey(e)
+      const bindings = this.watchKeys[key]
 
       if (bindings) {
-        const index = this.pressedKeys.indexOf(code)
+        const index = this.pressedKeys.indexOf(key)
 
         if (index > -1) {
           this.pressedKeys.splice(index, 1)

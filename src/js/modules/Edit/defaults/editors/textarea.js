@@ -86,18 +86,18 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   })
 
   input.addEventListener('keydown', (e) => {
-    switch (e.keyCode) {
-      case 13:
+    switch (e.key) {
+      case 'Enter':
         if (e.shiftKey && editorParams.shiftEnterSubmit) {
           onChange()
         }
         break
 
-      case 27:
+      case 'Escape':
         cancel()
         break
 
-      case 38: // up arrow
+      case 'ArrowUp': // up arrow
         if (vertNav === 'editor' || (vertNav === 'hybrid' && input.selectionStart)) {
           e.stopImmediatePropagation()
           e.stopPropagation()
@@ -105,15 +105,15 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
         break
 
-      case 40: // down arrow
+      case 'ArrowDown': // down arrow
         if (vertNav === 'editor' || (vertNav === 'hybrid' && input.selectionStart !== input.value.length)) {
           e.stopImmediatePropagation()
           e.stopPropagation()
         }
         break
 
-      case 35:
-      case 36:
+      case 'End':
+      case 'Home':
         e.stopPropagation()
         break
     }

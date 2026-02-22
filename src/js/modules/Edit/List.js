@@ -323,34 +323,34 @@ export default class Edit {
   }
 
   _inputKeyDown(e) {
-    switch (e.keyCode) {
-      case 38: // up arrow
+    switch (e.key) {
+      case 'ArrowUp': // up arrow
         this._keyUp(e)
         break
 
-      case 40: // down arrow
+      case 'ArrowDown': // down arrow
         this._keyDown(e)
         break
 
-      case 37: // left arrow
-      case 39: // right arrow
+      case 'ArrowLeft': // left arrow
+      case 'ArrowRight': // right arrow
         this._keySide(e)
         break
 
-      case 13: // enter
+      case 'Enter': // enter
         this._keyEnter()
         break
 
-      case 27: // escape
+      case 'Escape': // escape
         this._keyEsc()
         break
 
-      case 36: // home
-      case 35: // end
+      case 'Home': // home
+      case 'End': // end
         this._keyHomeEnd(e)
         break
 
-      case 9: // tab
+      case 'Tab': // tab
         this._keyTab(e)
         break
 
@@ -360,13 +360,13 @@ export default class Edit {
   }
 
   _inputKeyUp(e) {
-    switch (e.keyCode) {
-      case 38: // up arrow
-      case 37: // left arrow
-      case 39: // up arrow
-      case 40: // right arrow
-      case 13: // enter
-      case 27: // escape
+    switch (e.key) {
+      case 'ArrowUp': // up arrow
+      case 'ArrowLeft': // left arrow
+      case 'ArrowRight': // up arrow
+      case 'ArrowDown': // right arrow
+      case 'Enter': // enter
+      case 'Escape': // escape
         break
 
       default:
@@ -506,8 +506,8 @@ export default class Edit {
       e.preventDefault()
       // }
 
-      if (e.keyCode >= 38 && e.keyCode <= 90) {
-        this._scrollToValue(e.keyCode)
+      if (e.key && e.key.length === 1) {
+        this._scrollToValue(e.key)
       }
     }
   }
@@ -522,8 +522,13 @@ export default class Edit {
   _scrollToValue(char) {
     clearTimeout(this.filterTimeout)
 
-    const character = String.fromCharCode(char).toLowerCase()
-    this.filterTerm += character.toLowerCase()
+    const character = String(char).toLowerCase().charAt(0)
+
+    if (!character) {
+      return
+    }
+
+    this.filterTerm += character
 
     const match = this.displayItems.find((item) => {
       return typeof item.label !== 'undefined' && item.label.toLowerCase().startsWith(this.filterTerm)

@@ -316,7 +316,7 @@ export default class Popup extends CoreFeature {
    * @returns {void}
    */
   _escapeCheck(e) {
-    if (e.keyCode == 27) {
+    if (e.key === 'Escape') {
       this.hide()
     }
   }
