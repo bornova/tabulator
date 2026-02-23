@@ -20,7 +20,7 @@ fs.rmSync('dist', { recursive: true, force: true })
 function cssConfig(minify) {
   console.log(`- Generating ${minify ? 'Minified' : 'Full'} CSS Bundles`)
 
-  return globbySync(['src/scss/themes/*/[!_]*.scss']).map((inputFile) => {
+  return globbySync(['src/scss/themes/*/{,*/}[!_]*.scss']).map((inputFile) => {
     const file = inputFile.replace('src/scss/', '')
 
     return {

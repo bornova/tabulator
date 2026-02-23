@@ -3,7 +3,7 @@
 <html>
   <head>
     <title>Tabulator Test</title>
-    <link href="./../../dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
+    <link id="theme-stylesheet" href="./../../dist/css/themes/default/light/tabulator.min.css" rel="stylesheet" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +24,9 @@
 
     <script type="module">
       import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
-      import { generateNestedData } from './utils.js'
+      import { generateNestedData, initializeThemeSelector } from './utils.js'
+
+      initializeThemeSelector()
 
       // Generate and log the data
       const tableData = generateNestedData(5, 4, 2)

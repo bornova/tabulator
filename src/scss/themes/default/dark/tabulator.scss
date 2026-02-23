@@ -1,0 +1,41 @@
+@use 'colors' as *;
+
+@use 'tableholder';
+@use 'header';
+@use 'row';
+@use 'footer';
+
+@use 'utils';
+
+@use 'rtl';
+@use 'print';
+
+//Tabulator Containing Element
+.tabulator {
+  position: relative;
+  transform: translateZ(0);
+  border: 1px solid $color-slate-700;
+  border-radius: 5px;
+  background-color: $color-slate-900;
+  color: $color-slate-100;
+  overflow: hidden;
+  text-align: left;
+
+  & * {
+    font-size: inherit;
+    font-family: inherit;
+  }
+
+  &[tabulator-layout='fitDataFill'] {
+    .tabulator-tableholder {
+      .tabulator-table {
+        min-width: 100%;
+      }
+    }
+  }
+
+  &[tabulator-layout='fitDataTable'] {
+    display: inline-flex;
+    flex-direction: column;
+  }
+}

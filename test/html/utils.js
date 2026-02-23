@@ -75,3 +75,53 @@ export const generateNestedData = (rowCount = 1, maxChildren = 4, maxDepth = 1) 
 
   return data
 }
+
+export const initializeThemeSelector = () => {
+  const themeStylesheet = document.getElementById('theme-stylesheet')
+
+  if (!themeStylesheet) {
+    return
+  }
+
+  if (!document.getElementById('theme-selector-style')) {
+    const style = document.createElement('style')
+    style.id = 'theme-selector-style'
+    style.textContent = '.theme-selector{margin:0 0 10px;font-size:0.875rem}.theme-selector select{margin-left:6px}'
+    document.head.appendChild(style)
+  }
+
+  let selector = document.getElementById('theme-select')
+
+  if (!selector) {
+    const wrapper = document.createElement('div')
+    const label = document.createElement('label')
+    selector = document.createElement('select')
+
+    wrapper.className = 'theme-selector'
+    label.htmlFor = 'theme-select'
+    label.textContent = 'Theme:'
+
+    selector.id = 'theme-select'
+    selector.innerHTML = '<option value="light">Light</option><option value="dark">Dark</option>'
+
+    wrapper.appendChild(label)
+    wrapper.appendChild(selector)
+
+    const firstTable = document.querySelector('[id^="example-table"]')
+    if (firstTable) {
+      firstTable.parentNode.insertBefore(wrapper, firstTable)
+    } else {
+      document.body.insertBefore(wrapper, document.body.firstChild)
+    }
+  }
+
+  const themeMatch = themeStylesheet.href.match(/\/themes\/default\/(light|dark)\/tabulator(\.min)?\.css$/)
+  const currentTheme = themeMatch ? themeMatch[1] : 'light'
+
+  selector.value = currentTheme
+
+  selector.addEventListener('change', (event) => {
+    const nextTheme = event.target.value
+    themeStylesheet.href = `./../../dist/css/themes/default/${nextTheme}/tabulator.min.css`
+  })
+}

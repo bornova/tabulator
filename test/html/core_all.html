@@ -1,0 +1,252 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link id="theme-stylesheet" href="./../../dist/css/themes/default/light/tabulator.min.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-size: 0.75em;
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="example-table"></div>
+
+    <script type="module">
+      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { generateData, initializeThemeSelector } from './utils.js'
+
+      initializeThemeSelector()
+
+      // Generate and log the data
+      const tableData = generateData(100)
+
+      const table = new Tabulator('#example-table', {
+        // General
+        height: 600,
+        minHeight: 300,
+        maxHeight: 800,
+        dependencies: {},
+        renderVertical: 'virtual',
+        renderVerticalBuffer: false,
+        renderHorizontal: 'basic',
+        placeholder: 'No Data Set',
+        footerElement: '',
+        history: false,
+        keybindings: false,
+        locale: false,
+        langs: {},
+        downloadConfig: {},
+        htmlOutputConfig: {},
+        reactiveData: false,
+        tabEndNewRow: false,
+        validationMode: 'blocking',
+        textDirection: 'auto',
+        debugInvalidOptions: true,
+        popupContainer: false,
+        // Columns
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name', sorter: 'string' },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+          { title: 'Gender', field: 'gender', sorter: 'string' },
+          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+          { title: 'Color', field: 'col', sorter: 'string' },
+          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+          { title: 'Car', field: 'car', sorter: 'string' },
+          { title: 'Address', field: 'address', sorter: 'string' },
+          { title: 'State', field: 'state', sorter: 'string' },
+          { title: 'Country', field: 'country', sorter: 'string' },
+          {
+            title: 'Progress',
+            field: 'progress',
+            formatter: 'progress',
+            formatterParams: { color: ['red', 'orange', 'green'] }
+          }
+        ],
+        columnDefaults: { headerSortTristate: true },
+        autoColumns: false,
+        autoColumnsDefinitions: false,
+        layout: 'fitData',
+        layoutColumnsOnNewData: false,
+        responsiveLayout: false,
+        responsiveLayoutCollapseStartOpen: true,
+        responsiveLayoutCollapseUseFormatters: true,
+        responsiveLayoutCollapseFormatter: () => {},
+        movableColumns: false,
+        columnHeaderVertAlign: 'top',
+        scrollToColumnPosition: 'left',
+        scrollToColumnIfVisible: false,
+        columnCalcs: true,
+        nestedFieldSeparator: '.',
+        headerVisible: true,
+        resizableColumnGuide: false,
+        resizableColumnFit: false,
+        // Rows
+        rowHeader: false,
+        rowHeight: null,
+        rowFormatter: false,
+        rowFormatterPrint: null,
+        rowFormatterClipboard: null,
+        rowFormatterHtmlOutput: null,
+        addRowPos: 'bottom',
+        movableRows: false,
+        movableRowsConnectedTables: false,
+        movableRowsSender: false,
+        movableRowsReceiver: 'insert',
+        movableRowsConnectedElements: false,
+        movableRowsElementDrop: false,
+        resizableRows: false,
+        resizableRowGuide: false,
+        scrollToRowPosition: 'top',
+        scrollToRowIfVisible: false,
+        // Data
+        index: 'id',
+        data: tableData, //assign data to table
+        ajaxURL: false,
+        ajaxParams: {},
+        ajaxConfig: 'GET',
+        ajaxContentType: 'form',
+        ajaxURLGenerator: false,
+        ajaxRequestFunc: false,
+        dataSendParams: {
+          page: 'page',
+          size: 'size',
+          sorters: 'sorters',
+          filters: 'filters'
+        },
+        dataReceiveParams: {
+          current_page: 'current_page',
+          last_page: 'last_page',
+          data: 'data'
+        },
+        filterMode: 'local',
+        sortMode: 'local',
+        progressiveLoad: false,
+        progressiveLoadDelay: 0,
+        progressiveLoadScrollMargin: false,
+        importFormat: null,
+        importReader: 'text',
+        importFileValidator: null,
+        importDataValidator: null,
+        importHeaderTransform: null,
+        importValueTransform: null,
+        dataLoader: true,
+        dataLoaderLoading: '',
+        dataLoaderError: '',
+        dataLoaderErrorTimeout: 3000,
+        //Sorting
+        initialSort: [],
+        sortOrderReverse: false,
+        headerSortElement: '',
+        headerSortClickElement: 'header',
+        //Filtering
+        initialFilter: [],
+        initialHeaderFilter: [],
+        headerFilterLiveFilterDelay: 300,
+        //Row Grouping
+        groupBy: false,
+        groupValues: false,
+        groupHeader: '(see documentation)',
+        groupHeaderPrint: null,
+        groupHeaderClipboard: null,
+        groupHeaderDownload: null,
+        groupHeaderHtmlOutput: null,
+        groupStartOpen: true,
+        groupToggleElement: 'arrow',
+        groupClosedShowCalcs: false,
+        //Pagination
+        pagination: false,
+        paginationMode: 'local',
+        paginationSize: 10,
+        paginationSizeSelector: false,
+        paginationElement: '',
+        paginationAddRow: 'page',
+        paginationButtonCount: 5,
+        paginationOutOfRange: null,
+        //Spreadsheet
+        spreadsheet: false,
+        spreadsheetRows: 50,
+        spreadsheetColumns: 50,
+        spreadsheetColumnDefinition: {},
+        spreadsheetOutputFull: false,
+        spreadsheetData: null,
+        spreadsheetSheets: null,
+        spreadsheetSheetTabs: false,
+        spreadsheetSheetTabsElement: null,
+        // Persistent Configuration
+        persistence: false,
+        persistenceID: null,
+        persistenceMode: true,
+        persistenceReaderFunc: null,
+        persistenceWriterFunc: null,
+        // Editing
+        editTriggerEvent: 'focus',
+        editorEmptyValue: null,
+        editorEmptyValueFunc: null,
+        // Selection
+        selectableRows: 'highlight',
+        selectableRowsRollingSelection: true,
+        selectableRowsRangeMode: 'drag',
+        selectableRowsPersistence: true,
+        selectableRowsCheck: () => true,
+        selectableRange: false,
+        selectableRangeColumns: false,
+        selectableRangeClearCells: false,
+        selectableRangeClearCellsValue: null,
+        selectableRangeAutoFocus: true,
+        // Clipboard
+        clipboard: false,
+        clipboardCopyRowRange: 'active',
+        clipboardCopyFormatter: false,
+        clipboardPasteParser: false,
+        clipboardPasteAction: false,
+        // Data Tree
+        dataTree: false,
+        dataTreeFilter: true,
+        dataTreeSort: true,
+        dataTreeElementColumn: false,
+        dataTreeBranchElement: true,
+        dataTreeChildIndent: 9,
+        dataTreeChildField: '_children',
+        dataTreeCollapseElement: false,
+        dataTreeExpandElement: false,
+        dataTreeStartExpanded: false,
+        dataTreeSelectPropagate: false,
+        dataTreeChildColumnCalcs: false,
+        //Printing
+        printAsHtml: false,
+        printStyled: false,
+        printRowRange: 'visible',
+        printConfig: {},
+        printHeader: false,
+        printFooter: false,
+        printFormatter: false,
+        // Menus
+        rowContextMenu: false,
+        rowClickMenu: false,
+        rowDblClickMenu: false,
+        groupContextMenu: false,
+        groupClickMenu: false,
+        groupDblClickMenu: false,
+        // Popups
+        rowContextPopup: null,
+        rowClickPopup: null,
+        rowDblClickPopup: null,
+        groupContextPopup: null,
+        groupClickPopup: null,
+        groupDblClickPopup: null
+      })
+    </script>
+  </body>
+</html>
