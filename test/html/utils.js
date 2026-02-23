@@ -131,7 +131,6 @@ export const initializeThemeSelector = () => {
 
   const applyTheme = (theme) => {
     colorSchemeMeta.setAttribute('content', theme)
-    document.documentElement.style.colorScheme = ''
     localStorage.setItem('tabulator-theme', theme)
   }
 
