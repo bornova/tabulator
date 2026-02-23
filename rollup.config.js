@@ -9,7 +9,11 @@ const pkg = JSON.parse(fs.readFileSync('./package.json'))
 const banner = `/* Tabulator v${pkg.version} (c) Oliver Folkerd ${new Date().getFullYear()} */`
 
 const minifyTerser = terser({ format: { preamble: banner } })
-const beautifyTerser = terser({ compress: false, mangle: false, format: { beautify: true, preamble: banner } })
+const beautifyTerser = terser({
+  compress: false,
+  mangle: false,
+  format: { beautify: true, indent_level: 2, preamble: banner }
+})
 const resolverPlugin = nodeResolve()
 
 console.log('Starting Build Process...')

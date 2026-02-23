@@ -76,6 +76,11 @@ export const generateNestedData = (rowCount = 1, maxChildren = 4, maxDepth = 1) 
   return data
 }
 
+export const initializeTestPageStyle = () => {
+  document.body.style.fontSize = '0.75em'
+  document.body.style.fontFamily = 'Inter, sans-serif'
+}
+
 export const initializeThemeSelector = () => {
   let selector = document.getElementById('theme-select')
 
@@ -84,22 +89,35 @@ export const initializeThemeSelector = () => {
     const label = document.createElement('label')
     selector = document.createElement('select')
 
-    wrapper.style.margin = '10px 0'
+    wrapper.id = 'theme-select-wrapper'
+    wrapper.style.display = 'inline-flex'
+    wrapper.style.alignItems = 'center'
+    wrapper.style.gap = '4px'
+    wrapper.style.margin = '10px 12px 10px 0'
     label.htmlFor = 'theme-select'
     label.textContent = 'Theme: '
 
     selector.id = 'theme-select'
+    selector.style.padding = '5px'
+    selector.style.border = '1px solid light-dark(#ccc, #666)'
+    selector.style.outline = 'none'
     selector.innerHTML =
       '<option value="light dark">Auto</option><option value="light">Light</option><option value="dark">Dark</option>'
 
     wrapper.appendChild(label)
     wrapper.appendChild(selector)
 
-    const firstTable = document.querySelector('[id^="example-table"]')
-    if (firstTable) {
-      firstTable.parentNode.insertBefore(wrapper, firstTable)
+    const navigatorWrapper = document.getElementById('test-file-select-wrapper')
+
+    if (navigatorWrapper) {
+      navigatorWrapper.insertAdjacentElement('afterend', wrapper)
     } else {
-      document.body.insertBefore(wrapper, document.body.firstChild)
+      const firstTable = document.querySelector('[id^="example-table"]')
+      if (firstTable) {
+        firstTable.parentNode.insertBefore(wrapper, firstTable)
+      } else {
+        document.body.insertBefore(wrapper, document.body.firstChild)
+      }
     }
   }
 
@@ -127,4 +145,73 @@ export const initializeThemeSelector = () => {
     const nextTheme = event.target.value
     applyTheme(nextTheme)
   })
+}
+
+const testFiles = [
+  'calculations.html',
+  'header_groups.html',
+  'core.html',
+  'core_all.html',
+  'editors.html',
+  'filters.html',
+  'groupBy.html',
+  'layouts.html',
+  'menus.html',
+  'movable_rows.html',
+  'nested_data.html',
+  'pagination.html',
+  'resizable.html',
+  'selectable_range.html'
+]
+
+export const initializeTestFileNavigator = () => {
+  if (document.getElementById('test-file-select')) {
+    return
+  }
+
+  const wrapper = document.createElement('div')
+  const label = document.createElement('label')
+  const selector = document.createElement('select')
+
+  wrapper.id = 'test-file-select-wrapper'
+  wrapper.style.display = 'inline-flex'
+  wrapper.style.alignItems = 'center'
+  wrapper.style.gap = '4px'
+  wrapper.style.margin = '10px 12px 10px 0'
+  label.htmlFor = 'test-file-select'
+  label.textContent = 'Test Page: '
+
+  selector.id = 'test-file-select'
+  selector.style.padding = '5px'
+  selector.style.border = '1px solid light-dark(#ccc, #666)'
+  selector.style.outline = 'none'
+
+  const currentFile = window.location.pathname.split('/').pop() || ''
+
+  testFiles.forEach((file) => {
+    const option = document.createElement('option')
+    option.value = file
+    option.textContent = file.replace('.html', '').replaceAll('_', ' ')
+    if (file === currentFile) {
+      option.selected = true
+    }
+    selector.appendChild(option)
+  })
+
+  selector.addEventListener('change', (event) => {
+    const selectedFile = event.target.value
+    if (selectedFile && selectedFile !== currentFile) {
+      window.location.href = selectedFile
+    }
+  })
+
+  wrapper.appendChild(label)
+  wrapper.appendChild(selector)
+
+  const firstTable = document.querySelector('[id^="example-table"]')
+  if (firstTable) {
+    firstTable.parentNode.insertBefore(wrapper, firstTable)
+  } else {
+    document.body.insertBefore(wrapper, document.body.firstChild)
+  }
 }

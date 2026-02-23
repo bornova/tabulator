@@ -89,11 +89,11 @@
   position: absolute;
   flex-direction: column;
   box-sizing: border-box;
-  box-shadow: light-dark(0 0 5px 0 $color-black-alpha-200, 0 0 8px 0 $color-black-alpha-700);
-  border: 1px solid light-dark($color-slate-100, $color-slate-700);
+  box-shadow: 0 0 8px 0 light-dark($color-black-alpha-300, $color-black-alpha-900);
+  border: 1px solid light-dark($color-slate-300, $color-slate-700);
   background: light-dark($color-white, $color-slate-800);
-  color: light-dark($color-gray-900, $color-slate-100);
   overflow-y: auto;
+  color: light-dark($color-gray-900, $color-slate-100);
   -webkit-overflow-scrolling: touch;
   z-index: 10000;
 }
