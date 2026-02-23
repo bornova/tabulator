@@ -3,7 +3,7 @@
 //footer element
 .tabulator-footer {
   border-top: 1px solid light-dark($color-slate-200, $color-slate-700);
-  background-color: light-dark($color-white, $color-slate-800);
+  background-color: light-dark($color-slate-50, $color-slate-800);
   color: light-dark($color-gray-500, $color-slate-300);
   font-weight: 600;
   user-select: none;
@@ -141,13 +141,13 @@
     display: inline-flex;
     align-content: center;
     align-items: center;
-    background: light-dark($color-white, $color-slate-900);
+    background: light-dark($color-white, $color-slate-800);
     padding: 6px 10px;
     color: light-dark($color-gray-500, $color-slate-200);
 
     &.active {
-      background-color: light-dark($color-slate-100, $color-blue-700);
-      color: light-dark($color-gray-900, $color-white);
+      background-color: light-dark($color-slate-100, $color-slate-700);
+      color: light-dark($color-blue-900, $color-blue-200);
       font-weight: 700;
     }
 

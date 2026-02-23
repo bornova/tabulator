@@ -59,7 +59,12 @@
           { title: 'State', field: 'state', sorter: 'string' },
           { title: 'Country', field: 'country', sorter: 'string' },
           { title: 'Progress', field: 'progress', formatter: 'progress' }
-        ]
+        ],
+        pagination: 'local',
+        paginationSize: 25,
+        paginationSizeSelector: [10, 25, 50, 100],
+        movableColumns: true,
+        paginationCounter: 'rows'
       })
     </script>
   </body>

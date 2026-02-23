@@ -1,0 +1,32 @@
+@use 'colors' as *;
+
+//Tabulator Containing Element
+.tabulator {
+  position: relative;
+  transform: translateZ(0);
+  border: 1px solid light-dark($color-slate-300, $color-slate-700);
+  border-radius: 5px;
+  background-color: light-dark($color-white, $color-slate-900);
+  overflow: hidden;
+  color: light-dark($color-gray-900, $color-slate-100);
+  color-scheme: inherit;
+  text-align: left;
+
+  & * {
+    font-size: inherit;
+    font-family: inherit;
+  }
+
+  &[tabulator-layout='fitDataFill'] {
+    .tabulator-tableholder {
+      .tabulator-table {
+        min-width: 100%;
+      }
+    }
+  }
+
+  &[tabulator-layout='fitDataTable'] {
+    display: inline-flex;
+    flex-direction: column;
+  }
+}

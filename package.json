@@ -63,7 +63,7 @@
     "@playwright/test": "^1.58.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "eslint": "^10.0.1",
+    "eslint": "^10.0.2",
     "fs-extra": "^11.3.3",
     "globals": "^17.3.0",
     "globby": "^16.1.1",
