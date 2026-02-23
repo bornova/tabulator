@@ -77,19 +77,6 @@ export const generateNestedData = (rowCount = 1, maxChildren = 4, maxDepth = 1) 
 }
 
 export const initializeThemeSelector = () => {
-  const themeStylesheet = document.getElementById('theme-stylesheet')
-
-  if (!themeStylesheet) {
-    return
-  }
-
-  if (!document.getElementById('theme-selector-style')) {
-    const style = document.createElement('style')
-    style.id = 'theme-selector-style'
-    style.textContent = '.theme-selector{margin:0 0 10px;font-size:0.875rem}.theme-selector select{margin-left:6px}'
-    document.head.appendChild(style)
-  }
-
   let selector = document.getElementById('theme-select')
 
   if (!selector) {
@@ -97,12 +84,13 @@ export const initializeThemeSelector = () => {
     const label = document.createElement('label')
     selector = document.createElement('select')
 
-    wrapper.className = 'theme-selector'
+    wrapper.style.margin = '10px 0'
     label.htmlFor = 'theme-select'
-    label.textContent = 'Theme:'
+    label.textContent = 'Theme: '
 
     selector.id = 'theme-select'
-    selector.innerHTML = '<option value="light">Light</option><option value="dark">Dark</option>'
+    selector.innerHTML =
+      '<option value="light dark">Auto</option><option value="light">Light</option><option value="dark">Dark</option>'
 
     wrapper.appendChild(label)
     wrapper.appendChild(selector)
@@ -115,13 +103,28 @@ export const initializeThemeSelector = () => {
     }
   }
 
-  const themeMatch = themeStylesheet.href.match(/\/themes\/default\/(light|dark)\/tabulator(\.min)?\.css$/)
-  const currentTheme = themeMatch ? themeMatch[1] : 'light'
+  let colorSchemeMeta = document.querySelector('meta[name="color-scheme"]')
+
+  if (!colorSchemeMeta) {
+    colorSchemeMeta = document.createElement('meta')
+    colorSchemeMeta.setAttribute('name', 'color-scheme')
+    document.head.appendChild(colorSchemeMeta)
+  }
+
+  const applyTheme = (theme) => {
+    colorSchemeMeta.setAttribute('content', theme)
+    document.documentElement.style.colorScheme = ''
+    localStorage.setItem('tabulator-theme', theme)
+  }
+
+  const storedTheme = localStorage.getItem('tabulator-theme')
+  const currentTheme = storedTheme || 'light dark'
 
   selector.value = currentTheme
+  applyTheme(currentTheme)
 
   selector.addEventListener('change', (event) => {
     const nextTheme = event.target.value
-    themeStylesheet.href = `./../../dist/css/themes/default/${nextTheme}/tabulator.min.css`
+    applyTheme(nextTheme)
   })
 }

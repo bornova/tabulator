@@ -13,7 +13,7 @@
   .tabulator-header {
     .tabulator-col {
       border-right: initial;
-      border-left: 1px solid $color-slate-100;
+      border-left: 1px solid light-dark($color-slate-100, $color-slate-700);
       text-align: initial;
 
       &.tabulator-col-group {
@@ -48,7 +48,7 @@
           bottom: -3px;
           left: -3px;
           border-radius: 999px;
-          background-color: $color-blue-600;
+          background-color: light-dark($color-blue-600, $color-blue-400);
           width: 6px;
           height: 6px;
           content: '';
@@ -60,12 +60,12 @@
   .tabulator-row {
     .tabulator-cell {
       border-right: initial;
-      border-left: 1px solid $color-slate-100;
+      border-left: 1px solid light-dark($color-slate-100, $color-slate-700);
 
       .tabulator-data-tree-branch {
         margin-right: initial;
         margin-left: 5px;
-        border-right: 2px solid $color-slate-100;
+        border-right: 2px solid light-dark($color-slate-100, $color-slate-700);
         border-left: initial;
         border-bottom-right-radius: 1px;
         border-bottom-left-radius: initial;
@@ -78,11 +78,11 @@
 
       &.tabulator-frozen {
         &.tabulator-frozen-left {
-          border-left: 1px solid $color-slate-300;
+          border-left: 1px solid light-dark($color-slate-300, $color-slate-600);
         }
 
         &.tabulator-frozen-right {
-          border-right: 1px solid $color-slate-300;
+          border-right: 1px solid light-dark($color-slate-300, $color-slate-600);
         }
       }
     }

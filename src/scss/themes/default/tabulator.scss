@@ -14,10 +14,12 @@
 .tabulator {
   position: relative;
   transform: translateZ(0);
-  border: 1px solid $color-slate-300;
+  border: 1px solid light-dark($color-slate-300, $color-slate-700);
   border-radius: 5px;
-  background-color: $color-white;
+  background-color: light-dark($color-white, $color-slate-900);
   overflow: hidden;
+  color: light-dark($color-gray-900, $color-slate-100);
+  color-scheme: inherit;
   text-align: left;
 
   & * {
