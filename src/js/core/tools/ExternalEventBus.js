@@ -105,6 +105,7 @@ export default class ExternalEventBus {
 
   /**
    * Dispatch an external event.
+   * @param {...*} args Event key followed by callback arguments.
    * @returns {*}
    */
   _dispatch(...args) {
@@ -126,6 +127,7 @@ export default class ExternalEventBus {
 
   /**
    * Dispatch with optional debug logging.
+   * @param {...*} args Event key followed by callback arguments.
    * @returns {*}
    */
   _debugDispatch(...args) {

@@ -10,6 +10,7 @@ export default class DeprecationAdvisor extends CoreFeature {
 
   /**
    * Warn in debug mode when deprecation warnings are enabled.
+   * @param {...*} args Console warning arguments.
    * @returns {void}
    */
   _warnUser(...args) {

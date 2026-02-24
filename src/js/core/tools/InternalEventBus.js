@@ -152,6 +152,8 @@ export default class InternalEventBus {
 
   /**
    * Dispatch an internal event to all subscribers.
+   * @param {string} key Event key.
+   * @param {...*} args Event payload arguments.
    * @returns {void}
    */
   _dispatch(key, ...args) {
@@ -164,6 +166,7 @@ export default class InternalEventBus {
 
   /**
    * Dispatch with optional debug logging.
+   * @param {...*} args Event key followed by payload arguments.
    * @returns {void}
    */
   _debugDispatch(...args) {
@@ -180,6 +183,7 @@ export default class InternalEventBus {
 
   /**
    * Chain-dispatch with optional debug logging.
+   * @param {...*} args Event key followed by chain arguments.
    * @returns {*}
    */
   _debugChain(...args) {
@@ -196,6 +200,7 @@ export default class InternalEventBus {
 
   /**
    * Confirm-dispatch with optional debug logging.
+   * @param {...*} args Event key followed by confirmation arguments.
    * @returns {boolean}
    */
   _debugConfirm(...args) {
