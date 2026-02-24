@@ -1,0 +1,113 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link id="theme-stylesheet" href="./../../dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+  </head>
+  <body>
+    <div id="example-table"></div>
+    <br />
+    <div>
+      <button id="download-csv">Download CSV</button>
+      <button id="download-json">Download JSON</button>
+      <button id="download-xlsx">Download XLSX</button>
+      <button id="download-pdf">Download PDF</button>
+      <button id="download-html">Download HTML</button>
+    </div>
+
+    <script type="module">
+      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import {
+        generateData,
+        initializeTestFileNavigator,
+        initializeTestPageStyle,
+        initializeThemeSelector
+      } from './utils.js'
+
+      initializeTestPageStyle()
+      initializeTestFileNavigator()
+      initializeThemeSelector()
+
+      // Generate and log the data
+      const tableData = generateData(100)
+
+      const table = new Tabulator('#example-table', {
+        data: tableData, //assign data to table
+        height: 600,
+        columnDefaults: {
+          headerSortTristate: true
+        },
+        columns: [
+          { title: 'Id', field: 'id' },
+          {
+            title: 'Name',
+            field: 'name',
+            sorter: 'string',
+            formatter: function (cell, formatterParams, onRendered) {
+              //cell - the cell component
+              //formatterParams - parameters set for the column
+              //onRendered - function to call when the formatter has been rendered
+
+              return 'Mr. ' + cell.getValue() //return the contents of the cell;
+            }
+          },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+          { title: 'Gender', field: 'gender', sorter: 'string' },
+          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+          { title: 'Color', field: 'col', sorter: 'string' },
+          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+          { title: 'Address', field: 'address', sorter: 'string' },
+          { title: 'State', field: 'state', sorter: 'string' },
+          { title: 'Country', field: 'country', sorter: 'string' },
+          {
+            title: 'Progress',
+            field: 'progress',
+            formatter: 'progress',
+            formatterParams: { color: ['red', 'orange', 'green'] }
+          },
+          { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
+        ]
+      })
+
+      //trigger download of data.csv file
+      document.getElementById('download-csv').addEventListener('click', () => {
+        table.download('csv', 'data.csv')
+      })
+
+      //trigger download of data.json file
+      document.getElementById('download-json').addEventListener('click', () => {
+        table.download('json', 'data.json')
+      })
+
+      //trigger download of data.xlsx file
+      document.getElementById('download-xlsx').addEventListener('click', () => {
+        table.download('xlsx', 'data.xlsx', { sheetName: 'My Data' })
+      })
+
+      //trigger download of data.pdf file
+      document.getElementById('download-pdf').addEventListener('click', () => {
+        table.download('pdf', 'data.pdf', {
+          orientation: 'portrait', //set page orientation to portrait
+          title: 'Example Report' //add title to report
+        })
+      })
+
+      //trigger download of data.html file
+      document.getElementById('download-html').addEventListener('click', () => {
+        table.download('html', 'data.html', { style: true })
+      })
+    </script>
+  </body>
+</html>
