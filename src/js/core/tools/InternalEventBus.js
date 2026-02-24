@@ -160,10 +160,7 @@ export default class InternalEventBus {
    * Dispatch an internal event to all subscribers.
    * @returns {void}
    */
-  _dispatch() {
-    const args = Array.from(arguments)
-    const key = args.shift()
-
+  _dispatch(key, ...args) {
     if (this.events[key]) {
       this.events[key].forEach((subscriber) => {
         subscriber.callback.apply(this, args)

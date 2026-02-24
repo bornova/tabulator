@@ -185,9 +185,6 @@ class Tabulator extends ModuleBinder {
         // Firefox
         selection.removeAllRanges()
       }
-    } else if (document.selection) {
-      // IE?
-      document.selection.empty()
     }
 
     this.element.classList.remove('tabulator-block-select')

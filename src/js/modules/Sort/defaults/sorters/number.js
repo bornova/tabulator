@@ -37,9 +37,9 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   b = normalizeNumber(b)
 
   // handle non numeric values
-  if (isNaN(a)) {
-    emptyAlign = isNaN(b) ? 0 : -1
-  } else if (isNaN(b)) {
+  if (Number.isNaN(a)) {
+    emptyAlign = Number.isNaN(b) ? 0 : -1
+  } else if (Number.isNaN(b)) {
     emptyAlign = 1
   } else {
     // compare valid values

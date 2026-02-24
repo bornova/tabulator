@@ -26,7 +26,7 @@ export default {
 
     value = Number(value)
 
-    return !isNaN(value) && isFinite(value) && Math.floor(value) === value
+    return !Number.isNaN(value) && Number.isFinite(value) && Math.floor(value) === value
   },
 
   // is float
@@ -43,7 +43,7 @@ export default {
 
     value = Number(value)
 
-    return !isNaN(value) && isFinite(value) && value % 1 !== 0
+    return !Number.isNaN(value) && Number.isFinite(value) && value % 1 !== 0
   },
 
   // must be a number
@@ -58,7 +58,7 @@ export default {
       return true
     }
 
-    return !isNaN(value)
+    return !Number.isNaN(Number(value))
   },
 
   // must be a string
@@ -73,7 +73,7 @@ export default {
       return true
     }
 
-    return isNaN(value)
+    return Number.isNaN(Number(value))
   },
 
   // must be alphanumeric

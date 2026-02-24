@@ -336,12 +336,7 @@ export default class SelectRange extends Module {
     this.restoreFocus()
 
     try {
-      if (document.selection) {
-        // IE
-        range = document.body.createTextRange()
-        range.moveToElementText(cell.getElement())
-        range.select()
-      } else if (window.getSelection) {
+      if (window.getSelection) {
         range = document.createRange()
         range.selectNode(cell.getElement())
         window.getSelection().removeAllRanges()

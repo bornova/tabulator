@@ -27,7 +27,7 @@ export default function (cell, formatterParams) {
   star.setAttribute('xml:space', 'preserve')
   star.style.padding = '0 1px'
 
-  const parsedValue = value && !isNaN(value) ? Number.parseInt(value, 10) : 0
+  const parsedValue = value && !Number.isNaN(Number(value)) ? Number.parseInt(value, 10) : 0
   const normalizedValue = Math.max(0, Math.min(parsedValue, maxStars))
 
   for (let i = 1; i <= maxStars; i++) {

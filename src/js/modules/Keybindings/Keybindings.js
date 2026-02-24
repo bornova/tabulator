@@ -123,7 +123,7 @@ export default class Keybindings extends Module {
   }
 
   _normalizeBindingSymbol(symbol) {
-    if (!isNaN(symbol)) {
+    if (!Number.isNaN(Number(symbol))) {
       return this._keyFromLegacyCode(parseInt(symbol, 10))
     }
 

@@ -37,9 +37,7 @@ export default class Tooltip extends Module {
    * Check deprecated tooltip options.
    * @returns {void}
    */
-  deprecatedOptionsCheck() {
-    // this.deprecationCheckMsg("tooltipGenerationMode", "This option is no longer needed as tooltips are always generated on hover now");
-  }
+  deprecatedOptionsCheck() {}
 
   /**
    * Initialize tooltip listeners for a column.

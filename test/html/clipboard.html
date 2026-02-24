@@ -37,7 +37,8 @@
         columnDefaults: {
           headerSortTristate: true
         },
-        frozenRows: 3,
+        clipboard: true,
+        clipboardPasteAction: 'replace',
         columns: [
           { title: 'Id', field: 'id' },
           { title: 'Name', field: 'name', sorter: 'string' },
@@ -49,9 +50,18 @@
           { title: 'Address', field: 'address', sorter: 'string' },
           { title: 'State', field: 'state', sorter: 'string' },
           { title: 'Country', field: 'country', sorter: 'string' },
-          { title: 'Progress', field: 'progress', formatter: 'progress' },
+          {
+            title: 'Progress',
+            field: 'progress',
+            formatter: 'progress',
+            formatterParams: { color: ['red', 'orange', 'green'] }
+          },
           { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
         ]
+      })
+      table.on('dataLoaded', function (data) {
+        //data - all data loaded into the table
+        console.log(data)
       })
     </script>
   </body>

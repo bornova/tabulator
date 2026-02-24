@@ -96,7 +96,7 @@ export default class MoveColumns extends Module {
 
       colEl.addEventListener('mousedown', (e) => {
         this.touchMove = false
-        if (e.which === 1) {
+        if (e.button === 0) {
           this.checkTimeout = setTimeout(() => {
             this.startMove(e, column)
           }, this.checkPeriod)
@@ -104,7 +104,7 @@ export default class MoveColumns extends Module {
       })
 
       colEl.addEventListener('mouseup', (e) => {
-        if (e.which === 1) {
+        if (e.button === 0) {
           if (this.checkTimeout) {
             clearTimeout(this.checkTimeout)
           }
@@ -315,7 +315,7 @@ export default class MoveColumns extends Module {
    * @returns {void}
    */
   endMove(e) {
-    if (e.which === 1 || this.touchMove) {
+    if (e.button === 0 || this.touchMove) {
       this._unbindMouseMove()
 
       if (this.placeholderElement.parentNode) {

@@ -23,7 +23,8 @@ export const generateData = (rowCount) => {
       address: faker.location.streetAddress(), // Generates a random street address
       state: faker.location.state(), // Generates a random state
       country: faker.location.country(), // Generates a random country
-      progress: faker.number.int({ min: 0, max: 100 }) // Generates a random progress percentage
+      progress: faker.number.int({ min: 0, max: 100 }), // Generates a random progress percentage
+      completed: faker.datatype.boolean()
     })
   }
 
@@ -42,7 +43,8 @@ const createRow = (id) => {
     address: faker.location.streetAddress(),
     state: faker.location.state(),
     country: faker.location.country(),
-    progress: faker.number.int({ min: 0, max: 100 })
+    progress: faker.number.int({ min: 0, max: 100 }),
+    completed: faker.datatype.boolean()
   }
 }
 
@@ -148,6 +150,7 @@ export const initializeThemeSelector = () => {
 const testFiles = [
   'calculations.html',
   'header_groups.html',
+  'clipboard.html',
   'core.html',
   'core_all.html',
   'editors.html',

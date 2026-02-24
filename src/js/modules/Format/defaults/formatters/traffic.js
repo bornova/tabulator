@@ -17,7 +17,7 @@ export default function (cell, formatterParams) {
   let color = '#666666'
   let percentValue
 
-  if (isNaN(value) || typeof cell.getValue() === 'undefined') {
+  if (Number.isNaN(Number(value)) || typeof cell.getValue() === 'undefined') {
     return
   }
 

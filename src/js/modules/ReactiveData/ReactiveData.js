@@ -57,8 +57,7 @@ export default class ReactiveData extends Module {
     Object.defineProperty(this.data, 'push', {
       enumerable: false,
       configurable: true,
-      value: function () {
-        const args = Array.from(arguments)
+      value: function (...args) {
         let result
 
         if (!self.blocked && version === self.currentVersion) {
@@ -68,7 +67,7 @@ export default class ReactiveData extends Module {
             self.table.rowManager.addRowActual(arg, false)
           })
 
-          result = self.origFuncs.push.apply(data, arguments)
+          result = self.origFuncs.push.apply(data, args)
 
           self.unblock('data-push')
         }
@@ -83,8 +82,7 @@ export default class ReactiveData extends Module {
     Object.defineProperty(this.data, 'unshift', {
       enumerable: false,
       configurable: true,
-      value: function () {
-        const args = Array.from(arguments)
+      value: function (...args) {
         let result
 
         if (!self.blocked && version === self.currentVersion) {
@@ -94,7 +92,7 @@ export default class ReactiveData extends Module {
             self.table.rowManager.addRowActual(arg, true)
           })
 
-          result = self.origFuncs.unshift.apply(data, arguments)
+          result = self.origFuncs.unshift.apply(data, args)
 
           self.unblock('data-unshift')
         }
@@ -167,8 +165,7 @@ export default class ReactiveData extends Module {
     Object.defineProperty(this.data, 'splice', {
       enumerable: false,
       configurable: true,
-      value: function () {
-        const args = Array.from(arguments)
+      value: function (...args) {
         const start = args[0] < 0 ? data.length + args[0] : args[0]
         const end = args[1]
         let newRows = args[2] ? args.slice(2) : false
@@ -211,7 +208,7 @@ export default class ReactiveData extends Module {
             self.table.rowManager.reRenderInPosition()
           }
 
-          result = self.origFuncs.splice.apply(data, arguments)
+          result = self.origFuncs.splice.apply(data, args)
 
           self.unblock('data-splice')
         }

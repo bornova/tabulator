@@ -65,13 +65,7 @@ export default class SelectRow extends Module {
    * Check deprecated selection options.
    * @returns {void}
    */
-  deprecatedOptionsCheck() {
-    // this.deprecationCheck("selectable", "selectableRows", true);
-    // this.deprecationCheck("selectableRollingSelection", "selectableRowsRollingSelection", true);
-    // this.deprecationCheck("selectableRangeMode", "selectableRowsRangeMode", true);
-    // this.deprecationCheck("selectablePersistence", "selectableRowsPersistence", true);
-    // this.deprecationCheck("selectableCheck", "selectableRowsCheck", true);
-  }
+  deprecatedOptionsCheck() {}
 
   /**
    * Expose selected rows to row retrieval pipeline.
@@ -333,7 +327,11 @@ export default class SelectRow extends Module {
    */
   _selectRow(rowInfo, silent, force) {
     // handle max row count
-    if (!isNaN(this.table.options.selectableRows) && this.table.options.selectableRows !== true && !force) {
+    if (
+      !Number.isNaN(Number(this.table.options.selectableRows)) &&
+      this.table.options.selectableRows !== true &&
+      !force
+    ) {
       if (this.selectedRows.length >= this.table.options.selectableRows) {
         if (this.table.options.selectableRowsRollingSelection) {
           this._deselectRow(this.selectedRows[0])

@@ -19,7 +19,7 @@ export default function (cell, formatterParams) {
   const after = !!formatterParams.symbolAfter
   const precision = typeof formatterParams.precision !== 'undefined' ? formatterParams.precision : 2
 
-  if (isNaN(floatVal)) {
+  if (Number.isNaN(floatVal)) {
     return this.emptyToSpace(this.sanitizeHTML(cell.getValue()))
   }
 

@@ -363,7 +363,7 @@ export default class Sort extends Module {
             break
 
           default:
-            if (!isNaN(value) && value !== '') {
+            if (!Number.isNaN(Number(value)) && value !== '') {
               sorter = 'number'
             } else {
               if (value.match(/((^[0-9]+[a-z]+)|(^[a-z]+[0-9]+))+$/i)) {

@@ -181,7 +181,7 @@ export default class MoveRows extends Module {
       rowEl = row.getElement()
 
       rowEl.addEventListener('mousedown', (e) => {
-        if (e.which === 1 && this.canStartMoveFromEvent(e)) {
+        if (e.button === 0 && this.canStartMoveFromEvent(e)) {
           this.checkTimeout = setTimeout(() => {
             this.startMove(e, row)
           }, this.checkPeriod)
@@ -189,7 +189,7 @@ export default class MoveRows extends Module {
       })
 
       rowEl.addEventListener('mouseup', (e) => {
-        if (e.which === 1) {
+        if (e.button === 0) {
           if (this.checkTimeout) {
             clearTimeout(this.checkTimeout)
           }
@@ -223,7 +223,7 @@ export default class MoveRows extends Module {
       const cellEl = cell.getElement(true)
 
       cellEl.addEventListener('mousedown', (e) => {
-        if (e.which === 1 && this.canStartMoveFromEvent(e)) {
+        if (e.button === 0 && this.canStartMoveFromEvent(e)) {
           this.checkTimeout = setTimeout(() => {
             this.startMove(e, cell.row)
           }, this.checkPeriod)
@@ -231,7 +231,7 @@ export default class MoveRows extends Module {
       })
 
       cellEl.addEventListener('mouseup', (e) => {
-        if (e.which === 1) {
+        if (e.button === 0) {
           if (this.checkTimeout) {
             clearTimeout(this.checkTimeout)
           }
@@ -449,7 +449,7 @@ export default class MoveRows extends Module {
    * @returns {void}
    */
   endMove(e) {
-    if (!e || e.which === 1 || this.touchMove) {
+    if (!e || e.button === 0 || this.touchMove) {
       this._unbindMouseMove()
 
       if (!this.connection) {
@@ -573,9 +573,7 @@ export default class MoveRows extends Module {
 
       selectors.forEach((query) => {
         if (typeof query === 'string') {
-          this.connectionElements = this.connectionElements.concat(
-            Array.prototype.slice.call(document.querySelectorAll(query))
-          )
+          this.connectionElements = this.connectionElements.concat(Array.from(document.querySelectorAll(query)))
         } else {
           this.connectionElements.push(query)
         }

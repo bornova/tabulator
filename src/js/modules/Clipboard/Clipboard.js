@@ -48,33 +48,12 @@ export default class Clipboard extends Module {
 
     if (this.mode === true || this.mode === 'copy') {
       this.table.element.addEventListener('copy', (e) => {
-        let plain, html, list
+        let plain
+        let html
 
         if (!this.blocked) {
           e.preventDefault()
-
-          if (this.customSelection) {
-            plain = this.customSelection
-
-            if (this.table.options.clipboardCopyFormatter) {
-              plain = this.table.options.clipboardCopyFormatter('plain', plain)
-            }
-          } else {
-            list = this.table.modules.export.generateExportList(
-              this.table.options.clipboardCopyConfig,
-              this.table.options.clipboardCopyStyled,
-              this.rowRange,
-              'clipboard'
-            )
-
-            html = this.table.modules.export.generateHTMLTable(list)
-            plain = html ? this.generatePlainContent(list) : ''
-
-            if (this.table.options.clipboardCopyFormatter) {
-              plain = this.table.options.clipboardCopyFormatter('plain', plain)
-              html = this.table.options.clipboardCopyFormatter('html', html)
-            }
-          }
+          ;({ plain, html } = this.generateClipboardContent())
 
           if (window.clipboardData && window.clipboardData.setData) {
             window.clipboardData.setData('Text', plain)
@@ -169,7 +148,7 @@ export default class Clipboard extends Module {
    * @returns {void}
    */
   copy(range, internal) {
-    let sel, textRange
+    let sel
     this.blocked = false
     this.customSelection = false
 
@@ -185,19 +164,98 @@ export default class Clipboard extends Module {
           this.customSelection = sel.toString()
         }
 
-        sel.removeAllRanges()
-        sel.addRange(range)
-      } else if (typeof document.selection !== 'undefined' && typeof document.body.createTextRange !== 'undefined') {
-        textRange = document.body.createTextRange()
-        textRange.moveToElementText(this.table.element)
-        textRange.select()
+        if (sel.removeAllRanges && sel.addRange) {
+          sel.removeAllRanges()
+          sel.addRange(range)
+        }
       }
 
-      document.execCommand('copy')
+      this.copyWithClipboardApi().then((copied) => {
+        if (!copied) {
+          // Compatibility fallback for browsers/contexts where async Clipboard API is unavailable or blocked.
+          document.execCommand('copy')
+        }
 
-      if (sel) {
-        sel.removeAllRanges()
+        if (sel && sel.removeAllRanges) {
+          sel.removeAllRanges()
+        }
+      })
+    }
+  }
+
+  /**
+   * Build clipboard plain/html payload based on current copy settings.
+   * @returns {{plain:string, html:string|undefined}}
+   */
+  generateClipboardContent() {
+    let plain
+    let html
+    let list
+
+    if (this.customSelection) {
+      plain = this.customSelection
+
+      if (this.table.options.clipboardCopyFormatter) {
+        plain = this.table.options.clipboardCopyFormatter('plain', plain)
       }
+    } else {
+      list = this.table.modules.export.generateExportList(
+        this.table.options.clipboardCopyConfig,
+        this.table.options.clipboardCopyStyled,
+        this.rowRange,
+        'clipboard'
+      )
+
+      html = this.table.modules.export.generateHTMLTable(list)
+      plain = html ? this.generatePlainContent(list) : ''
+
+      if (this.table.options.clipboardCopyFormatter) {
+        plain = this.table.options.clipboardCopyFormatter('plain', plain)
+        html = this.table.options.clipboardCopyFormatter('html', html)
+      }
+    }
+
+    return { plain, html }
+  }
+
+  /**
+   * Attempt modern async clipboard copy, preserving html when supported.
+   * @returns {Promise<boolean>} True if async clipboard copy succeeded.
+   */
+  async copyWithClipboardApi() {
+    const clipboard = navigator.clipboard
+
+    if (!clipboard) {
+      return false
+    }
+
+    const { plain, html } = this.generateClipboardContent()
+
+    try {
+      if (
+        html &&
+        typeof ClipboardItem !== 'undefined' &&
+        typeof Blob !== 'undefined' &&
+        typeof clipboard.write === 'function'
+      ) {
+        await clipboard.write([
+          new ClipboardItem({
+            'text/plain': new Blob([plain], { type: 'text/plain' }),
+            'text/html': new Blob([html], { type: 'text/html' })
+          })
+        ])
+      } else if (typeof clipboard.writeText === 'function') {
+        await clipboard.writeText(plain)
+      } else {
+        return false
+      }
+
+      this.dispatchExternal('clipboardCopied', plain, html)
+      this.reset()
+
+      return true
+    } catch {
+      return false
     }
   }
 

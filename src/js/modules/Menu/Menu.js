@@ -52,11 +52,7 @@ export default class Menu extends Module {
    * Check deprecated menu options.
    * @returns {void}
    */
-  deprecatedOptionsCheck() {
-    // if(!this.deprecationCheck("menuContainer", "popupContainer")){
-    // 	this.table.options.popupContainer = this.table.options.menuContainer;
-    // }
-  }
+  deprecatedOptionsCheck() {}
 
   /**
    * Initialize row-level menu subscriptions.
