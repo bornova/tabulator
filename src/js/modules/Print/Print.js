@@ -28,7 +28,6 @@ export default class Print extends Module {
 
   /**
    * Initialize print handlers and table print API.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.printAsHtml) {
@@ -45,7 +44,6 @@ export default class Print extends Module {
 
   /**
    * Remove print listeners on module teardown.
-   * @returns {void}
    */
   destroy() {
     if (this.table.options.printAsHtml) {
@@ -76,7 +74,6 @@ export default class Print extends Module {
    * @param {HTMLElement} rootElement Root print wrapper.
    * @param {HTMLElement} sectionElement Section element.
    * @param {string|HTMLElement} content Section content.
-   * @returns {void}
    */
   appendPrintSection(rootElement, sectionElement, content) {
     if (typeof content === 'string') {
@@ -90,7 +87,6 @@ export default class Print extends Module {
 
   /**
    * Replace table with printable markup for browser print events.
-   * @returns {void}
    */
   replaceTable() {
     const { printConfig, printStyled, printRowRange } = this.table.options
@@ -111,7 +107,6 @@ export default class Print extends Module {
 
   /**
    * Cleanup print-only DOM and restore table display.
-   * @returns {void}
    */
   cleanup() {
     document.body.classList.remove('tabulator-print-fullscreen-hide')
@@ -129,7 +124,6 @@ export default class Print extends Module {
    * @param {string} [visible] Row range to print.
    * @param {boolean} [style] Include print styling.
    * @param {object} [config] Print config override.
-   * @returns {void}
    */
   printFullscreen(visible, style, config) {
     const { printConfig, printStyled, printRowRange, printHeader, printFooter, printFormatter } = this.table.options

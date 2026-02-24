@@ -24,7 +24,6 @@ export default class Tooltip extends Module {
 
   /**
    * Initialize tooltip subscriptions.
-   * @returns {void}
    */
   initialize() {
     this.deprecatedOptionsCheck()
@@ -35,14 +34,12 @@ export default class Tooltip extends Module {
 
   /**
    * Check deprecated tooltip options.
-   * @returns {void}
    */
   deprecatedOptionsCheck() {}
 
   /**
    * Initialize tooltip listeners for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     if (column.definition.headerTooltip && !this.headerSubscriber) {
@@ -65,7 +62,6 @@ export default class Tooltip extends Module {
    * @param {string} action Tooltip type key.
    * @param {MouseEvent} e Mouse event.
    * @param {object} component Cell or column component.
-   * @returns {void}
    */
   mousemoveCheck(action, e, component) {
     const tooltip = action === 'tooltip' ? component.column.definition.tooltip : component.definition.headerTooltip
@@ -78,7 +74,6 @@ export default class Tooltip extends Module {
 
   /**
    * Handle mouseout for tooltip cancellation.
-   * @returns {void}
    */
   mouseoutCheck() {
     if (!this.popupInstance) {
@@ -88,7 +83,6 @@ export default class Tooltip extends Module {
 
   /**
    * Clear pending tooltip timeout and hide active popup.
-   * @returns {void}
    */
   clearPopup() {
     clearTimeout(this.timeout)
@@ -104,7 +98,6 @@ export default class Tooltip extends Module {
    * @param {MouseEvent} e Mouse event.
    * @param {object} component Internal cell/column component.
    * @param {boolean|string|HTMLElement|Function} tooltip Tooltip definition.
-   * @returns {void}
    */
   loadTooltip(e, component, tooltip) {
     let contentsEl

@@ -42,7 +42,6 @@ export default class Spreadsheet extends Module {
 
   /**
    * Initialize spreadsheet mode and related lifecycle hooks.
-   * @returns {void}
    */
   initialize() {
     if (this.options('spreadsheet')) {
@@ -67,7 +66,6 @@ export default class Spreadsheet extends Module {
 
   /**
    * Warn about incompatible options with spreadsheet mode.
-   * @returns {void}
    */
   compatibilityCheck() {
     if (this.options('data')) {
@@ -91,7 +89,6 @@ export default class Spreadsheet extends Module {
 
   /**
    * Initialize sheet tab container.
-   * @returns {void}
    */
   initializeTabset() {
     this.element = document.createElement('div')
@@ -118,7 +115,6 @@ export default class Spreadsheet extends Module {
 
   /**
    * Load initial spreadsheet data/sheets after table initialization.
-   * @returns {void}
    */
   tableInitialized() {
     if (this.sheets.length) {
@@ -171,7 +167,6 @@ export default class Spreadsheet extends Module {
   /**
    * Load a single-sheet data matrix.
    * @param {Array<*>} data Spreadsheet data matrix.
-   * @returns {void}
    */
   loadData(data) {
     const def = {
@@ -183,7 +178,6 @@ export default class Spreadsheet extends Module {
 
   /**
    * Destroy all sheet instances.
-   * @returns {void}
    */
   destroySheets() {
     this.sheets.forEach((sheet) => {
@@ -197,7 +191,6 @@ export default class Spreadsheet extends Module {
   /**
    * Load and initialize multiple sheet definitions.
    * @param {Array<object>} sheets Sheet definitions.
-   * @returns {void}
    */
   loadSheets(sheets) {
     if (!Array.isArray(sheets)) {
@@ -218,7 +211,6 @@ export default class Spreadsheet extends Module {
   /**
    * Activate a sheet.
    * @param {Sheet} sheet Sheet instance.
-   * @returns {void}
    */
   loadSheet(sheet) {
     if (!sheet) {
@@ -265,7 +257,6 @@ export default class Spreadsheet extends Module {
   /**
    * Remove a sheet instance.
    * @param {Sheet} sheet Sheet instance.
-   * @returns {void}
    */
   removeSheet(sheet) {
     const index = this.sheets.indexOf(sheet)
@@ -407,7 +398,6 @@ export default class Spreadsheet extends Module {
   /**
    * Remove a target sheet.
    * @param {*} key Sheet lookup value.
-   * @returns {void}
    */
   removeSheetFunc(key) {
     const sheet = this.lookupSheet(key)

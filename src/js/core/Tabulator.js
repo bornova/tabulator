@@ -29,7 +29,6 @@ class Tabulator extends ModuleBinder {
   /**
    * Extend an existing module namespace.
    * @param {...*} args Extension arguments.
-   * @returns {void}
    */
   static extendModule(...args) {
     Tabulator.initializeModuleBinder()
@@ -39,7 +38,6 @@ class Tabulator extends ModuleBinder {
   /**
    * Register a module with Tabulator.
    * @param {...*} args Module registration arguments.
-   * @returns {void}
    */
   static registerModule(...args) {
     Tabulator.initializeModuleBinder()
@@ -131,7 +129,6 @@ class Tabulator extends ModuleBinder {
   /**
    * Initialize core managers, options, buses, and dependencies.
    * @param {object} options Table options.
-   * @returns {void}
    */
   initializeCoreSystems(options) {
     this.columnManager = new ColumnManager(this)
@@ -162,7 +159,6 @@ class Tabulator extends ModuleBinder {
   // convert deprecated functionality to new functions
   /**
    * Map deprecated functionality to modern APIs.
-   * @returns {void}
    */
   _mapDeprecatedFunctionality() {
     // all previously deprecated functionality removed in the 6.0 release
@@ -170,7 +166,6 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Clear current browser text selection within the table.
-   * @returns {void}
    */
   _clearSelection() {
     this.element.classList.add('tabulator-block-select')
@@ -193,7 +188,6 @@ class Tabulator extends ModuleBinder {
   // create table
   /**
    * Build and initialize table internals.
-   * @returns {void}
    */
   _create() {
     this.externalEvents.dispatch('tableBuilding')
@@ -217,7 +211,6 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Warn when the page is running in Quirks Mode.
-   * @returns {void}
    */
   _compatibilityCheck() {
     if (typeof document !== 'undefined' && document.compatMode !== 'CSS1Compat') {
@@ -229,7 +222,6 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Apply RTL/LTR mode classes based on options and computed style.
-   * @returns {void}
    */
   _rtlCheck() {
     const style = window.getComputedStyle(this.element)
@@ -260,7 +252,6 @@ class Tabulator extends ModuleBinder {
   // clear pointers to objects in default config object
   /**
    * Clone pointer-based option values to prevent shared references.
-   * @returns {void}
    */
   _clearObjectPointers() {
     this.options.columns = [...this.options.columns]
@@ -273,7 +264,6 @@ class Tabulator extends ModuleBinder {
   // build tabulator element
   /**
    * Build root table element and apply size constraints.
-   * @returns {void}
    */
   _buildElement() {
     let element = this.element
@@ -326,7 +316,6 @@ class Tabulator extends ModuleBinder {
   // initialize core systems and modules
   /**
    * Initialize managers/modules and append core DOM structure.
-   * @returns {void}
    */
   _initializeTable() {
     const element = this.element
@@ -379,7 +368,6 @@ class Tabulator extends ModuleBinder {
   // deconstructor
   /**
    * Destroy table instance and clean DOM/events.
-   * @returns {void}
    */
   destroy() {
     const element = this.element
@@ -403,7 +391,6 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Detect browser and mobile environment flags.
-   * @returns {void}
    */
   _detectBrowser() {
     const ua = navigator.userAgent || navigator.vendor || window.opera
@@ -471,7 +458,6 @@ class Tabulator extends ModuleBinder {
   // block table redrawing
   /**
    * Block redraw operations.
-   * @returns {void}
    */
   blockRedraw() {
     this.initGuard()
@@ -487,7 +473,6 @@ class Tabulator extends ModuleBinder {
   // restore table redrawing
   /**
    * Restore redraw operations.
-   * @returns {void}
    */
   restoreRedraw() {
     this.initGuard()
@@ -517,7 +502,6 @@ class Tabulator extends ModuleBinder {
   // clear data
   /**
    * Clear all table data.
-   * @returns {void}
    */
   clearData() {
     this.initGuard()
@@ -860,7 +844,6 @@ class Tabulator extends ModuleBinder {
    * @param {*} from Source row identifier.
    * @param {*} to Target row identifier.
    * @param {boolean} [after] Insert after target.
-   * @returns {void}
    */
   moveRow(from, to, after) {
     const fromRow = this.rowManager.findRow(from)
@@ -904,7 +887,6 @@ class Tabulator extends ModuleBinder {
   /**
    * Set full column definitions.
    * @param {Array<object>} definition Column definitions.
-   * @returns {void}
    */
   setColumns(definition) {
     this.initGuard(false, "To set initial columns please use the 'columns' property in the table constructor")
@@ -1057,7 +1039,6 @@ class Tabulator extends ModuleBinder {
    * @param {string} from Source field.
    * @param {string} to Target field.
    * @param {boolean} [after] Insert after target.
-   * @returns {void}
    */
   moveColumn(from, to, after) {
     const fromColumn = this.columnManager.findColumn(from)
@@ -1100,7 +1081,6 @@ class Tabulator extends ModuleBinder {
   /**
    * Redraw table without data refresh.
    * @param {boolean} [force] Force redraw.
-   * @returns {void}
    */
   redraw(force) {
     this.initGuard()
@@ -1112,7 +1092,6 @@ class Tabulator extends ModuleBinder {
   /**
    * Set table height and re-render vertical renderer.
    * @param {string|number} height Height value.
-   * @returns {void}
    */
   setHeight(height) {
     this.options.height = Number.isNaN(Number(height)) ? height : `${height}px`
@@ -1127,7 +1106,6 @@ class Tabulator extends ModuleBinder {
    * Subscribe to external event.
    * @param {string} key Event key.
    * @param {Function} callback Event callback.
-   * @returns {void}
    */
   on(key, callback) {
     this.externalEvents.subscribe(key, callback)
@@ -1137,7 +1115,6 @@ class Tabulator extends ModuleBinder {
    * Unsubscribe from external event.
    * @param {string} key Event key.
    * @param {Function} callback Event callback.
-   * @returns {void}
    */
   off(key, callback) {
     this.externalEvents.unsubscribe(key, callback)
@@ -1146,7 +1123,6 @@ class Tabulator extends ModuleBinder {
   /**
    * Dispatch external event.
    * @param {...*} args Event args.
-   * @returns {void}
    */
   dispatchEvent(...args) {
     this.externalEvents.dispatch(...args)
@@ -1158,7 +1134,6 @@ class Tabulator extends ModuleBinder {
    * Show an alert.
    * @param {*} contents Alert contents.
    * @param {string} [type] Alert type.
-   * @returns {void}
    */
   alert(contents, type) {
     this.initGuard()
@@ -1168,7 +1143,6 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Clear active alert.
-   * @returns {void}
    */
   clearAlert() {
     this.initGuard()

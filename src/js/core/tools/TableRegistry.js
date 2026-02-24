@@ -5,7 +5,6 @@ export default class TableRegistry {
     /**
      * Register a table instance.
      * @param {TableRegistry} table Table instance.
-     * @returns {void}
      */
     register(table) {
       TableRegistry.registry.tables.push(table)
@@ -14,7 +13,6 @@ export default class TableRegistry {
     /**
      * Deregister a table instance.
      * @param {TableRegistry} table Table instance.
-     * @returns {void}
      */
     deregister(table) {
       const index = TableRegistry.registry.tables.indexOf(table)

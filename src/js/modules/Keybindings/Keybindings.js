@@ -27,7 +27,6 @@ export default class Keybindings extends Module {
 
   /**
    * Initialize keybinding mappings and DOM listeners.
-   * @returns {void}
    */
   initialize() {
     const bindings = this.table.options.keybindings
@@ -47,7 +46,6 @@ export default class Keybindings extends Module {
   /**
    * Map configured action bindings into key watch lists.
    * @param {object} bindings Binding definitions.
-   * @returns {void}
    */
   mapBindings(bindings) {
     for (const key in bindings) {
@@ -76,7 +74,6 @@ export default class Keybindings extends Module {
    * Map one action binding string/array into normalized key metadata.
    * @param {string} action Action name.
    * @param {string|number|Array<string|number>} symbolsList Binding symbols.
-   * @returns {void}
    */
   mapBinding(action, symbolsList) {
     const binding = {
@@ -220,7 +217,6 @@ export default class Keybindings extends Module {
 
   /**
    * Bind keydown/keyup listeners on the table element.
-   * @returns {void}
    */
   bindEvents() {
     this.keyupBinding = (e) => {
@@ -256,7 +252,6 @@ export default class Keybindings extends Module {
 
   /**
    * Remove keybinding listeners from the table element.
-   * @returns {void}
    */
   clearBindings() {
     if (this.keyupBinding) {

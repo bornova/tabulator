@@ -58,7 +58,6 @@ export default class GroupRows extends Module {
   // initialize group configuration
   /**
    * Initialize grouping subscriptions and handlers.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('table-destroy', this._blockRedrawing.bind(this))
@@ -93,7 +92,6 @@ export default class GroupRows extends Module {
 
   /**
    * Temporarily block grouped redraw output generation.
-   * @returns {void}
    */
   _blockRedrawing() {
     this.blockRedraw = true
@@ -101,7 +99,6 @@ export default class GroupRows extends Module {
 
   /**
    * Restore grouped redraw output generation.
-   * @returns {void}
    */
   _restoreRedrawing() {
     this.blockRedraw = false
@@ -109,7 +106,6 @@ export default class GroupRows extends Module {
 
   /**
    * Build group lookup/generator configuration from table options.
-   * @returns {void}
    */
   configureGroupSetup() {
     if (this.table.options.groupBy) {
@@ -295,7 +291,6 @@ export default class GroupRows extends Module {
 
   /**
    * Emit grouped data change event.
-   * @returns {void}
    */
   trackChanges() {
     this.dispatch('group-changed')
@@ -308,7 +303,6 @@ export default class GroupRows extends Module {
   /**
    * Set grouping definition.
    * @param {*} groups Group definition.
-   * @returns {void}
    */
   setGroupBy(groups) {
     this.table.options.groupBy = groups
@@ -331,7 +325,6 @@ export default class GroupRows extends Module {
   /**
    * Set allowed group values.
    * @param {*} groupValues Group values config.
-   * @returns {void}
    */
   setGroupValues(groupValues) {
     this.table.options.groupValues = groupValues
@@ -344,7 +337,6 @@ export default class GroupRows extends Module {
   /**
    * Set initial open/closed state rules for groups.
    * @param {*} values Open-state config.
-   * @returns {void}
    */
   setGroupStartOpen(values) {
     this.table.options.groupStartOpen = values
@@ -362,7 +354,6 @@ export default class GroupRows extends Module {
   /**
    * Set group header generator config.
    * @param {*} values Group header config.
-   * @returns {void}
    */
   setGroupHeader(values) {
     this.table.options.groupHeader = values
@@ -416,7 +407,6 @@ export default class GroupRows extends Module {
    * @param {object} from Source row/group.
    * @param {object} to Target row/group.
    * @param {boolean} after Insert-after flag.
-   * @returns {void}
    */
   rowMoving(from, to, after) {
     if (this.table.options.groupBy) {
@@ -442,7 +432,6 @@ export default class GroupRows extends Module {
   /**
    * Remove row from its group before deletion.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   rowDeleting(row) {
     // remove from group
@@ -453,7 +442,6 @@ export default class GroupRows extends Module {
 
   /**
    * Refresh grouped rows after row updates.
-   * @returns {void}
    */
   rowsUpdated() {
     if (this.table.options.groupBy) {
@@ -464,7 +452,6 @@ export default class GroupRows extends Module {
   /**
    * Reassign row when grouped field values change.
    * @param {object} cell Updated cell.
-   * @returns {void}
    */
   cellUpdated(cell) {
     if (this.table.options.groupBy) {
@@ -534,7 +521,6 @@ export default class GroupRows extends Module {
 
   /**
    * Clear all group state.
-   * @returns {void}
    */
   wipe() {
     if (this.table.options.groupBy) {
@@ -629,7 +615,6 @@ export default class GroupRows extends Module {
   /**
    * Generate groups and assign rows.
    * @param {Array<object>} rows Source rows.
-   * @returns {void}
    */
   generateGroups(rows) {
     const oldGroups = this.groups
@@ -661,7 +646,6 @@ export default class GroupRows extends Module {
    * @param {*} groupID Group key.
    * @param {number} level Group level.
    * @param {object} oldGroups Previous group map.
-   * @returns {void}
    */
   createGroup(groupID, level, oldGroups) {
     const groupKey = `${level}_${groupID}`
@@ -686,7 +670,6 @@ export default class GroupRows extends Module {
   /**
    * Assign row to an existing pre-created group.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   assignRowToExistingGroup(row) {
     const groupID = this.groupIDLookups[0].func(row.getData())
@@ -720,7 +703,6 @@ export default class GroupRows extends Module {
   /**
    * Move row to correct group when grouping values change.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   reassignRowToGroup(row) {
     if (row.type === 'row') {
@@ -783,7 +765,6 @@ export default class GroupRows extends Module {
   /**
    * Sync grouped header horizontal positions.
    * @param {number} left Horizontal scroll offset.
-   * @returns {void}
    */
   scrollHeaders(left) {
     if (this.table.options.groupBy) {
@@ -802,7 +783,6 @@ export default class GroupRows extends Module {
   /**
    * Remove a group from registry and list.
    * @param {object} group Internal group.
-   * @returns {void}
    */
   removeGroup(group) {
     const groupKey = `${group.level}_${group.key}`
@@ -821,7 +801,6 @@ export default class GroupRows extends Module {
 
   /**
    * Ensure table width when only group headers render.
-   * @returns {void}
    */
   checkBasicModeGroupHeaderWidth() {
     const element = this.table.rowManager.tableElement

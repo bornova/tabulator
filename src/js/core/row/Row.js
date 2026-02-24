@@ -35,7 +35,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Lazily create the row DOM element.
-   * @returns {void}
    */
   create() {
     if (!this.created) {
@@ -46,7 +45,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Create the base row DOM element.
-   * @returns {void}
    */
   createElement() {
     const element = document.createElement('div')
@@ -68,7 +66,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Detach the row element from the DOM if currently attached.
-   * @returns {void}
    */
   detachElement() {
     if (this.element && this.element.parentNode) {
@@ -78,7 +75,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Generate row element and emit initialization event.
-   * @returns {void}
    */
   generateElement() {
     this.createElement()
@@ -87,7 +83,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Generate cell objects for this row.
-   * @returns {void}
    */
   generateCells() {
     this.cells = this.table.columnManager.generateCells(this)
@@ -97,7 +92,6 @@ export default class Row extends CoreFeature {
    * Initialize row cells and layout.
    * @param {boolean} [force] Force reinitialization.
    * @param {boolean} [inFragment] Render in a detached fragment when true.
-   * @returns {void}
    */
   initialize(force, inFragment) {
     this.create()
@@ -133,7 +127,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Dispatch rendered hooks for all row cells.
-   * @returns {void}
    */
   rendered() {
     this.cells.forEach((cell) => {
@@ -143,7 +136,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Mark height as stale and normalize if row is currently in the document flow.
-   * @returns {void}
    */
   reinitializeHeight() {
     this.heightInitialized = false
@@ -155,7 +147,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Mark this row as not initialized.
-   * @returns {void}
    */
   deinitialize() {
     this.initialized = false
@@ -163,7 +154,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Mark row height as not initialized.
-   * @returns {void}
    */
   deinitializeHeight() {
     this.heightInitialized = false
@@ -171,7 +161,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Reinitialize row layout state.
-   * @returns {void}
    */
   reinitialize() {
     this.initialized = false
@@ -192,7 +181,6 @@ export default class Row extends CoreFeature {
   /**
    * Calculate row height and cache styled/outer heights.
    * @param {boolean} [force] Ignore manual height and recalculate when true.
-   * @returns {void}
    */
   calcHeight(force) {
     let maxHeight
@@ -243,7 +231,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Apply current row height to all cells.
-   * @returns {void}
    */
   setCellHeight() {
     this.cells.forEach((cell) => {
@@ -255,7 +242,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Clear explicit height on all row cells.
-   * @returns {void}
    */
   clearCellHeight() {
     this.cells.forEach((cell) => {
@@ -266,7 +252,6 @@ export default class Row extends CoreFeature {
   /**
    * Normalize row and cell heights.
    * @param {boolean} [force] Clear existing cell heights before recalculating.
-   * @returns {void}
    */
   normalizeHeight(force) {
     if (force && !this.table.options.rowHeight) {
@@ -282,7 +267,6 @@ export default class Row extends CoreFeature {
    * Set row height explicitly.
    * @param {number} height Row height in pixels.
    * @param {boolean} [force] Force update when true.
-   * @returns {void}
    */
   setHeight(height, force) {
     if (this.height !== height || force) {
@@ -322,7 +306,6 @@ export default class Row extends CoreFeature {
   /**
    * Remove a cell from the row cell collection.
    * @param {object} cell Internal cell instance.
-   * @returns {void}
    */
   deleteCell(cell) {
     const index = this.cells.indexOf(cell)
@@ -336,7 +319,6 @@ export default class Row extends CoreFeature {
   /**
    * Set initial row data with lifecycle hooks.
    * @param {object} data Row data object.
-   * @returns {void}
    */
   setData(data) {
     this.data = this.chain('row-data-init-before', [this, data], undefined, data)
@@ -510,7 +492,6 @@ export default class Row extends CoreFeature {
    * Move this row before or after another row.
    * @param {*} to Target row lookup value.
    * @param {boolean} before Insert before when true.
-   * @returns {void}
    */
   moveToRow(to, before) {
     const toRow = this.table.rowManager.findRow(to)
@@ -539,7 +520,6 @@ export default class Row extends CoreFeature {
   /**
    * Delete row internals and unregister from row manager.
    * @param {boolean} [blockRedraw] Prevent redraw while deleting.
-   * @returns {void}
    */
   deleteActual(blockRedraw) {
     this.detachModules()
@@ -557,7 +537,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Detach module state before deletion.
-   * @returns {void}
    */
   detachModules() {
     this.dispatch('row-deleting', this)
@@ -565,7 +544,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Delete all cells owned by this row.
-   * @returns {void}
    */
   deleteCells() {
     const cellCount = this.cells.length
@@ -577,7 +555,6 @@ export default class Row extends CoreFeature {
 
   /**
    * Remove all row DOM/module state without row-manager deletion.
-   * @returns {void}
    */
   wipe() {
     this.detachModules()
@@ -614,7 +591,6 @@ export default class Row extends CoreFeature {
   /**
    * Set row display position and notify watchers.
    * @param {number} position New position index.
-   * @returns {void}
    */
   setPosition(position) {
     if (position !== this.position) {
@@ -629,7 +605,6 @@ export default class Row extends CoreFeature {
   /**
    * Subscribe to row position updates.
    * @param {Function} callback Position callback.
-   * @returns {void}
    */
   watchPosition(callback) {
     this.positionWatchers.push(callback)

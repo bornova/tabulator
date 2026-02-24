@@ -8,7 +8,6 @@ export default {
    * Delete source row after move completes.
    *
    * @param {Object} fromRow Source row.
-   * @returns {void}
    */
   delete(fromRow) {
     if (fromRow) {

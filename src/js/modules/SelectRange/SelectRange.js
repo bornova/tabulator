@@ -50,7 +50,6 @@ export default class SelectRange extends Module {
 
   /**
    * Initialize selectable range behavior.
-   * @returns {void}
    */
   initialize() {
     if (this.options('selectableRange')) {
@@ -79,7 +78,6 @@ export default class SelectRange extends Module {
 
   /**
    * Build range overlay and base table wiring.
-   * @returns {void}
    */
   initializeTable() {
     this.overlay = document.createElement('div')
@@ -105,7 +103,6 @@ export default class SelectRange extends Module {
 
   /**
    * Subscribe range module event watchers.
-   * @returns {void}
    */
   initializeWatchers() {
     this.columnSelection = this.options('selectableRangeColumns')
@@ -156,7 +153,6 @@ export default class SelectRange extends Module {
   /**
    * Initialize column-specific range warnings/settings.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     if (this.columnSelection && column.definition.headerSort && this.options('headerSortClickElement') !== 'icon') {
@@ -174,7 +170,6 @@ export default class SelectRange extends Module {
 
   /**
    * Resolve row-header column and validate frozen configuration.
-   * @returns {void}
    */
   updateHeaderColumn() {
     let frozenCols
@@ -288,7 +283,6 @@ export default class SelectRange extends Module {
 
   /**
    * Handle global mouseup for drag selection.
-   * @returns {void}
    */
   _handleMouseUp() {
     this.mousedown = false
@@ -298,7 +292,6 @@ export default class SelectRange extends Module {
   /**
    * Handle keyboard actions for range editing and clearing.
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   _handleKeyDown(e) {
     const editModule = this.table.modules.edit
@@ -328,7 +321,6 @@ export default class SelectRange extends Module {
   /**
    * Initialize text focus/selection for a cell.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   initializeFocus(cell) {
     let range
@@ -364,7 +356,6 @@ export default class SelectRange extends Module {
   /**
    * Resize selected columns after a column resize.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   handleColumnResized(column) {
     let selected
@@ -393,7 +384,6 @@ export default class SelectRange extends Module {
   /**
    * Start column move handling while maintaining range state.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   handleColumnMoving(column) {
     this.resetRanges().setBounds(column)
@@ -403,7 +393,6 @@ export default class SelectRange extends Module {
   /**
    * Finalize column move range bounds.
    * @param {object} from Source column after move.
-   * @returns {void}
    */
   handleColumnMoved(from) {
     this.activeRange.setBounds(from)
@@ -414,7 +403,6 @@ export default class SelectRange extends Module {
    * Handle mousedown on column headers for range selection.
    * @param {MouseEvent} event Mouse event.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   handleColumnMouseDown(event, column) {
     if (
@@ -442,7 +430,6 @@ export default class SelectRange extends Module {
    * Handle hover drag extension for column selections.
    * @param {MouseEvent} e Mouse event.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   handleColumnMouseMove(e, column) {
     if (column === this.rowHeader || !this.mousedown || this.selecting === 'all') {
@@ -459,7 +446,6 @@ export default class SelectRange extends Module {
   /**
    * Render range CSS classes for a cell.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   renderCell(cell) {
     const el = cell.getElement()
@@ -478,7 +464,6 @@ export default class SelectRange extends Module {
    * Handle mousedown on cells for range selection.
    * @param {MouseEvent} event Mouse event.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   handleCellMouseDown(event, cell) {
     if (
@@ -500,7 +485,6 @@ export default class SelectRange extends Module {
    * Handle drag-extension when moving across cells.
    * @param {MouseEvent} e Mouse event.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   handleCellMouseMove(e, cell) {
     if (!this.mousedown || this.selecting === 'all') {
@@ -514,7 +498,6 @@ export default class SelectRange extends Module {
    * Handle cell click focus behavior.
    * @param {MouseEvent} _e Mouse event.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   handleCellClick(_e, cell) {
     this.initializeFocus(cell)
@@ -523,7 +506,6 @@ export default class SelectRange extends Module {
   /**
    * Keep active range aligned with currently edited cell.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   handleEditingCell(cell) {
     if (this.activeRange) {
@@ -533,7 +515,6 @@ export default class SelectRange extends Module {
 
   /**
    * Restore keydown behavior after edit completion.
-   * @returns {void}
    */
   finishEditingCell() {
     this.blockKeydown = true
@@ -552,7 +533,6 @@ export default class SelectRange extends Module {
    * Navigate active range by one cell.
    * @param {string} dir Direction.
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   keyNavigate(dir, e) {
     if (this.navigate(false, false, dir)) {
@@ -566,7 +546,6 @@ export default class SelectRange extends Module {
    * @param {string} dir Direction.
    * @param {boolean} jump Jump to edge.
    * @param {boolean} expand Expand range.
-   * @returns {void}
    */
   keyNavigateRange(e, dir, jump, expand) {
     if (this.navigate(jump, expand, dir)) {
@@ -916,7 +895,6 @@ export default class SelectRange extends Module {
    * Start a new selection based on source element and modifier keys.
    * @param {MouseEvent} event Mouse event.
    * @param {object} element Cell or column.
-   * @returns {void}
    */
   newSelection(event, element) {
     let range
@@ -958,7 +936,6 @@ export default class SelectRange extends Module {
    * @param {Range} range Active range.
    * @param {HTMLElement} [row] Row element.
    * @param {HTMLElement} [column] Column element.
-   * @returns {void}
    */
   autoScroll(range, row, column) {
     const tableHolder = this.table.rowManager.element
@@ -1013,7 +990,6 @@ export default class SelectRange extends Module {
 
   /**
    * Queue layout recompute for range overlays.
-   * @returns {void}
    */
   layoutChange() {
     this.overlay.style.visibility = 'hidden'
@@ -1024,7 +1000,6 @@ export default class SelectRange extends Module {
   /**
    * Redraw range state when table redraw occurs.
    * @param {boolean} force Force full reset.
-   * @returns {void}
    */
   redraw(force) {
     if (force) {
@@ -1037,7 +1012,6 @@ export default class SelectRange extends Module {
   /**
    * Layout rows, columns, and range overlays.
    * @param {boolean} [visibleRows] Use only visible rows.
-   * @returns {void}
    */
   layoutElement(visibleRows) {
     const rows = visibleRows ? this.table.rowManager.getVisibleRows(true) : this.table.rowManager.getRows()
@@ -1059,7 +1033,6 @@ export default class SelectRange extends Module {
   /**
    * Layout row selection/highlight classes.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   layoutRow(row) {
     const el = row.getElement()
@@ -1079,7 +1052,6 @@ export default class SelectRange extends Module {
   /**
    * Layout column selection/highlight classes.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   layoutColumn(column) {
     const el = column.getElement()
@@ -1098,7 +1070,6 @@ export default class SelectRange extends Module {
 
   /**
    * Layout all range overlays and active cell highlight.
-   * @returns {void}
    */
   layoutRanges() {
     let activeCell, activeCellEl, activeRowEl
@@ -1253,7 +1224,6 @@ export default class SelectRange extends Module {
 
   /**
    * Remove module DOM/event listeners on table destroy.
-   * @returns {void}
    */
   tableDestroyed() {
     document.removeEventListener('mouseup', this.mouseUpEvent)

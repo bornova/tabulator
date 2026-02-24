@@ -31,7 +31,6 @@ export default class Export extends Module {
 
   /**
    * Register export table functions.
-   * @returns {void}
    */
   initialize() {
     this.registerTableFunction('getHtml', this.getHtml.bind(this))
@@ -843,7 +842,6 @@ export default class Export extends Module {
    * @param {HTMLElement} from Source element.
    * @param {HTMLElement} to Target element.
    * @param {Array<string>} props CSS property list.
-   * @returns {void}
    */
   mapElementStyles(from, to, props) {
     if (this.cloneTableStyle && from && to) {

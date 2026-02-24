@@ -43,7 +43,6 @@ export default class Ajax extends Module {
   // initialize setup options
   /**
    * Initialize ajax request handlers and defaults.
-   * @returns {void}
    */
   initialize() {
     this.loaderPromise = this.table.options.ajaxRequestFunc || Ajax.defaultLoaderPromise
@@ -124,7 +123,6 @@ export default class Ajax extends Module {
   /**
    * Set base ajax config.
    * @param {object|string} [config={}] Config object or method string.
-   * @returns {void}
    */
   setDefaultConfig(config = {}) {
     this.config = { ...Ajax.defaultConfig }
@@ -161,7 +159,6 @@ export default class Ajax extends Module {
   /**
    * Set ajax URL.
    * @param {string} url Request URL.
-   * @returns {void}
    */
   setUrl(url) {
     this.url = url

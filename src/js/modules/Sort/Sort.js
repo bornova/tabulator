@@ -35,7 +35,6 @@ export default class Sort extends Module {
 
   /**
    * Initialize sorting handlers and table APIs.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('column-layout', this.initializeColumn.bind(this))
@@ -53,7 +52,6 @@ export default class Sort extends Module {
 
   /**
    * Apply initial sort after table build.
-   * @returns {void}
    */
   tableBuilt() {
     if (this.table.options.initialSort) {
@@ -86,7 +84,6 @@ export default class Sort extends Module {
    * User-facing sort setter.
    * @param {*} sortList Sort descriptor(s).
    * @param {string} [dir] Sort direction.
-   * @returns {void}
    */
   userSetSort(sortList, dir) {
     this.setSort(sortList, dir)
@@ -96,7 +93,6 @@ export default class Sort extends Module {
 
   /**
    * Clear all sorting and refresh data.
-   * @returns {void}
    */
   clearSort() {
     this.clear()
@@ -111,7 +107,6 @@ export default class Sort extends Module {
   /**
    * Initialize sort metadata and click handlers for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     let sorter = false
@@ -258,7 +253,6 @@ export default class Sort extends Module {
 
   /**
    * Refresh data after sort changes.
-   * @returns {void}
    */
   refreshSort() {
     const left = this.table.rowManager.scrollLeft
@@ -299,7 +293,6 @@ export default class Sort extends Module {
    * Set internal sort list.
    * @param {*} sortList Sort descriptor(s).
    * @param {string} [dir] Sort direction.
-   * @returns {void}
    */
   setSort(sortList, dir) {
     const newSortList = []
@@ -327,7 +320,6 @@ export default class Sort extends Module {
 
   /**
    * Clear internal sort list.
-   * @returns {void}
    */
   clear() {
     this.setSort([])
@@ -446,7 +438,6 @@ export default class Sort extends Module {
 
   /**
    * Clear sort state and icons on all columns.
-   * @returns {void}
    */
   clearColumnHeaders() {
     this.table.columnManager.getRealColumns().forEach((column) => {
@@ -462,7 +453,6 @@ export default class Sort extends Module {
    * Set header sort direction for a column.
    * @param {object} column Internal column.
    * @param {string} dir Sort direction.
-   * @returns {void}
    */
   setColumnHeader(column, dir) {
     column.modules.sort.dir = dir
@@ -474,7 +464,6 @@ export default class Sort extends Module {
    * Render/refresh sort icon for a column.
    * @param {object} column Internal column.
    * @param {string} dir Sort direction.
-   * @returns {void}
    */
   setColumnHeaderSortIcon(column, dir) {
     const sortEl = column.modules.sort.element
@@ -497,7 +486,6 @@ export default class Sort extends Module {
    * Sort row list using prepared sorters.
    * @param {Array<object>} data Rows.
    * @param {Array<object>} sortList Prepared sort config.
-   * @returns {void}
    */
   _sortItems(data, sortList) {
     const sorterCount = sortList.length - 1

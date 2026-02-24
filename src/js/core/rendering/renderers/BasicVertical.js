@@ -16,7 +16,6 @@ export default class BasicVertical extends Renderer {
 
   /**
    * Clear all rendered rows and reset table element styles.
-   * @returns {void}
    */
   clearRows() {
     const element = this.tableElement
@@ -34,7 +33,6 @@ export default class BasicVertical extends Renderer {
 
   /**
    * Render all display rows into the table element.
-   * @returns {void}
    */
   renderRows() {
     const element = this.tableElement
@@ -75,7 +73,6 @@ export default class BasicVertical extends Renderer {
   /**
    * Re-render all rows with an optional callback between clear and render.
    * @param {Function} [callback] Callback executed after clear and before render.
-   * @returns {void}
    */
   rerenderRows(callback) {
     this.clearRows()
@@ -109,7 +106,6 @@ export default class BasicVertical extends Renderer {
   /**
    * Scroll vertically to bring a row into view.
    * @param {object} row Internal row instance.
-   * @returns {void}
    */
   scrollToRow(row) {
     const rowEl = row.getElement()

@@ -26,7 +26,6 @@ export default class Download extends Module {
 
   /**
    * Register table download functions.
-   * @returns {void}
    */
   initialize() {
     this.deprecatedOptionsCheck()
@@ -37,7 +36,6 @@ export default class Download extends Module {
 
   /**
    * Check deprecated download options.
-   * @returns {void}
    */
   deprecatedOptionsCheck() {}
 
@@ -51,7 +49,6 @@ export default class Download extends Module {
    * @param {string} [filename] Output filename.
    * @param {object} [options] Downloader options.
    * @param {string} [active] Row range selector.
-   * @returns {void}
    */
   downloadToTab(type, filename, options, active) {
     this.download(type, filename, options, active, true)
@@ -68,7 +65,6 @@ export default class Download extends Module {
    * @param {object} [options] Downloader options.
    * @param {string} [range] Export row range.
    * @param {boolean|Function} [interceptCallback] Intercept callback or open-in-tab flag.
-   * @returns {void}
    */
   download(type, filename, options, range, interceptCallback) {
     let downloadFunc = false
@@ -147,7 +143,6 @@ export default class Download extends Module {
    * @param {string|Function} type Download type.
    * @param {string} [filename] Output filename.
    * @param {boolean} [newTab] Open output in new tab.
-   * @returns {void}
    */
   triggerDownload(data, mime, type, filename, newTab) {
     const element = document.createElement('a')
@@ -193,7 +188,6 @@ export default class Download extends Module {
    * @param {*} table Source table.
    * @param {string} action Action key.
    * @param {object} data Action payload.
-   * @returns {void}
    */
   commsReceived(table, action, data) {
     switch (action) {

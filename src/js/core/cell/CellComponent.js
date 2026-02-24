@@ -99,7 +99,6 @@ export default class CellComponent {
    * Set the cell value.
    * @param {*} value New value.
    * @param {boolean} [mutate=true] Run value mutators before setting.
-   * @returns {void}
    */
   setValue(value, mutate = true) {
     this._cell.setValue(value, mutate)
@@ -107,7 +106,6 @@ export default class CellComponent {
 
   /**
    * Restore the previous value.
-   * @returns {void}
    */
   restoreOldValue() {
     this._cell.setValueActual(this._cell.getOldValue())
@@ -115,7 +113,6 @@ export default class CellComponent {
 
   /**
    * Restore the initial value.
-   * @returns {void}
    */
   restoreInitialValue() {
     this._cell.setValueActual(this._cell.initialValue)
@@ -123,7 +120,6 @@ export default class CellComponent {
 
   /**
    * Recalculate row height based on this cell.
-   * @returns {void}
    */
   checkHeight() {
     this._cell.checkHeight()

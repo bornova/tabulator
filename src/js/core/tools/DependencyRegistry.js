@@ -14,7 +14,6 @@ export default class DependencyRegistry extends CoreFeature {
 
   /**
    * Initialize dependency map from table options.
-   * @returns {void}
    */
   initialize() {
     this.deps = { ...this.options('dependencies') }
@@ -105,7 +104,6 @@ export default class DependencyRegistry extends CoreFeature {
   /**
    * Log a dependency lookup error.
    * @param {string|Array<string>} key Missing dependency key.
-   * @returns {void}
    */
   error(key) {
     console.error(

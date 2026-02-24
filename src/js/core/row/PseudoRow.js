@@ -51,30 +51,21 @@ export default class PseudoRow {
     return this.element.offsetHeight
   }
 
-  /** @returns {void} */
   initialize() {}
 
-  /** @returns {void} */
   reinitialize() {}
 
-  /** @returns {void} */
   normalizeHeight() {}
 
-  /** @returns {void} */
   generateCells() {}
 
-  /** @returns {void} */
   reinitializeHeight() {}
 
-  /** @returns {void} */
   calcHeight() {}
 
-  /** @returns {void} */
   setCellHeight() {}
 
-  /** @returns {void} */
   clearCellHeight() {}
 
-  /** @returns {void} */
   rendered() {}
 }

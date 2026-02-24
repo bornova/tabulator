@@ -21,7 +21,6 @@ export default class ResizeRows extends Module {
 
   /**
    * Initialize row resize handlers.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.resizableRows) {
@@ -49,7 +48,6 @@ export default class ResizeRows extends Module {
   /**
    * Attach row resize handles to a row element.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   initializeRow(row) {
     const rowEl = row.getElement()
@@ -96,7 +94,6 @@ export default class ResizeRows extends Module {
    * Apply row height resize based on pointer movement.
    * @param {MouseEvent|TouchEvent} e Input event.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   resize(e, row) {
     row.setHeight(this.startHeight + (this.getScreenY(e) - this.startY))
@@ -124,7 +121,6 @@ export default class ResizeRows extends Module {
    * @param {MouseEvent|TouchEvent} e Input event.
    * @param {object} row Internal row.
    * @param {HTMLElement} handle Active handle.
-   * @returns {void}
    */
   _mouseDown(e, row, handle) {
     let guideEl

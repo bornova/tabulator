@@ -31,7 +31,6 @@ export default class ResizeTable extends Module {
 
   /**
    * Initialize resize and visibility observers.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.autoResize) {
@@ -123,7 +122,6 @@ export default class ResizeTable extends Module {
 
   /**
    * Initialize table visibility observer.
-   * @returns {void}
    */
   initializeVisibilityObserver() {
     this.visibilityObserver = new IntersectionObserver((entries) => {
@@ -146,7 +144,6 @@ export default class ResizeTable extends Module {
   /**
    * Trigger table redraw after resize changes.
    * @param {boolean} [force] Force redraw.
-   * @returns {void}
    */
   redrawTable(force) {
     if (this.initialized && this.visible) {
@@ -157,7 +154,6 @@ export default class ResizeTable extends Module {
 
   /**
    * Handle table-resize event by redrawing rows.
-   * @returns {void}
    */
   tableResized() {
     this.table.rowManager.redraw()
@@ -165,7 +161,6 @@ export default class ResizeTable extends Module {
 
   /**
    * Clear bound listeners and observers.
-   * @returns {void}
    */
   clearBindings() {
     const tableElement = this.table.element

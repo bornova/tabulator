@@ -3,7 +3,6 @@
  *
  * @param {HTMLInputElement} el Input element.
  * @param {{mask: string, maskLetterChar?: string, maskNumberChar?: string, maskWildcardChar?: string, maskAutoFill?: boolean}} options Mask options.
- * @returns {void}
  */
 export default function maskInput(el, options) {
   const mask = options.mask

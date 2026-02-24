@@ -76,7 +76,6 @@ export default class RowComponent {
   /**
    * Subscribe to row position changes.
    * @param {Function} callback Position update callback.
-   * @returns {void}
    */
   watchPosition(callback) {
     return this._row.watchPosition(callback)
@@ -104,7 +103,6 @@ export default class RowComponent {
    * Move this row relative to another row.
    * @param {*} to Target row lookup.
    * @param {boolean} [after] Insert after target when true.
-   * @returns {void}
    */
   move(to, after) {
     this._row.moveToRow(to, after)
@@ -121,7 +119,6 @@ export default class RowComponent {
 
   /**
    * Force row height normalization.
-   * @returns {void}
    */
   normalizeHeight() {
     this._row.normalizeHeight(true)
@@ -137,7 +134,6 @@ export default class RowComponent {
 
   /**
    * Reinitialize row formatting and layout.
-   * @returns {void}
    */
   reformat() {
     return this._row.reinitialize()

@@ -53,7 +53,6 @@ export default class Persistence extends Module {
   // setup parameters
   /**
    * Initialize persistence configuration and subscriptions.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.persistence) {
@@ -182,7 +181,6 @@ export default class Persistence extends Module {
   /**
    * Persist data for event type when configured.
    * @param {string} type Persistence type key.
-   * @returns {void}
    */
   eventSave(type) {
     if (this.config[type]) {
@@ -192,7 +190,6 @@ export default class Persistence extends Module {
 
   /**
    * Apply persisted startup sort/filter values.
-   * @returns {void}
    */
   tableBuilt() {
     let sorters, filters, headerFilters
@@ -225,7 +222,6 @@ export default class Persistence extends Module {
   /**
    * Persist columns on forced redraw.
    * @param {boolean} force Force redraw flag.
-   * @returns {void}
    */
   tableRedraw(force) {
     if (force && this.config.columns) {
@@ -262,7 +258,6 @@ export default class Persistence extends Module {
   /**
    * Initialize definition watchers for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     let def, keys
@@ -416,7 +411,6 @@ export default class Persistence extends Module {
   /**
    * Save persistence payload for a type.
    * @param {string} type Persistence type.
-   * @returns {void}
    */
   save(type) {
     let data = {}

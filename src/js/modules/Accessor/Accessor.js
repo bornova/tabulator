@@ -33,7 +33,6 @@ export default class Accessor extends Module {
 
   /**
    * Initialize accessor subscriptions.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('column-layout', this.initializeColumn.bind(this))
@@ -44,7 +43,6 @@ export default class Accessor extends Module {
   /**
    * Build per-column accessor config.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     let match = false

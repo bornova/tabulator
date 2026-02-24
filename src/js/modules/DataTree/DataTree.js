@@ -47,7 +47,6 @@ export default class DataTree extends Module {
 
   /**
    * Initialize data tree module options, controls, and subscriptions.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.dataTree) {
@@ -143,7 +142,6 @@ export default class DataTree extends Module {
   /**
    * Reinitialize child rows when table is force-redrawn.
    * @param {boolean} force Force redraw state.
-   * @returns {void}
    */
   tableRedrawing(force) {
     let rows
@@ -159,7 +157,6 @@ export default class DataTree extends Module {
 
   /**
    * Resolve which field column should render tree controls.
-   * @returns {void}
    */
   initializeElementField() {
     const firstCol = this.table.columnManager.getFirstVisibleColumn()
@@ -195,7 +192,6 @@ export default class DataTree extends Module {
    * @param {Row} row Internal row.
    * @param {boolean} visible Whether row is currently visible.
    * @param {object} updatedData Updated row data payload.
-   * @returns {void}
    */
   rowDataChanged(row, visible, updatedData) {
     if (this.redrawNeeded(updatedData)) {
@@ -211,7 +207,6 @@ export default class DataTree extends Module {
   /**
    * Relayout tree UI when the configured element field value changes.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   cellValueChanged(cell) {
     const field = cell.column.getField()
@@ -224,7 +219,6 @@ export default class DataTree extends Module {
   /**
    * Initialize data tree metadata for a row.
    * @param {Row} row Internal row.
-   * @returns {void}
    */
   initializeRow(row) {
     const childArray = row.getData()[this.field]
@@ -257,7 +251,6 @@ export default class DataTree extends Module {
   /**
    * Reinitialize all descendants for a row.
    * @param {Row} row Internal row.
-   * @returns {void}
    */
   reinitializeRowChildren(row) {
     const children = this.getTreeChildren(row, false, true)
@@ -270,7 +263,6 @@ export default class DataTree extends Module {
   /**
    * Layout tree controls and branch elements for a row.
    * @param {Row} row Internal row.
-   * @returns {void}
    */
   layoutRow(row) {
     const cell = this.elementField ? row.getCell(this.elementField) : row.getCells()[0]
@@ -331,7 +323,6 @@ export default class DataTree extends Module {
    * Create or replace expand/collapse control for a row.
    * @param {Row} row Internal row.
    * @param {HTMLElement} [el] Target cell element.
-   * @returns {void}
    */
   generateControlElement(row, el) {
     const config = row.modules.dataTree
@@ -477,7 +468,6 @@ export default class DataTree extends Module {
   /**
    * Expand a data-tree row.
    * @param {Row} row Internal row.
-   * @returns {void}
    */
   expandRow(row) {
     const config = row.modules.dataTree
@@ -497,7 +487,6 @@ export default class DataTree extends Module {
   /**
    * Collapse a data-tree row.
    * @param {Row} row Internal row.
-   * @returns {void}
    */
   collapseRow(row) {
     const config = row.modules.dataTree
@@ -516,7 +505,6 @@ export default class DataTree extends Module {
 
   /**
    * Refit the data tree element column after expand/collapse in fit-data layouts.
-   * @returns {void}
    */
   refitTreeElementColumn() {
     const mode = this.layoutMode()
@@ -537,7 +525,6 @@ export default class DataTree extends Module {
   /**
    * Toggle expanded state for a data-tree row.
    * @param {Row} row Internal row.
-   * @returns {void}
    */
   toggleRow(row) {
     const config = row.modules.dataTree
@@ -610,7 +597,6 @@ export default class DataTree extends Module {
   /**
    * Wipe child row instances before parent row deletion.
    * @param {Row} row Internal row.
-   * @returns {void}
    */
   rowDeleting(row) {
     const config = row.modules.dataTree
@@ -627,7 +613,6 @@ export default class DataTree extends Module {
   /**
    * Handle post-delete cleanup and parent child-array updates.
    * @param {Row} row Deleted row.
-   * @returns {void}
    */
   rowDelete(row) {
     const parent = row.modules.dataTree.parent
@@ -663,7 +648,6 @@ export default class DataTree extends Module {
    * @param {object|string} data Child row data.
    * @param {boolean} [top] Insert at start when true.
    * @param {*} [index] Anchor row/index for insertion.
-   * @returns {void}
    */
   addTreeChildRow(row, data, top, index) {
     let childIndex = false

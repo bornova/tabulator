@@ -69,7 +69,6 @@ export default class Page extends Module {
    * Dispatch page error to internal/external listeners and console.
    * @param {string} message Error message.
    * @param {...*} details Extra detail values.
-   * @returns {void}
    */
   logPageError(message, ...details) {
     const error = { message, details }
@@ -84,7 +83,6 @@ export default class Page extends Module {
    * Dispatch page warning to internal/external listeners and console.
    * @param {string} message Warning message.
    * @param {...*} details Extra detail values.
-   * @returns {void}
    */
   logPageWarning(message, ...details) {
     const warning = { message, details }
@@ -97,7 +95,6 @@ export default class Page extends Module {
 
   /**
    * Initialize pagination/progressive-load subscriptions and UI.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.pagination) {
@@ -172,7 +169,6 @@ export default class Page extends Module {
 
   /**
    * Calculate pagination size from option or viewport.
-   * @returns {void}
    */
   calculatePageSizes() {
     let testElRow, testElCell
@@ -204,7 +200,6 @@ export default class Page extends Module {
 
   /**
    * Mark initial data load as complete.
-   * @returns {void}
    */
   initialLoadComplete() {
     this.initialLoad = false
@@ -278,7 +273,6 @@ export default class Page extends Module {
    * Trigger next page while progressive scroll nears bottom.
    * @param {number} top Scroll top.
    * @param {boolean} dir Scroll direction.
-   * @returns {void}
    */
   scrollVertical(top, dir) {
     let element, diff, margin
@@ -311,7 +305,6 @@ export default class Page extends Module {
 
   /**
    * Refresh data after row count changes.
-   * @returns {void}
    */
   rowsUpdated() {
     this.refreshData(true, 'all')
@@ -319,7 +312,6 @@ export default class Page extends Module {
 
   /**
    * Create paginator DOM elements.
-   * @returns {void}
    */
   createElements() {
     let button
@@ -357,7 +349,6 @@ export default class Page extends Module {
 
   /**
    * Regenerate page-size selector options.
-   * @returns {void}
    */
   generatePageSizeSelectList() {
     let pageSizes
@@ -407,7 +398,6 @@ export default class Page extends Module {
 
   /**
    * Initialize configured page counter element.
-   * @returns {void}
    */
   initializePageCounter() {
     const counter = this.table.options.paginationCounter
@@ -435,7 +425,6 @@ export default class Page extends Module {
   /**
    * Initialize paginator controls and bindings.
    * @param {boolean} [hidden] Build in hidden mode for progressive loading.
-   * @returns {void}
    */
   initializePaginator(hidden) {
     let pageSelectLabel, paginationCounterHolder
@@ -562,7 +551,6 @@ export default class Page extends Module {
   /**
    * Initialize progressive load mode.
    * @param {string} mode Progressive mode key.
-   * @returns {void}
    */
   initializeProgressive(mode) {
     this.initializePaginator(true)
@@ -572,7 +560,6 @@ export default class Page extends Module {
 
   /**
    * Dispatch page-changed internal event.
-   * @returns {void}
    */
   trackChanges() {
     this.dispatch('page-changed')
@@ -582,7 +569,6 @@ export default class Page extends Module {
   /**
    * Calculate max page from row count.
    * @param {number} rowCount Row count.
-   * @returns {void}
    */
   setMaxRows(rowCount) {
     if (!rowCount) {
@@ -600,7 +586,6 @@ export default class Page extends Module {
   /**
    * Reset to first page without triggering action when applicable.
    * @param {boolean} [force] Force reset in non-local mode.
-   * @returns {void}
    */
   reset(force) {
     if (!this.initialLoad) {
@@ -615,7 +600,6 @@ export default class Page extends Module {
   /**
    * Set maximum page number.
    * @param {number|string} max Maximum page.
-   * @returns {void}
    */
   setMaxPage(max) {
     max = parseInt(max, 10)
@@ -685,7 +669,6 @@ export default class Page extends Module {
   /**
    * Set active page size.
    * @param {number|boolean|string} size Page size.
-   * @returns {void}
    */
   setPageSize(size) {
     if (size !== true) {
@@ -710,7 +693,6 @@ export default class Page extends Module {
    * @param {number} totalRows Total rows.
    * @param {number} size Page size.
    * @param {number} currentRow Current row index.
-   * @returns {void}
    */
   _setPageCounter(totalRows, size, currentRow) {
     let content
@@ -756,7 +738,6 @@ export default class Page extends Module {
   // setup the pagination buttons
   /**
    * Build visible page buttons and navigation state.
-   * @returns {void}
    */
   _setPageButtons() {
     const leftSize = Math.floor((this.count - 1) / 2)
@@ -1088,7 +1069,6 @@ export default class Page extends Module {
   // handle the footer element being redrawn
   /**
    * Handle footer redraw and hide/show page list on overflow.
-   * @returns {void}
    */
   footerRedraw() {
     const footer = this.table.footerManager.containerElement

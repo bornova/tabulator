@@ -4,7 +4,6 @@
  *
  * @this {Object}
  * @param {Array<Object>} columns Columns to resize.
- * @returns {void}
  */
 export default function (columns) {
   let totalWidth = this.table.rowManager.element.getBoundingClientRect().width // table element width

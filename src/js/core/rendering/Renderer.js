@@ -21,7 +21,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Initialize renderer internals and event bindings.
-   * @returns {void}
    */
   initialize() {
     // initialize core functionality
@@ -29,7 +28,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Clear rendered row layout.
-   * @returns {void}
    */
   clearRows() {
     // clear down existing rows layout
@@ -37,7 +35,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Clear rendered column layout.
-   * @returns {void}
    */
   clearColumns() {
     // clear down existing columns layout
@@ -45,7 +42,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Reinitialize widths for the provided columns.
-   * @returns {void}
    */
   reinitializeColumnWidths() {
     // resize columns to fit data
@@ -53,7 +49,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Render rows from a clean state.
-   * @returns {void}
    */
   renderRows() {
     // render rows from a clean slate
@@ -61,7 +56,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Render columns from a clean state.
-   * @returns {void}
    */
   renderColumns() {
     // render columns from a clean slate
@@ -70,7 +64,6 @@ export default class Renderer extends CoreFeature {
   /**
    * Re-render rows while preserving scroll context when possible.
    * @param {Function} [callback] Optional callback between clear and render steps.
-   * @returns {void}
    */
   rerenderRows(callback) {
     // rerender rows and keep position
@@ -79,7 +72,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Re-render columns.
-   * @returns {void}
    */
   rerenderColumns() {
     // rerender columns
@@ -87,7 +79,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Render cells for a specific row.
-   * @returns {void}
    */
   renderRowCells() {
     // render the cells in a row
@@ -95,7 +86,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Re-render cells for a specific row.
-   * @returns {void}
    */
   rerenderRowCells() {
     // rerender the cells in a row
@@ -103,7 +93,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Handle horizontal scroll updates.
-   * @returns {void}
    */
   scrollColumns() {
     // handle horizontal scrolling
@@ -111,7 +100,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Handle vertical scroll updates.
-   * @returns {void}
    */
   scrollRows() {
     // handle vertical scrolling
@@ -119,7 +107,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Handle container resize recalculations without re-rendering.
-   * @returns {void}
    */
   resize() {
     // container has resized, carry out any needed recalculations (DO NOT RERENDER IN THIS FUNCTION)
@@ -127,7 +114,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Scroll to a specific row.
-   * @returns {void}
    */
   scrollToRow() {
     // scroll to a specific row
@@ -135,7 +121,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Determine whether a row is closer to the top edge than the bottom edge.
-   * @returns {void}
    */
   scrollToRowNearestTop() {
     // determine weather the row is nearest the top or bottom of the table, return true for top or false for bottom
@@ -166,7 +151,6 @@ export default class Renderer extends CoreFeature {
    * Apply even/odd styling classes to a row.
    * @param {object} row Internal row instance.
    * @param {number} index Row display index.
-   * @returns {void}
    */
   styleRow(row, index) {
     const rowEl = row.getElement()
@@ -183,7 +167,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Clear current row and column render output.
-   * @returns {void}
    */
   clear() {
     // clear down existing layout
@@ -193,7 +176,6 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Render rows and columns from a clean state.
-   * @returns {void}
    */
   render() {
     // render from a clean slate
@@ -204,7 +186,6 @@ export default class Renderer extends CoreFeature {
   /**
    * Re-render rows and columns while preserving position when possible.
    * @param {Function} [callback] Optional callback used by row re-render logic.
-   * @returns {void}
    */
   rerender(callback) {
     // rerender and keep position

@@ -34,7 +34,6 @@ export default class Mutator extends Module {
 
   /**
    * Initialize mutator event subscriptions.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('cell-value-changing', this.transformCell.bind(this))
@@ -59,7 +58,6 @@ export default class Mutator extends Module {
   /**
    * Build per-column mutator config.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     let match = false
@@ -180,7 +178,6 @@ export default class Mutator extends Module {
   /**
    * Re-trigger linked mutator cells when a source cell changes.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   mutateLink(cell) {
     let links = cell.column.definition.mutateLink
@@ -202,7 +199,6 @@ export default class Mutator extends Module {
 
   /**
    * Enable mutator processing.
-   * @returns {void}
    */
   enable() {
     this.enabled = true
@@ -210,7 +206,6 @@ export default class Mutator extends Module {
 
   /**
    * Disable mutator processing.
-   * @returns {void}
    */
   disable() {
     this.enabled = false

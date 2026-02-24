@@ -62,7 +62,6 @@ export default class Edit extends Module {
 
   /**
    * Initialize edit module subscriptions.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('cell-init', this.bindEditor.bind(this))
@@ -107,7 +106,6 @@ export default class Edit extends Module {
   /**
    * Handle keyboard navigate-next behavior and optional new-row creation.
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   keybindingNavigateNext(e) {
     const cell = this.currentCell
@@ -156,7 +154,6 @@ export default class Edit extends Module {
   /**
    * Cancel edit for a specific cell component if active.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   cellCancelEdit(cell) {
     if (cell === this.currentCell) {
@@ -172,7 +169,6 @@ export default class Edit extends Module {
   /**
    * Toggle editable CSS state on a cell.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   updateCellClass(cell) {
     if (this.allowEdit(cell)) {
@@ -185,7 +181,6 @@ export default class Edit extends Module {
   /**
    * Clear edited-state tracking for one or more cells.
    * @param {object|Array<object>} [cells] Cell component(s).
-   * @returns {void}
    */
   clearCellEdited(cells) {
     if (!cells) {
@@ -436,7 +431,6 @@ export default class Edit extends Module {
   /**
    * Initialize column editing configuration when editor is defined.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumnCheck(column) {
     if (column.definition.editor !== undefined) {
@@ -447,7 +441,6 @@ export default class Edit extends Module {
   /**
    * Cancel editing if the active column is deleted.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   columnDeleteCheck(column) {
     if (this.currentCell && this.currentCell.column === column) {
@@ -458,7 +451,6 @@ export default class Edit extends Module {
   /**
    * Cancel editing if the active row is deleted.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   rowDeleteCheck(row) {
     if (this.currentCell && this.currentCell.row === row) {
@@ -469,7 +461,6 @@ export default class Edit extends Module {
   /**
    * Re-evaluate editable state for all cells in a row.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   rowEditableCheck(row) {
     row.getCells().forEach((cell) => {
@@ -483,7 +474,6 @@ export default class Edit extends Module {
   /**
    * Initialize edit module config for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     const convertEmpty = Object.keys(column.definition).includes('editorEmptyValue')
@@ -560,7 +550,6 @@ export default class Edit extends Module {
   /**
    * Clear active editor UI state.
    * @param {boolean} [cancel] Whether edit is being canceled.
-   * @returns {void}
    */
   clearEditor(cancel) {
     const cell = this.currentCell
@@ -586,7 +575,6 @@ export default class Edit extends Module {
 
   /**
    * Cancel the active cell edit and restore value.
-   * @returns {void}
    */
   cancelEdit() {
     if (this.currentCell) {
@@ -614,7 +602,6 @@ export default class Edit extends Module {
   /**
    * Bind edit trigger handlers to a cell element.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   bindEditor(cell) {
     if (cell.column.modules.edit) {
@@ -663,7 +650,6 @@ export default class Edit extends Module {
    * Focus a cell element without triggering recursion.
    * @param {object} cell Internal cell.
    * @param {boolean} [block] Block focus in IE scenarios.
-   * @returns {void}
    */
   focusCellNoEvent(cell, block) {
     this.recursionBlock = true
@@ -679,7 +665,6 @@ export default class Edit extends Module {
    * Programmatically start editing a cell.
    * @param {object} cell Internal cell.
    * @param {boolean} [forceEdit] Force edit even if not editable.
-   * @returns {void}
    */
   editCell(cell, forceEdit) {
     this.focusCellNoEvent(cell)
@@ -689,7 +674,6 @@ export default class Edit extends Module {
   /**
    * Ensure the editing cell is visible in virtual render mode.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   focusScrollAdjust(cell) {
     if (this.table.rowManager.getRenderMode() === 'virtual') {
@@ -952,7 +936,6 @@ export default class Edit extends Module {
   /**
    * Blur an element unless blur is canceled by listeners.
    * @param {HTMLElement} element Target element.
-   * @returns {void}
    */
   blur(element) {
     if (!this.confirm('edit-blur', [element])) {
@@ -971,7 +954,6 @@ export default class Edit extends Module {
   /**
    * Clear edited state tracking for a cell.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   clearEdited(cell) {
     let editIndex

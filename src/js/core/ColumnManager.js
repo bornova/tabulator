@@ -37,7 +37,6 @@ export default class ColumnManager extends CoreFeature {
 
   /**
    * Initialize column manager renderer and DOM.
-   * @returns {void}
    */
   initialize() {
     this.initializeRenderer()
@@ -58,7 +57,6 @@ export default class ColumnManager extends CoreFeature {
   /**
    * Pad header for vertical scrollbar width.
    * @param {number} width Scrollbar width.
-   * @returns {void}
    */
   padVerticalScrollbar(width) {
     if (this.table.rtl) {
@@ -70,7 +68,6 @@ export default class ColumnManager extends CoreFeature {
 
   /**
    * Initialize horizontal renderer.
-   * @returns {void}
    */
   initializeRenderer() {
     let renderClass
@@ -168,7 +165,6 @@ export default class ColumnManager extends CoreFeature {
   /**
    * Sync horizontal scroll position.
    * @param {number} left Horizontal scroll offset.
-   * @returns {void}
    */
   scrollHorizontal(left) {
     this.contentsElement.scrollLeft = left
@@ -180,7 +176,6 @@ export default class ColumnManager extends CoreFeature {
 
   /**
    * Bind wheel scrolling for horizontal sync.
-   * @returns {void}
    */
   initializeScrollWheelWatcher() {
     this.contentsElement.addEventListener('wheel', (e) => {
@@ -200,7 +195,6 @@ export default class ColumnManager extends CoreFeature {
   /**
    * Auto-generate columns from row data.
    * @param {Array<object>} data Source data.
-   * @returns {void}
    */
   generateColumnsFromRowData(data) {
     const cols = []

@@ -14,7 +14,6 @@ export default class OptionsList {
    * Register a default option value.
    * @param {string} option Option key.
    * @param {*} value Default value.
-   * @returns {void}
    */
   register(option, value) {
     this.registeredDefaults[option] = value

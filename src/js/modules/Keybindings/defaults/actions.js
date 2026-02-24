@@ -8,7 +8,6 @@ export default {
    * Block default key handling.
    *
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   keyBlock(e) {
     e.stopPropagation()
@@ -20,7 +19,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   scrollPageUp(e) {
     const rowManager = this.table.rowManager
@@ -45,7 +43,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   scrollPageDown(e) {
     const rowManager = this.table.rowManager
@@ -71,7 +68,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   scrollToStart(e) {
     const rowManager = this.table.rowManager
@@ -91,7 +87,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   scrollToEnd(e) {
     const rowManager = this.table.rowManager
@@ -111,7 +106,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   navPrev(e) {
     this.dispatch('keybinding-nav-prev', e)
@@ -122,7 +116,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   navNext(e) {
     this.dispatch('keybinding-nav-next', e)
@@ -133,7 +126,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   navLeft(e) {
     this.dispatch('keybinding-nav-left', e)
@@ -144,7 +136,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   navRight(e) {
     this.dispatch('keybinding-nav-right', e)
@@ -155,7 +146,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   navUp(e) {
     this.dispatch('keybinding-nav-up', e)
@@ -166,7 +156,6 @@ export default {
    *
    * @this {Object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   navDown(e) {
     this.dispatch('keybinding-nav-down', e)

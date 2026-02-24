@@ -45,7 +45,6 @@ export default class Range extends CoreFeature {
 
   /**
    * Initialize range DOM element.
-   * @returns {void}
    */
   initElement() {
     this.element = document.createElement('div')
@@ -56,7 +55,6 @@ export default class Range extends CoreFeature {
    * Initialize start/end bounds.
    * @param {object} [start] Start boundary.
    * @param {object} [end] End boundary.
-   * @returns {void}
    */
   initBounds(start, end) {
     this._updateMinMax()
@@ -74,7 +72,6 @@ export default class Range extends CoreFeature {
    * Set range start coordinates.
    * @param {number} row Row index.
    * @param {number} col Column index.
-   * @returns {void}
    */
   setStart(row, col) {
     if (this.start.row !== row || this.start.col !== col) {
@@ -90,7 +87,6 @@ export default class Range extends CoreFeature {
    * Set range end coordinates.
    * @param {number} row Row index.
    * @param {number} col Column index.
-   * @returns {void}
    */
   setEnd(row, col) {
     if (this.end.row !== row || this.end.col !== col) {
@@ -107,7 +103,6 @@ export default class Range extends CoreFeature {
    * @param {object} start Start boundary.
    * @param {object} [end] End boundary.
    * @param {Array<object>} [visibleRows] Visible rows.
-   * @returns {void}
    */
   setBounds(start, end, visibleRows) {
     if (start) {
@@ -121,7 +116,6 @@ export default class Range extends CoreFeature {
   /**
    * Resolve and set start bound from element.
    * @param {object} element Cell/column element.
-   * @returns {void}
    */
   setStartBound(element) {
     let row, col
@@ -145,7 +139,6 @@ export default class Range extends CoreFeature {
   /**
    * Resolve and set end bound from element.
    * @param {object} element Cell/column element.
-   * @returns {void}
    */
   setEndBound(element) {
     const rowsCount = this._getTableRows().length
@@ -180,7 +173,6 @@ export default class Range extends CoreFeature {
 
   /**
    * Recompute normalized min/max bounds and emit range events.
-   * @returns {void}
    */
   _updateMinMax() {
     this.top = Math.min(this.start.row, this.end.row)
@@ -221,7 +213,6 @@ export default class Range extends CoreFeature {
 
   /**
    * Layout range highlight element.
-   * @returns {void}
    */
   layout() {
     let _vDomTop = this.table.rowManager.renderer.vDomTop
@@ -442,7 +433,6 @@ export default class Range extends CoreFeature {
 
   /**
    * Clear values across range cells.
-   * @returns {void}
    */
   clearValues() {
     const cells = this.getCells()
@@ -493,7 +483,6 @@ export default class Range extends CoreFeature {
   /**
    * Destroy range and optionally notify manager.
    * @param {boolean} [notify] Notify range manager.
-   * @returns {void}
    */
   destroy(notify) {
     this.destroyed = true

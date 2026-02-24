@@ -13,7 +13,6 @@ export default class ComponentFunctionBinder {
    * @param {string} type Component type key.
    * @param {string} funcName Function name to bind.
    * @param {Function} handler Handler function.
-   * @returns {void}
    */
   bind(type, funcName, handler) {
     if (!this.bindings[type]) {

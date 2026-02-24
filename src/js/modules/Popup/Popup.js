@@ -35,7 +35,6 @@ export default class Popup extends Module {
 
   /**
    * Initialize popup watchers for rows, groups, and columns.
-   * @returns {void}
    */
   initialize() {
     this.initializeRowWatchers()
@@ -49,7 +48,6 @@ export default class Popup extends Module {
    * @param {object} component Component instance.
    * @param {*} contents Popup contents.
    * @param {string} [position] Popup position.
-   * @returns {void}
    */
   _componentPopupCall(component, contents, position) {
     this.loadPopupEvent(contents, null, component, position)
@@ -57,7 +55,6 @@ export default class Popup extends Module {
 
   /**
    * Initialize row popup watchers.
-   * @returns {void}
    */
   initializeRowWatchers() {
     if (this.table.options.rowContextPopup) {
@@ -76,7 +73,6 @@ export default class Popup extends Module {
 
   /**
    * Initialize group popup watchers.
-   * @returns {void}
    */
   initializeGroupWatchers() {
     if (this.table.options.groupContextPopup) {
@@ -96,7 +92,6 @@ export default class Popup extends Module {
   /**
    * Initialize column and cell popup behavior.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     const def = column.definition
@@ -142,7 +137,6 @@ export default class Popup extends Module {
   /**
    * Initialize header popup button for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumnHeaderPopup(column) {
     let icon = column.definition.headerPopupIcon
@@ -178,7 +172,6 @@ export default class Popup extends Module {
    * @param {string} option Column option key.
    * @param {Event} e Event object.
    * @param {object} cell Cell component/internal cell.
-   * @returns {void}
    */
   loadPopupTableCellEvent(option, e, cell) {
     if (cell._cell) {
@@ -195,7 +188,6 @@ export default class Popup extends Module {
    * @param {string} option Column option key.
    * @param {Event} e Event object.
    * @param {object} column Column component/internal column.
-   * @returns {void}
    */
   loadPopupTableColumnEvent(option, e, column) {
     if (column._column) {
@@ -213,7 +205,6 @@ export default class Popup extends Module {
    * @param {Event} e Event object.
    * @param {object} component Internal component.
    * @param {string} [position] Popup position.
-   * @returns {void}
    */
   loadPopupEvent(contents, e, component, position) {
     let renderedCallback
@@ -246,7 +237,6 @@ export default class Popup extends Module {
    * @param {*} contents Popup contents.
    * @param {Function} [renderedCallback] Optional render callback.
    * @param {string} [position] Popup position.
-   * @returns {void}
    */
   loadPopup(e, component, contents, renderedCallback, position) {
     const touch = !(e instanceof MouseEvent)

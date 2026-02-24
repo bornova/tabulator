@@ -57,7 +57,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Initialize calc subscriptions and APIs.
-   * @returns {void}
    */
   initialize() {
     this.genColumn = new Column({ field: 'value' }, this)
@@ -90,7 +89,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Resize calc holder to header width.
-   * @returns {void}
    */
   resizeHolderWidth() {
     this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
@@ -99,7 +97,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Recalculate calcs on table redraw.
    * @param {boolean} force Force redraw after recalc.
-   * @returns {void}
    */
   tableRedraw(force) {
     this.recalc(this.table.rowManager.activeRows)
@@ -111,7 +108,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Block calc redraw updates.
-   * @returns {void}
    */
   blockRedraw() {
     this.blocked = true
@@ -120,7 +116,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Restore redraw and run deferred recalculation.
-   * @returns {void}
    */
   restoreRedraw() {
     this.blocked = false
@@ -136,7 +131,6 @@ export default class ColumnCalcs extends Module {
   /// ////////////////////////////////
   /**
    * Public API: recalculate active-row calcs.
-   * @returns {void}
    */
   userRecalc() {
     this.recalc(this.table.rowManager.activeRows)
@@ -179,7 +173,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Recalculate after row add/delete updates.
    * @param {object} row Updated row.
-   * @returns {void}
    */
   rowsUpdated(row) {
     if (this.table.options.groupBy) {
@@ -191,7 +184,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Recalculate active rows or full tree/group set on refresh.
-   * @returns {void}
    */
   recalcActiveRowsRefresh() {
     if (this.table.options.groupBy && this.table.options.dataTreeStartExpanded && this.table.options.dataTree) {
@@ -203,7 +195,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Recalculate calcs for currently active rows.
-   * @returns {void}
    */
   recalcActiveRows() {
     this.recalc(this.table.rowManager.activeRows)
@@ -212,7 +203,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Trigger recalc when a calc-enabled cell value changes.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   cellValueChanged(cell) {
     if (cell.column.definition.topCalc || cell.column.definition.bottomCalc) {
@@ -233,7 +223,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Initialize column calc config when calc options are present.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumnCheck(column) {
     if (column.definition.topCalc || column.definition.bottomCalc) {
@@ -245,7 +234,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Build calc config for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     const def = column.definition
@@ -309,13 +297,11 @@ export default class ColumnCalcs extends Module {
   // dummy functions to handle being mock column manager
   /**
    * No-op placeholder for mock column manager API.
-   * @returns {void}
    */
   registerColumnField() {}
 
   /**
    * Remove initialized calc rows from DOM.
-   * @returns {void}
    */
   removeCalcs() {
     let changed = false
@@ -341,7 +327,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Reinitialize calc rows based on configured calc columns.
-   * @returns {void}
    */
   reinitializeCalcs() {
     if (this.topCalcs.length) {
@@ -355,7 +340,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Initialize top calc row container.
-   * @returns {void}
    */
   initializeTopRow() {
     const fragment = document.createDocumentFragment()
@@ -372,7 +356,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Initialize bottom calc row container.
-   * @returns {void}
    */
   initializeBottomRow() {
     if (!this.botInitialized) {
@@ -384,7 +367,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Sync calc footer horizontal scroll.
    * @param {number} left Horizontal scroll position.
-   * @returns {void}
    */
   scrollHorizontal(left) {
     if (this.botInitialized && this.botRow) {
@@ -395,7 +377,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Recalculate top/bottom calc rows.
    * @param {Array<object>} rows Internal rows.
-   * @returns {void}
    */
   recalc(rows) {
     let data, row
@@ -441,7 +422,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Recalculate the row group containing a row.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   recalcRowGroup(row) {
     this.recalcGroup(this.table.modules.groupRows.getRowGroup(row))
@@ -449,7 +429,6 @@ export default class ColumnCalcs extends Module {
 
   /**
    * Recalculate all table/group calc rows.
-   * @returns {void}
    */
   recalcAll() {
     if (this.topCalcs.length || this.botCalcs.length) {
@@ -470,7 +449,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Recalculate calc rows for a group.
    * @param {object} group Internal group.
-   * @returns {void}
    */
   recalcGroup(group) {
     let data, rowData
@@ -672,7 +650,6 @@ export default class ColumnCalcs extends Module {
   // handle table redraw
   /**
    * Normalize calc row heights after table redraw.
-   * @returns {void}
    */
   redraw() {
     if (this.topRow) {
@@ -736,7 +713,6 @@ export default class ColumnCalcs extends Module {
   /**
    * Add calc footer padding for vertical scrollbar width.
    * @param {number} width Scrollbar width.
-   * @returns {void}
    */
   adjustForScrollbar(width) {
     if (this.botRow) {

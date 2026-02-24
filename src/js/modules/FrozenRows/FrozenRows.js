@@ -24,7 +24,6 @@ export default class FrozenRows extends Module {
 
   /**
    * Initialize frozen row container, subscriptions, and handlers.
-   * @returns {void}
    */
   initialize() {
     const fragment = document.createDocumentFragment()
@@ -59,7 +58,6 @@ export default class FrozenRows extends Module {
 
   /**
    * Sync frozen-row holder width to headers.
-   * @returns {void}
    */
   resizeHolderWidth() {
     this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
@@ -67,7 +65,6 @@ export default class FrozenRows extends Module {
 
   /**
    * Initialize configured frozen rows from existing rows.
-   * @returns {void}
    */
   initializeRows() {
     this.table.rowManager.getRows().forEach((row) => {
@@ -78,7 +75,6 @@ export default class FrozenRows extends Module {
   /**
    * Check whether a row should be frozen from config.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   initializeRow(row) {
     const frozenRows = this.table.options.frozenRows
@@ -149,7 +145,6 @@ export default class FrozenRows extends Module {
   /**
    * Freeze a row at the top of the table.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   freezeRow(row) {
     if (!row.modules.frozen) {
@@ -173,7 +168,6 @@ export default class FrozenRows extends Module {
   /**
    * Unfreeze a previously frozen row.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   unfreezeRow(row) {
     if (row.modules.frozen) {
@@ -196,7 +190,6 @@ export default class FrozenRows extends Module {
   /**
    * Detach a frozen row from internal list and DOM.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   detachRow(row) {
     const index = this.rows.indexOf(row)
@@ -214,7 +207,6 @@ export default class FrozenRows extends Module {
 
   /**
    * Apply row striping/styles to frozen rows.
-   * @returns {void}
    */
   styleRows() {
     this.rows.forEach((row, i) => {

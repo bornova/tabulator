@@ -118,7 +118,6 @@ export default class RangeComponent {
    * Set both start and end bounds.
    * @param {*} start Start cell or cell component.
    * @param {*} end End cell or cell component.
-   * @returns {void}
    */
   setBounds(start, end) {
     if (this._range.destroyedGuard('setBounds')) {
@@ -129,7 +128,6 @@ export default class RangeComponent {
   /**
    * Set the start bound.
    * @param {*} start Start cell or cell component.
-   * @returns {void}
    */
   setStartBound(start) {
     if (this._range.destroyedGuard('setStartBound')) {
@@ -141,7 +139,6 @@ export default class RangeComponent {
   /**
    * Set the end bound.
    * @param {*} end End cell or cell component.
-   * @returns {void}
    */
   setEndBound(end) {
     if (this._range.destroyedGuard('setEndBound')) {
@@ -152,7 +149,6 @@ export default class RangeComponent {
 
   /**
    * Clear values inside the range.
-   * @returns {void}
    */
   clearValues() {
     if (this._range.destroyedGuard('clearValues')) {
@@ -162,7 +158,6 @@ export default class RangeComponent {
 
   /**
    * Remove this range.
-   * @returns {void}
    */
   remove() {
     if (this._range.destroyedGuard('remove')) {

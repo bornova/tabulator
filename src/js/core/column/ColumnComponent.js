@@ -73,7 +73,6 @@ export default class ColumnComponent {
 
   /**
    * Show this column (or all child columns for groups).
-   * @returns {void}
    */
   show() {
     if (this._column.isGroup) {
@@ -87,7 +86,6 @@ export default class ColumnComponent {
 
   /**
    * Hide this column (or all child columns for groups).
-   * @returns {void}
    */
   hide() {
     if (this._column.isGroup) {
@@ -101,7 +99,6 @@ export default class ColumnComponent {
 
   /**
    * Toggle column visibility.
-   * @returns {void}
    */
   toggle() {
     this._column.visible ? this.hide() : this.show()
@@ -161,7 +158,6 @@ export default class ColumnComponent {
    * Move this column relative to another column.
    * @param {*} to Target column lookup.
    * @param {boolean} [after] Insert after target when true.
-   * @returns {void}
    */
   move(to, after) {
     const toColumn = this._column.table.columnManager.findColumn(to)

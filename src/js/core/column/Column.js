@@ -116,7 +116,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Merge defaults and generate normalized definition options.
-   * @returns {void}
    */
   mapDefinitions() {
     const defaults = this.table.options.columnDefaults
@@ -136,7 +135,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Validate definition keys against known column options.
-   * @returns {void}
    */
   checkDefinition() {
     Object.keys(this.definition).forEach((key) => {
@@ -149,7 +147,6 @@ export default class Column extends CoreFeature {
   /**
    * Set field access strategy for this column.
    * @param {string} field Column field path.
-   * @returns {void}
    */
   setField(field) {
     this.field = field
@@ -165,7 +162,6 @@ export default class Column extends CoreFeature {
   /**
    * Register column position with the parent manager.
    * @param {Column} column Column instance.
-   * @returns {void}
    */
   registerColumnPosition(column) {
     this.parent.registerColumnPosition(column)
@@ -174,7 +170,6 @@ export default class Column extends CoreFeature {
   /**
    * Register column field with the parent manager.
    * @param {Column} column Column instance.
-   * @returns {void}
    */
   registerColumnField(column) {
     this.parent.registerColumnField(column)
@@ -182,7 +177,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Trigger position registration recursively for child columns.
-   * @returns {void}
    */
   reRegisterPosition() {
     if (this.isGroup) {
@@ -196,7 +190,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Build and initialize the header element.
-   * @returns {void}
    */
   _initialize() {
     const def = this.definition
@@ -226,7 +219,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Build header details for a non-group column.
-   * @returns {void}
    */
   _buildColumnHeader() {
     const def = this.definition
@@ -352,7 +344,6 @@ export default class Column extends CoreFeature {
    * Format and apply column header title content.
    * @param {HTMLElement} el Target title element.
    * @param {string} title Title text.
-   * @returns {void}
    */
   _formatColumnHeaderTitle(el, title) {
     const contents = this.chain('column-format', [this, title, el], null, () => title)
@@ -379,7 +370,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Build header details for a grouped column.
-   * @returns {void}
    */
   _buildGroupHeader() {
     this.element.classList.add('tabulator-col-group')
@@ -436,7 +426,6 @@ export default class Column extends CoreFeature {
    * Set a value on a flat data object.
    * @param {object} data Row data object.
    * @param {*} value Value to set.
-   * @returns {void}
    */
   _setFlatData(data, value) {
     if (this.field) {
@@ -448,7 +437,6 @@ export default class Column extends CoreFeature {
    * Set a value on nested row data using the field structure.
    * @param {object} data Row data object.
    * @param {*} value Value to set.
-   * @returns {void}
    */
   _setNestedData(data, value) {
     let dataObj = data
@@ -475,7 +463,6 @@ export default class Column extends CoreFeature {
   /**
    * Attach a child column to this group column.
    * @param {Column} column Child column.
-   * @returns {void}
    */
   attachColumn(column) {
     if (this.groupElement) {
@@ -492,7 +479,6 @@ export default class Column extends CoreFeature {
    * Apply vertical alignment and height to this column header.
    * @param {string} alignment Vertical alignment mode.
    * @param {number} [height] Optional explicit parent header height.
-   * @returns {void}
    */
   verticalAlign(alignment, height) {
     // calculate height of column header and group holder element
@@ -525,7 +511,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Clear vertical alignment and related sizing styles.
-   * @returns {void}
    */
   clearVerticalAlign() {
     this.element.style.paddingTop = ''
@@ -652,7 +637,6 @@ export default class Column extends CoreFeature {
   /// ///////////////// Actions ////////////////////
   /**
    * Update group visibility state based on child visibility.
-   * @returns {void}
    */
   checkColumnVisibility() {
     const visible = this.columns.some((column) => column.visible)
@@ -669,7 +653,6 @@ export default class Column extends CoreFeature {
    * Show this column.
    * @param {boolean} [silent] Suppress external visibility event when true.
    * @param {boolean} [responsiveToggle] Visibility change caused by responsive module.
-   * @returns {void}
    */
   show(silent, responsiveToggle) {
     if (!this.visible) {
@@ -711,7 +694,6 @@ export default class Column extends CoreFeature {
    * Hide this column.
    * @param {boolean} [silent] Suppress external visibility event when true.
    * @param {boolean} [responsiveToggle] Visibility change caused by responsive module.
-   * @returns {void}
    */
   hide(silent, responsiveToggle) {
     if (this.visible) {
@@ -747,7 +729,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Recompute grouped column width based on visible child widths.
-   * @returns {void}
    */
   matchChildWidths() {
     let childWidth = 0
@@ -782,7 +763,6 @@ export default class Column extends CoreFeature {
   /**
    * Remove a child column from this group.
    * @param {Column} child Child column.
-   * @returns {void}
    */
   removeChild(child) {
     const index = this.columns.indexOf(child)
@@ -799,7 +779,6 @@ export default class Column extends CoreFeature {
   /**
    * Set explicit width on this column.
    * @param {number|string} width Width value in pixels or percentage.
-   * @returns {void}
    */
   setWidth(width) {
     this.widthFixed = true
@@ -809,7 +788,6 @@ export default class Column extends CoreFeature {
   /**
    * Apply width constraints and update related cell widths.
    * @param {number|string} width Width value in pixels or percentage.
-   * @returns {void}
    */
   setWidthActual(width) {
     if (Number.isNaN(Number(width))) {
@@ -848,7 +826,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Recalculate row heights for rows bound to this column.
-   * @returns {void}
    */
   checkCellHeights() {
     const rows = []
@@ -918,7 +895,6 @@ export default class Column extends CoreFeature {
   /**
    * Set minimum width constraint.
    * @param {number} minWidth Minimum width in pixels.
-   * @returns {void}
    */
   setMinWidth(minWidth) {
     if (this.maxWidth && minWidth > this.maxWidth) {
@@ -950,7 +926,6 @@ export default class Column extends CoreFeature {
   /**
    * Set maximum width constraint.
    * @param {number} maxWidth Maximum width in pixels.
-   * @returns {void}
    */
   setMaxWidth(maxWidth) {
     if (this.minWidth && maxWidth < this.minWidth) {
@@ -1024,7 +999,6 @@ export default class Column extends CoreFeature {
 
   /**
    * Dispatch render-complete hooks for this column.
-   * @returns {void}
    */
   columnRendered() {
     if (this.titleFormatterRendered) {
@@ -1089,7 +1063,6 @@ export default class Column extends CoreFeature {
   /**
    * Reinitialize width state and refit to content.
    * @param {boolean} [force] Force width handling regardless of explicit width settings.
-   * @returns {void}
    */
   reinitializeWidth(force) {
     this.widthFixed = false
@@ -1110,7 +1083,6 @@ export default class Column extends CoreFeature {
   /**
    * Resize this column to fit content width.
    * @param {boolean} [force] Force width application.
-   * @returns {void}
    */
   fitToData(force) {
     if (this.isGroup) {
@@ -1190,7 +1162,6 @@ export default class Column extends CoreFeature {
   /**
    * Remove a cell from this column's cell collection.
    * @param {Cell} cell Cell instance.
-   * @returns {void}
    */
   deleteCell(cell) {
     const index = this.cells.indexOf(cell)

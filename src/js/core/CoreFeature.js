@@ -37,7 +37,6 @@ export default class CoreFeature {
   /**
    * Bind localized text updates.
    * @param {...*} args Binding args.
-   * @returns {void}
    */
   langBind(...args) {
     return this.table.modules.localize.bind(...args)
@@ -68,7 +67,6 @@ export default class CoreFeature {
   /**
    * Send inter-table message.
    * @param {...*} args Message args.
-   * @returns {void}
    */
   commsSend(...args) {
     return this.table.modules.comms.send(...args)
@@ -89,7 +87,6 @@ export default class CoreFeature {
   /**
    * Trigger layout refresh.
    * @param {boolean} force Force layout.
-   * @returns {void}
    */
   layoutRefresh(force) {
     return this.table.modules.layout.layout(force)
@@ -225,7 +222,6 @@ export default class CoreFeature {
    * @param {string} oldOption Deprecated option name.
    * @param {string} newOption Replacement option name.
    * @param {boolean} [convert] Convert value when possible.
-   * @returns {void}
    */
   deprecationCheck(oldOption, newOption, convert) {
     return this.table.deprecationAdvisor.check(oldOption, newOption, convert)
@@ -235,7 +231,6 @@ export default class CoreFeature {
    * Report custom deprecation message for an option.
    * @param {string} oldOption Deprecated option name.
    * @param {string} msg Deprecation message.
-   * @returns {void}
    */
   deprecationCheckMsg(oldOption, msg) {
     return this.table.deprecationAdvisor.checkMsg(oldOption, msg)
@@ -244,7 +239,6 @@ export default class CoreFeature {
   /**
    * Emit deprecation message without option lookup.
    * @param {string} msg Deprecation message.
-   * @returns {void}
    */
   deprecationMsg(msg) {
     return this.table.deprecationAdvisor.msg(msg)

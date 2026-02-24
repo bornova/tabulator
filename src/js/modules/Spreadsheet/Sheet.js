@@ -46,7 +46,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Initialize sheet element, columns, and rows.
-   * @returns {void}
    */
   initialize() {
     this.initializeElement()
@@ -56,7 +55,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Reinitialize generated columns and rows.
-   * @returns {void}
    */
   reinitialize() {
     this.initializeColumns()
@@ -65,7 +63,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Create tab element for this sheet.
-   * @returns {void}
    */
   initializeElement() {
     this.element = document.createElement('div')
@@ -79,7 +76,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Generate column field references and defs.
-   * @returns {void}
    */
   initializeColumns() {
     this.grid.setColumnCount(this.columnCount)
@@ -94,7 +90,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Generate row defs from grid and data.
-   * @returns {void}
    */
   initializeRows() {
     this.grid.setRowCount(this.rowCount)
@@ -121,7 +116,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Unload active sheet state.
-   * @returns {void}
    */
   unload() {
     this.isActive = false
@@ -133,7 +127,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Load sheet data/columns into table.
-   * @returns {void}
    */
   load() {
     const wasInactive = !this.isActive
@@ -212,7 +205,6 @@ export default class Sheet extends CoreFeature {
   /**
    * Set sheet data and refresh active view.
    * @param {Array<Array<*>>} data Sheet data.
-   * @returns {void}
    */
   setData(data) {
     this.data = data
@@ -227,7 +219,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Clear all sheet data.
-   * @returns {void}
    */
   clear() {
     this.setData([])
@@ -236,7 +227,6 @@ export default class Sheet extends CoreFeature {
   /**
    * Set sheet title.
    * @param {string} title Sheet title.
-   * @returns {void}
    */
   setTitle(title) {
     this.title = title
@@ -248,7 +238,6 @@ export default class Sheet extends CoreFeature {
   /**
    * Set sheet row count.
    * @param {number} rows Row count.
-   * @returns {void}
    */
   setRows(rows) {
     this.rowCount = rows
@@ -264,7 +253,6 @@ export default class Sheet extends CoreFeature {
   /**
    * Set sheet column count.
    * @param {number} columns Column count.
-   * @returns {void}
    */
   setColumns(columns) {
     this.columnCount = columns
@@ -279,7 +267,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Remove sheet via manager.
-   * @returns {void}
    */
   remove() {
     this.spreadsheetManager.removeSheet(this)
@@ -287,7 +274,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Destroy sheet element and emit removal event.
-   * @returns {void}
    */
   destroy() {
     if (this.element.parentNode) {
@@ -299,7 +285,6 @@ export default class Sheet extends CoreFeature {
 
   /**
    * Activate this sheet.
-   * @returns {void}
    */
   active() {
     this.spreadsheetManager.loadSheet(this)

@@ -34,7 +34,6 @@ export default class Validate extends Module {
 
   /**
    * Bind validation lifecycle events.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('cell-delete', this.clearValidation.bind(this))
@@ -74,7 +73,6 @@ export default class Validate extends Module {
    * Clear editor validation state.
    * @param {object} cell Internal cell.
    * @param {boolean} cancelled Whether edit was cancelled.
-   * @returns {void}
    */
   editorClear(cell, cancelled) {
     if (cancelled) {
@@ -89,7 +87,6 @@ export default class Validate extends Module {
   /**
    * Clear edited marker validation state.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   editedClear(cell) {
     if (cell.modules.validate) {
@@ -168,7 +165,6 @@ export default class Validate extends Module {
   /**
    * Clear validation state for one or more cells.
    * @param {object|Array<object>} [cells] Cell component(s).
-   * @returns {void}
    */
   userClearCellValidation(cells) {
     if (!cells) {
@@ -210,7 +206,6 @@ export default class Validate extends Module {
   /**
    * Initialize column validator config when column defines validators.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumnCheck(column) {
     if (column.definition.validator !== undefined) {
@@ -221,7 +216,6 @@ export default class Validate extends Module {
   /**
    * Build validator config for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     const config = []
@@ -360,7 +354,6 @@ export default class Validate extends Module {
   /**
    * Clear validation state for an internal cell.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   clearValidation(cell) {
     let invalidIndex

@@ -52,7 +52,6 @@ export default class Group {
   /**
    * Wipe group state and optionally only elements.
    * @param {boolean} [elementsOnly] Only wipe elements.
-   * @returns {void}
    */
   wipe(elementsOnly) {
     if (!elementsOnly) {
@@ -76,7 +75,6 @@ export default class Group {
 
   /**
    * Create group header elements.
-   * @returns {void}
    */
   createElements() {
     const arrow = document.createElement('div')
@@ -98,7 +96,6 @@ export default class Group {
 
   /**
    * Create allowed child groups for next level.
-   * @returns {void}
    */
   createValueGroups() {
     const level = this.level + 1
@@ -111,7 +108,6 @@ export default class Group {
 
   /**
    * Add click bindings for group toggle behavior.
-   * @returns {void}
    */
   addBindings() {
     let toggleElement
@@ -137,7 +133,6 @@ export default class Group {
    * Create a child group.
    * @param {*} groupID Group key.
    * @param {number} level Group level.
-   * @returns {void}
    */
   _createGroup(groupID, level) {
     const groupKey = `${level}_${groupID}`
@@ -158,7 +153,6 @@ export default class Group {
   /**
    * Add row into nested child groups.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   _addRowToGroup(row) {
     const level = this.level + 1
@@ -184,7 +178,6 @@ export default class Group {
   /**
    * Add row to this leaf group.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   _addRow(row) {
     this.rows.push(row)
@@ -196,7 +189,6 @@ export default class Group {
    * @param {object} row Row to insert.
    * @param {object} to Target row.
    * @param {boolean} after Insert-after flag.
-   * @returns {void}
    */
   insertRow(row, to, after) {
     const data = this.conformRowData({})
@@ -233,7 +225,6 @@ export default class Group {
   /**
    * Sync group header horizontal offset.
    * @param {string} left Left offset CSS value.
-   * @returns {void}
    */
   scrollHeader(left) {
     if (this.arrowElement) {
@@ -247,7 +238,6 @@ export default class Group {
 
   /**
    * Placeholder row index lookup.
-   * @returns {void}
    */
   getRowIndex() {}
 
@@ -274,7 +264,6 @@ export default class Group {
   /**
    * Remove a row from group.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   removeRow(row) {
     const index = this.rows.indexOf(row)
@@ -313,7 +302,6 @@ export default class Group {
   /**
    * Remove a child group from this group.
    * @param {Group} group Child group.
-   * @returns {void}
    */
   removeGroup(group) {
     const groupKey = `${group.level}_${group.key}`
@@ -447,7 +435,6 @@ export default class Group {
 
   /**
    * Toggle group visibility.
-   * @returns {void}
    */
   toggleVisibility() {
     if (this.visible) {
@@ -459,7 +446,6 @@ export default class Group {
 
   /**
    * Hide group rows.
-   * @returns {void}
    */
   hide() {
     this.visible = false
@@ -493,7 +479,6 @@ export default class Group {
 
   /**
    * Show group rows.
-   * @returns {void}
    */
   show() {
     this.visible = true
@@ -531,7 +516,6 @@ export default class Group {
 
   /**
    * Resolve dynamic visibility callback values.
-   * @returns {void}
    */
   _visSet() {
     const data = []
@@ -608,7 +592,6 @@ export default class Group {
 
   /**
    * Generate group header content.
-   * @returns {void}
    */
   generateGroupHeaderContents() {
     const data = []
@@ -683,7 +666,6 @@ export default class Group {
 
   /**
    * Detach group element from DOM.
-   * @returns {void}
    */
   detachElement() {
     if (this.element && this.element.parentNode) {
@@ -694,7 +676,6 @@ export default class Group {
   // normalize the height of elements in the row
   /**
    * Normalize cached height values.
-   * @returns {void}
    */
   normalizeHeight() {
     this.setHeight(this.element.clientHeight)
@@ -703,7 +684,6 @@ export default class Group {
   /**
    * Initialize group size state.
    * @param {boolean} [force] Force reinitialize.
-   * @returns {void}
    */
   initialize(force) {
     if (!this.initialized || force) {
@@ -714,7 +694,6 @@ export default class Group {
 
   /**
    * Reinitialize group height state.
-   * @returns {void}
    */
   reinitialize() {
     this.initialized = false
@@ -728,7 +707,6 @@ export default class Group {
   /**
    * Set group height cache.
    * @param {number} height Height in px.
-   * @returns {void}
    */
   setHeight(height) {
     if (this.height !== height) {
@@ -754,22 +732,16 @@ export default class Group {
     return this
   }
 
-  /** @returns {void} */
   reinitializeHeight() {}
 
-  /** @returns {void} */
   calcHeight() {}
 
-  /** @returns {void} */
   setCellHeight() {}
 
-  /** @returns {void} */
   clearCellHeight() {}
 
-  /** @returns {void} */
   deinitializeHeight() {}
 
-  /** @returns {void} */
   rendered() {}
 
   /// ///////////// Object Generation /////////////////

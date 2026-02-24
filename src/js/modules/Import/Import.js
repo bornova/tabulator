@@ -24,7 +24,6 @@ export default class Import extends Module {
 
   /**
    * Initialize import table function and data-load hooks.
-   * @returns {void}
    */
   initialize() {
     this.registerTableFunction('import', this.importFromFile.bind(this))
@@ -39,7 +38,6 @@ export default class Import extends Module {
    * Emit and log an import error.
    * @param {string} message Error message.
    * @param {...*} details Additional details.
-   * @returns {void}
    */
   logImportError(message, ...details) {
     const error = { message, details }
@@ -54,7 +52,6 @@ export default class Import extends Module {
    * Emit and log an import warning.
    * @param {string} message Warning message.
    * @param {...*} details Additional details.
-   * @returns {void}
    */
   logImportWarning(message, ...details) {
     const warning = { message, details }

@@ -39,7 +39,6 @@ export default class Clipboard extends Module {
 
   /**
    * Initialize clipboard copy/paste behavior and table APIs.
-   * @returns {void}
    */
   initialize() {
     this.mode = this.table.options.clipboard
@@ -88,7 +87,6 @@ export default class Clipboard extends Module {
 
   /**
    * Reset clipboard transient state.
-   * @returns {void}
    */
   reset() {
     this.blocked = true
@@ -145,7 +143,6 @@ export default class Clipboard extends Module {
    * Copy table content to clipboard.
    * @param {string|Function} [range] Row range selector.
    * @param {boolean} [internal] Preserve user selection if present.
-   * @returns {void}
    */
   copy(range, internal) {
     let sel
@@ -263,7 +260,6 @@ export default class Clipboard extends Module {
   /**
    * Configure paste action handler.
    * @param {string|Function} action Paste action key or function.
-   * @returns {void}
    */
   setPasteAction(action) {
     if (typeof action === 'function') {
@@ -283,7 +279,6 @@ export default class Clipboard extends Module {
   /**
    * Configure paste parser handler.
    * @param {string|Function} parser Paste parser key or function.
-   * @returns {void}
    */
   setPasteParser(parser) {
     if (typeof parser === 'function') {
@@ -303,7 +298,6 @@ export default class Clipboard extends Module {
   /**
    * Handle paste event, parse data, and dispatch action.
    * @param {ClipboardEvent} e Paste event.
-   * @returns {void}
    */
   paste(e) {
     let data, rowData, rows

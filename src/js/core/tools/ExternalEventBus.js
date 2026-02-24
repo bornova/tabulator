@@ -18,7 +18,6 @@ export default class ExternalEventBus {
    * Register a callback notified when subscription state changes for an event.
    * @param {string} key Event key.
    * @param {Function} callback Subscription change callback.
-   * @returns {void}
    */
   subscriptionChange(key, callback) {
     if (!this.subscriptionNotifiers[key]) {
@@ -36,7 +35,6 @@ export default class ExternalEventBus {
    * Subscribe to an external event.
    * @param {string} key Event key.
    * @param {Function} callback Event callback.
-   * @returns {void}
    */
   subscribe(key, callback) {
     if (!this.events[key]) {
@@ -52,7 +50,6 @@ export default class ExternalEventBus {
    * Unsubscribe from an external event.
    * @param {string} key Event key.
    * @param {Function} [callback] Specific callback to remove; omit to remove all.
-   * @returns {void}
    */
   unsubscribe(key, callback) {
     let index
@@ -91,7 +88,6 @@ export default class ExternalEventBus {
    * Notify subscription state change listeners.
    * @param {string} key Event key.
    * @param {boolean} subscribed Current subscription state.
-   * @returns {void}
    */
   _notifySubscriptionChange(key, subscribed) {
     const notifiers = this.subscriptionNotifiers[key]

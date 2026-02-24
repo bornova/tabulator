@@ -27,7 +27,6 @@ export default class Localize extends Module {
 
   /**
    * Initialize localization data and table-level localization functions.
-   * @returns {void}
    */
   initialize() {
     this.langList = Helpers.deepClone(Localize.langs)
@@ -51,7 +50,6 @@ export default class Localize extends Module {
   /**
    * Override the default header filter placeholder text.
    * @param {string} placeholder Placeholder text.
-   * @returns {void}
    */
   setHeaderFilterPlaceholder(placeholder) {
     this.langList.default.headerFilters.default = placeholder
@@ -62,7 +60,6 @@ export default class Localize extends Module {
    * Install or merge a locale definition.
    * @param {string} locale Locale key.
    * @param {object} lang Locale definition object.
-   * @returns {void}
    */
   installLang(locale, lang) {
     if (this.langList[locale]) {
@@ -76,7 +73,6 @@ export default class Localize extends Module {
    * Recursively merge localized values into an existing language tree.
    * @param {object} lang Target language object.
    * @param {object} values Source values.
-   * @returns {void}
    */
   _setLangProp(lang, values) {
     for (const key in values) {
@@ -92,7 +88,6 @@ export default class Localize extends Module {
   /**
    * Set active locale and rebuild the language map.
    * @param {string|boolean} desiredLocale Locale key or true for browser locale.
-   * @returns {void}
    */
   setLocale(desiredLocale) {
     let locale = desiredLocale || 'default'
@@ -210,7 +205,6 @@ export default class Localize extends Module {
    * Bind a callback to locale updates for a language key.
    * @param {string} path Translation key path.
    * @param {Function} callback Update callback.
-   * @returns {void}
    */
   bind(path, callback) {
     if (!this.bindings[path]) {
@@ -225,7 +219,6 @@ export default class Localize extends Module {
   // iterate through bindings and trigger updates
   /**
    * Execute all registered localization bindings.
-   * @returns {void}
    */
   _executeBindings() {
     for (const path in this.bindings) {

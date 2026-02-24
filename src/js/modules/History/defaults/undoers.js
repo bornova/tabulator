@@ -13,7 +13,6 @@ export default {
    * Revert an edited cell value.
    *
    * @param {Object} action History action.
-   * @returns {void}
    */
   cellEdit(action) {
     action.component.setValueProcessData(action.data.oldValue)
@@ -25,7 +24,6 @@ export default {
    *
    * @this {Object}
    * @param {Object} action History action.
-   * @returns {void}
    */
   rowAdd(action) {
     const rowManager = this.table.rowManager
@@ -40,7 +38,6 @@ export default {
    *
    * @this {Object}
    * @param {Object} action History action.
-   * @returns {void}
    */
   rowDelete(action) {
     const rowManager = this.table.rowManager
@@ -61,7 +58,6 @@ export default {
    *
    * @this {Object}
    * @param {Object} action History action.
-   * @returns {void}
    */
   rowMove(action) {
     const rowManager = this.table.rowManager

@@ -13,7 +13,6 @@ export default class DataLoader extends CoreFeature {
 
   /**
    * Initialize data loader lifecycle.
-   * @returns {void}
    */
   initialize() {}
 
@@ -159,7 +158,6 @@ export default class DataLoader extends CoreFeature {
 
   /**
    * Invalidate any in-flight load response.
-   * @returns {void}
    */
   blockActiveLoad() {
     this.requestOrder++
@@ -167,7 +165,6 @@ export default class DataLoader extends CoreFeature {
 
   /**
    * Show loading alert if enabled.
-   * @returns {void}
    */
   alertLoader() {
     const shouldLoad =
@@ -182,7 +179,6 @@ export default class DataLoader extends CoreFeature {
 
   /**
    * Show data-load error alert.
-   * @returns {void}
    */
   alertError() {
     this.table.alertManager.alert(this.table.options.dataLoaderError || this.langText('data|error'), 'error')
@@ -190,7 +186,6 @@ export default class DataLoader extends CoreFeature {
 
   /**
    * Clear active loader/alert message.
-   * @returns {void}
    */
   clearAlert() {
     this.table.alertManager.clear()

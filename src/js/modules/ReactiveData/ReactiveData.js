@@ -19,7 +19,6 @@ export default class ReactiveData extends Module {
 
   /**
    * Initialize reactive data subscriptions.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.reactiveData) {
@@ -37,7 +36,6 @@ export default class ReactiveData extends Module {
   /**
    * Watch table data array and override mutating methods.
    * @param {Array<object>} data Active table data array.
-   * @returns {void}
    */
   watchData(data) {
     const self = this
@@ -220,7 +218,6 @@ export default class ReactiveData extends Module {
 
   /**
    * Restore original array mutator methods.
-   * @returns {void}
    */
   unwatchData() {
     if (this.data !== false) {
@@ -241,7 +238,6 @@ export default class ReactiveData extends Module {
   /**
    * Watch row data object keys for reactive updates.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   watchRow(row) {
     const data = row.getData()
@@ -258,7 +254,6 @@ export default class ReactiveData extends Module {
   /**
    * Watch data tree child array mutators for a row.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   watchTreeChildren(row) {
     const childField = row.getData()[this.table.options.dataTreeChildField]
@@ -299,7 +294,6 @@ export default class ReactiveData extends Module {
   /**
    * Rebuild tree after reactive child updates.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   rebuildTree(row) {
     this.table.modules.dataTree.initializeRow(row)
@@ -312,7 +306,6 @@ export default class ReactiveData extends Module {
    * @param {object} row Internal row.
    * @param {object} data Row data object.
    * @param {string} key Data key.
-   * @returns {void}
    */
   watchKey(row, data, key) {
     const self = this
@@ -352,7 +345,6 @@ export default class ReactiveData extends Module {
   /**
    * Remove reactive accessors from row data keys.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   unwatchRow(row) {
     const data = row.getData()
@@ -370,7 +362,6 @@ export default class ReactiveData extends Module {
   /**
    * Set reactivity block flag.
    * @param {string} key Block key.
-   * @returns {void}
    */
   block(key) {
     if (!this.blocked) {
@@ -381,7 +372,6 @@ export default class ReactiveData extends Module {
   /**
    * Clear reactivity block flag.
    * @param {string} key Block key.
-   * @returns {void}
    */
   unblock(key) {
     if (this.blocked === key) {

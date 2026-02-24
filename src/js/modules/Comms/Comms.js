@@ -5,7 +5,6 @@ export default class Comms extends Module {
 
   /**
    * Initialize inter-table communication API.
-   * @returns {void}
    */
   initialize() {
     this.registerTableFunction('tableComms', this.receive.bind(this))
@@ -26,7 +25,6 @@ export default class Comms extends Module {
    * @param {string} module Target module name.
    * @param {string} action Target action name.
    * @param {*} data Message payload.
-   * @returns {void}
    */
   send(selectors, module, action, data) {
     const connections = this.getConnections(selectors)

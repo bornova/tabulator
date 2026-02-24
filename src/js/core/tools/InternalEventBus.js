@@ -16,7 +16,6 @@ export default class InternalEventBus {
    * Register a subscription-state notifier for an event key.
    * @param {string} key Event key.
    * @param {Function} callback Notifier callback.
-   * @returns {void}
    */
   subscriptionChange(key, callback) {
     if (!this.subscriptionNotifiers[key]) {
@@ -35,7 +34,6 @@ export default class InternalEventBus {
    * @param {string} key Event key.
    * @param {Function} callback Subscriber callback.
    * @param {number} [priority=10000] Subscriber priority (lower runs first).
-   * @returns {void}
    */
   subscribe(key, callback, priority = 10000) {
     if (!this.events[key]) {
@@ -53,7 +51,6 @@ export default class InternalEventBus {
    * Unsubscribe from an internal event.
    * @param {string} key Event key.
    * @param {Function} callback Subscriber callback.
-   * @returns {void}
    */
   unsubscribe(key, callback) {
     let index
@@ -140,7 +137,6 @@ export default class InternalEventBus {
    * Notify subscription change listeners for an event key.
    * @param {string} key Event key.
    * @param {boolean} subscribed Current subscription state.
-   * @returns {void}
    */
   _notifySubscriptionChange(key, subscribed) {
     const notifiers = this.subscriptionNotifiers[key]
@@ -154,7 +150,6 @@ export default class InternalEventBus {
    * Dispatch an internal event to all subscribers.
    * @param {string} key Event key.
    * @param {...*} args Event payload arguments.
-   * @returns {void}
    */
   _dispatch(key, ...args) {
     if (this.events[key]) {
@@ -167,7 +162,6 @@ export default class InternalEventBus {
   /**
    * Dispatch with optional debug logging.
    * @param {...*} args Event key followed by payload arguments.
-   * @returns {void}
    */
   _debugDispatch(...args) {
     const key = args[0]

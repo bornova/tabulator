@@ -38,7 +38,6 @@ export default class Popup extends CoreFeature {
   /**
    * Prevent popup mousedown from bubbling to blur handlers.
    * @param {MouseEvent} e Mouse event.
-   * @returns {void}
    */
   _mouseDownCheck(e) {
     e.stopPropagation()
@@ -46,7 +45,6 @@ export default class Popup extends CoreFeature {
 
   /**
    * Handle table destruction.
-   * @returns {void}
    */
   tableDestroyed() {
     this.destroyed = true
@@ -107,7 +105,6 @@ export default class Popup extends CoreFeature {
   /**
    * Set a callback to run after popup is rendered.
    * @param {Function} callback Render callback.
-   * @returns {void}
    */
   renderCallback(callback) {
     this.renderedCallback = callback
@@ -243,7 +240,6 @@ export default class Popup extends CoreFeature {
    * @param {HTMLElement} [parentEl] Parent element used for anchored positioning.
    * @param {object} [parentOffset] Parent element offset.
    * @param {string} [position] Anchor position.
-   * @returns {void}
    */
   _fitToScreen(x, y, parentEl, parentOffset, position) {
     const scrollTop = this.container === document.body ? document.documentElement.scrollTop : this.container.scrollTop
@@ -321,7 +317,6 @@ export default class Popup extends CoreFeature {
   /**
    * Close popup when escape is pressed.
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   _escapeCheck(e) {
     if (e.key === 'Escape') {
@@ -331,7 +326,6 @@ export default class Popup extends CoreFeature {
 
   /**
    * Temporarily prevent popup hide.
-   * @returns {void}
    */
   blockHide() {
     this.hideable = false
@@ -339,7 +333,6 @@ export default class Popup extends CoreFeature {
 
   /**
    * Restore popup hide behavior.
-   * @returns {void}
    */
   restoreHide() {
     this.hideable = true

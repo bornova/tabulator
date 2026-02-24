@@ -14,7 +14,6 @@ export default {
    * @param {string} id Persistence identifier.
    * @param {string} type Persistence data type.
    * @param {Object} data Data to persist.
-   * @returns {void}
    */
   local(id, type, data) {
     localStorage.setItem(`${id}-${type}`, JSON.stringify(data))
@@ -25,7 +24,6 @@ export default {
    * @param {string} id Persistence identifier.
    * @param {string} type Persistence data type.
    * @param {Object} data Data to persist.
-   * @returns {void}
    */
   cookie(id, type, data) {
     const expireDate = new Date()

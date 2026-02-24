@@ -61,7 +61,6 @@ export default class Filter extends Module {
 
   /**
    * Initialize filter subscriptions and data handler.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('column-init', this.initializeColumnHeaderFilter.bind(this))
@@ -79,7 +78,6 @@ export default class Filter extends Module {
 
   /**
    * Apply initial table and header filters once the table is built.
-   * @returns {void}
    */
   tableBuilt() {
     if (this.table.options.initialFilter) {
@@ -136,7 +134,6 @@ export default class Filter extends Module {
    * @param {*} type Filter type.
    * @param {*} value Filter value.
    * @param {object} [params] Filter params.
-   * @returns {void}
    */
   userSetFilter(field, type, value, params) {
     this.setFilter(field, type, value, params)
@@ -146,7 +143,6 @@ export default class Filter extends Module {
   // set standard filters
   /**
    * Refresh active filters from the public API.
-   * @returns {void}
    */
   userRefreshFilter() {
     this.refreshFilter()
@@ -159,7 +155,6 @@ export default class Filter extends Module {
    * @param {*} type Filter type.
    * @param {*} value Filter value.
    * @param {object} [params] Filter params.
-   * @returns {void}
    */
   userAddFilter(field, type, value, params) {
     this.addFilter(field, type, value, params)
@@ -220,7 +215,6 @@ export default class Filter extends Module {
    * @param {*} field Field, filter object, or array.
    * @param {*} type Filter type.
    * @param {*} value Filter value.
-   * @returns {void}
    */
   userRemoveFilter(field, type, value) {
     this.removeFilter(field, type, value)
@@ -231,7 +225,6 @@ export default class Filter extends Module {
   /**
    * Clear filters from the public API and refresh.
    * @param {boolean} all Clear header filters as well.
-   * @returns {void}
    */
   userClearFilter(all) {
     this.clearFilter(all)
@@ -241,7 +234,6 @@ export default class Filter extends Module {
   // clear header filters
   /**
    * Clear header filters from the public API and refresh.
-   * @returns {void}
    */
   userClearHeaderFilter() {
     this.clearHeaderFilter()
@@ -279,7 +271,6 @@ export default class Filter extends Module {
   /**
    * Initialize header filter support for a column when enabled.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumnHeaderFilter(column) {
     const def = column.definition
@@ -293,7 +284,6 @@ export default class Filter extends Module {
   /**
    * Build column filter state and success handler.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     const field = column.getField()
@@ -404,7 +394,6 @@ export default class Filter extends Module {
    * @param {object} column Internal column.
    * @param {*} [initialValue] Initial filter value.
    * @param {boolean} [reinitialize] Rebuild existing filter element.
-   * @returns {void}
    */
   generateHeaderFilterElement(column, initialValue, reinitialize) {
     const success = column.modules.filter.success
@@ -625,7 +614,6 @@ export default class Filter extends Module {
   // hide all header filter elements (used to ensure correct column widths in "fitData" layout mode)
   /**
    * Hide all header filter elements.
-   * @returns {void}
    */
   hideHeaderFilterElements() {
     this.headerFilterColumns.forEach((column) => {
@@ -638,7 +626,6 @@ export default class Filter extends Module {
   // show all header filter elements (used to ensure correct column widths in "fitData" layout mode)
   /**
    * Show all header filter elements.
-   * @returns {void}
    */
   showHeaderFilterElements() {
     this.headerFilterColumns.forEach((column) => {
@@ -652,7 +639,6 @@ export default class Filter extends Module {
   /**
    * Focus a column header filter element.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   setHeaderFilterFocus(column) {
     if (column.modules.filter && column.modules.filter.headerElement) {
@@ -681,7 +667,6 @@ export default class Filter extends Module {
    * Set a column header filter value.
    * @param {object} column Internal column.
    * @param {*} value Filter value.
-   * @returns {void}
    */
   setHeaderFilterValue(column, value) {
     if (column) {
@@ -697,7 +682,6 @@ export default class Filter extends Module {
   /**
    * Recreate a column header filter editor with its current value.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   reloadHeaderFilter(column) {
     if (column) {
@@ -711,7 +695,6 @@ export default class Filter extends Module {
 
   /**
    * Refresh table data after filter changes.
-   * @returns {void}
    */
   refreshFilter() {
     const left = this.table.rowManager.scrollLeft
@@ -733,7 +716,6 @@ export default class Filter extends Module {
   // check if the filters has changed since last use
   /**
    * Mark filters as changed and emit change event.
-   * @returns {void}
    */
   trackChanges() {
     this.changed = true
@@ -758,7 +740,6 @@ export default class Filter extends Module {
    * @param {*} type Filter type.
    * @param {*} value Filter value.
    * @param {object} [params] Filter params.
-   * @returns {void}
    */
   setFilter(field, type, value, params) {
     this.filterList = []
@@ -777,7 +758,6 @@ export default class Filter extends Module {
    * @param {*} type Filter type.
    * @param {*} value Filter value.
    * @param {object} [params] Filter params.
-   * @returns {void}
    */
   addFilter(field, type, value, params) {
     let changed = false
@@ -935,7 +915,6 @@ export default class Filter extends Module {
    * @param {*} field Field, filter object, or array.
    * @param {*} type Filter type.
    * @param {*} value Filter value.
-   * @returns {void}
    */
   removeFilter(field, type, value) {
     if (!Array.isArray(field)) {
@@ -965,7 +944,6 @@ export default class Filter extends Module {
   /**
    * Clear all standard filters and optionally header filters.
    * @param {boolean} all Clear header filters as well.
-   * @returns {void}
    */
   clearFilter(all) {
     this.filterList = []
@@ -980,7 +958,6 @@ export default class Filter extends Module {
   // clear header filters
   /**
    * Clear all header filters and reset header filter editors.
-   * @returns {void}
    */
   clearHeaderFilter() {
     this.headerFilters = {}

@@ -13,7 +13,6 @@ export default class Module extends CoreFeature {
 
   /**
    * Initialize module lifecycle hook.
-   * @returns {void}
    */
   initialize() {
     // setup module when table is initialized, to be overridden in module
@@ -27,7 +26,6 @@ export default class Module extends CoreFeature {
    * Register a table option default.
    * @param {string} key Option key.
    * @param {*} value Default value.
-   * @returns {void}
    */
   registerTableOption(key, value) {
     this.table.optionsList.register(key, value)
@@ -37,7 +35,6 @@ export default class Module extends CoreFeature {
    * Register a column option default.
    * @param {string} key Option key.
    * @param {*} value Default value.
-   * @returns {void}
    */
   registerColumnOption(key, value) {
     this.table.columnManager.optionsList.register(key, value)
@@ -51,7 +48,6 @@ export default class Module extends CoreFeature {
    * Register a public table function.
    * @param {string} name Function name.
    * @param {Function} func Function handler.
-   * @returns {void}
    */
   registerTableFunction(name, func) {
     if (this.table[name] === undefined) {
@@ -84,7 +80,6 @@ export default class Module extends CoreFeature {
    * Register data pipeline handler.
    * @param {Function} handler Pipeline handler.
    * @param {number} priority Handler priority.
-   * @returns {void}
    */
   registerDataHandler(handler, priority) {
     this.table.rowManager.registerDataPipelineHandler(handler, priority)
@@ -95,7 +90,6 @@ export default class Module extends CoreFeature {
    * Register display pipeline handler.
    * @param {Function} handler Pipeline handler.
    * @param {number} priority Handler priority.
-   * @returns {void}
    */
   registerDisplayHandler(handler, priority) {
     this.table.rowManager.registerDisplayPipelineHandler(handler, priority)
@@ -141,7 +135,6 @@ export default class Module extends CoreFeature {
    * Refresh active data pipeline.
    * @param {boolean} renderInPosition Render-in-position flag.
    * @param {Function} [handler] Pipeline handler.
-   * @returns {void}
    */
   refreshData(renderInPosition, handler) {
     handler ??= this._handler

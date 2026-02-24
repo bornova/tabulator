@@ -3,7 +3,6 @@
  * @param {Array<object>} list Export row list.
  * @param {object} [options={}] Downloader options.
  * @param {Function} setFileContents Callback to receive file payload.
- * @returns {void}
  */
 export default function (list, options = {}, setFileContents) {
   const header = []

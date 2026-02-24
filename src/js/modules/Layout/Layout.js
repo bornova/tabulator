@@ -26,7 +26,6 @@ export default class Layout extends Module {
   // initialize layout system
   /**
    * Initialize the configured layout mode.
-   * @returns {void}
    */
   initialize() {
     const layout = this.table.options.layout
@@ -45,7 +44,6 @@ export default class Layout extends Module {
   /**
    * Normalize column width configuration values.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     if (column.definition.widthGrow !== undefined) {
@@ -68,7 +66,6 @@ export default class Layout extends Module {
   /**
    * Run the current layout strategy.
    * @param {boolean} dataChanged Whether data has changed.
-   * @returns {void}
    */
   layout(dataChanged) {
     const hasVariableHeightColumns = this.table.columnManager.columnsByIndex.find(

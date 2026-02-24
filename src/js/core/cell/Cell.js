@@ -46,7 +46,6 @@ export default class Cell extends CoreFeature {
   /// ///////////// Setup Functions /////////////////
   /**
    * Build the cell element and initialize its value.
-   * @returns {void}
    */
   build() {
     this.generateElement()
@@ -62,7 +61,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Create the base DOM element used by the cell.
-   * @returns {void}
    */
   generateElement() {
     this.element = document.createElement('div')
@@ -76,7 +74,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Apply display attributes and classes to the cell element.
-   * @returns {void}
    */
   _configureCell() {
     const element = this.element
@@ -117,7 +114,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Generate and render the formatted cell contents.
-   * @returns {void}
    */
   _generateContents() {
     const val = this.chain('cell-format', this, null, () => {
@@ -131,7 +127,6 @@ export default class Cell extends CoreFeature {
   /**
    * Apply formatter output to the cell element.
    * @param {*} val Formatter output.
-   * @returns {void}
    */
   _applyFormattedValue(val) {
     if (typeof val === 'object') {
@@ -157,7 +152,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Dispatch the rendered hook for the cell.
-   * @returns {void}
    */
   cellRendered() {
     this.dispatch('cell-rendered', this)
@@ -202,7 +196,6 @@ export default class Cell extends CoreFeature {
    * @param {*} value New value.
    * @param {boolean} [mutate] Run value mutation pipeline when true.
    * @param {boolean} [force] Force update even if value is unchanged.
-   * @returns {void}
    */
   setValue(value, mutate, force) {
     const changed = this.setValueProcessData(value, mutate, force)
@@ -251,7 +244,6 @@ export default class Cell extends CoreFeature {
   /**
    * Persist the value onto row data and update rendered content when needed.
    * @param {*} value New value.
-   * @returns {void}
    */
   setValueActual(value) {
     this.oldValue = this.value
@@ -271,7 +263,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Rebuild the cell layout and notify listeners.
-   * @returns {void}
    */
   layoutElement() {
     this._generateContents()
@@ -281,7 +272,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Apply current column width to the cell element.
-   * @returns {void}
    */
   setWidth() {
     const width = this.column.width
@@ -294,7 +284,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Remove explicit width from the cell element.
-   * @returns {void}
    */
   clearWidth() {
     this.width = ''
@@ -315,7 +304,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Apply current column minimum width to the cell element.
-   * @returns {void}
    */
   setMinWidth() {
     const minWidth = this.column.minWidth
@@ -328,7 +316,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Apply current column maximum width to the cell element.
-   * @returns {void}
    */
   setMaxWidth() {
     const maxWidth = this.column.maxWidth
@@ -341,7 +328,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Trigger row height recalculation.
-   * @returns {void}
    */
   checkHeight() {
     // var height = this.element.css("height");
@@ -350,7 +336,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Clear any explicitly applied cell height.
-   * @returns {void}
    */
   clearHeight() {
     this.element.style.height = ''
@@ -361,7 +346,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Apply current row height to the cell element.
-   * @returns {void}
    */
   setHeight() {
     this.height = this.row.height
@@ -380,7 +364,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Show the cell element.
-   * @returns {void}
    */
   show() {
     this._setStyleValue('display', this._getDisplayValue())
@@ -388,7 +371,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Hide the cell element.
-   * @returns {void}
    */
   hide() {
     this._setStyleValue('display', 'none')
@@ -396,7 +378,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Remove the cell and clean up row/column references.
-   * @returns {void}
    */
   delete() {
     if (this.deleted) {
@@ -428,7 +409,6 @@ export default class Cell extends CoreFeature {
    * Set a style property only when the value differs.
    * @param {keyof CSSStyleDeclaration|string} property Style property name.
    * @param {string} value Style value.
-   * @returns {void}
    */
   _setStyleValue(property, value) {
     if (this.element.style[property] !== value) {

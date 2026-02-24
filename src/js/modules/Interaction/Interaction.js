@@ -134,7 +134,6 @@ export default class Interaction extends Module {
 
   /**
    * Initialize interaction subscriptions.
-   * @returns {void}
    */
   initialize() {
     this.initializeExternalEvents()
@@ -147,7 +146,6 @@ export default class Interaction extends Module {
 
   /**
    * Reset touch watcher state for all component types.
-   * @returns {void}
    */
   clearTouchWatchers() {
     Object.values(this.touchWatchers).forEach((watchers) => {
@@ -164,7 +162,6 @@ export default class Interaction extends Module {
    * Prevent accidental editor text selection on double click.
    * @param {Event} e DOM event.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   cellContentsSelectionFixer(e, cell) {
     let range
@@ -191,7 +188,6 @@ export default class Interaction extends Module {
 
   /**
    * Register external subscription change handlers for interaction events.
-   * @returns {void}
    */
   initializeExternalEvents() {
     Object.keys(this.eventMap).forEach((key) => {
@@ -203,7 +199,6 @@ export default class Interaction extends Module {
    * Handle external subscription lifecycle for interaction events.
    * @param {string} key External event key.
    * @param {boolean} added Whether a subscriber was added.
-   * @returns {void}
    */
   subscriptionChanged(key, added) {
     const eventName = this.eventMap[key]
@@ -235,7 +230,6 @@ export default class Interaction extends Module {
   /**
    * Subscribe internal touchstart/touchend handlers for a touch event group.
    * @param {string} key External event key.
-   * @returns {void}
    */
   subscribeTouchEvents(key) {
     const type = this.eventMap[key]
@@ -256,7 +250,6 @@ export default class Interaction extends Module {
   /**
    * Unsubscribe touch handlers when no listeners remain.
    * @param {string} key External event key.
-   * @returns {void}
    */
   unsubscribeTouchEvents(key) {
     let noTouch = true
@@ -287,7 +280,6 @@ export default class Interaction extends Module {
   /**
    * Register column-level interaction callbacks.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     const def = column.definition
@@ -310,7 +302,6 @@ export default class Interaction extends Module {
    * @param {string} action Event action key.
    * @param {Event} e DOM event.
    * @param {object} component Internal component.
-   * @returns {void}
    */
   handle(action, e, component) {
     this.dispatchEvent(action, e, component)
@@ -322,7 +313,6 @@ export default class Interaction extends Module {
    * @param {'start'|'end'} action Touch phase.
    * @param {Event} e DOM event.
    * @param {object} component Internal component.
-   * @returns {void}
    */
   handleTouch(type, action, e, component) {
     const watchers = this.touchWatchers[type]
@@ -375,7 +365,6 @@ export default class Interaction extends Module {
    * @param {string} action Event action key.
    * @param {Event} e DOM event.
    * @param {object} component Internal component.
-   * @returns {void}
    */
   dispatchEvent(action, e, component) {
     const componentObj = component.getComponent()

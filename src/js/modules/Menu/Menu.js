@@ -38,7 +38,6 @@ export default class Menu extends Module {
 
   /**
    * Initialize menu watchers for rows, groups, and columns.
-   * @returns {void}
    */
   initialize() {
     this.deprecatedOptionsCheck()
@@ -50,13 +49,11 @@ export default class Menu extends Module {
 
   /**
    * Check deprecated menu options.
-   * @returns {void}
    */
   deprecatedOptionsCheck() {}
 
   /**
    * Initialize row-level menu subscriptions.
-   * @returns {void}
    */
   initializeRowWatchers() {
     if (this.table.options.rowContextMenu) {
@@ -75,7 +72,6 @@ export default class Menu extends Module {
 
   /**
    * Initialize group-level menu subscriptions.
-   * @returns {void}
    */
   initializeGroupWatchers() {
     if (this.table.options.groupContextMenu) {
@@ -95,7 +91,6 @@ export default class Menu extends Module {
   /**
    * Initialize column and cell menu interactions.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     const def = column.definition
@@ -142,7 +137,6 @@ export default class Menu extends Module {
   /**
    * Initialize static header-menu button for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumnHeaderMenu(column) {
     let icon = column.definition.headerMenuIcon
@@ -178,7 +172,6 @@ export default class Menu extends Module {
    * @param {string} option Column option key.
    * @param {Event} e Event object.
    * @param {object} cell Internal/public cell.
-   * @returns {void}
    */
   loadMenuTableCellEvent(option, e, cell) {
     if (cell._cell) {
@@ -195,7 +188,6 @@ export default class Menu extends Module {
    * @param {string} option Column option key.
    * @param {Event} e Event object.
    * @param {object} column Internal/public column.
-   * @returns {void}
    */
   loadMenuTableColumnEvent(option, e, column) {
     if (column._column) {
@@ -212,7 +204,6 @@ export default class Menu extends Module {
    * @param {*} menu Menu definition or resolver.
    * @param {Event} e Event object.
    * @param {object} component Internal component.
-   * @returns {void}
    */
   loadMenuEvent(menu, e, component) {
     if (component._group) {
@@ -238,7 +229,6 @@ export default class Menu extends Module {
    * @param {Array<object>} menu Menu item definitions.
    * @param {HTMLElement} [parentEl] Parent menu item element.
    * @param {object} [parentPopup] Parent popup instance.
-   * @returns {void}
    */
   loadMenu(e, component, menu, parentEl, parentPopup) {
     const touch = !(e instanceof MouseEvent)

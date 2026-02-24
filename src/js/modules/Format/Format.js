@@ -40,7 +40,6 @@ export default class Format extends Module {
 
   /**
    * Bind formatter lifecycle events.
-   * @returns {void}
    */
   initialize() {
     this.subscribe('cell-format', this.formatValue.bind(this))
@@ -52,7 +51,6 @@ export default class Format extends Module {
   /**
    * Initialize formatter config for a column.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     column.modules.format = this.lookupTypeFormatter(column, '')
@@ -112,7 +110,6 @@ export default class Format extends Module {
   /**
    * Trigger formatter rendered callback for a cell.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   cellRendered(cell) {
     if (cell.modules.format && cell.modules.format.renderedCallback && !cell.modules.format.rendered) {

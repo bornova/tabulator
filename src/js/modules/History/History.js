@@ -28,7 +28,6 @@ export default class History extends Module {
 
   /**
    * Initialize history subscriptions and table APIs.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.history) {
@@ -52,7 +51,6 @@ export default class History extends Module {
    * @param {object} from Source row.
    * @param {object} to Target row.
    * @param {boolean} after Insert-after flag.
-   * @returns {void}
    */
   rowMoved(from, to, after) {
     this.action('rowMove', from, { posFrom: from.getPosition(), posTo: to.getPosition(), to, after })
@@ -64,7 +62,6 @@ export default class History extends Module {
    * @param {object} data Row data.
    * @param {*} pos Insert position.
    * @param {*} index Insert index reference.
-   * @returns {void}
    */
   rowAdded(row, data, pos, index) {
     this.action('rowAdd', row, { data, pos, index })
@@ -73,7 +70,6 @@ export default class History extends Module {
   /**
    * Record a row delete action.
    * @param {object} row Deleted row.
-   * @returns {void}
    */
   rowDeleted(row) {
     let index
@@ -99,7 +95,6 @@ export default class History extends Module {
   /**
    * Record a cell edit action.
    * @param {object} cell Edited cell.
-   * @returns {void}
    */
   cellUpdated(cell) {
     this.action('cellEdit', cell, { oldValue: cell.oldValue, newValue: cell.value })
@@ -107,7 +102,6 @@ export default class History extends Module {
 
   /**
    * Clear all history entries.
-   * @returns {void}
    */
   clear() {
     this.history = []
@@ -119,7 +113,6 @@ export default class History extends Module {
    * @param {string} type Action type.
    * @param {object} component Action component.
    * @param {object} data Action payload.
-   * @returns {void}
    */
   action(type, component, data) {
     this.history = this.history.slice(0, this.index + 1)
@@ -152,7 +145,6 @@ export default class History extends Module {
   /**
    * Remove actions referencing a deleted component.
    * @param {object} component Internal component.
-   * @returns {void}
    */
   clearComponentHistory(component) {
     while (true) {
@@ -221,7 +213,6 @@ export default class History extends Module {
    * Rebind row/cell references when row instances are replaced.
    * @param {object} oldRow Previous row instance.
    * @param {object} newRow New row instance.
-   * @returns {void}
    */
   _rebindRow(oldRow, newRow) {
     this.history.forEach((action) => {

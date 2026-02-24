@@ -4,7 +4,6 @@
  *
  * @this {Object}
  * @param {Array<Object>} columns Columns to resize.
- * @returns {void}
  */
 export default function (columns) {
   const table = this.table

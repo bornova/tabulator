@@ -31,7 +31,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Initialize renderer listeners and compatibility state.
-   * @returns {void}
    */
   initialize() {
     this.compatibilityCheck()
@@ -41,7 +40,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Warn about unsupported feature combinations.
-   * @returns {void}
    */
   compatibilityCheck() {
     if (this.options('layout') === 'fitDataTable') {
@@ -59,7 +57,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Cache layout mode flags used by horizontal virtualization.
-   * @returns {void}
    */
   layoutCheck() {
     this.isFitData = this.options('layout').startsWith('fitData')
@@ -67,7 +64,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Subscribe to vertical/data events that invalidate visible row cache.
-   * @returns {void}
    */
   vertScrollListen() {
     this.subscribe('scroll-vertical', this.clearVisRowCache.bind(this))
@@ -76,7 +72,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Clear cached visible rows.
-   * @returns {void}
    */
   clearVisRowCache() {
     this.visibleRows = null
@@ -88,7 +83,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Handle row cell rendering trigger after data changes.
-   * @returns {void}
    */
   renderColumns() {
     this.dataChange()
@@ -97,7 +91,6 @@ export default class VirtualDomHorizontal extends Renderer {
   /**
    * Handle horizontal scroll updates.
    * @param {number} left Horizontal scroll position.
-   * @returns {void}
    */
   scrollColumns(left) {
     if (this.scrollLeft !== left) {
@@ -109,7 +102,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Compute the horizontal render buffer size.
-   * @returns {void}
    */
   calcWindowBuffer() {
     let buffer = this.elementVertical.clientWidth
@@ -131,7 +123,6 @@ export default class VirtualDomHorizontal extends Renderer {
    * Recompute visible horizontal column window and optionally redraw rows.
    * @param {boolean} [update] Whether this is an update cycle.
    * @param {boolean} [blockRedraw] Prevent row redraw when true.
-   * @returns {void}
    */
   rerenderColumns(update, blockRedraw) {
     const old = {
@@ -213,7 +204,6 @@ export default class VirtualDomHorizontal extends Renderer {
   /**
    * Render cells for a row based on current virtual window.
    * @param {object} row Internal row instance.
-   * @returns {void}
    */
   renderRowCells(row) {
     if (this.initialized) {
@@ -235,7 +225,6 @@ export default class VirtualDomHorizontal extends Renderer {
    * Re-render cells for a single row.
    * @param {object} row Internal row instance.
    * @param {boolean} [force] Force full row reinitialization.
-   * @returns {void}
    */
   rerenderRowCells(row, force) {
     this.reinitializeRow(row, force)
@@ -243,7 +232,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Reinitialize widths for currently visible columns.
-   * @returns {void}
    */
   reinitializeColumnWidths() {
     for (let i = this.leftCol; i <= this.rightCol; i++) {
@@ -261,7 +249,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Reset initialization state.
-   * @returns {void}
    */
   deinitialize() {
     this.initialized = false
@@ -269,7 +256,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Clear horizontal virtual DOM window state.
-   * @returns {void}
    */
   clear() {
     this.columns = []
@@ -285,7 +271,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Handle data-driven width changes that may affect virtual columns.
-   * @returns {void}
    */
   dataChange() {
     let change = false
@@ -348,7 +333,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Reinitialize all rows for current visible column window.
-   * @returns {void}
    */
   reinitializeRows() {
     const visibleRows = this.getVisibleRows()
@@ -378,7 +362,6 @@ export default class VirtualDomHorizontal extends Renderer {
   /**
    * Adjust rendered columns based on horizontal scroll delta.
    * @param {number} diff Horizontal delta.
-   * @returns {void}
    */
   scroll(diff) {
     this.vDomScrollPosLeft += diff
@@ -404,7 +387,6 @@ export default class VirtualDomHorizontal extends Renderer {
    * @param {number} start Start index (inclusive).
    * @param {number} end End index (exclusive).
    * @param {number} diff Position adjustment delta.
-   * @returns {void}
    */
   colPositionAdjust(start, end, diff) {
     for (let i = start; i < end; i++) {
@@ -417,7 +399,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Add columns on the right side as they enter the virtual window.
-   * @returns {void}
    */
   addColRight() {
     let changes = false
@@ -470,7 +451,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Add columns on the left side as they enter the virtual window.
-   * @returns {void}
    */
   addColLeft() {
     let changes = false
@@ -527,7 +507,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Remove columns that moved beyond the right virtual boundary.
-   * @returns {void}
    */
   removeColRight() {
     let changes = false
@@ -575,7 +554,6 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Remove columns that moved beyond the left virtual boundary.
-   * @returns {void}
    */
   removeColLeft() {
     let changes = false
@@ -650,7 +628,6 @@ export default class VirtualDomHorizontal extends Renderer {
   /**
    * Initialize a row with cells inside current virtual window and frozen columns.
    * @param {object} row Internal row instance.
-   * @returns {void}
    */
   initializeRow(row) {
     if (row.type !== 'group') {
@@ -681,7 +658,6 @@ export default class VirtualDomHorizontal extends Renderer {
    * Append a column cell to a row element.
    * @param {object} row Internal row instance.
    * @param {object} column Internal column instance.
-   * @returns {void}
    */
   appendCell(row, column) {
     if (column && column.visible) {
@@ -696,7 +672,6 @@ export default class VirtualDomHorizontal extends Renderer {
    * Reinitialize a row when visible column bounds have changed.
    * @param {object} row Internal row instance.
    * @param {boolean} [force] Force row reset.
-   * @returns {void}
    */
   reinitializeRow(row, force) {
     if (row.type !== 'group') {

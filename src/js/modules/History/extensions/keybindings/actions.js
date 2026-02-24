@@ -16,7 +16,6 @@ export default {
    *
    * @this {object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   undo(e) {
     if (!canUseHistory(this.table)) {
@@ -36,7 +35,6 @@ export default {
    *
    * @this {object}
    * @param {KeyboardEvent} e Keyboard event.
-   * @returns {void}
    */
   redo(e) {
     if (!canUseHistory(this.table)) {

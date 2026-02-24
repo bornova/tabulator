@@ -55,13 +55,11 @@ export default class Edit {
 
   /**
    * Check deprecated editor options.
-   * @returns {void}
    */
   _deprecatedOptionsCheck() {}
 
   /**
    * Initialize current editor value state.
-   * @returns {void}
    */
   _initializeValue() {
     let initialValue = this.cell.getValue()
@@ -80,7 +78,6 @@ export default class Edit {
 
   /**
    * Post-render setup for list input.
-   * @returns {void}
    */
   _onRendered() {
     const cellEl = this.cell.getElement()
@@ -119,7 +116,6 @@ export default class Edit {
 
   /**
    * Set list popup width constraints.
-   * @returns {void}
    */
   _setListWidth() {
     const element = this.isFilter ? this.input : this.cell.getElement()
@@ -257,7 +253,6 @@ export default class Edit {
   /**
    * Bind input event handlers.
    * @param {HTMLInputElement} input Input element.
-   * @returns {void}
    */
   _bindInputEvents(input) {
     input.addEventListener('focus', this._inputFocus.bind(this))
@@ -472,7 +467,6 @@ export default class Edit {
 
   /**
    * Keep active item highlight in sync when navigating with keyboard.
-   * @returns {void}
    */
   _syncFocusedSelection() {
     if (this.params.autocomplete || this.params.multiselect || !this.focusedItem) {
@@ -620,7 +614,6 @@ export default class Edit {
 
   /**
    * Rebuild options and show list popup.
-   * @returns {void}
    */
   rebuildOptionsList() {
     this._generateOptions()
@@ -1047,7 +1040,6 @@ export default class Edit {
   /**
    * Build list DOM from option data.
    * @param {Array<object>} data Option data.
-   * @returns {void}
    */
   _buildList(data) {
     this._clearList()
@@ -1130,7 +1122,6 @@ export default class Edit {
 
   /**
    * Show list popup.
-   * @returns {void}
    */
   _showList() {
     const startVis = this.popup && this.popup.isVisible()
@@ -1229,7 +1220,6 @@ export default class Edit {
    * Choose an item in the list.
    * @param {object} item List item.
    * @param {boolean} [silent] Skip auto-resolve.
-   * @returns {void}
    */
   _chooseItem(item, silent) {
     let index
@@ -1269,7 +1259,6 @@ export default class Edit {
   /**
    * Resolve current value and call success callback.
    * @param {boolean} [blur] Triggered by blur.
-   * @returns {void}
    */
   _resolveValue(blur) {
     let output, initialValue

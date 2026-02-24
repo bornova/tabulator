@@ -68,7 +68,6 @@ export default class MoveRows extends Module {
 
   /**
    * Initialize row move behavior and subscriptions.
-   * @returns {void}
    */
   initialize() {
     if (this.table.options.movableRows) {
@@ -109,7 +108,6 @@ export default class MoveRows extends Module {
   /**
    * Initialize drag/drop handlers for group headers.
    * @param {object} group Group row.
-   * @returns {void}
    */
   initializeGroupHeader(group) {
     const config = {}
@@ -149,7 +147,6 @@ export default class MoveRows extends Module {
   /**
    * Initialize drag/drop handlers for a row.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   initializeRow(row) {
     const config = {}
@@ -205,7 +202,6 @@ export default class MoveRows extends Module {
   /**
    * Detect whether a row-handle column exists.
    * @param {object} column Internal column.
-   * @returns {void}
    */
   initializeColumn(column) {
     if (column.definition.rowHandle && this.table.options.movableRows !== false) {
@@ -216,7 +212,6 @@ export default class MoveRows extends Module {
   /**
    * Initialize drag behavior on row-handle cells.
    * @param {object} cell Internal cell.
-   * @returns {void}
    */
   initializeCell(cell) {
     if (cell.column.definition.rowHandle && this.table.options.movableRows !== false) {
@@ -246,7 +241,6 @@ export default class MoveRows extends Module {
    * Bind touch drag handlers to a row trigger element.
    * @param {object} row Internal row.
    * @param {HTMLElement} element Trigger element.
-   * @returns {void}
    */
   bindTouchEvents(row, element) {
     let startYMove = false // shifting center position of the cell
@@ -342,7 +336,6 @@ export default class MoveRows extends Module {
 
   /**
    * Bind row mousemove listeners used while dragging.
-   * @returns {void}
    */
   _bindMouseMove() {
     this.table.rowManager.getDisplayRows().forEach((row) => {
@@ -354,7 +347,6 @@ export default class MoveRows extends Module {
 
   /**
    * Unbind row mousemove listeners used while dragging.
-   * @returns {void}
    */
   _unbindMouseMove() {
     this.table.rowManager.getDisplayRows().forEach((row) => {
@@ -368,7 +360,6 @@ export default class MoveRows extends Module {
    * Start row move operation.
    * @param {MouseEvent|TouchEvent} e Input event.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   startMove(e, row) {
     const element = row.getElement()
@@ -424,7 +415,6 @@ export default class MoveRows extends Module {
    * Capture pointer offset for drag start.
    * @param {MouseEvent|TouchEvent} e Input event.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   setStartPosition(e, row) {
     const pageX = this.touchMove ? e.touches[0].pageX : e.pageX
@@ -446,7 +436,6 @@ export default class MoveRows extends Module {
   /**
    * Finalize row move operation.
    * @param {MouseEvent|TouchEvent} [e] Input event.
-   * @returns {void}
    */
   endMove(e) {
     if (!e || e.button === 0 || this.touchMove) {
@@ -489,7 +478,6 @@ export default class MoveRows extends Module {
    * Update row drop target.
    * @param {object} row Target row.
    * @param {boolean} after Insert-after flag.
-   * @returns {void}
    */
   moveRow(row, after) {
     this.toRow = row
@@ -499,7 +487,6 @@ export default class MoveRows extends Module {
   /**
    * Move hover element in active drag context.
    * @param {MouseEvent|TouchEvent} e Input event.
-   * @returns {void}
    */
   moveHover(e) {
     if (this.connection) {
@@ -512,7 +499,6 @@ export default class MoveRows extends Module {
   /**
    * Move hover element for same-table row drag.
    * @param {MouseEvent|TouchEvent} e Input event.
-   * @returns {void}
    */
   moveHoverTable(e) {
     const rowHolder = this.table.rowManager.getElement()
@@ -528,7 +514,6 @@ export default class MoveRows extends Module {
   /**
    * Move hover element for connected drag targets.
    * @param {MouseEvent|TouchEvent} e Input event.
-   * @returns {void}
    */
   moveHoverConnections(e) {
     this.hoverElement.style.left = `${this.startX + (this.touchMove ? e.touches[0].pageX : e.pageX)}px`
@@ -540,7 +525,6 @@ export default class MoveRows extends Module {
    * @param {Event} e Drop event.
    * @param {HTMLElement} element Drop target element.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   elementRowDrop(e, element, row) {
     this.dispatchExternal('movableRowsElementDrop', e, element, row ? row.getComponent() : false)
@@ -550,7 +534,6 @@ export default class MoveRows extends Module {
   /**
    * Connect drag sender to configured tables/elements.
    * @param {object} row Internal row.
-   * @returns {void}
    */
   connectToTables(row) {
     let connectionTables
@@ -595,7 +578,6 @@ export default class MoveRows extends Module {
   // disconnect from other tables
   /**
    * Disconnect drag sender from configured tables/elements.
-   * @returns {void}
    */
   disconnectFromTables() {
     let connectionTables
@@ -652,7 +634,6 @@ export default class MoveRows extends Module {
   /**
    * Close incoming row-drag connection.
    * @param {object} table Connected table.
-   * @returns {void}
    */
   disconnect(table) {
     if (table === this.connectedTable) {
@@ -680,7 +661,6 @@ export default class MoveRows extends Module {
    * @param {object} table Receiving table.
    * @param {object} row Target row.
    * @param {boolean} success Drop success flag.
-   * @returns {void}
    */
   dropComplete(table, row, success) {
     let sender = false
@@ -726,7 +706,6 @@ export default class MoveRows extends Module {
    * Handle drop on receiving table.
    * @param {Event} e Drop event.
    * @param {object} row Target row.
-   * @returns {void}
    */
   tableRowDrop(e, row) {
     let receiver = false

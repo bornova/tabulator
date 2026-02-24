@@ -15,7 +15,6 @@ export default class HtmlTableImport extends Module {
 
   /**
    * Initialize table-element import check.
-   * @returns {void}
    */
   initialize() {
     this.tableElementCheck()
@@ -23,7 +22,6 @@ export default class HtmlTableImport extends Module {
 
   /**
    * Validate original element and trigger table parsing.
-   * @returns {void}
    */
   tableElementCheck() {
     if (!(this.table.originalElement && this.table.originalElement.tagName === 'TABLE')) {
@@ -41,7 +39,6 @@ export default class HtmlTableImport extends Module {
 
   /**
    * Parse source HTML table into Tabulator columns and data.
-   * @returns {void}
    */
   parseTable() {
     const element = this.table.originalElement
@@ -99,7 +96,6 @@ export default class HtmlTableImport extends Module {
    * @param {HTMLElement} element Source element.
    * @param {object} options Target options object.
    * @param {object} [defaultOptions] Optional defaults map.
-   * @returns {void}
    */
   _extractOptions(element, options, defaultOptions) {
     const attributes = element.attributes
@@ -157,7 +153,6 @@ export default class HtmlTableImport extends Module {
   /**
    * Extract or create column definitions from header cells.
    * @param {HTMLCollection} headers Header elements.
-   * @returns {void}
    */
   _extractHeaders(headers) {
     for (let index = 0; index < headers.length; index++) {
@@ -199,7 +194,6 @@ export default class HtmlTableImport extends Module {
   /**
    * Generate placeholder column definitions when no headers are defined.
    * @param {HTMLCollection} headers Header elements.
-   * @returns {void}
    */
   _generateBlankHeaders(headers) {
     for (let index = 0; index < headers.length; index++) {

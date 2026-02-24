@@ -47,7 +47,6 @@ export default class Alert extends CoreFeature {
    * Show an alert message in the table container.
    * @param {string|HTMLElement|Function} content Message content, element, or content factory.
    * @param {string} [type='msg'] Alert type key.
-   * @returns {void}
    */
   alert(content, type = 'msg') {
     if (content) {
@@ -77,7 +76,6 @@ export default class Alert extends CoreFeature {
 
   /**
    * Hide the alert and remove associated styling.
-   * @returns {void}
    */
   clear() {
     this.dispatch('alert-hide', this.type)

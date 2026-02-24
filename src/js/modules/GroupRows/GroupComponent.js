@@ -81,7 +81,6 @@ export default class GroupComponent {
 
   /**
    * Show this group.
-   * @returns {void}
    */
   show() {
     this._group.show()
@@ -89,7 +88,6 @@ export default class GroupComponent {
 
   /**
    * Hide this group.
-   * @returns {void}
    */
   hide() {
     this._group.hide()
@@ -97,7 +95,6 @@ export default class GroupComponent {
 
   /**
    * Toggle this group visibility.
-   * @returns {void}
    */
   toggle() {
     this._group.toggleVisibility()

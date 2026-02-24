@@ -48,7 +48,6 @@ export default class GridCalculator {
   /**
    * Increment alphabetic column token.
    * @param {number} i Token index.
-   * @returns {void}
    */
   incrementChar(i) {
     const currentChar = this.columnString[i]
@@ -75,7 +74,6 @@ export default class GridCalculator {
   /**
    * Set row count.
    * @param {number} count Row count.
-   * @returns {void}
    */
   setRowCount(count) {
     this.rowCount = count
@@ -84,7 +82,6 @@ export default class GridCalculator {
   /**
    * Set column count.
    * @param {number} count Column count.
-   * @returns {void}
    */
   setColumnCount(count) {
     this.columnCount = count

@@ -5,7 +5,6 @@
  * @this {Object}
  * @param {Array<Object>} columns Columns to resize.
  * @param {boolean} forced Force width reinitialization.
- * @returns {void}
  */
 export default function (columns, forced) {
   const table = this.table
