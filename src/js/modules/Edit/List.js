@@ -271,10 +271,16 @@ export default class Edit {
     }
   }
 
+  /**
+   * Input focus.
+   */
   _inputFocus() {
     this.rebuildOptionsList()
   }
 
+  /**
+   * Filter list contents.
+   */
   _filter() {
     if (this.params.filterRemote) {
       clearTimeout(this.filterTimeout)
@@ -287,10 +293,17 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle input click.
+   * @param {*} e - Parameter value.
+   */
   _inputClick(e) {
     e.stopPropagation()
   }
 
+  /**
+   * Handle input blur.
+   */
   _inputBlur() {
     if (this.blurable) {
       if (this.popup) {
@@ -301,10 +314,17 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle input search.
+   */
   _inputSearch() {
     this._clearChoices()
   }
 
+  /**
+   * Handle input keydown.
+   * @param {*} e - Parameter value.
+   */
   _inputKeyDown(e) {
     switch (e.key) {
       case 'ArrowUp': // up arrow
@@ -342,6 +362,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle input keyup.
+   * @param {*} e - Parameter value.
+   */
   _inputKeyUp(e) {
     switch (e.key) {
       case 'ArrowUp': // up arrow
@@ -357,6 +381,9 @@ export default class Edit {
     }
   }
 
+  /**
+   * Prevent popup blur behavior.
+   */
   _preventPopupBlur() {
     if (this.popup) {
       this.popup.blockHide()
@@ -369,6 +396,9 @@ export default class Edit {
     }, 10)
   }
 
+  /**
+   * Prevent blur behavior.
+   */
   _preventBlur() {
     this.blurable = false
 
@@ -381,6 +411,9 @@ export default class Edit {
   /// ///// Keyboard Navigation /////////
   /// ///////////////////////////////////
 
+  /**
+   * Handle tab key behavior.
+   */
   _keyTab() {
     if (this.params.autocomplete && this.lastAction === 'typing') {
       this._resolveValue(true)
@@ -391,6 +424,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle up key behavior.
+   * @param {*} e - Parameter value.
+   */
   _keyUp(e) {
     const index = this.displayItems.indexOf(this.focusedItem)
 
@@ -406,6 +443,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle down key behavior.
+   * @param {*} e - Parameter value.
+   */
   _keyDown(e) {
     const index = this.displayItems.indexOf(this.focusedItem)
 
@@ -451,6 +492,10 @@ export default class Edit {
     this._styleItem(this.focusedItem)
   }
 
+  /**
+   * Handle horizontal key behavior.
+   * @param {*} e - Parameter value.
+   */
   _keySide(e) {
     if (!this.params.autocomplete) {
       e.stopImmediatePropagation()
@@ -459,6 +504,9 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle enter key behavior.
+   */
   _keyEnter() {
     if (this.params.autocomplete && this.lastAction === 'typing') {
       this._resolveValue(true)
@@ -469,10 +517,17 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle escape key behavior.
+   */
   _keyEsc() {
     this._cancel()
   }
 
+  /**
+   * Handle home/end key behavior.
+   * @param {*} e - Parameter value.
+   */
   _keyHomeEnd(e) {
     if (this.params.autocomplete) {
       // prevent table navigation while using input element
@@ -480,6 +535,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle key-based letter selection.
+   * @param {*} e - Parameter value.
+   */
   _keySelectLetter(e) {
     if (!this.params.autocomplete) {
       // if(this.edit.currentCell === false){
@@ -492,12 +551,20 @@ export default class Edit {
     }
   }
 
+  /**
+   * Handle autocomplete letter behavior.
+   */
   _keyAutoCompLetter() {
     this._filter()
     this.lastAction = 'typing'
     this.typing = true
   }
 
+  /**
+   * Scroll to an item by character.
+   * @param {*} char - Parameter value.
+   * @returns {*} Return value.
+   */
   _scrollToValue(char) {
     clearTimeout(this.filterTimeout)
 
@@ -522,6 +589,10 @@ export default class Edit {
     }, 800)
   }
 
+  /**
+   * Focus a list item.
+   * @param {*} item - Parameter value.
+   */
   _focusItem(item) {
     this.lastAction = 'focus'
 
@@ -540,6 +611,9 @@ export default class Edit {
   /// ///////////////////////////////////
   /// //// Data List Generation /////////
   /// ///////////////////////////////////
+  /**
+   * Generate initial header filter list values.
+   */
   headerFilterInitialListGen() {
     this._generateOptions(true)
   }
@@ -559,6 +633,9 @@ export default class Edit {
         }
       })
   }
+  /**
+   * Apply filtering to visible list items.
+   */
   _filterList() {
     this._buildList(this._filterOptions())
     this._showList()
@@ -603,6 +680,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Add placeholder list content.
+   * @param {*} contents - Parameter value.
+   */
   _addPlaceholder(contents) {
     let placeholder = document.createElement('div')
 
@@ -694,10 +775,20 @@ export default class Edit {
     return Object.keys(output)
   }
 
+  /**
+   * Check whether a value is considered empty.
+   * @param {*} value - Parameter value.
+   * @returns {*} Return value.
+   */
   _emptyValueCheck(value) {
     return value == null || value === ''
   }
 
+  /**
+   * Parse list input values.
+   * @param {*} inputValues - Parameter value.
+   * @returns {*} Return value.
+   */
   _parseList(inputValues) {
     const data = []
 
@@ -732,6 +823,12 @@ export default class Edit {
     return data
   }
 
+  /**
+   * Parse a list item option.
+   * @param {*} option - Parameter value.
+   * @param {*} data - Parameter value.
+   * @param {*} level - Parameter value.
+   */
   _parseListItem(option, data, level) {
     let item
 
@@ -758,6 +855,12 @@ export default class Edit {
     data.push(item)
   }
 
+  /**
+   * Parse a grouped list option.
+   * @param {*} option - Parameter value.
+   * @param {*} level - Parameter value.
+   * @returns {*} Return value.
+   */
   _parseListGroup(option, level) {
     const item = {
       label: option.label,
@@ -778,6 +881,11 @@ export default class Edit {
     return item
   }
 
+  /**
+   * Sort list options.
+   * @param {*} options - Parameter value.
+   * @returns {*} Return value.
+   */
   _sortOptions(options) {
     let sorter
 
@@ -790,6 +898,11 @@ export default class Edit {
     return options
   }
 
+  /**
+   * Sort a grouped option set.
+   * @param {*} sorter - Parameter value.
+   * @param {*} options - Parameter value.
+   */
   _sortGroup(sorter, options) {
     options.sort((a, b) => sorter(a.label, b.label, a.value, b.value, a.original, b.original))
 
@@ -800,6 +913,12 @@ export default class Edit {
     })
   }
 
+  /**
+   * Default sort comparator.
+   * @param {*} as - Parameter value.
+   * @param {*} bs - Parameter value.
+   * @returns {*} Return value.
+   */
   _defaultSortFunction(as, bs) {
     let a
     let b
@@ -847,6 +966,10 @@ export default class Edit {
     return emptyAlign
   }
 
+  /**
+   * Filter available options.
+   * @returns {*} Return value.
+   */
   _filterOptions() {
     const filterFunc = this.params.filterFunc || this._defaultFilterFunc
     const term = this.input.value
@@ -864,6 +987,13 @@ export default class Edit {
     return this.data
   }
 
+  /**
+   * Evaluate a single option against a filter.
+   * @param {*} func - Parameter value.
+   * @param {*} term - Parameter value.
+   * @param {*} item - Parameter value.
+   * @returns {*} Return value.
+   */
   _filterItem(func, term, item) {
     let matches = false
 
@@ -882,6 +1012,13 @@ export default class Edit {
     return item.visible
   }
 
+  /**
+   * Default item filter predicate.
+   * @param {*} term - Parameter value.
+   * @param {*} label - Parameter value.
+   * @param {*} value - Parameter value.
+   * @returns {*} Return value.
+   */
   _defaultFilterFunc(term, label, value) {
     term = String(term).toLowerCase()
 
@@ -898,6 +1035,9 @@ export default class Edit {
   /// //////// Display List /////////////
   /// ///////////////////////////////////
 
+  /**
+   * Clear rendered list items.
+   */
   _clearList() {
     this.listEl.replaceChildren()
 
@@ -921,6 +1061,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Build a list item element.
+   * @param {*} item - Parameter value.
+   */
   _buildItem(item) {
     let el = item.element
     let contents
@@ -1015,6 +1159,10 @@ export default class Edit {
     }
   }
 
+  /**
+   * Apply style rules to a list item.
+   * @param {*} item - Parameter value.
+   */
   _styleItem(item) {
     if (item && item.element) {
       if (item.selected) {
@@ -1029,12 +1177,22 @@ export default class Edit {
   /// ////// User Interaction ///////////
   /// ///////////////////////////////////
 
+  /**
+   * Handle item click.
+   * @param {*} item - Parameter value.
+   * @param {*} e - Parameter value.
+   */
   _itemClick(item, e) {
     e.stopPropagation()
 
     this._chooseItem(item)
   }
 
+  /**
+   * Handle group click.
+   * @param {*} item - Parameter value.
+   * @param {*} e - Parameter value.
+   */
   _groupClick(item, e) {
     e.stopPropagation()
   }
@@ -1043,11 +1201,17 @@ export default class Edit {
   /// /// Current Item Management ///////
   /// ///////////////////////////////////
 
+  /**
+   * Cancel list editing.
+   */
   _cancel() {
     this.popup.hide(true)
     this.actions.cancel()
   }
 
+  /**
+   * Clear selected choices.
+   */
   _clearChoices() {
     this.typing = true
 

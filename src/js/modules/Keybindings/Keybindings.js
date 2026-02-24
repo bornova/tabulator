@@ -122,6 +122,11 @@ export default class Keybindings extends Module {
     })
   }
 
+  /**
+   * Normalize a keybinding symbol.
+   * @param {*} symbol - Parameter value.
+   * @returns {*} Return value.
+   */
   _normalizeBindingSymbol(symbol) {
     if (!Number.isNaN(Number(symbol))) {
       return this._keyFromLegacyCode(parseInt(symbol, 10))
@@ -144,6 +149,11 @@ export default class Keybindings extends Module {
     return aliases[symbol] || symbol
   }
 
+  /**
+   * Map a legacy key code to a normalized key.
+   * @param {*} code - Parameter value.
+   * @returns {*} Return value.
+   */
   _keyFromLegacyCode(code) {
     const knownCodes = {
       8: 'backspace',
@@ -182,6 +192,11 @@ export default class Keybindings extends Module {
     return null
   }
 
+  /**
+   * Normalize keyboard event key values.
+   * @param {*} e - Parameter value.
+   * @returns {*} Return value.
+   */
   _normalizeEventKey(e) {
     const key = e.key
 

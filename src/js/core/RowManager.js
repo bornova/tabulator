@@ -313,6 +313,10 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Remove row elements and reset manager state.
+   * @returns {void}
+   */
   _wipeElements() {
     this.dispatch('rows-wipe')
 
@@ -323,6 +327,10 @@ export default class RowManager extends CoreFeature {
     this.dispatch('rows-wiped')
   }
 
+  /**
+   * Destroy all row instances and clear row collections.
+   * @returns {void}
+   */
   destroy() {
     this.rows.forEach((row) => {
       row.wipe()
@@ -336,6 +344,12 @@ export default class RowManager extends CoreFeature {
     this.displayRowsCount = 0
   }
 
+  /**
+   * Delete a row from all row collections.
+   * @param {Row} row Internal row instance.
+   * @param {boolean} blockRedraw Prevent redraw after deletion.
+   * @returns {void}
+   */
   deleteRow(row, blockRedraw) {
     const allIndex = this.rows.indexOf(row)
     const activeIndex = this.activeRows.indexOf(row)
@@ -375,11 +389,27 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Add a single row.
+   * @param {object|Row} data Row data object or row instance.
+   * @param {boolean|string} [pos] Insert position preference.
+   * @param {*} [index] Target row/index reference.
+   * @param {boolean} [blockRedraw] Prevent redraw after insertion.
+   * @returns {Row}
+   */
   addRow(data, pos, index, blockRedraw) {
     return this.addRowActual(data, pos, index, blockRedraw)
   }
 
   // add multiple rows
+  /**
+   * Add multiple rows.
+   * @param {Array<object>|object} data Row data array or single row object.
+   * @param {boolean|string} [pos] Insert position preference.
+   * @param {*} [index] Target row/index reference.
+   * @param {boolean} [refreshDisplayOnly] Refresh only display pipeline when possible.
+   * @returns {Promise<Array<Row>>}
+   */
   addRows(data, pos, index, refreshDisplayOnly) {
     const rows = []
 
@@ -432,6 +462,11 @@ export default class RowManager extends CoreFeature {
     })
   }
 
+  /**
+   * Normalize add-row position option into boolean form.
+   * @param {boolean|string} [pos] Position keyword or boolean.
+   * @returns {boolean}
+   */
   findAddRowPos(pos) {
     if (pos === undefined) {
       pos = this.table.options.addRowPos
@@ -448,6 +483,14 @@ export default class RowManager extends CoreFeature {
     return pos
   }
 
+  /**
+   * Insert a row into all tracked row arrays.
+   * @param {object|Row} data Row data object or row instance.
+   * @param {boolean|string} [pos] Insert position preference.
+   * @param {*} [index] Target row/index reference.
+   * @param {boolean} [blockRedraw] Prevent redraw after insertion.
+   * @returns {Row}
+   */
   addRowActual(data, pos, index, blockRedraw) {
     const row = data instanceof Row ? data : new Row(data || {}, this)
     let top = this.findAddRowPos(pos)
@@ -521,6 +564,13 @@ export default class RowManager extends CoreFeature {
     return row
   }
 
+  /**
+   * Move a row relative to another row.
+   * @param {Row} from Row to move.
+   * @param {Row} to Target row.
+   * @param {boolean} after Insert after target when true.
+   * @returns {void}
+   */
   moveRow(from, to, after) {
     this.dispatch('row-move', from, to, after)
 
@@ -532,6 +582,13 @@ export default class RowManager extends CoreFeature {
     this.dispatchExternal('rowMoved', from.getComponent())
   }
 
+  /**
+   * Apply row move to all managed row arrays.
+   * @param {Row} from Row to move.
+   * @param {Row} to Target row.
+   * @param {boolean} after Insert after target when true.
+   * @returns {void}
+   */
   moveRowActual(from, to, after) {
     this.moveRowInArray(this.rows, from, to, after)
     this.moveRowInArray(this.activeRows, from, to, after)
@@ -543,6 +600,14 @@ export default class RowManager extends CoreFeature {
     this.dispatch('row-moving', from, to, after)
   }
 
+  /**
+   * Move a row inside a specific row array.
+   * @param {Array<object>} rows Row array.
+   * @param {Row} from Row to move.
+   * @param {Row} to Target row.
+   * @param {boolean} after Insert after target when true.
+   * @returns {void}
+   */
   moveRowInArray(rows, from, to, after) {
     let fromIndex, toIndex, start, end
 
@@ -579,19 +644,39 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Clear all table data.
+   * @returns {void}
+   */
   clearData() {
     this.setData([])
   }
 
+  /**
+   * Get index of a row in all rows.
+   * @param {*} row Row reference.
+   * @returns {number|boolean}
+   */
   getRowIndex(row) {
     return this.findRowIndex(row, this.rows)
   }
 
+  /**
+   * Get index of a row in display rows.
+   * @param {*} row Row reference.
+   * @returns {number|boolean}
+   */
   getDisplayRowIndex(row) {
     const index = this.getDisplayRows().indexOf(row)
     return index > -1 ? index : false
   }
 
+  /**
+   * Get next displayed row.
+   * @param {*} row Current row reference.
+   * @param {boolean} [rowOnly] Limit to actual data rows.
+   * @returns {object|boolean}
+   */
   nextDisplayRow(row, rowOnly) {
     const index = this.getDisplayRowIndex(row)
     let nextRow = false
@@ -607,6 +692,12 @@ export default class RowManager extends CoreFeature {
     return nextRow
   }
 
+  /**
+   * Get previous displayed row.
+   * @param {*} row Current row reference.
+   * @param {boolean} [rowOnly] Limit to actual data rows.
+   * @returns {object|boolean}
+   */
   prevDisplayRow(row, rowOnly) {
     const index = this.getDisplayRowIndex(row)
     let prevRow = false
@@ -622,6 +713,12 @@ export default class RowManager extends CoreFeature {
     return prevRow
   }
 
+  /**
+   * Find row index within a specific list.
+   * @param {*} row Row reference.
+   * @param {Array<object>} list Row list to search.
+   * @returns {number|boolean}
+   */
   findRowIndex(row, list) {
     let rowIndex
 
@@ -638,24 +735,45 @@ export default class RowManager extends CoreFeature {
     return false
   }
 
+  /**
+   * Get row data for a row set.
+   * @param {string|boolean} [active] Row set selector.
+   * @param {string} [transform] Data transform mode.
+   * @returns {Array<object>}
+   */
   getData(active, transform) {
     const rows = this.getRows(active)
 
     return rows.filter((row) => row.type === 'row').map((row) => row.getData(transform || 'data'))
   }
 
+  /**
+   * Get row components for a row set.
+   * @param {string|boolean} [active] Row set selector.
+   * @returns {Array<object>}
+   */
   getComponents(active) {
     const rows = this.getRows(active)
 
     return rows.map((row) => row.getComponent())
   }
 
+  /**
+   * Get row count for a row set.
+   * @param {string|boolean} [active] Row set selector.
+   * @returns {number}
+   */
   getDataCount(active) {
     const rows = this.getRows(active)
 
     return rows.length
   }
 
+  /**
+   * Sync horizontal scroll position.
+   * @param {number} left Scroll left offset.
+   * @returns {void}
+   */
   scrollHorizontal(left) {
     this.scrollLeft = left
     this.element.scrollLeft = left
@@ -663,6 +781,12 @@ export default class RowManager extends CoreFeature {
     this.dispatch('scroll-horizontal', left)
   }
 
+  /**
+   * Register a data pipeline handler.
+   * @param {Function} handler Pipeline handler.
+   * @param {number} priority Handler priority.
+   * @returns {void}
+   */
   registerDataPipelineHandler(handler, priority) {
     if (priority !== undefined) {
       this.dataPipeline.push({ handler, priority })
@@ -672,6 +796,12 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Register a display pipeline handler.
+   * @param {Function} handler Pipeline handler.
+   * @param {number} priority Handler priority.
+   * @returns {void}
+   */
   registerDisplayPipelineHandler(handler, priority) {
     if (priority !== undefined) {
       this.displayPipeline.push({ handler, priority })
@@ -682,6 +812,13 @@ export default class RowManager extends CoreFeature {
   }
 
   // set active data set
+  /**
+   * Refresh active row data through configured pipelines.
+   * @param {Function|string|false} [handler] Handler or stage to start from.
+   * @param {boolean} [skipStage] Skip provided handler stage.
+   * @param {boolean} [renderInPosition] Preserve viewport position.
+   * @returns {void}
+   */
   refreshActiveData(handler, skipStage, renderInPosition) {
     const table = this.table
     let stage
@@ -766,6 +903,14 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Execute data and display refresh pipelines.
+   * @param {Function|string|false} [handler] Handler or stage to start from.
+   * @param {string} stage Refresh stage.
+   * @param {number} index Pipeline index.
+   * @param {boolean} renderInPosition Preserve viewport position.
+   * @returns {void}
+   */
   refreshPipelines(handler, stage, index, renderInPosition) {
     this.dispatch('data-refreshing')
 
@@ -816,6 +961,10 @@ export default class RowManager extends CoreFeature {
   }
 
   // regenerate row positions
+  /**
+   * Regenerate display position numbers for data rows.
+   * @returns {void}
+   */
   regenerateRowPositions() {
     const rows = this.getDisplayRows()
     let index = 1
@@ -828,12 +977,21 @@ export default class RowManager extends CoreFeature {
     })
   }
 
+  /**
+   * Set active row set and cache count.
+   * @param {Array<object>} activeRows Active rows.
+   * @returns {void}
+   */
   setActiveRows(activeRows) {
     this.activeRows = [...activeRows]
     this.activeRowsCount = this.activeRows.length
   }
 
   // reset display rows array
+  /**
+   * Reset display rows from active rows.
+   * @returns {void}
+   */
   resetDisplayRows() {
     this.displayRows = []
 
@@ -843,6 +1001,12 @@ export default class RowManager extends CoreFeature {
   }
 
   // set display row pipeline data
+  /**
+   * Store display rows for a pipeline stage.
+   * @param {Array<object>} displayRows Display rows.
+   * @param {number} index Pipeline stage index.
+   * @returns {void}
+   */
   setDisplayRows(displayRows, index) {
     this.displayRows[index] = displayRows
 
@@ -851,6 +1015,11 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Get display rows for final or specific pipeline stage.
+   * @param {number} [index] Pipeline stage index.
+   * @returns {Array<object>}
+   */
   getDisplayRows(index) {
     if (index === undefined) {
       return this.displayRows.length ? this.displayRows[this.displayRows.length - 1] : []
@@ -859,6 +1028,12 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Get currently visible rows from renderer.
+   * @param {boolean} chain Apply rows-visible extension chain.
+   * @param {boolean} viewable Request only viewable rows.
+   * @returns {Array<object>}
+   */
   getVisibleRows(chain, viewable) {
     let rows = [...this.renderer.visibleRows(!viewable)]
 
@@ -870,6 +1045,11 @@ export default class RowManager extends CoreFeature {
   }
 
   // repeat action across display rows
+  /**
+   * Execute a callback across pipeline row arrays.
+   * @param {Function} callback Iterator callback.
+   * @returns {void}
+   */
   displayRowIterator(callback) {
     this.activeRowsPipeline.forEach(callback)
     this.displayRows.forEach(callback)
@@ -878,6 +1058,11 @@ export default class RowManager extends CoreFeature {
   }
 
   // return only actual rows (not group headers etc)
+  /**
+   * Get rows by type.
+   * @param {string|boolean} [type] Row set type.
+   * @returns {Array<object>}
+   */
   getRows(type) {
     let rows
 
@@ -903,6 +1088,11 @@ export default class RowManager extends CoreFeature {
 
   /// ////////////// Table Rendering /////////////////
   // trigger rerender of table in current position
+  /**
+   * Re-render rows while preserving current viewport position.
+   * @param {Function} [callback] Optional callback during re-render.
+   * @returns {void}
+   */
   reRenderInPosition(callback) {
     if (this.redrawBlock) {
       if (callback) {
@@ -925,6 +1115,10 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Measure and publish vertical scrollbar width changes.
+   * @returns {void}
+   */
   scrollBarCheck() {
     let scrollbarWidth = 0
 
@@ -939,6 +1133,10 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Initialize vertical renderer implementation.
+   * @returns {void}
+   */
   initializeRenderer() {
     let renderClass
 
@@ -972,10 +1170,18 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Get current render mode.
+   * @returns {string}
+   */
   getRenderMode() {
     return this.renderMode
   }
 
+  /**
+   * Render table rows and placeholder state.
+   * @returns {void}
+   */
   renderTable() {
     this.dispatchExternal('renderStarted')
 
@@ -1015,6 +1221,10 @@ export default class RowManager extends CoreFeature {
   }
 
   // show scrollbars on empty table div
+  /**
+   * Render empty-state table shell when no display rows exist.
+   * @returns {void}
+   */
   renderEmptyScroll() {
     if (this.placeholder) {
       this.tableElement.style.display = 'none'
@@ -1025,6 +1235,10 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Clear table rows and reset scroll cache.
+   * @returns {void}
+   */
   _clearTable() {
     this._clearPlaceholder()
 
@@ -1034,11 +1248,19 @@ export default class RowManager extends CoreFeature {
     this.renderer.clearRows()
   }
 
+  /**
+   * Render empty table state and placeholder.
+   * @returns {void}
+   */
   tableEmpty() {
     this.renderEmptyScroll()
     this._showPlaceholder()
   }
 
+  /**
+   * Ensure placeholder visibility matches current display rows.
+   * @returns {void}
+   */
   checkPlaceholder() {
     if (this.displayRowsCount) {
       this._clearPlaceholder()
@@ -1047,6 +1269,10 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Show placeholder element.
+   * @returns {void}
+   */
   _showPlaceholder() {
     if (this.placeholder) {
       if (this.placeholder && this.placeholder.parentNode) {
@@ -1064,6 +1290,10 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Remove placeholder element and clear empty-state styles.
+   * @returns {void}
+   */
   _clearPlaceholder() {
     if (this.placeholder && this.placeholder.parentNode) {
       this.placeholder.parentNode.removeChild(this.placeholder)
@@ -1074,6 +1304,10 @@ export default class RowManager extends CoreFeature {
     this.tableElement.style.display = ''
   }
 
+  /**
+   * Position placeholder content to match table width and scroll offset.
+   * @returns {void}
+   */
   _positionPlaceholder() {
     if (this.placeholder && this.placeholder.parentNode) {
       this.placeholder.style.width = `${this.table.columnManager.getWidth()}px`
@@ -1082,6 +1316,12 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Apply odd/even styling classes to a row.
+   * @param {Row} row Row instance.
+   * @param {number} index Row index.
+   * @returns {void}
+   */
   styleRow(row, index) {
     const rowEl = row.getElement()
 
@@ -1091,6 +1331,11 @@ export default class RowManager extends CoreFeature {
   }
 
   // normalize height of active rows
+  /**
+   * Normalize heights for active rows.
+   * @param {boolean} force Force normalization.
+   * @returns {void}
+   */
   normalizeHeight(force) {
     this.activeRows.forEach((row) => {
       row.normalizeHeight(force)
@@ -1098,6 +1343,10 @@ export default class RowManager extends CoreFeature {
   }
 
   // adjust the height of the table holder to fit in the Tabulator element
+  /**
+   * Adjust table holder size to available layout space.
+   * @returns {boolean} True if table holder height changed.
+   */
   adjustTableSize() {
     const initialHeight = this.element.clientHeight
     let minHeight
@@ -1151,6 +1400,10 @@ export default class RowManager extends CoreFeature {
   }
 
   // reinitialize all rows
+  /**
+   * Reinitialize all tracked rows.
+   * @returns {void}
+   */
   reinitialize() {
     this.rows.forEach((row) => {
       row.reinitialize(true)
@@ -1158,12 +1411,20 @@ export default class RowManager extends CoreFeature {
   }
 
   // prevent table from being redrawn
+  /**
+   * Block table redraw operations.
+   * @returns {void}
+   */
   blockRedraw() {
     this.redrawBlock = true
     this.redrawBlockRestoreConfig = false
   }
 
   // restore table redrawing
+  /**
+   * Restore redraw operations and run deferred refresh work.
+   * @returns {void}
+   */
   restoreRedraw() {
     this.redrawBlock = false
 
@@ -1185,6 +1446,11 @@ export default class RowManager extends CoreFeature {
   }
 
   // redraw table
+  /**
+   * Redraw table and optionally force full render.
+   * @param {boolean} force Force full table render.
+   * @returns {void}
+   */
   redraw(force) {
     this.adjustTableSize()
     this.table.tableWidth = this.table.element.clientWidth
@@ -1197,6 +1463,10 @@ export default class RowManager extends CoreFeature {
     }
   }
 
+  /**
+   * Reset table scroll position and emit scroll event.
+   * @returns {void}
+   */
   resetScroll() {
     this.element.scrollLeft = 0
     this.element.scrollTop = 0

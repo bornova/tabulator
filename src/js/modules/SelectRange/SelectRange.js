@@ -721,6 +721,10 @@ export default class SelectRange extends Module {
     return true
   }
 
+  /**
+   * Handle removal of a range.
+   * @param {*} removed - Parameter value.
+   */
   rangeRemoved(removed) {
     this.ranges = this.ranges.filter((range) => range !== removed)
 
@@ -735,18 +739,44 @@ export default class SelectRange extends Module {
     this.layoutElement(true)
   }
 
+  /**
+   * Find the next jump row index.
+   * @param {*} column - Parameter value.
+   * @param {*} rows - Parameter value.
+   * @param {*} reverse - Parameter value.
+   * @param {*} emptyStart - Parameter value.
+   * @param {*} emptySide - Parameter value.
+   * @returns {*} Return value.
+   */
   findJumpRow(column, rows, reverse, emptyStart, emptySide) {
     const targetRows = reverse ? [...rows].reverse() : rows
 
     return this.findJumpItem(emptyStart, emptySide, targetRows, (row) => row.getData()[column.getField()])
   }
 
+  /**
+   * Find the next jump column index.
+   * @param {*} row - Parameter value.
+   * @param {*} columns - Parameter value.
+   * @param {*} reverse - Parameter value.
+   * @param {*} emptyStart - Parameter value.
+   * @param {*} emptySide - Parameter value.
+   * @returns {*} Return value.
+   */
   findJumpCol(row, columns, reverse, emptyStart, emptySide) {
     const targetColumns = reverse ? [...columns].reverse() : columns
 
     return this.findJumpItem(emptyStart, emptySide, targetColumns, (column) => row.getData()[column.getField()])
   }
 
+  /**
+   * Find a jump position in a value sequence.
+   * @param {*} emptyStart - Parameter value.
+   * @param {*} emptySide - Parameter value.
+   * @param {*} items - Parameter value.
+   * @param {*} valueResolver - Parameter value.
+   * @returns {*} Return value.
+   */
   findJumpItem(emptyStart, emptySide, items, valueResolver) {
     let nextItem
 
@@ -778,6 +808,12 @@ export default class SelectRange extends Module {
     return nextItem
   }
 
+  /**
+   * Find the jump target to the left.
+   * @param {*} rowPos - Parameter value.
+   * @param {*} colPos - Parameter value.
+   * @returns {*} Return value.
+   */
   findJumpCellLeft(rowPos, colPos) {
     const row = this.getRowByRangePos(rowPos)
     const columns = this.getTableColumns()
@@ -795,6 +831,12 @@ export default class SelectRange extends Module {
     return colPos
   }
 
+  /**
+   * Find the jump target to the right.
+   * @param {*} rowPos - Parameter value.
+   * @param {*} colPos - Parameter value.
+   * @returns {*} Return value.
+   */
   findJumpCellRight(rowPos, colPos) {
     const row = this.getRowByRangePos(rowPos)
     const columns = this.getTableColumns()
@@ -817,6 +859,12 @@ export default class SelectRange extends Module {
     return colPos
   }
 
+  /**
+   * Find the jump target upward.
+   * @param {*} rowPos - Parameter value.
+   * @param {*} colPos - Parameter value.
+   * @returns {*} Return value.
+   */
   findJumpCellUp(rowPos, colPos) {
     const column = this.getColumnByRangePos(colPos)
     const rows = this.getTableRows()
@@ -833,6 +881,12 @@ export default class SelectRange extends Module {
     return rowPos
   }
 
+  /**
+   * Find the jump target downward.
+   * @param {*} rowPos - Parameter value.
+   * @param {*} colPos - Parameter value.
+   * @returns {*} Return value.
+   */
   findJumpCellDown(rowPos, colPos) {
     const column = this.getColumnByRangePos(colPos)
     const rows = this.getTableRows()
@@ -1114,18 +1168,36 @@ export default class SelectRange extends Module {
     return this.getCell(this.activeRange.start.row, this.activeRange.start.col)
   }
 
+  /**
+   * Get a table row from a range position.
+   * @param {*} pos - Parameter value.
+   * @returns {*} Return value.
+   */
   getRowByRangePos(pos) {
     return this.getTableRows()[pos]
   }
 
+  /**
+   * Get a table column from a range position.
+   * @param {*} pos - Parameter value.
+   * @returns {*} Return value.
+   */
   getColumnByRangePos(pos) {
     return this.getTableColumns()[pos]
   }
 
+  /**
+   * Get table rows used for range operations.
+   * @returns {*} Return value.
+   */
   getTableRows() {
     return this.table.rowManager.getDisplayRows().filter((row) => row.type === 'row')
   }
 
+  /**
+   * Get table columns used for range operations.
+   * @returns {*} Return value.
+   */
   getTableColumns() {
     return this.table.columnManager.getVisibleColumnsByIndex()
   }

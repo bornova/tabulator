@@ -311,6 +311,10 @@ export default class ColumnManager extends CoreFeature {
     return sorter
   }
 
+  /**
+   * Set columns.
+   * @param {*} cols - Parameter value.
+   */
   setColumns(cols) {
     this.headersElement.replaceChildren()
 
@@ -345,6 +349,13 @@ export default class ColumnManager extends CoreFeature {
     this.redraw(true)
   }
 
+  /**
+   * Add a column.
+   * @param {*} definition - Parameter value.
+   * @param {*} before - Parameter value.
+   * @param {*} nextToColumn - Parameter value.
+   * @returns {*} Return value.
+   */
   _addColumn(definition, before, nextToColumn) {
     const column = new Column(definition, this)
     const colEl = column.getElement()
@@ -384,16 +395,27 @@ export default class ColumnManager extends CoreFeature {
     return column
   }
 
+  /**
+   * Register a column field.
+   * @param {*} col - Parameter value.
+   */
   registerColumnField(col) {
     if (col.definition.field) {
       this.columnsByField[col.definition.field] = col
     }
   }
 
+  /**
+   * Register a column position.
+   * @param {*} col - Parameter value.
+   */
   registerColumnPosition(col) {
     this.columnsByIndex.push(col)
   }
 
+  /**
+   * Reindex columns.
+   */
   _reIndexColumns() {
     this.columnsByIndex = []
 
@@ -403,6 +425,9 @@ export default class ColumnManager extends CoreFeature {
   }
 
   // ensure column headers take up the correct amount of space in column groups
+  /**
+   * Align header rows vertically.
+   */
   verticalAlignHeaders() {
     let minHeight = 0
 
@@ -432,6 +457,11 @@ export default class ColumnManager extends CoreFeature {
   }
 
   /// ///////////// Column Details /////////////////
+  /**
+   * Find a column from a lookup subject.
+   * @param {*} subject - Parameter value.
+   * @returns {*} Return value.
+   */
   findColumn(subject) {
     let columns
 
@@ -464,10 +494,20 @@ export default class ColumnManager extends CoreFeature {
     return false
   }
 
+  /**
+   * Get a column by field.
+   * @param {*} field - Parameter value.
+   * @returns {*} Return value.
+   */
   getColumnByField(field) {
     return this.columnsByField[field]
   }
 
+  /**
+   * Get columns by field root.
+   * @param {*} root - Parameter value.
+   * @returns {*} Return value.
+   */
   getColumnsByFieldRoot(root) {
     const matches = []
 
@@ -483,39 +523,74 @@ export default class ColumnManager extends CoreFeature {
     return matches
   }
 
+  /**
+   * Get a column by index.
+   * @param {*} index - Parameter value.
+   * @returns {*} Return value.
+   */
   getColumnByIndex(index) {
     return this.columnsByIndex[index]
   }
 
+  /**
+   * Get the first visible column.
+   * @returns {*} Return value.
+   */
   getFirstVisibleColumn() {
     const index = this.columnsByIndex.findIndex((col) => col.visible)
 
     return index > -1 ? this.columnsByIndex[index] : false
   }
 
+  /**
+   * Get visible columns by index.
+   * @returns {*} Return value.
+   */
   getVisibleColumnsByIndex() {
     return this.columnsByIndex.filter((col) => col.visible)
   }
 
+  /**
+   * Get top-level columns.
+   * @returns {*} Return value.
+   */
   getColumns() {
     return this.columns
   }
 
+  /**
+   * Find a column index.
+   * @param {*} column - Parameter value.
+   * @returns {*} Return value.
+   */
   findColumnIndex(column) {
     return this.columnsByIndex.findIndex((col) => column === col)
   }
 
   // return all columns that are not groups
+  /**
+   * Get real columns.
+   * @returns {*} Return value.
+   */
   getRealColumns() {
     return this.columnsByIndex
   }
 
   // traverse across columns and call action
+  /**
+   * Traverse all columns.
+   * @param {*} callback - Parameter value.
+   */
   traverse(callback) {
     this.columnsByIndex.forEach(callback)
   }
 
   // get definitions of actual columns
+  /**
+   * Get column definitions.
+   * @param {*} active - Parameter value.
+   * @returns {*} Return value.
+   */
   getDefinitions(active) {
     const output = []
 
@@ -529,16 +604,29 @@ export default class ColumnManager extends CoreFeature {
   }
 
   // get full nested definition tree
+  /**
+   * Get the column definition tree.
+   * @returns {*} Return value.
+   */
   getDefinitionTree() {
     return this.columns.map((column) => column.getDefinition(true))
   }
 
+  /**
+   * Get column components.
+   * @param {*} structured - Parameter value.
+   * @returns {*} Return value.
+   */
   getComponents(structured) {
     const columns = structured ? this.columns : this.columnsByIndex
 
     return columns.map((column) => column.getComponent())
   }
 
+  /**
+   * Get combined column width.
+   * @returns {*} Return value.
+   */
   getWidth() {
     let width = 0
 
@@ -551,6 +639,12 @@ export default class ColumnManager extends CoreFeature {
     return width
   }
 
+  /**
+   * Move a column and trigger layout updates.
+   * @param {*} from - Parameter value.
+   * @param {*} to - Parameter value.
+   * @param {*} after - Parameter value.
+   */
   moveColumn(from, to, after) {
     to.element.parentNode.insertBefore(from.element, to.element)
 
@@ -565,6 +659,12 @@ export default class ColumnManager extends CoreFeature {
     this.table.rowManager.reinitialize()
   }
 
+  /**
+   * Move a column without external side effects.
+   * @param {*} from - Parameter value.
+   * @param {*} to - Parameter value.
+   * @param {*} after - Parameter value.
+   */
   moveColumnActual(from, to, after) {
     if (from.parent.isGroup) {
       this._moveColumnInArray(from.parent.columns, from, to, after)
@@ -583,6 +683,14 @@ export default class ColumnManager extends CoreFeature {
     }
   }
 
+  /**
+   * Move a column entry inside a column array.
+   * @param {*} columns - Parameter value.
+   * @param {*} from - Parameter value.
+   * @param {*} to - Parameter value.
+   * @param {*} after - Parameter value.
+   * @param {*} updateRows - Parameter value.
+   */
   _moveColumnInArray(columns, from, to, after, updateRows) {
     const fromIndex = columns.indexOf(from)
     let toIndex
@@ -618,6 +726,13 @@ export default class ColumnManager extends CoreFeature {
     }
   }
 
+  /**
+   * Scroll to a specific column.
+   * @param {*} column - Parameter value.
+   * @param {*} position - Parameter value.
+   * @param {*} ifVisible - Parameter value.
+   * @returns {*} Return value.
+   */
   scrollToColumn(column, position, ifVisible) {
     let left = 0
     const offset = column.getLeftOffset()
@@ -668,6 +783,11 @@ export default class ColumnManager extends CoreFeature {
   }
 
   /// ///////////// Cell Management /////////////////
+  /**
+   * Generate cells for a row.
+   * @param {*} row - Parameter value.
+   * @returns {*} Return value.
+   */
   generateCells(row) {
     const cells = []
 
@@ -679,6 +799,10 @@ export default class ColumnManager extends CoreFeature {
   }
 
   /// ///////////// Column Management /////////////////
+  /**
+   * Get flex base width.
+   * @returns {*} Return value.
+   */
   getFlexBaseWidth() {
     let totalWidth = this.table.element.clientWidth // table element width
     let fixedWidth = 0
@@ -713,6 +837,13 @@ export default class ColumnManager extends CoreFeature {
     return fixedWidth
   }
 
+  /**
+   * Add a column.
+   * @param {*} definition - Parameter value.
+   * @param {*} before - Parameter value.
+   * @param {*} nextToColumn - Parameter value.
+   * @returns {*} Return value.
+   */
   addColumn(definition, before, nextToColumn) {
     return new Promise((resolve) => {
       const column = this._addColumn(definition, before, nextToColumn)
@@ -736,6 +867,10 @@ export default class ColumnManager extends CoreFeature {
   }
 
   // remove column from system
+  /**
+   * Deregister a column.
+   * @param {*} column - Parameter value.
+   */
   deregisterColumn(column) {
     const field = column.getField()
     let index
@@ -764,6 +899,11 @@ export default class ColumnManager extends CoreFeature {
     this.redraw()
   }
 
+  /**
+   * Rerender columns.
+   * @param {*} update - Parameter value.
+   * @param {*} silent - Parameter value.
+   */
   rerenderColumns(update, silent) {
     if (!this.redrawBlock) {
       this.renderer.rerenderColumns(update, silent)
@@ -774,11 +914,17 @@ export default class ColumnManager extends CoreFeature {
     }
   }
 
+  /**
+   * Block redraw actions.
+   */
   blockRedraw() {
     this.redrawBlock = true
     this.redrawBlockUpdate = null
   }
 
+  /**
+   * Restore redraw actions.
+   */
   restoreRedraw() {
     this.redrawBlock = false
     this.verticalAlignHeaders()
@@ -786,6 +932,10 @@ export default class ColumnManager extends CoreFeature {
   }
 
   // redraw columns
+  /**
+   * Redraw columns.
+   * @param {*} force - Parameter value.
+   */
   redraw(force) {
     if (Helpers.elVisible(this.element)) {
       this.verticalAlignHeaders()
