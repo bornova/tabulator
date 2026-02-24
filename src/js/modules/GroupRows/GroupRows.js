@@ -135,8 +135,7 @@ export default class GroupRows extends Module {
       ] // starting state of group
 
       this.langBind('groups|item', (langValue, lang) => {
-        this.headerGenerator[0] = (value, count, data) => {
-          void data
+        this.headerGenerator[0] = (value, count) => {
           // header layout function
           return (
             (typeof value === 'undefined' ? '' : value) +
@@ -376,11 +375,9 @@ export default class GroupRows extends Module {
 
   /**
    * Get top-level groups as components.
-   * @param {*} values Unused argument.
    * @returns {Array<object>}
    */
-  userGetGroups(values) {
-    void values
+  userGetGroups() {
     return this.getGroups(true)
   }
 
@@ -452,11 +449,9 @@ export default class GroupRows extends Module {
 
   /**
    * Refresh grouped rows after row updates.
-   * @param {object} row Updated row.
    * @returns {void}
    */
-  rowsUpdated(row) {
-    void row
+  rowsUpdated() {
     if (this.table.options.groupBy) {
       this.updateGroupRows(true)
     }
@@ -644,7 +639,7 @@ export default class GroupRows extends Module {
       })
 
       rows.forEach((row) => {
-        this.assignRowToExistingGroup(row, oldGroups)
+        this.assignRowToExistingGroup(row)
       })
     } else {
       rows.forEach((row) => {
@@ -687,11 +682,9 @@ export default class GroupRows extends Module {
   /**
    * Assign row to an existing pre-created group.
    * @param {object} row Internal row.
-   * @param {object} oldGroups Previous group map.
    * @returns {void}
    */
-  assignRowToExistingGroup(row, oldGroups) {
-    void oldGroups
+  assignRowToExistingGroup(row) {
     const groupID = this.groupIDLookups[0].func(row.getData())
     const groupKey = `0_${groupID}`
 

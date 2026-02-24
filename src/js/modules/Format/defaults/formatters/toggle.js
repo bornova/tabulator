@@ -3,11 +3,9 @@
  *
  * @param {Object} cell Cell component.
  * @param {Object} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {HTMLDivElement} Toggle element.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const value = cell.getValue()
   const size = formatterParams.size || 15
   const sizePx = `${size}px`

@@ -79,17 +79,9 @@ export default class Import extends Module {
   /**
    * Import and structure data loaded through standard data pipeline.
    * @param {*} data Raw data.
-   * @param {object} params Load params.
-   * @param {object} config Load config.
-   * @param {boolean} silent Silent flag.
-   * @param {*} previousData Previous data.
    * @returns {Promise<*>}
    */
-  loadData(data, params, config, silent, previousData) {
-    void params
-    void config
-    void silent
-    void previousData
+  loadData(data) {
     return this.importData(this.lookupImporter(), data)
       .then(this.structureData.bind(this))
       .catch((err) => {

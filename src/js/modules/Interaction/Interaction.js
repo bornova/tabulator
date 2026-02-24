@@ -186,8 +186,8 @@ export default class Interaction extends Module {
         window.getSelection().removeAllRanges()
         window.getSelection().addRange(range)
       }
-    } catch (error) {
-      void error
+    } catch {
+      return
     }
   }
 

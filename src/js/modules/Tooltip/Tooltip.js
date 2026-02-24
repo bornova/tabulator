@@ -81,10 +81,7 @@ export default class Tooltip extends Module {
    * Handle mouseout for tooltip cancellation.
    * @returns {void}
    */
-  mouseoutCheck(_action, _e, _component) {
-    void _action
-    void _e
-    void _component
+  mouseoutCheck() {
     if (!this.popupInstance) {
       this.clearPopup()
     }
@@ -94,10 +91,7 @@ export default class Tooltip extends Module {
    * Clear pending tooltip timeout and hide active popup.
    * @returns {void}
    */
-  clearPopup(_action, _e, _component) {
-    void _action
-    void _e
-    void _component
+  clearPopup() {
     clearTimeout(this.timeout)
     this.timeout = null
 

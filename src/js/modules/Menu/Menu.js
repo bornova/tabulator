@@ -328,8 +328,7 @@ export default class Menu extends Module {
       menuEl.appendChild(itemEl)
     })
 
-    menuEl.addEventListener('click', (e) => {
-      void e
+    menuEl.addEventListener('click', () => {
       if (this.rootPopup) {
         this.rootPopup.hide()
       }

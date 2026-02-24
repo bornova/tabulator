@@ -3,11 +3,9 @@
  *
  * @param {Object} cell Cell component.
  * @param {{relativeToPage?: boolean}} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {HTMLSpanElement} Row number element.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const content = document.createElement('span')
   const row = cell.getRow()
   const table = cell.getTable()

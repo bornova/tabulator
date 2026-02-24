@@ -17,11 +17,9 @@ export default {
    * Validate integer values.
    * @param {object} cell Cell component.
    * @param {*} value Cell value.
-   * @param {*} parameters Validator params.
    * @returns {boolean}
    */
-  integer(cell, value, parameters) {
-    void parameters
+  integer(cell, value) {
     if (isEmptyValue(value)) {
       return true
     }
@@ -36,11 +34,9 @@ export default {
    * Validate floating-point values.
    * @param {object} cell Cell component.
    * @param {*} value Cell value.
-   * @param {*} parameters Validator params.
    * @returns {boolean}
    */
-  float(cell, value, parameters) {
-    void parameters
+  float(cell, value) {
     if (isEmptyValue(value)) {
       return true
     }
@@ -55,11 +51,9 @@ export default {
    * Validate numeric values.
    * @param {object} cell Cell component.
    * @param {*} value Cell value.
-   * @param {*} parameters Validator params.
    * @returns {boolean}
    */
-  numeric(cell, value, parameters) {
-    void parameters
+  numeric(cell, value) {
     if (isEmptyValue(value)) {
       return true
     }
@@ -72,11 +66,9 @@ export default {
    * Validate non-numeric/string-like values.
    * @param {object} cell Cell component.
    * @param {*} value Cell value.
-   * @param {*} parameters Validator params.
    * @returns {boolean}
    */
-  string(cell, value, parameters) {
-    void parameters
+  string(cell, value) {
     if (isEmptyValue(value)) {
       return true
     }
@@ -89,11 +81,9 @@ export default {
    * Validate alphanumeric values.
    * @param {object} cell Cell component.
    * @param {*} value Cell value.
-   * @param {*} parameters Validator params.
    * @returns {boolean}
    */
-  alphanumeric(cell, value, parameters) {
-    void parameters
+  alphanumeric(cell, value) {
     if (isEmptyValue(value)) {
       return true
     }
@@ -240,11 +230,9 @@ export default {
    * Validate value uniqueness within column.
    * @param {object} cell Cell component.
    * @param {*} value Cell value.
-   * @param {*} parameters Validator params.
    * @returns {boolean}
    */
-  unique(cell, value, parameters) {
-    void parameters
+  unique(cell, value) {
     if (isEmptyValue(value)) {
       return true
     }
@@ -268,11 +256,9 @@ export default {
    * Validate value is required and non-empty.
    * @param {object} cell Cell component.
    * @param {*} value Cell value.
-   * @param {*} parameters Validator params.
    * @returns {boolean}
    */
-  required(cell, value, parameters) {
-    void parameters
+  required(cell, value) {
     return !isEmptyValue(value)
   }
 }

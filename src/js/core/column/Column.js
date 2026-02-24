@@ -62,8 +62,7 @@ export default class Column extends CoreFeature {
     if (this.definition.columns) {
       this.isGroup = true
 
-      this.definition.columns.forEach((def, i) => {
-        void i
+      this.definition.columns.forEach((def) => {
         const newCol = new Column(def, this)
         this.attachColumn(newCol)
       })

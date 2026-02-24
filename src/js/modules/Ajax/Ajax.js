@@ -90,15 +90,9 @@ export default class Ajax extends Module {
   /**
    * Check if data load should be handled by ajax module.
    * @param {*} data Data source.
-   * @param {object} params Request params.
-   * @param {object} config Request config.
-   * @param {boolean} silent Silent flag.
    * @returns {boolean}
    */
-  requestDataCheck(data, params, config, silent) {
-    void params
-    void config
-    void silent
+  requestDataCheck(data) {
     return (!data && this.url) || typeof data === 'string'
   }
 

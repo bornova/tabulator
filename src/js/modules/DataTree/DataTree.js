@@ -374,8 +374,7 @@ export default class DataTree extends Module {
   getRows(rows) {
     const output = []
 
-    rows.forEach((row, i) => {
-      void i
+    rows.forEach((row) => {
       let config, children
 
       output.push(row)
@@ -478,11 +477,9 @@ export default class DataTree extends Module {
   /**
    * Expand a data-tree row.
    * @param {Row} row Internal row.
-   * @param {boolean} [silent] Unused legacy parameter.
    * @returns {void}
    */
-  expandRow(row, silent) {
-    void silent
+  expandRow(row) {
     const config = row.modules.dataTree
 
     if (config.children !== false) {

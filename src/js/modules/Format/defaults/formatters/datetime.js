@@ -4,11 +4,9 @@
  * @this {Object}
  * @param {Object} cell Cell component.
  * @param {{inputFormat?: string, outputFormat?: string, invalidPlaceholder?: *|function(*): *, timezone?: string}} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {*} Formatted datetime value.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const inputFormat = formatterParams.inputFormat || 'yyyy-MM-dd HH:mm:ss'
   const outputFormat = formatterParams.outputFormat || 'dd/MM/yyyy HH:mm:ss'

@@ -513,8 +513,7 @@ export default class Page extends Module {
         this.element.appendChild(pageSelectLabel)
         this.element.appendChild(this.pageSizeSelect)
 
-        this.pageSizeSelect.addEventListener('change', (e) => {
-          void e
+        this.pageSizeSelect.addEventListener('change', () => {
           this.setPageSize(this.pageSizeSelect.value === 'true' ? true : this.pageSizeSelect.value)
           this.setPage(1)
         })
@@ -817,8 +816,7 @@ export default class Page extends Module {
     button.setAttribute('data-page', page)
     button.textContent = page
 
-    button.addEventListener('click', (e) => {
-      void e
+    button.addEventListener('click', () => {
       this.setPage(page)
     })
 

@@ -21,9 +21,7 @@ export default class SelectRow extends Module {
     this.registerTableOption('selectableRowsRangeMode', 'drag') // highlight rows on hover
     this.registerTableOption('selectableRowsRollingSelection', true) // roll selection once maximum number of selectable rows is reached
     this.registerTableOption('selectableRowsPersistence', true) // maintain selection when table view is updated
-    this.registerTableOption('selectableRowsCheck', function (data, row) {
-      void data
-      void row
+    this.registerTableOption('selectableRowsCheck', function () {
       return true
     }) // check whether row is selectable
 

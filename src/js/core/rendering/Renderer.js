@@ -45,11 +45,9 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Reinitialize widths for the provided columns.
-   * @param {Array<object>} columns Internal column instances.
    * @returns {void}
    */
-  reinitializeColumnWidths(columns) {
-    void columns
+  reinitializeColumnWidths() {
     // resize columns to fit data
   }
 
@@ -81,59 +79,41 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Re-render columns.
-   * @param {boolean} [update] Whether this is an update pass.
-   * @param {boolean} [blockRedraw] Prevent dependent redraw steps when true.
    * @returns {void}
    */
-  rerenderColumns(update, blockRedraw) {
-    void update
-    void blockRedraw
+  rerenderColumns() {
     // rerender columns
   }
 
   /**
    * Render cells for a specific row.
-   * @param {object} row Internal row instance.
    * @returns {void}
    */
-  renderRowCells(row) {
-    void row
+  renderRowCells() {
     // render the cells in a row
   }
 
   /**
    * Re-render cells for a specific row.
-   * @param {object} row Internal row instance.
-   * @param {boolean} [force] Force reinitialization when true.
    * @returns {void}
    */
-  rerenderRowCells(row, force) {
-    void row
-    void force
+  rerenderRowCells() {
     // rerender the cells in a row
   }
 
   /**
    * Handle horizontal scroll updates.
-   * @param {number} left Scroll left position.
-   * @param {boolean} [dir] Scroll direction flag.
    * @returns {void}
    */
-  scrollColumns(left, dir) {
-    void left
-    void dir
+  scrollColumns() {
     // handle horizontal scrolling
   }
 
   /**
    * Handle vertical scroll updates.
-   * @param {number} top Scroll top position.
-   * @param {boolean} [dir] Scroll direction flag.
    * @returns {void}
    */
-  scrollRows(top, dir) {
-    void top
-    void dir
+  scrollRows() {
     // handle vertical scrolling
   }
 
@@ -147,31 +127,25 @@ export default class Renderer extends CoreFeature {
 
   /**
    * Scroll to a specific row.
-   * @param {object} row Internal row instance.
    * @returns {void}
    */
-  scrollToRow(row) {
-    void row
+  scrollToRow() {
     // scroll to a specific row
   }
 
   /**
    * Determine whether a row is closer to the top edge than the bottom edge.
-   * @param {object} row Internal row instance.
    * @returns {void}
    */
-  scrollToRowNearestTop(row) {
-    void row
+  scrollToRowNearestTop() {
     // determine weather the row is nearest the top or bottom of the table, return true for top or false for bottom
   }
 
   /**
    * Return rows currently visible in this renderer.
-   * @param {boolean} [includingBuffer] Include buffered rows when true.
    * @returns {Array<object>}
    */
-  visibleRows(includingBuffer) {
-    void includingBuffer
+  visibleRows() {
     // return the visible rows
     return []
   }

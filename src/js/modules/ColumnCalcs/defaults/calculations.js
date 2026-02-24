@@ -106,13 +106,9 @@ export default {
    * Concatenate values into a single string.
    *
    * @param {Array<*>} values Values to aggregate.
-   * @param {Array<Object>} data Row data.
-   * @param {Object} calcParams Calculation parameters.
    * @returns {string|number} Concatenated value.
    */
-  concat(values, data, calcParams) {
-    void data
-    void calcParams
+  concat(values) {
     let output = 0
 
     if (values.length) {
@@ -127,13 +123,9 @@ export default {
    * Count truthy values.
    *
    * @param {Array<*>} values Values to aggregate.
-   * @param {Array<Object>} data Row data.
-   * @param {Object} calcParams Calculation parameters.
    * @returns {number} Count of truthy values.
    */
-  count(values, data, calcParams) {
-    void data
-    void calcParams
+  count(values) {
     let output = 0
 
     if (values.length) {
@@ -150,13 +142,9 @@ export default {
    * Count unique values.
    *
    * @param {Array<*>} values Values to aggregate.
-   * @param {Array<Object>} data Row data.
-   * @param {Object} calcParams Calculation parameters.
    * @returns {number} Number of unique values.
    */
-  unique(values, data, calcParams) {
-    void data
-    void calcParams
+  unique(values) {
     const unique = values.filter((value, index) => {
       return (values || value === 0) && values.indexOf(value) === index
     })

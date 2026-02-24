@@ -257,8 +257,7 @@ export default class RowManager extends CoreFeature {
    * @returns {Promise<void>}
    */
   setData(data, renderInPosition, columnsChanged) {
-    return new Promise((resolve, reject) => {
-      void reject
+    return new Promise((resolve) => {
       if (renderInPosition && this.getDisplayRows().length) {
         if (this.table.options.pagination) {
           this._setDataActual(data, true)
@@ -294,8 +293,7 @@ export default class RowManager extends CoreFeature {
     if (Array.isArray(data)) {
       this.dispatch('data-processing', data)
 
-      data.forEach((def, i) => {
-        void i
+      data.forEach((def) => {
         if (def && typeof def === 'object') {
           const row = new Row(def, this)
           this.rows.push(row)
@@ -392,8 +390,7 @@ export default class RowManager extends CoreFeature {
   addRows(data, pos, index, refreshDisplayOnly) {
     const rows = []
 
-    return new Promise((resolve, reject) => {
-      void reject
+    return new Promise((resolve) => {
       pos = this.findAddRowPos(pos)
 
       if (!Array.isArray(data)) {
@@ -404,8 +401,7 @@ export default class RowManager extends CoreFeature {
         data.reverse()
       }
 
-      data.forEach((item, i) => {
-        void i
+      data.forEach((item) => {
         const row = this.addRow(item, pos, index, true)
         rows.push(row)
         this.dispatch('row-added', row, item, pos, index)

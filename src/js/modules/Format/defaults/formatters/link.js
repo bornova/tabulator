@@ -6,11 +6,9 @@ import Helpers from '../../../../core/tools/Helpers.js'
  * @this {Object}
  * @param {Object} cell Cell component.
  * @param {Object} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {HTMLAnchorElement|string} Anchor element or non-breaking space.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   let value = cell.getValue()
   const urlPrefix = formatterParams.urlPrefix || ''
   let download = formatterParams.download

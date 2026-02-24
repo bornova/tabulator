@@ -53,11 +53,9 @@ export default class Validate extends Module {
    * Validate edited cell value.
    * @param {object} cell Internal cell.
    * @param {*} value New value.
-   * @param {*} previousValue Previous value.
    * @returns {boolean|Array<object>}
    */
-  editValidate(cell, value, previousValue) {
-    void previousValue
+  editValidate(cell, value) {
     const valid =
       this.table.options.validationMode !== 'manual' ? this.validate(cell.column.modules.validate, cell, value) : true
 
@@ -188,11 +186,9 @@ export default class Validate extends Module {
 
   /**
    * Validate all rows in the table.
-   * @param {*} cells Unused parameter kept for API compatibility.
    * @returns {true|Array<object>}
    */
-  userValidate(cells) {
-    void cells
+  userValidate() {
     let output = []
 
     // clear row data

@@ -94,11 +94,9 @@ export default class Edit extends Module {
 
   /**
    * Block clipboard paste while a cell is actively editing.
-   * @param {ClipboardEvent} e Paste event.
    * @returns {boolean|undefined}
    */
-  pasteBlocker(e) {
-    void e
+  pasteBlocker() {
     if (this.currentCell) {
       return true
     }

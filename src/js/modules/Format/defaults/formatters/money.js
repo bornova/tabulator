@@ -4,11 +4,9 @@
  * @this {Object}
  * @param {Object} cell Cell component.
  * @param {Object} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {string} Formatted currency value.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   let floatVal = parseFloat(cell.getValue())
   let sign = ''
 

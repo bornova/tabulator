@@ -26,10 +26,8 @@ class TabulatorFull extends Tabulator {
   /**
    * @param {HTMLElement|string} element Target element or selector.
    * @param {object} options Table options.
-   * @param {Array<Function>} [modules] Ignored in full build.
    */
-  constructor(element, options, modules) {
-    void modules
+  constructor(element, options) {
     super(element, options, allModules)
   }
 }

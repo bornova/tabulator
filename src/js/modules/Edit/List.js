@@ -286,8 +286,7 @@ export default class Edit {
     }
   }
 
-  _inputFocus(e) {
-    void e
+  _inputFocus() {
     this.rebuildOptionsList()
   }
 
@@ -307,8 +306,7 @@ export default class Edit {
     e.stopPropagation()
   }
 
-  _inputBlur(e) {
-    void e
+  _inputBlur() {
     if (this.blurable) {
       if (this.popup) {
         this.popup.hide()
@@ -398,8 +396,7 @@ export default class Edit {
   /// ///// Keyboard Navigation /////////
   /// ///////////////////////////////////
 
-  _keyTab(e) {
-    void e
+  _keyTab() {
     if (this.params.autocomplete && this.lastAction === 'typing') {
       this._resolveValue(true)
     } else {
@@ -477,8 +474,7 @@ export default class Edit {
     }
   }
 
-  _keyEnter(e) {
-    void e
+  _keyEnter() {
     if (this.params.autocomplete && this.lastAction === 'typing') {
       this._resolveValue(true)
     } else {
@@ -488,8 +484,7 @@ export default class Edit {
     }
   }
 
-  _keyEsc(e) {
-    void e
+  _keyEsc() {
     this._cancel()
   }
 
@@ -512,8 +507,7 @@ export default class Edit {
     }
   }
 
-  _keyAutoCompLetter(e) {
-    void e
+  _keyAutoCompLetter() {
     this._filter()
     this.lastAction = 'typing'
     this.typing = true
@@ -905,8 +899,7 @@ export default class Edit {
     return item.visible
   }
 
-  _defaultFilterFunc(term, label, value, item) {
-    void item
+  _defaultFilterFunc(term, label, value) {
     term = String(term).toLowerCase()
 
     if (label !== null && label !== undefined) {

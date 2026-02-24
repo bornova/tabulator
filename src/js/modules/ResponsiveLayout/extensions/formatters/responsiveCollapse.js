@@ -2,13 +2,9 @@
  * Render a responsive collapse toggle control.
  *
  * @param {Object} cell Cell component.
- * @param {Object} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {HTMLDivElement} Toggle element.
  */
-export default function (cell, formatterParams, onRendered) {
-  void formatterParams
-  void onRendered
+export default function (cell) {
   const el = document.createElement('div')
   const config = cell.getRow()._row.modules.responsiveLayout
   const table = cell.getTable()

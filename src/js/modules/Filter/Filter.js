@@ -118,11 +118,9 @@ export default class Filter extends Module {
 
   /**
    * Generate header filter placeholder text.
-   * @param {string} text Default placeholder text.
    * @returns {string|undefined}
    */
-  generatePlaceholder(_text) {
-    void _text
+  generatePlaceholder() {
     if (this.table.options.placeholderHeaderFilter && Object.keys(this.headerFilters).length) {
       return this.table.options.placeholderHeaderFilter
     }
@@ -1065,11 +1063,9 @@ export default class Filter extends Module {
   /**
    * Filter row list using active standard and header filters.
    * @param {Array<object>} rowList Candidate row list.
-   * @param {*} filters Unused legacy arg.
    * @returns {Array<object>}
    */
-  filter(rowList, _filters) {
-    void _filters
+  filter(rowList) {
     let activeRows = []
     const activeRowComponents = []
 
@@ -1105,11 +1101,9 @@ export default class Filter extends Module {
   /**
    * Check whether a single row matches active filters.
    * @param {object} row Internal row.
-   * @param {*} filters Unused legacy arg.
    * @returns {boolean}
    */
-  filterRow(row, _filters) {
-    void _filters
+  filterRow(row) {
     let match = true
     const data = row.getData()
 

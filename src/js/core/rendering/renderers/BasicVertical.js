@@ -119,11 +119,9 @@ export default class BasicVertical extends Renderer {
 
   /**
    * Return rows currently considered visible.
-   * @param {boolean} [includingBuffer] Included for renderer API compatibility.
    * @returns {Array<object>}
    */
-  visibleRows(includingBuffer) {
-    void includingBuffer
+  visibleRows() {
     return this.rows()
   }
 }

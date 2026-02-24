@@ -88,24 +88,18 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Handle row cell rendering trigger after data changes.
-   * @param {object} row Internal row instance.
-   * @param {boolean} [force] Force flag, unused in this renderer.
    * @returns {void}
    */
-  renderColumns(row, force) {
-    void row
-    void force
+  renderColumns() {
     this.dataChange()
   }
 
   /**
    * Handle horizontal scroll updates.
    * @param {number} left Horizontal scroll position.
-   * @param {boolean} [dir] Scroll direction flag.
    * @returns {void}
    */
-  scrollColumns(left, dir) {
-    void dir
+  scrollColumns(left) {
     if (this.scrollLeft !== left) {
       this.scrollLeft = left
 
@@ -249,11 +243,9 @@ export default class VirtualDomHorizontal extends Renderer {
 
   /**
    * Reinitialize widths for currently visible columns.
-   * @param {Array<object>} columns Column list (unused, renderer API compatibility).
    * @returns {void}
    */
-  reinitializeColumnWidths(columns) {
-    void columns
+  reinitializeColumnWidths() {
     for (let i = this.leftCol; i <= this.rightCol; i++) {
       const col = this.columns[i]
 

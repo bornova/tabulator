@@ -3,11 +3,9 @@
  *
  * @param {Object} cell Cell component.
  * @param {{urlPrefix?: string, urlSuffix?: string, height?: string|number, width?: string|number}} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {HTMLImageElement} Image element.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const el = document.createElement('img')
   let src = cell.getValue()
 

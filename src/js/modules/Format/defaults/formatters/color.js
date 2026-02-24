@@ -3,13 +3,9 @@
  *
  * @this {Object}
  * @param {Object} cell Cell component.
- * @param {Object} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {string} Empty string.
  */
-export default function (cell, formatterParams, onRendered) {
-  void formatterParams
-  void onRendered
+export default function (cell) {
   const element = cell.getElement()
   const color = this.sanitizeHTML(cell.getValue())
 

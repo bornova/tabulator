@@ -2,10 +2,10 @@
  * Default row move receiver actions.
  *
  * @type {{
- *   insert: function(Object, Object, Object): boolean,
- *   add: function(Object, Object, Object): boolean,
- *   update: function(Object, Object, Object): boolean,
- *   replace: function(Object, Object, Object): boolean
+ *   insert: function(Object, Object): boolean,
+ *   add: function(Object): boolean,
+ *   update: function(Object, Object): boolean,
+ *   replace: function(Object, Object): boolean
  * }}
  */
 export default {
@@ -15,11 +15,9 @@ export default {
    * @this {Object}
    * @param {Object} fromRow Source row.
    * @param {Object} toRow Target row.
-   * @param {Object} fromTable Source table.
    * @returns {boolean} True when action succeeds.
    */
-  insert(fromRow, toRow, fromTable) {
-    void fromTable
+  insert(fromRow, toRow) {
     this.table.addRow(fromRow.getData(), undefined, toRow)
 
     return true
@@ -30,13 +28,9 @@ export default {
    *
    * @this {Object}
    * @param {Object} fromRow Source row.
-   * @param {Object} toRow Target row.
-   * @param {Object} fromTable Source table.
    * @returns {boolean} True when action succeeds.
    */
-  add(fromRow, toRow, fromTable) {
-    void toRow
-    void fromTable
+  add(fromRow) {
     this.table.addRow(fromRow.getData())
 
     return true
@@ -47,11 +41,9 @@ export default {
    *
    * @param {Object} fromRow Source row.
    * @param {Object} toRow Target row.
-   * @param {Object} fromTable Source table.
    * @returns {boolean} True when update succeeds.
    */
-  update(fromRow, toRow, fromTable) {
-    void fromTable
+  update(fromRow, toRow) {
     if (!toRow) {
       return false
     }
@@ -67,11 +59,9 @@ export default {
    * @this {Object}
    * @param {Object} fromRow Source row.
    * @param {Object} toRow Target row.
-   * @param {Object} fromTable Source table.
    * @returns {boolean} True when replace succeeds.
    */
-  replace(fromRow, toRow, fromTable) {
-    void fromTable
+  replace(fromRow, toRow) {
     if (!toRow) {
       return false
     }

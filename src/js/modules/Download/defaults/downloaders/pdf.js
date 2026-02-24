@@ -101,8 +101,7 @@ export default function (list, options = {}, setFileContents) {
   }
 
   if (title) {
-    autoTableParams.didDrawPage = function (data) {
-      void data
+    autoTableParams.didDrawPage = function () {
       doc.text(title, 40, 30)
     }
   }

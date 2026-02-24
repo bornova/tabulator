@@ -6,11 +6,9 @@
  * @param {number} currentRow First row index in the current page.
  * @param {number} currentPage Current page number.
  * @param {number} totalRows Total row count.
- * @param {number} totalPages Total page count.
  * @returns {HTMLElement} Counter element.
  */
-export default function (pageSize, currentRow, currentPage, totalRows, totalPages) {
-  void totalPages
+export default function (pageSize, currentRow, currentPage, totalRows) {
   const el = document.createElement('span')
   const showingEl = document.createElement('span')
   const valueEl = document.createElement('span')

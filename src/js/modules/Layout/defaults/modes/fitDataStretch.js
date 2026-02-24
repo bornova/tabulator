@@ -4,11 +4,9 @@
  *
  * @this {Object}
  * @param {Array<Object>} columns Columns to resize.
- * @param {boolean} forced Force recalculation.
  * @returns {void}
  */
-export default function (columns, forced) {
-  void forced
+export default function (columns) {
   const table = this.table
   const hasResponsiveLayout = table.options.responsiveLayout && table.modExists('responsiveLayout', true)
   let colsWidth = 0

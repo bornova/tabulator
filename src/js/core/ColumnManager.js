@@ -312,8 +312,7 @@ export default class ColumnManager extends CoreFeature {
     return sorter
   }
 
-  setColumns(cols, row) {
-    void row
+  setColumns(cols) {
     this.headersElement.replaceChildren()
 
     this.columns = []
@@ -330,8 +329,7 @@ export default class ColumnManager extends CoreFeature {
       this.rowHeader.columnRendered()
     }
 
-    cols.forEach((def, i) => {
-      void i
+    cols.forEach((def) => {
       this._addColumn(def)
     })
 
@@ -721,8 +719,7 @@ export default class ColumnManager extends CoreFeature {
   }
 
   addColumn(definition, before, nextToColumn) {
-    return new Promise((resolve, reject) => {
-      void reject
+    return new Promise((resolve) => {
       const column = this._addColumn(definition, before, nextToColumn)
 
       this._reIndexColumns()

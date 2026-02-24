@@ -3,11 +3,9 @@
  *
  * @param {Object} cell Cell component.
  * @param {{stars?: number}} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {HTMLSpanElement} Star container element.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const value = cell.getValue()
   const element = cell.getElement()
   const maxStars = formatterParams && formatterParams.stars ? formatterParams.stars : 5

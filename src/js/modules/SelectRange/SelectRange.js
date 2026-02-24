@@ -288,8 +288,7 @@ export default class SelectRange extends Module {
    * Handle global mouseup for drag selection.
    * @returns {void}
    */
-  _handleMouseUp(_e) {
-    void _e
+  _handleMouseUp() {
     this.mousedown = false
     document.removeEventListener('mouseup', this.mouseUpEvent)
   }
@@ -346,8 +345,8 @@ export default class SelectRange extends Module {
         window.getSelection().removeAllRanges()
         window.getSelection().addRange(range)
       }
-    } catch (_error) {
-      void _error
+    } catch {
+      return
     }
   }
 
@@ -396,11 +395,10 @@ export default class SelectRange extends Module {
 
   /**
    * Start column move handling while maintaining range state.
-   * @param {Event} _event Trigger event.
    * @param {object} column Internal column.
    * @returns {void}
    */
-  handleColumnMoving(_event, column) {
+  handleColumnMoving(column) {
     this.resetRanges().setBounds(column)
     this.overlay.style.visibility = 'hidden'
   }
@@ -408,13 +406,9 @@ export default class SelectRange extends Module {
   /**
    * Finalize column move range bounds.
    * @param {object} from Source column after move.
-   * @param {object} _to Destination column before move.
-   * @param {boolean} _after Destination placement flag.
    * @returns {void}
    */
-  handleColumnMoved(from, _to, _after) {
-    void _to
-    void _after
+  handleColumnMoved(from) {
     this.activeRange.setBounds(from)
     this.layoutElement()
   }

@@ -3,11 +3,9 @@
  *
  * @param {Object} cell Cell component.
  * @param {Object} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {string} Tick, cross, or empty content.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const value = cell.getValue()
   const element = cell.getElement()
   const empty = formatterParams.allowEmpty

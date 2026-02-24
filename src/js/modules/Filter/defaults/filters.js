@@ -10,13 +10,9 @@ export default {
    *
    * @param {*} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if values are equal.
    */
-  '='(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  '='(filterVal, rowVal) {
     return rowVal == filterVal
   },
 
@@ -26,13 +22,9 @@ export default {
    *
    * @param {*} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value is less than filter value.
    */
-  '<'(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  '<'(filterVal, rowVal) {
     return rowVal < filterVal
   },
 
@@ -42,13 +34,9 @@ export default {
    *
    * @param {*} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value is less than or equal to filter value.
    */
-  '<='(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  '<='(filterVal, rowVal) {
     return rowVal <= filterVal
   },
 
@@ -58,13 +46,9 @@ export default {
    *
    * @param {*} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value is greater than filter value.
    */
-  '>'(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  '>'(filterVal, rowVal) {
     return rowVal > filterVal
   },
 
@@ -74,13 +58,9 @@ export default {
    *
    * @param {*} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value is greater than or equal to filter value.
    */
-  '>='(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  '>='(filterVal, rowVal) {
     return rowVal >= filterVal
   },
 
@@ -90,13 +70,9 @@ export default {
    *
    * @param {*} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if values are not equal.
    */
-  '!='(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  '!='(filterVal, rowVal) {
     return rowVal != filterVal
   },
 
@@ -105,13 +81,9 @@ export default {
    *
    * @param {RegExp|string} filterVal Regex or regex string.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if regex matches row value.
    */
-  regex(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  regex(filterVal, rowVal) {
     if (typeof filterVal === 'string') {
       filterVal = new RegExp(filterVal)
     }
@@ -125,13 +97,9 @@ export default {
    *
    * @param {string|null|undefined} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value contains filter text.
    */
-  like(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  like(filterVal, rowVal) {
     if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
     }
@@ -173,13 +141,9 @@ export default {
    *
    * @param {string|null|undefined} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value starts with filter text.
    */
-  starts(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  starts(filterVal, rowVal) {
     if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
     }
@@ -197,13 +161,9 @@ export default {
    *
    * @param {string|null|undefined} filterVal Filter value.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value ends with filter text.
    */
-  ends(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  ends(filterVal, rowVal) {
     if (filterVal === null || filterVal === undefined) {
       return rowVal === filterVal
     }
@@ -221,13 +181,9 @@ export default {
    *
    * @param {Array<*>} filterVal Filter values.
    * @param {*} rowVal Row value.
-   * @param {Object} rowData Row data.
-   * @param {Object} filterParams Filter parameters.
    * @returns {boolean} True if row value is in filter array.
    */
-  in(filterVal, rowVal, rowData, filterParams) {
-    void rowData
-    void filterParams
+  in(filterVal, rowVal) {
     if (Array.isArray(filterVal)) {
       return filterVal.length ? filterVal.includes(rowVal) : true
     }

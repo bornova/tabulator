@@ -6,11 +6,9 @@ import Helpers from '../../../../core/tools/Helpers.js'
  * @this {Object}
  * @param {Object} cell Cell component.
  * @param {{delimiter?: string, valueMap?: string|function(Array<*>): Array<*>}} formatterParams Formatter parameters.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {*} Formatted value.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const delimiter = formatterParams.delimiter ?? ','
   let value = cell.getValue()
   const table = this.table

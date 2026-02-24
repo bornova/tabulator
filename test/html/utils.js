@@ -39,7 +39,6 @@ const createRow = (id) => {
     rating: faker.number.int({ min: 1, max: 5 }),
     col: faker.color.human(),
     dob: formatDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' })),
-    car: faker.vehicle.vehicle(),
     address: faker.location.streetAddress(),
     state: faker.location.state(),
     country: faker.location.country(),

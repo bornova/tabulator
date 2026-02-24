@@ -4,11 +4,9 @@
  *
  * @this {Object}
  * @param {Array<Object>} columns Columns to resize.
- * @param {boolean} forced Force recalculation.
  * @returns {void}
  */
-export default function (columns, forced) {
-  void forced
+export default function (columns) {
   let totalWidth = this.table.rowManager.element.getBoundingClientRect().width // table element width
   let fixedWidth = 0 // total width of columns with a defined width
   let flexWidth = 0 // total width available to flexible columns

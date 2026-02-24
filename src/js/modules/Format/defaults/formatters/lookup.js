@@ -3,11 +3,9 @@
  *
  * @param {Object} cell Cell component.
  * @param {Object<string, *>} formatterParams Lookup map.
- * @param {function(function): void} onRendered Render callback registrar.
  * @returns {*} Lookup result.
  */
-export default function (cell, formatterParams, onRendered) {
-  void onRendered
+export default function (cell, formatterParams) {
   const value = cell.getValue()
 
   if (typeof formatterParams[value] === 'undefined') {

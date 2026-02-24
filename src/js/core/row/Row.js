@@ -171,11 +171,9 @@ export default class Row extends CoreFeature {
 
   /**
    * Reinitialize row layout state.
-   * @param {boolean} [children] Unused legacy parameter.
    * @returns {void}
    */
-  reinitialize(children) {
-    void children
+  reinitialize() {
     this.initialized = false
     this.heightInitialized = false
 
@@ -357,8 +355,7 @@ export default class Row extends CoreFeature {
     let newRowData
     let component
 
-    return new Promise((resolve, reject) => {
-      void reject
+    return new Promise((resolve) => {
       if (typeof updatedData === 'string') {
         updatedData = JSON.parse(updatedData)
       }

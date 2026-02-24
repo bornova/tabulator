@@ -327,8 +327,7 @@ export default class Export extends Module {
       return true
     })
 
-    rows.forEach((row, i) => {
-      void i
+    rows.forEach((row) => {
       const rowData = row.getData(this.colVisProp)
       const exportCols = []
       let indent = 0
@@ -406,7 +405,7 @@ export default class Export extends Module {
 
       switch (row.type) {
         case 'header':
-          headerEl.appendChild(this.generateHeaderElement(row, setup, styles))
+          headerEl.appendChild(this.generateHeaderElement(row))
           break
 
         case 'group':
@@ -477,13 +476,9 @@ export default class Export extends Module {
   /**
    * Generate an exported table header row element.
    * @param {ExportRow} row Export row.
-   * @param {object} setup Export setup options.
-   * @param {object} styles Style lookup cache.
    * @returns {HTMLTableRowElement}
    */
-  generateHeaderElement(row, setup, styles) {
-    void setup
-    void styles
+  generateHeaderElement(row) {
     const rowEl = document.createElement('tr')
 
     row.columns.forEach((column) => {
