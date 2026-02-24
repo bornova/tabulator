@@ -15,7 +15,10 @@ import datetime from './datetime.js'
  * @returns {number} Sort result.
  */
 export default function (a, b, aRow, bRow, column, dir, params) {
-  params.format = params.format || 'dd/MM/yyyy'
+  const sorterParams = {
+    ...(params || {}),
+    format: (params && params.format) || 'dd/MM/yyyy'
+  }
 
-  return datetime.call(this, a, b, aRow, bRow, column, dir, params)
+  return datetime.call(this, a, b, aRow, bRow, column, dir, sorterParams)
 }

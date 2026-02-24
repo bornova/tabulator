@@ -175,50 +175,47 @@ export default class InternalEventBus {
    * Dispatch with optional debug logging.
    * @returns {void}
    */
-  _debugDispatch() {
-    const args = Array.from(arguments)
+  _debugDispatch(...args) {
     const key = args[0]
 
     args[0] = 'InternalEvent:' + key
 
-    if (this.debug === true || this.debug.includes(key)) {
+    if (this.debug === true || (Array.isArray(this.debug) && this.debug.includes(key))) {
       console.log(...args)
     }
 
-    return this._dispatch(...arguments)
+    return this._dispatch(...args)
   }
 
   /**
    * Chain-dispatch with optional debug logging.
    * @returns {*}
    */
-  _debugChain() {
-    const args = Array.from(arguments)
+  _debugChain(...args) {
     const key = args[0]
 
     args[0] = 'InternalEvent:' + key
 
-    if (this.debug === true || this.debug.includes(key)) {
+    if (this.debug === true || (Array.isArray(this.debug) && this.debug.includes(key))) {
       console.log(...args)
     }
 
-    return this._chain(...arguments)
+    return this._chain(...args)
   }
 
   /**
    * Confirm-dispatch with optional debug logging.
    * @returns {boolean}
    */
-  _debugConfirm() {
-    const args = Array.from(arguments)
+  _debugConfirm(...args) {
     const key = args[0]
 
     args[0] = 'InternalEvent:' + key
 
-    if (this.debug === true || this.debug.includes(key)) {
+    if (this.debug === true || (Array.isArray(this.debug) && this.debug.includes(key))) {
       console.log(...args)
     }
 
-    return this._confirm(...arguments)
+    return this._confirm(...args)
   }
 }

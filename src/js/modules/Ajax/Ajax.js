@@ -194,7 +194,7 @@ export default class Ajax extends Module {
         return data
       })
     } else {
-      return Promise.reject()
+      return Promise.reject(new Error('Ajax request was cancelled by ajaxRequesting callback'))
     }
   }
 }

@@ -7,6 +7,8 @@
  * @returns {*} Formatted datetime value.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const inputFormat = formatterParams.inputFormat || 'yyyy-MM-dd HH:mm:ss'
   const outputFormat = formatterParams.outputFormat || 'dd/MM/yyyy HH:mm:ss'

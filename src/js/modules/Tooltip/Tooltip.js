@@ -30,6 +30,7 @@ export default class Tooltip extends Module {
     this.deprecatedOptionsCheck()
 
     this.subscribe('column-init', this.initializeColumn.bind(this))
+    this.subscribe('table-destroy', this.clearPopup.bind(this))
   }
 
   /**

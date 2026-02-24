@@ -28,9 +28,11 @@ export default {
    * @returns {void}
    */
   rowAdd(action) {
+    const rowManager = this.table.rowManager
+
     action.component.deleteActual()
 
-    this.table.rowManager.checkPlaceholder()
+    rowManager.checkPlaceholder()
   },
 
   /**

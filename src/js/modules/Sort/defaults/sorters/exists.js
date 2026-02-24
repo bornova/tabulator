@@ -7,7 +7,7 @@
  * @returns {number} Sort result.
  */
 export default function (a, b) {
-  const toSortValue = (value) => (typeof value === 'undefined' ? 0 : 1)
+  const toSortValue = (value) => (value == null ? 0 : 1)
 
   const el1 = toSortValue(a)
   const el2 = toSortValue(b)

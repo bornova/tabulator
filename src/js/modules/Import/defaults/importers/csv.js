@@ -5,6 +5,10 @@
  * @returns {Array<Array<string>>} Parsed CSV rows.
  */
 export default function (input) {
+  if (typeof input !== 'string') {
+    return []
+  }
+
   const data = []
   let row = 0
   let col = 0

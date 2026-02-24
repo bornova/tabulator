@@ -14,6 +14,7 @@ export default class FrozenColumns extends Module {
     this.initializationMode = 'left'
     this.active = false
     this.blocked = true
+    this.rightMargin = '0px'
 
     this.registerColumnOption('frozen')
   }
@@ -28,6 +29,7 @@ export default class FrozenColumns extends Module {
     this.leftColumns = []
     this.rightColumns = []
     this.active = false
+    this.rightMargin = '0px'
   }
 
   /**
@@ -260,6 +262,8 @@ export default class FrozenColumns extends Module {
         })
       }
     })
+
+    this.rightMargin = `${rightMargin}px`
   }
 
   /**

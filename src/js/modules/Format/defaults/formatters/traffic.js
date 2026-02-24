@@ -7,12 +7,13 @@
  * @returns {HTMLElement|undefined} Indicator element.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   const value = this.sanitizeHTML(cell.getValue()) || 0
   const el = document.createElement('span')
-  const max = formatterParams && formatterParams.max ? formatterParams.max : 100
-  const min = formatterParams && formatterParams.min ? formatterParams.min : 0
-  const colors =
-    formatterParams && typeof formatterParams.color !== 'undefined' ? formatterParams.color : ['red', 'orange', 'green']
+  const max = formatterParams.max ?? 100
+  const min = formatterParams.min ?? 0
+  const colors = typeof formatterParams.color !== 'undefined' ? formatterParams.color : ['red', 'orange', 'green']
   let color = '#666666'
   let percentValue
 

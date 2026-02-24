@@ -169,7 +169,7 @@ export default class ColumnComponent {
     if (toColumn) {
       this._column.table.columnManager.moveColumn(this._column, toColumn, after)
     } else {
-      console.warn('Move Error - No matching column found:', toColumn)
+      console.warn('Move Error - No matching column found:', to)
     }
   }
 

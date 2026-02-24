@@ -42,6 +42,12 @@ export default function (cell, onRendered, success, cancel, params) {
     : undefined
 
   const editorFunc = this.table.modules.edit.lookupEditor(lookup, column)
+  const fallbackEditorFunc = this.table.modules.edit.lookupEditor('input', column)
+
+  if (typeof editorFunc !== 'function') {
+    console.warn('Adaptable Editor Error - Unable to resolve editor, falling back to input:', lookup)
+    return fallbackEditorFunc.call(this, cell, onRendered, success, cancel, editorParams || {})
+  }
 
   return editorFunc.call(this, cell, onRendered, success, cancel, editorParams || {})
 }

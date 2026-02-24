@@ -272,6 +272,10 @@ export default class Validate extends Module {
         return this._buildValidator(value)
 
       case 'object':
+        if (!value) {
+          return false
+        }
+
         return this._buildValidator(value.type, value.parameters)
     }
   }

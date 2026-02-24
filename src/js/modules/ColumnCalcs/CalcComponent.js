@@ -12,7 +12,7 @@ export default class CalcComponent {
           return Reflect.get(target, name, receiver)
         }
 
-        if (typeof target[name] !== 'undefined') {
+        if (name in target) {
           return target[name]
         }
 

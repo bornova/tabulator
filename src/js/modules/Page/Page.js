@@ -364,7 +364,7 @@ export default class Page extends Module {
 
     if (this.pageSizeSelect) {
       if (Array.isArray(this.table.options.paginationSizeSelector)) {
-        pageSizes = this.table.options.paginationSizeSelector
+        pageSizes = this.table.options.paginationSizeSelector.slice()
         this.pageSizes = pageSizes
 
         if (this.pageSizes.indexOf(this.size) === -1) {

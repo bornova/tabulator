@@ -315,7 +315,7 @@ export default class Row extends CoreFeature {
    * @returns {number}
    */
   getWidth() {
-    return this.element.offsetWidth
+    return this.getElement().offsetWidth
   }
 
   /// ///////////// Cell Management /////////////////

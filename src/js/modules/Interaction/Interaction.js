@@ -151,6 +151,9 @@ export default class Interaction extends Module {
    */
   clearTouchWatchers() {
     Object.values(this.touchWatchers).forEach((watchers) => {
+      clearTimeout(watchers.tapDbl)
+      clearTimeout(watchers.tapHold)
+
       Object.keys(watchers).forEach((key) => {
         watchers[key] = null
       })

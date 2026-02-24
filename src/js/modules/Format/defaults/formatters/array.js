@@ -9,6 +9,8 @@ import Helpers from '../../../../core/tools/Helpers.js'
  * @returns {*} Formatted value.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   const delimiter = formatterParams.delimiter ?? ','
   let value = cell.getValue()
   const table = this.table

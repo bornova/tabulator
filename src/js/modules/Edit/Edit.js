@@ -97,9 +97,7 @@ export default class Edit extends Module {
    * @returns {boolean|undefined}
    */
   pasteBlocker() {
-    if (this.currentCell) {
-      return true
-    }
+    return !!this.currentCell
   }
 
   /// ////////////////////////////////

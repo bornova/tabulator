@@ -8,6 +8,9 @@
 export default function (cell) {
   const element = cell.getElement()
 
-  element.style.whiteSpace = 'pre-wrap'
+  if (element.style.whiteSpace !== 'pre-wrap') {
+    element.style.whiteSpace = 'pre-wrap'
+  }
+
   return this.emptyToSpace(this.sanitizeHTML(cell.getValue()))
 }

@@ -12,7 +12,7 @@ function generateParamsList(data, prefix = '') {
     data.forEach((item, i) => {
       output = output.concat(generateParamsList(item, prefix ? `${prefix}[${i}]` : i))
     })
-  } else if (typeof data === 'object') {
+  } else if (data !== null && typeof data === 'object') {
     for (const key in data) {
       output = output.concat(generateParamsList(data[key], prefix ? `${prefix}[${key}]` : key))
     }

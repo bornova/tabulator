@@ -29,7 +29,7 @@ import adaptable from './editors/adaptable.js'
  *   adaptable: function(Object, function, function, function, Object): HTMLElement
  * }}
  */
-export default {
+const defaultEditors = {
   input,
   textarea,
   number,
@@ -43,3 +43,5 @@ export default {
   tickCross,
   adaptable
 }
+
+export default defaultEditors

@@ -114,7 +114,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // ensure value does not exceed number of stars
-  value = Math.min(Number.parseInt(value, 10), maxStars)
+  value = Number.parseInt(value, 10)
+  value = Number.isNaN(value) ? 0 : value
+  value = Math.max(0, Math.min(value, maxStars))
 
   // set initial styling of stars
   starChange(value)

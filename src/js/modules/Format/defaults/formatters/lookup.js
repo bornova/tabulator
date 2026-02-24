@@ -6,9 +6,11 @@
  * @returns {*} Lookup result.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   const value = cell.getValue()
 
-  if (typeof formatterParams[value] === 'undefined') {
+  if (!Object.prototype.hasOwnProperty.call(formatterParams, value)) {
     console.warn(`Missing display value for ${value}`)
     return value
   }

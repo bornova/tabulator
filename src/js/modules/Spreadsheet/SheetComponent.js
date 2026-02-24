@@ -8,6 +8,10 @@ export default class SheetComponent {
 
     return new Proxy(this, {
       get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
+
         if (Reflect.has(target, name)) {
           return Reflect.get(target, name, receiver)
         }

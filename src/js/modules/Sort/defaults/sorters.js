@@ -12,15 +12,15 @@ import alphanum from './sorters/alphanum.js'
  * Default sorter implementations.
  *
  * @type {{
- *   number: function(*, *, Object, Object, Object, string, Object): number,
- *   string: function(*, *, Object, Object, Object, string, Object): number,
- *   date: function(*, *, Object, Object, Object, string, Object): number,
- *   time: function(*, *, Object, Object, Object, string, Object): number,
- *   datetime: function(*, *, Object, Object, Object, string, Object): number,
- *   boolean: function(*, *, Object, Object, Object, string, Object): number,
- *   array: function(*, *, Object, Object, Object, string, Object): number,
- *   exists: function(*, *, Object, Object, Object, string, Object): number,
- *   alphanum: function(*, *, Object, Object, Object, string, Object): number
+ *   number: function(*, *, object, object, object, string, object): number,
+ *   string: function(*, *, object, object, object, string, object): number,
+ *   date: function(*, *, object, object, object, string, object): number,
+ *   time: function(*, *, object, object, object, string, object): number,
+ *   datetime: function(*, *, object, object, object, string, object): number,
+ *   boolean: function(*, *, object, object, object, string, object): number,
+ *   array: function(*, *, object, object, object, string, object): number,
+ *   exists: function(*, *, object, object, object, string, object): number,
+ *   alphanum: function(*, *, object, object, object, string, object): number
  * }}
  */
 export default {

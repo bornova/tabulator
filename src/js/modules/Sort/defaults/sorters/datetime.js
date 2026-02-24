@@ -13,6 +13,8 @@
  * @returns {number} Sort result.
  */
 export default function (a, b, aRow, bRow, column, dir, params) {
+  params = params || {}
+
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const format = params.format || 'dd/MM/yyyy HH:mm:ss'
   const alignEmptyValues = params.alignEmptyValues

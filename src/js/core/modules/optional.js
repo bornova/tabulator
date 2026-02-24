@@ -1,6 +1,9 @@
 /**
  * Optional module export bundle.
  *
+ * Note: some optional modules can rely on external runtime dependencies,
+ * so import only the modules needed by your bundle.
+ *
  * @module core/modules/optional
  */
 export { default as AccessorModule } from '../../modules/Accessor/Accessor.js'

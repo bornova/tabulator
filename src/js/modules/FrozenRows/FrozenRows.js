@@ -137,17 +137,13 @@ export default class FrozenRows extends Module {
    * @returns {Array<object>}
    */
   getRows(rows) {
-    const output = rows.slice(0)
+    if (!this.rows.length) {
+      return rows.slice(0)
+    }
 
-    this.rows.forEach((row) => {
-      const index = output.indexOf(row)
+    const frozenRows = new Set(this.rows)
 
-      if (index > -1) {
-        output.splice(index, 1)
-      }
-    })
-
-    return output
+    return rows.filter((row) => !frozenRows.has(row))
   }
 
   /**

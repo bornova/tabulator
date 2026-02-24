@@ -101,7 +101,7 @@ export default class ModuleBinder extends TableRegistry {
     if (mod.moduleName) {
       ModuleBinder.moduleBindings[mod.moduleName] = mod
     } else {
-      console.error('Unable to bind module, no moduleName defined', mod.moduleName)
+      console.error('Unable to bind module, no moduleName defined', mod)
     }
   }
 

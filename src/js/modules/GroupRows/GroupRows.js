@@ -229,7 +229,13 @@ export default class GroupRows extends Module {
     if (this.table.options.groupBy) {
       const group = this.getGroups(false)[0]
 
-      prevValue.push(group.getRows(false)[0])
+      if (group) {
+        const groupRows = group.getRows(false)
+
+        if (groupRows.length) {
+          prevValue.push(groupRows[0])
+        }
+      }
     }
 
     return prevValue

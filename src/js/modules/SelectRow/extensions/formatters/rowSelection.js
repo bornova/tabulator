@@ -9,6 +9,8 @@ import RowComponent from '../../../../core/row/RowComponent.js'
  * @returns {HTMLInputElement|string} Checkbox element or empty string.
  */
 export default function (cell, formatterParams) {
+  formatterParams = formatterParams || {}
+
   const checkbox = document.createElement('input')
   let blocked = false
 

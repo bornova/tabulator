@@ -19,7 +19,9 @@ export default function (columns) {
       column.reinitializeWidth()
     }
 
-    if (hasResponsiveLayout ? column.modules.responsive.visible : column.visible) {
+    const responsiveVisible = column.modules.responsive ? column.modules.responsive.visible : column.visible
+
+    if (hasResponsiveLayout ? responsiveVisible : column.visible) {
       lastCol = column
     }
 

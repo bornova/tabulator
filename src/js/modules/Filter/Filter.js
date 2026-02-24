@@ -18,7 +18,6 @@ export default class Filter extends Module {
     this.headerFilters = {} // hold column filters
     this.headerFilterColumns = [] // hold columns that use header filters
 
-    this.prevHeaderFilterChangeCheck = ''
     this.prevHeaderFilterChangeCheck = '{}'
 
     this.changed = false // has filtering changed since last render
@@ -303,7 +302,7 @@ export default class Filter extends Module {
     const success = (value) => {
       const filterType =
         (column.modules.filter.tagType === 'input' && column.modules.filter.attrType === 'text') ||
-        column.modules.filter.tagType == 'textarea'
+        column.modules.filter.tagType === 'textarea'
           ? 'partial'
           : 'match'
       let type = ''

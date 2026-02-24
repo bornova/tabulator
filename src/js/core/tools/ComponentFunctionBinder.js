@@ -20,7 +20,7 @@ export default class ComponentFunctionBinder {
       this.bindings[type] = {}
     }
 
-    if (this.bindings[type][funcName]) {
+    if (Object.prototype.hasOwnProperty.call(this.bindings[type], funcName)) {
       console.warn(
         'Unable to bind component handler, a matching function name is already bound',
         type,
@@ -40,8 +40,14 @@ export default class ComponentFunctionBinder {
    * @returns {Function|undefined}
    */
   handle(type, component, name) {
-    if (this.bindings[type] && this.bindings[type][name] && typeof this.bindings[type][name].bind === 'function') {
-      return this.bindings[type][name].bind(null, component)
+    const bindings = this.bindings[type]
+
+    if (
+      bindings &&
+      Object.prototype.hasOwnProperty.call(bindings, name) &&
+      typeof bindings[name]?.bind === 'function'
+    ) {
+      return bindings[name].bind(null, component)
     } else {
       if (name !== 'then' && typeof name === 'string' && !name.startsWith('_')) {
         if (this.table.options.debugInvalidComponentFuncs) {

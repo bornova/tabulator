@@ -37,9 +37,8 @@
         columnDefaults: {
           headerSortTristate: true
         },
-        groupBy: ['country', 'state'],
         columns: [
-          { title: 'Id', field: 'id' },
+          { title: 'Id', field: 'id', frozen: true, sorter: 'number' },
           { title: 'Name', field: 'name', sorter: 'string' },
           { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
           { title: 'Gender', field: 'gender', sorter: 'string' },

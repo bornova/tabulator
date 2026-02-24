@@ -7,6 +7,10 @@
  */
 export default function (list, options, setFileContents) {
   const fileContents = []
+  const typeWarnings = {
+    group: false,
+    calc: false
+  }
 
   list.forEach((row) => {
     const item = {}
@@ -16,11 +20,17 @@ export default function (list, options, setFileContents) {
         break
 
       case 'group':
-        console.warn('Download Warning - JSON downloader cannot process row groups')
+        if (!typeWarnings.group) {
+          console.warn('Download Warning - JSON downloader cannot process row groups')
+          typeWarnings.group = true
+        }
         break
 
       case 'calc':
-        console.warn('Download Warning - JSON downloader cannot process column calculations')
+        if (!typeWarnings.calc) {
+          console.warn('Download Warning - JSON downloader cannot process column calculations')
+          typeWarnings.calc = true
+        }
         break
 
       case 'row':

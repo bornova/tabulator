@@ -225,6 +225,10 @@ export default class Menu extends Module {
       component = component._row
     }
 
+    if (!component) {
+      return
+    }
+
     const componentRef = component.getComponent()
     menu = typeof menu === 'function' ? menu.call(this.table, e, componentRef) : menu
 

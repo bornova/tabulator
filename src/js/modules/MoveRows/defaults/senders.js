@@ -11,6 +11,8 @@ export default {
    * @returns {void}
    */
   delete(fromRow) {
-    fromRow.delete()
+    if (fromRow) {
+      fromRow.delete()
+    }
   }
 }

@@ -291,7 +291,7 @@ export default class Renderer extends CoreFeature {
         resolve()
       } else {
         console.warn('Scroll Error - Row not visible')
-        reject('Scroll Error - Row not visible')
+        reject(new Error('Scroll Error - Row not visible'))
       }
     })
   }

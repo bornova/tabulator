@@ -18,6 +18,10 @@ export default {
    * @returns {boolean} True when action succeeds.
    */
   insert(fromRow, toRow) {
+    if (!toRow) {
+      return false
+    }
+
     this.table.addRow(fromRow.getData(), undefined, toRow)
 
     return true

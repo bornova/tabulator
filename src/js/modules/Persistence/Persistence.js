@@ -465,12 +465,14 @@ export default class Persistence extends Module {
    * @returns {Array<object>}
    */
   validateSorters(data) {
-    data.forEach((item) => {
-      item.column = item.field
-      delete item.field
-    })
+    return data.map((item) => {
+      const sorter = { ...item }
 
-    return data
+      sorter.column = sorter.field
+      delete sorter.field
+
+      return sorter
+    })
   }
 
   /**

@@ -228,6 +228,10 @@ export default class Popup extends Module {
       component = component._row
     }
 
+    if (!component) {
+      return
+    }
+
     const componentRef = component.getComponent()
 
     contents = typeof contents === 'function' ? contents.call(this.table, e, componentRef, onRendered) : contents

@@ -58,8 +58,17 @@ export default class FooterManager extends CoreFeature {
           if (this.table.options.footerElement[0] === '<') {
             this.containerElement.innerHTML = this.table.options.footerElement
           } else {
-            this.external = true
-            this.containerElement = document.querySelector(this.table.options.footerElement)
+            const externalContainer = document.querySelector(this.table.options.footerElement)
+
+            if (externalContainer) {
+              this.external = true
+              this.containerElement = externalContainer
+            } else {
+              console.warn(
+                'Footer Error - Unable to find element matching footerElement selector:',
+                this.table.options.footerElement
+              )
+            }
           }
           break
 

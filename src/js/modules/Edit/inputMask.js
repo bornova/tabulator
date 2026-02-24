@@ -7,6 +7,11 @@
  */
 export default function maskInput(el, options) {
   const mask = options.mask
+
+  if (!mask) {
+    return
+  }
+
   const maskLetter = options.maskLetterChar ?? 'A'
   const maskNumber = options.maskNumberChar ?? '9'
   const maskWildcard = options.maskWildcardChar ?? '*'

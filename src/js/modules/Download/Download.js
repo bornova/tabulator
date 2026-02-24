@@ -152,17 +152,20 @@ export default class Download extends Module {
   triggerDownload(data, mime, type, filename, newTab) {
     const element = document.createElement('a')
     const blob = this.table.options.downloadEncoder(data, mime)
+    let blobUrl
 
     if (blob) {
+      blobUrl = window.URL.createObjectURL(blob)
+
       if (newTab) {
-        window.open(window.URL.createObjectURL(blob))
+        window.open(blobUrl)
       } else {
         filename = filename || `Tabulator.${typeof type === 'function' ? 'txt' : type}`
 
         if (navigator.msSaveOrOpenBlob) {
           navigator.msSaveOrOpenBlob(blob, filename)
         } else {
-          element.setAttribute('href', window.URL.createObjectURL(blob))
+          element.setAttribute('href', blobUrl)
 
           // set file title
           element.setAttribute('download', filename)
@@ -176,6 +179,10 @@ export default class Download extends Module {
           document.body.removeChild(element)
         }
       }
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(blobUrl)
+      }, 1000)
 
       this.dispatchExternal('downloadComplete')
     }

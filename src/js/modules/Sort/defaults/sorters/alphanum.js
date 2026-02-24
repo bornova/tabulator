@@ -43,7 +43,7 @@ export default function (as, bs, aRow, bRow, column, dir, params) {
 
     a = a.match(rx)
     b = b.match(rx)
-    const minLength = a.length > b.length ? b.length : a.length
+    const minLength = Math.min(a.length, b.length)
 
     while (i < minLength) {
       let a1 = a[i]

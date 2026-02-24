@@ -9,12 +9,13 @@
  */
 export default function (columns, forced) {
   const table = this.table
+  const hasResponsiveLayout = table.options.responsiveLayout && table.modExists('responsiveLayout', true)
 
   if (forced) {
     table.columnManager.renderer.reinitializeColumnWidths(columns)
   }
 
-  if (!(table.options.responsiveLayout && table.modExists('responsiveLayout', true))) {
+  if (!hasResponsiveLayout) {
     return
   }
 

@@ -17,6 +17,10 @@ export default {
       return []
     }
 
+    if (!Array.isArray(data) || !data.length) {
+      return []
+    }
+
     const bounds = range.getBounds()
     const startCell = bounds.start
 

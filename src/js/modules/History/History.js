@@ -233,7 +233,7 @@ export default class History extends Module {
       if (action.component instanceof Cell && action.component.row === oldRow) {
         const field = action.component.column.getField()
 
-        if (field) {
+        if (typeof field !== 'undefined') {
           action.component = newRow.getCell(field)
         }
       }

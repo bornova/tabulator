@@ -109,6 +109,11 @@ class Tabulator extends ModuleBinder {
     }
 
     if (typeof element === 'string') {
+      if (typeof document === 'undefined') {
+        console.error('Tabulator Creation Error - Selector lookup requires a browser document context')
+        return false
+      }
+
       this.element = document.querySelector(element)
 
       if (this.element) {

@@ -117,34 +117,74 @@ export default class CoreFeature {
     return this.table.eventBus.unsubscribe(...args)
   }
 
+  /**
+   * Check whether an internal event has subscribers.
+   * @param {string} key Event key.
+   * @returns {boolean}
+   */
   subscribed(key) {
     return this.table.eventBus.subscribed(key)
   }
 
+  /**
+   * Register callback for subscription changes.
+   * @param {...*} args Subscription change args.
+   * @returns {*}
+   */
   subscriptionChange(...args) {
     return this.table.eventBus.subscriptionChange(...args)
   }
 
+  /**
+   * Dispatch an internal event.
+   * @param {...*} args Dispatch args.
+   * @returns {*}
+   */
   dispatch(...args) {
     return this.table.eventBus.dispatch(...args)
   }
 
+  /**
+   * Chain internal subscribers and return final value.
+   * @param {...*} args Chain args.
+   * @returns {*}
+   */
   chain(...args) {
     return this.table.eventBus.chain(...args)
   }
 
+  /**
+   * Confirm an internal action via event subscribers.
+   * @param {...*} args Confirmation args.
+   * @returns {boolean}
+   */
   confirm(...args) {
     return this.table.eventBus.confirm(...args)
   }
 
+  /**
+   * Dispatch an external/public event.
+   * @param {...*} args Dispatch args.
+   * @returns {*}
+   */
   dispatchExternal(...args) {
     return this.table.externalEvents.dispatch(...args)
   }
 
+  /**
+   * Check whether an external event has subscribers.
+   * @param {string} key Event key.
+   * @returns {boolean}
+   */
   subscribedExternal(key) {
     return this.table.externalEvents.subscribed(key)
   }
 
+  /**
+   * Register callback for external subscription changes.
+   * @param {...*} args Subscription change args.
+   * @returns {*}
+   */
   subscriptionChangeExternal(...args) {
     return this.table.externalEvents.subscriptionChange(...args)
   }
@@ -180,14 +220,32 @@ export default class CoreFeature {
   /// //////// Deprecation Checks ///////////
   /// ///////////////////////////////////////
 
+  /**
+   * Run standard deprecation option check.
+   * @param {string} oldOption Deprecated option name.
+   * @param {string} newOption Replacement option name.
+   * @param {boolean} [convert] Convert value when possible.
+   * @returns {void}
+   */
   deprecationCheck(oldOption, newOption, convert) {
     return this.table.deprecationAdvisor.check(oldOption, newOption, convert)
   }
 
+  /**
+   * Report custom deprecation message for an option.
+   * @param {string} oldOption Deprecated option name.
+   * @param {string} msg Deprecation message.
+   * @returns {void}
+   */
   deprecationCheckMsg(oldOption, msg) {
     return this.table.deprecationAdvisor.checkMsg(oldOption, msg)
   }
 
+  /**
+   * Emit deprecation message without option lookup.
+   * @param {string} msg Deprecation message.
+   * @returns {void}
+   */
   deprecationMsg(msg) {
     return this.table.deprecationAdvisor.msg(msg)
   }

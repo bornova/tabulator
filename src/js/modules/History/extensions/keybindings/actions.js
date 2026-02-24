@@ -6,6 +6,10 @@
  *   redo: function(KeyboardEvent): void
  * }}
  */
+function canUseHistory(table) {
+  return table.options.history && table.modExists('history') && table.modExists('edit')
+}
+
 export default {
   /**
    * Trigger undo when history is enabled and no editor is active.
@@ -15,7 +19,7 @@ export default {
    * @returns {void}
    */
   undo(e) {
-    if (!(this.table.options.history && this.table.modExists('history') && this.table.modExists('edit'))) {
+    if (!canUseHistory(this.table)) {
       return
     }
 
@@ -35,7 +39,7 @@ export default {
    * @returns {void}
    */
   redo(e) {
-    if (!(this.table.options.history && this.table.modExists('history') && this.table.modExists('edit'))) {
+    if (!canUseHistory(this.table)) {
       return
     }
 

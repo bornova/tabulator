@@ -5,5 +5,5 @@
  * @returns {Array<Object>} Imported row data.
  */
 export default function (input) {
-  return input
+  return Array.isArray(input) ? input.slice() : []
 }

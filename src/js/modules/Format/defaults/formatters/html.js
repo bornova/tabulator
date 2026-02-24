@@ -5,7 +5,5 @@
  * @returns {*} Raw cell value.
  */
 export default function (cell) {
-  const value = cell.getValue()
-
-  return value
+  return cell.getValue()
 }

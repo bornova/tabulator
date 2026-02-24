@@ -13,8 +13,8 @@ export default function (cell, formatterParams = {}, onRendered) {
   // progress bar
   const value = this.sanitizeHTML(cell.getValue()) || 0
   let element = cell.getElement()
-  const max = formatterParams.max ? formatterParams.max : 100
-  const min = formatterParams.min ? formatterParams.min : 0
+  const max = formatterParams.max ?? 100
+  const min = formatterParams.min ?? 0
   const legendAlign = formatterParams.legendAlign ? formatterParams.legendAlign : 'center'
   let percentValue
   let color

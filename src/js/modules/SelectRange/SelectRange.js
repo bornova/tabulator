@@ -183,7 +183,9 @@ export default class SelectRange extends Module {
       this.rowHeader = this.table.columnManager.getVisibleColumnsByIndex()[0]
 
       if (this.rowHeader) {
-        this.rowHeader.definition.cssClass = this.rowHeader.definition.cssClass + ' tabulator-range-row-header'
+        this.rowHeader.definition.cssClass = [this.rowHeader.definition.cssClass, 'tabulator-range-row-header']
+          .filter(Boolean)
+          .join(' ')
 
         if (this.rowHeader.definition.headerSort) {
           console.warn('Using column headerSort with selectableRangeRows option may result in unpredictable behavior')

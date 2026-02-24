@@ -127,6 +127,8 @@ export default class Module extends CoreFeature {
     if (this._handler) {
       return index > -1 ? this.table.rowManager.getDisplayRows(index) : this.activeRows()
     }
+
+    return this.activeRows()
   }
 
   /**

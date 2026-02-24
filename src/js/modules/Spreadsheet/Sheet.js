@@ -199,7 +199,7 @@ export default class Sheet extends CoreFeature {
     if (!full && !this.options('spreadsheetOutputFull')) {
       // calculate used area of data
       rowWidths = output.map((row) => row.findLastIndex((val) => typeof val !== 'undefined') + 1)
-      outputWidth = Math.max(...rowWidths)
+      outputWidth = rowWidths.length ? Math.max(...rowWidths) : 0
       outputHeight = rowWidths.findLastIndex((width) => width > 0) + 1
 
       output = output.slice(0, outputHeight)

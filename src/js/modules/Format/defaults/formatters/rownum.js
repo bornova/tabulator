@@ -6,6 +6,8 @@
  * @returns {HTMLSpanElement} Row number element.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   const content = document.createElement('span')
   const row = cell.getRow()
   const table = cell.getTable()
@@ -13,7 +15,7 @@ export default function (cell, formatterParams) {
   row.watchPosition((position) => {
     let displayPosition = position
 
-    if (formatterParams.relativeToPage) {
+    if (formatterParams.relativeToPage && table.modExists('page', true)) {
       displayPosition += table.modules.page.getPageSize() * (table.modules.page.getPage() - 1)
     }
 

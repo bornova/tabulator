@@ -1,7 +1,7 @@
 /**
  * Default language packs.
  *
- * @type {Object<string, Object>}
+ * @type {Object<string, object>}
  */
 export default {
   default: {

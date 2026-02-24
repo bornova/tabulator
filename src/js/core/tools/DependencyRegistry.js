@@ -29,8 +29,10 @@ export default class DependencyRegistry extends CoreFeature {
    */
   lookup(key, prop, silent) {
     if (Array.isArray(key)) {
+      let match
+
       for (const item of key) {
-        var match = this.lookup(item, prop, true)
+        match = this.lookup(item, prop, true)
 
         if (match) {
           break

@@ -85,7 +85,12 @@ export default {
    */
   regex(filterVal, rowVal) {
     if (typeof filterVal === 'string') {
-      filterVal = new RegExp(filterVal)
+      try {
+        filterVal = new RegExp(filterVal)
+      } catch (error) {
+        console.warn('Filter Error - invalid regex pattern:', filterVal, error)
+        return false
+      }
     }
 
     return filterVal.test(rowVal)

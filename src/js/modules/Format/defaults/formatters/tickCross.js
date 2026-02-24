@@ -6,6 +6,8 @@
  * @returns {string} Tick, cross, or empty content.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   const value = cell.getValue()
   const element = cell.getElement()
   const empty = formatterParams.allowEmpty

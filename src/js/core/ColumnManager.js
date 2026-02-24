@@ -185,9 +185,10 @@ export default class ColumnManager extends CoreFeature {
   initializeScrollWheelWatcher() {
     this.contentsElement.addEventListener('wheel', (e) => {
       let left
+      const deltaX = e.deltaX || (e.shiftKey ? e.deltaY : 0)
 
-      if (e.deltaX) {
-        left = this.contentsElement.scrollLeft + e.deltaX
+      if (deltaX) {
+        left = this.contentsElement.scrollLeft + deltaX
 
         this.table.rowManager.scrollHorizontal(left)
         this.table.columnManager.scrollHorizontal(left)

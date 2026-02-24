@@ -1,4 +1,4 @@
-export default {
+export default Object.freeze({
   title: undefined,
   field: undefined,
   columns: undefined,
@@ -15,4 +15,4 @@ export default {
   headerHozAlign: undefined,
   headerWordWrap: false,
   editableTitle: undefined
-}
+})

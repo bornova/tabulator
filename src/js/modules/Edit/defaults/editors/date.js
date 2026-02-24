@@ -37,11 +37,11 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   input.style.boxSizing = 'border-box'
 
   if (editorParams.max) {
-    input.setAttribute('max', inputFormat ? convertDate(editorParams.max) : editorParams.max)
+    input.setAttribute('max', inputFormat && DT ? convertDate(editorParams.max) : editorParams.max)
   }
 
   if (editorParams.min) {
-    input.setAttribute('min', inputFormat ? convertDate(editorParams.min) : editorParams.min)
+    input.setAttribute('min', inputFormat && DT ? convertDate(editorParams.min) : editorParams.min)
   }
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {

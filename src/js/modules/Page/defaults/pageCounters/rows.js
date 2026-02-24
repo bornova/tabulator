@@ -17,6 +17,11 @@ export default function (pageSize, currentRow, currentPage, totalRows) {
   const rowsEl = document.createElement('span')
   const { localize } = this.table.modules
 
+  if (!localize) {
+    el.innerHTML = totalRows ? `${currentRow}-${Math.min(currentRow + pageSize - 1, totalRows)} / ${totalRows}` : '0'
+    return el
+  }
+
   localize.langBind('pagination|counter|showing', (value) => {
     showingEl.innerHTML = value
   })

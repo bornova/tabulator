@@ -3,6 +3,8 @@
  *
  * @type {{copyToClipboard: Array<string>}}
  */
-export default {
+const clipboardBindings = {
   copyToClipboard: ['ctrl + 67', 'meta + 67']
 }
+
+export default clipboardBindings

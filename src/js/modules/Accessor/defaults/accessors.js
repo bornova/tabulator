@@ -16,6 +16,6 @@ export default {
    * @returns {number} Row position.
    */
   rownum(value, data, type, params, column, row) {
-    return row.getPosition()
+    return row && typeof row.getPosition === 'function' ? row.getPosition() : 0
   }
 }

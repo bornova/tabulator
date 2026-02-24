@@ -6,7 +6,5 @@
  * @returns {string} Sanitized plain text value.
  */
 export default function (cell) {
-  const value = this.sanitizeHTML(cell.getValue())
-
-  return this.emptyToSpace(value)
+  return this.emptyToSpace(this.sanitizeHTML(cell.getValue()))
 }

@@ -11,10 +11,12 @@ export default {
    * @returns {void}
    */
   copyToClipboard() {
-    if (!this.table.modules.edit.currentCell) {
-      if (this.table.modExists('clipboard', true)) {
-        this.table.modules.clipboard.copy(false, true)
-      }
+    if (this.table.modExists('edit', true) && this.table.modules.edit.currentCell) {
+      return
+    }
+
+    if (this.table.modExists('clipboard', true)) {
+      this.table.modules.clipboard.copy(false, true)
     }
   }
 }

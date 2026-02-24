@@ -84,9 +84,10 @@ export default class BasicVertical extends Renderer {
       callback()
     }
 
+    const rows = this.rows()
     this.renderRows()
 
-    if (!this.rows().length) {
+    if (!rows.length) {
       this.table.rowManager.tableEmpty()
     }
   }

@@ -12,9 +12,9 @@ export default class DeprecationAdvisor extends CoreFeature {
    * Warn in debug mode when deprecation warnings are enabled.
    * @returns {void}
    */
-  _warnUser() {
+  _warnUser(...args) {
     if (this.options('debugDeprecation')) {
-      console.warn(...arguments)
+      console.warn(...args)
     }
   }
 

@@ -6,11 +6,14 @@
  * @returns {HTMLImageElement} Image element.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   const el = document.createElement('img')
-  let src = cell.getValue()
+  const cellValue = cell.getValue()
+  let src = cellValue
 
   if (formatterParams.urlPrefix) {
-    src = `${formatterParams.urlPrefix}${cell.getValue()}`
+    src = `${formatterParams.urlPrefix}${cellValue}`
   }
 
   if (formatterParams.urlSuffix) {

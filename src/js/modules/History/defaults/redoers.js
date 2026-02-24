@@ -49,9 +49,11 @@ export default {
    * @returns {void}
    */
   rowDelete(action) {
+    const rowManager = this.table.rowManager
+
     action.component.deleteActual()
 
-    this.table.rowManager.checkPlaceholder()
+    rowManager.checkPlaceholder()
   },
 
   /**

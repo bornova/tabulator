@@ -29,9 +29,19 @@ export default class Popup extends CoreFeature {
 
     this.blurEvent = this.hide.bind(this, false)
     this.escEvent = this._escapeCheck.bind(this)
+    this.mouseDownEvent = this._mouseDownCheck.bind(this)
 
     this.destroyBinding = this.tableDestroyed.bind(this)
     this.destroyed = false
+  }
+
+  /**
+   * Prevent popup mousedown from bubbling to blur handlers.
+   * @param {MouseEvent} e Mouse event.
+   * @returns {void}
+   */
+  _mouseDownCheck(e) {
+    e.stopPropagation()
   }
 
   /**
@@ -221,9 +231,7 @@ export default class Popup extends CoreFeature {
 
     this.subscribe('table-destroy', this.destroyBinding)
 
-    this.element.addEventListener('mousedown', (e) => {
-      e.stopPropagation()
-    })
+    this.element.addEventListener('mousedown', this.mouseDownEvent)
 
     return this
   }
@@ -367,6 +375,8 @@ export default class Popup extends CoreFeature {
       if (this.element.parentNode) {
         this.element.parentNode.removeChild(this.element)
       }
+
+      this.element.removeEventListener('mousedown', this.mouseDownEvent)
 
       this.visible = false
 

@@ -7,7 +7,7 @@ import CoreFeature from '../../../../core/CoreFeature.js'
  * @param {Function} setFileContents Callback to receive file payload.
  * @returns {void}
  */
-export default function (list, options, setFileContents) {
+export default function (list, options = {}, setFileContents) {
   const self = this
   const sheetName = options.sheetName || 'Sheet1'
   const XLSXLib = this.dependencyRegistry.lookup('XLSX')

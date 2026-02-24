@@ -398,7 +398,7 @@ export default class SelectRow extends Module {
 
     switch (typeof rows) {
       case 'undefined':
-        rowMatch = Object.assign([], this.selectedRows)
+        rowMatch = this.selectedRows.slice()
         break
 
       case 'number':

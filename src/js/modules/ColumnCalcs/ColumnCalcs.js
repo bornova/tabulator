@@ -478,8 +478,11 @@ export default class ColumnCalcs extends Module {
     if (!this.blockCheck()) {
       if (group) {
         if (group.calcs) {
-          if (group.calcs.bottom) {
+          if (group.calcs.bottom || group.calcs.top) {
             data = this.rowsToData(group.rows)
+          }
+
+          if (group.calcs.bottom) {
             rowData = this.generateRowData('bottom', data)
 
             group.calcs.bottom.updateData(rowData)
@@ -487,7 +490,6 @@ export default class ColumnCalcs extends Module {
           }
 
           if (group.calcs.top) {
-            data = this.rowsToData(group.rows)
             rowData = this.generateRowData('top', data)
 
             group.calcs.top.updateData(rowData)

@@ -1,7 +1,7 @@
 /**
  * SelectRange keybinding definitions.
  *
- * @type {Object<string, string|Array<string>>}
+ * @type {Object<string, string|ReadonlyArray<string>>}
  */
 export default {
   rangeJumpUp: ['ctrl + 38', 'meta + 38'],

@@ -9,11 +9,13 @@
  */
 export default function (url, config, params) {
   return new Promise((resolve, reject) => {
+    const method = (config.method || 'GET').toUpperCase()
+
     // set url
     url = this.urlGenerator.call(this.table, url, config, params)
 
     // set body content if not GET request
-    if (config.method.toUpperCase() !== 'GET') {
+    if (method !== 'GET') {
       const contentType =
         typeof this.table.options.ajaxContentType === 'object'
           ? this.table.options.ajaxContentType

@@ -382,8 +382,7 @@ export default class RowManager extends CoreFeature {
   }
 
   addRow(data, pos, index, blockRedraw) {
-    const row = this.addRowActual(data, pos, index, blockRedraw)
-    return row
+    return this.addRowActual(data, pos, index, blockRedraw)
   }
 
   // add multiple rows

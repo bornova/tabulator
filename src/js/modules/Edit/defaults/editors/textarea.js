@@ -30,7 +30,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     for (let key in editorParams.elementAttributes) {
       if (key.charAt(0) === '+') {
         key = key.slice(1)
-        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
+        input.setAttribute(key, (input.getAttribute(key) || '') + editorParams.elementAttributes[`+${key}`])
       } else {
         input.setAttribute(key, editorParams.elementAttributes[key])
       }

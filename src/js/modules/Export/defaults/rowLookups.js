@@ -34,7 +34,7 @@ export default {
    * @returns {Array<Object>} Selected rows.
    */
   selected() {
-    return this.modules.selectRow.selectedRows
+    return this.modules.selectRow ? this.modules.selectRow.selectedRows : []
   },
   /**
    * Lookup active display rows.

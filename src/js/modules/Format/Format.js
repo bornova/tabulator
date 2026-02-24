@@ -94,7 +94,7 @@ export default class Format extends Module {
     // set column formatter
     switch (typeof formatter) {
       case 'string':
-        if (Format.formatters[formatter]) {
+        if (Object.prototype.hasOwnProperty.call(Format.formatters, formatter)) {
           return Format.formatters[formatter]
         } else {
           console.warn('Formatter Error - No such formatter found: ', formatter)

@@ -36,17 +36,19 @@ export default function (list, options = {}, setFileContents) {
       case 'row':
         row.columns.forEach((col) => {
           if (col) {
-            switch (typeof col.value) {
+            let value = col.value
+
+            switch (typeof value) {
               case 'object':
-                col.value = col.value !== null ? JSON.stringify(col.value) : ''
+                value = value !== null ? JSON.stringify(value) : ''
                 break
 
               case 'undefined':
-                col.value = ''
+                value = ''
                 break
             }
 
-            item.push(`"${String(col.value).split('"').join('""')}"`)
+            item.push(`"${String(value).split('"').join('""')}"`)
           }
         })
 

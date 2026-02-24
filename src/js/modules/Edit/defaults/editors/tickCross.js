@@ -14,8 +14,8 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const tristate = editorParams.tristate
   const indetermValue = editorParams.indeterminateValue === undefined ? null : editorParams.indeterminateValue
   let indetermState = false
-  const trueValueSet = Object.keys(editorParams).includes('trueValue')
-  const falseValueSet = Object.keys(editorParams).includes('falseValue')
+  const trueValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'trueValue')
+  const falseValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'falseValue')
 
   input.setAttribute('type', 'checkbox')
   input.style.marginTop = '5px'

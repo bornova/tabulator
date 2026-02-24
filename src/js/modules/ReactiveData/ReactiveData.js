@@ -235,6 +235,9 @@ export default class ReactiveData extends Module {
           value: this.origFuncs[key]
         })
       }
+
+      this.origFuncs = {}
+      this.data = false
     }
   }
 

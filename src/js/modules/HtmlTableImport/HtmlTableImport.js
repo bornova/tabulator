@@ -53,6 +53,8 @@ export default class HtmlTableImport extends Module {
 
     this.hasIndex = false
 
+    options.columns = Array.isArray(options.columns) ? options.columns : []
+
     this.dispatchExternal('htmlImporting')
 
     // check for Tabulator inline options
@@ -146,7 +148,9 @@ export default class HtmlTableImport extends Module {
    * @returns {object|boolean}
    */
   _findCol(title) {
-    return this.table.options.columns.find((column) => column.title === title) || false
+    const columns = this.table.options.columns
+
+    return Array.isArray(columns) ? columns.find((column) => column.title === title) || false : false
   }
 
   // extract column from headers

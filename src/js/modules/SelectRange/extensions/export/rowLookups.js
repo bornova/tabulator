@@ -11,6 +11,6 @@ export default {
    * @returns {Array<object>} Selected rows.
    */
   range() {
-    return this.modules.selectRange.selectedRows()
+    return this.modules.selectRange.selectedRows().slice()
   }
 }

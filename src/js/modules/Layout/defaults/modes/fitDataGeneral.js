@@ -8,12 +8,13 @@
  */
 export default function (columns) {
   const table = this.table
+  const hasResponsiveLayout = table.options.responsiveLayout && table.modExists('responsiveLayout', true)
 
   columns.forEach((column) => {
     column.reinitializeWidth()
   })
 
-  if (!(table.options.responsiveLayout && table.modExists('responsiveLayout', true))) {
+  if (!hasResponsiveLayout) {
     return
   }
 

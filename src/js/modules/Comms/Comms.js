@@ -54,5 +54,7 @@ export default class Comms extends Module {
     }
 
     console.warn('Inter-table Comms Error - no such module:', module)
+
+    return false
   }
 }

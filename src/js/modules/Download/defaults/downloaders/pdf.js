@@ -61,18 +61,20 @@ export default function (list, options = {}, setFileContents) {
 
     row.columns.forEach((col) => {
       if (col) {
-        switch (typeof col.value) {
+        let value = col.value
+
+        switch (typeof value) {
           case 'object':
-            col.value = col.value !== null ? JSON.stringify(col.value) : ''
+            value = value !== null ? JSON.stringify(value) : ''
             break
 
           case 'undefined':
-            col.value = ''
+            value = ''
             break
         }
 
         const cell = {
-          content: col.value,
+          content: value,
           colSpan: col.width,
           rowSpan: col.height
         }

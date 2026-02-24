@@ -29,28 +29,27 @@
       initializeThemeSelector()
 
       // Generate and log the data
-      const tableData = generateData(100)
+      const sheetData = [
+        [9937, '', '', 7749, 9816, 4355, 8279, '', ''],
+        [2380, '', 6977, 8896, 4012, 3803, 5408, 3415, 3056],
+        [9180, '', 39, 9445, 3917, '', 18, 5239, 2516],
+        [1924, 8734, 1819, 1838, 2330, 7921, 9219, '', 3537],
+        ['', 8665, 5875, 9732, 1926, '', 9743, 8388, ''],
+        [7040, 4861, 2988, 5584, 2344, 9749, 8872, 9177, 6246],
+        [6334, 1674, 2967, '', 9353, 396, 6006, 8572, ''],
+        [6359, '', 2580, 5723, 9801, 554, 1044, 5266, 8532],
+        [7278, 6971, 2232, 5720, 5665, 7231, 1165, '', 168]
+      ]
 
       const table = new Tabulator('#example-table', {
-        data: tableData, //assign data to table
         height: 600,
-        columnDefaults: {
-          headerSortTristate: true
-        },
-        groupBy: ['country', 'state'],
-        columns: [
-          { title: 'Id', field: 'id' },
-          { title: 'Name', field: 'name', sorter: 'string' },
-          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
-          { title: 'Gender', field: 'gender', sorter: 'string' },
-          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
-          { title: 'Color', field: 'col', sorter: 'string' },
-          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
-          { title: 'Address', field: 'address', sorter: 'string' },
-          { title: 'State', field: 'state', sorter: 'string' },
-          { title: 'Country', field: 'country', sorter: 'string' },
-          { title: 'Progress', field: 'progress', formatter: 'progress' }
-        ]
+        spreadsheet: true,
+        spreadsheetColumnDefinition: { editor: 'input' },
+        spreadsheetData: sheetData,
+
+        rowHeader: { field: '_id', hozAlign: 'center', headerSort: false, frozen: true },
+
+        editorEmptyValue: undefined //ensure empty values are set to undefined so they arent included in spreadsheet output data
       })
     </script>
   </body>

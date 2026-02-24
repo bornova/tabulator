@@ -26,7 +26,7 @@ import json from './formatters/json.js'
  *
  * @type {Object<string, function(Object, Object, function): *>}
  */
-export default {
+const defaultFormatters = {
   plaintext,
   html,
   textarea,
@@ -50,3 +50,5 @@ export default {
   array,
   json
 }
+
+export default defaultFormatters

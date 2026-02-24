@@ -2,16 +2,16 @@
  * Default keybinding definitions.
  *
  * @type {{
- *   navPrev: string,
- *   navNext: number,
- *   navUp: number,
- *   navDown: number,
- *   navLeft: number,
- *   navRight: number,
- *   scrollPageUp: number,
- *   scrollPageDown: number,
- *   scrollToStart: number,
- *   scrollToEnd: number
+ *   navPrev: string|number,
+ *   navNext: string|number,
+ *   navUp: string|number,
+ *   navDown: string|number,
+ *   navLeft: string|number,
+ *   navRight: string|number,
+ *   scrollPageUp: string|number,
+ *   scrollPageDown: string|number,
+ *   scrollToStart: string|number,
+ *   scrollToEnd: string|number
  * }}
  */
 export default {

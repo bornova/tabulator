@@ -299,7 +299,7 @@ export default class Spreadsheet extends Module {
    * @returns {Sheet|boolean|null}
    */
   lookupSheet(key) {
-    if (!key) {
+    if (typeof key === 'undefined' || key === null || key === false) {
       return this.activeSheet
     } else {
       if (key instanceof Sheet) {

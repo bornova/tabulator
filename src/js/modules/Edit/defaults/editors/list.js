@@ -10,7 +10,5 @@ import List from '../../List.js'
  * @returns {HTMLInputElement}
  */
 export default function (cell, onRendered, success, cancel, editorParams) {
-  const list = new List(this, cell, onRendered, success, cancel, editorParams)
-
-  return list.input
+  return new List(this, cell, onRendered, success, cancel, editorParams).input
 }

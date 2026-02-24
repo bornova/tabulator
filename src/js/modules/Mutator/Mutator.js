@@ -97,7 +97,7 @@ export default class Mutator extends Module {
     // set column mutator
     switch (typeof value) {
       case 'string':
-        if (Mutator.mutators[value]) {
+        if (Object.prototype.hasOwnProperty.call(Mutator.mutators, value)) {
           return Mutator.mutators[value]
         }
 

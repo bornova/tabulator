@@ -453,11 +453,15 @@ export default class MoveRows extends Module {
       this._unbindMouseMove()
 
       if (!this.connection) {
-        this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling)
-        this.placeholderElement.parentNode.removeChild(this.placeholderElement)
+        if (this.placeholderElement.parentNode) {
+          this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling)
+          this.placeholderElement.parentNode.removeChild(this.placeholderElement)
+        }
       }
 
-      this.hoverElement.parentNode.removeChild(this.hoverElement)
+      if (this.hoverElement && this.hoverElement.parentNode) {
+        this.hoverElement.parentNode.removeChild(this.hoverElement)
+      }
 
       this.table.element.classList.remove('tabulator-block-select')
 

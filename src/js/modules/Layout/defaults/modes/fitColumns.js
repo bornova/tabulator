@@ -141,7 +141,7 @@ export default function (columns) {
   flexWidth = totalWidth - fixedWidth
 
   // calculate correct column size
-  flexColWidth = Math.floor(flexWidth / flexGrowUnits)
+  flexColWidth = flexGrowUnits ? Math.floor(flexWidth / flexGrowUnits) : 0
 
   // generate column widths
   gapFill = scaleColumns(flexColumns, flexWidth, flexColWidth, false)

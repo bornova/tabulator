@@ -9,9 +9,9 @@ import rowLookups from './export/rowLookups.js'
  * SelectRange module extension configuration.
  *
  * @type {{
- *   keybindings: {bindings: object, actions: object},
- *   clipboard: {pasteActions: object, pasteParsers: object},
- *   export: {columnLookups: object, rowLookups: object}
+ *   keybindings: {bindings: Object, actions: Object},
+ *   clipboard: {pasteActions: Object, pasteParsers: Object},
+ *   export: {columnLookups: Object, rowLookups: Object}
  * }}
  */
 export default {

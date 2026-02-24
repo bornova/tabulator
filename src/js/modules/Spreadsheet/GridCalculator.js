@@ -18,7 +18,7 @@ export default class GridCalculator {
    * @returns {Array<string>}
    */
   genColumns(data) {
-    const maxDataColumns = Math.max(...data.map((item) => item.length))
+    const maxDataColumns = data.length ? Math.max(...data.map((item) => item.length)) : 0
     const colCount = Math.max(this.columnCount, maxDataColumns)
 
     this.columnString = []

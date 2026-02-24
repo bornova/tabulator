@@ -98,9 +98,16 @@ export default class Export extends Module {
   rowLookup(range) {
     let rows = []
     let rowLookup
+    let rangeRows
 
     if (typeof range === 'function') {
-      range.call(this.table).forEach((row) => {
+      rangeRows = range.call(this.table)
+
+      if (!Array.isArray(rangeRows)) {
+        rangeRows = rangeRows ? [rangeRows] : []
+      }
+
+      rangeRows.forEach((row) => {
         row = this.table.rowManager.findRow(row)
 
         if (row) {

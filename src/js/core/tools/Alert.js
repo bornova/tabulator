@@ -86,6 +86,10 @@ export default class Alert extends CoreFeature {
       this.element.parentNode.removeChild(this.element)
     }
 
-    this.msgElement.classList.remove(this._typeClass())
+    if (this.type) {
+      this.msgElement.classList.remove(this._typeClass())
+    }
+
+    this.type = null
   }
 }

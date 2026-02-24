@@ -295,9 +295,9 @@ export default class VirtualDomVertical extends Renderer {
     let avgRowHeight = this.table.options.rowHeight
     let resized
 
-    position = position || 0
+    position ??= 0
 
-    offset = offset || 0
+    offset ??= 0
 
     if (!position) {
       this.clear()

@@ -23,7 +23,7 @@ export default class RangeComponent {
    * @returns {*}
    */
   _resolveCell(cell) {
-    return cell ? cell._cell : cell
+    return cell ? cell._cell || cell : cell
   }
 
   /**
@@ -133,7 +133,7 @@ export default class RangeComponent {
    */
   setStartBound(start) {
     if (this._range.destroyedGuard('setStartBound')) {
-      this._range.setEndBound(this._resolveCell(start))
+      this._range.setStartBound(this._resolveCell(start))
       this._range.rangeManager.layoutElement()
     }
   }

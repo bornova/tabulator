@@ -119,7 +119,7 @@ export default class Accessor extends Module {
         if (accessor) {
           value = column.getFieldValue(data)
 
-          if (value !== 'undefined') {
+          if (typeof value !== 'undefined') {
             colComponent = column.getComponent()
             params =
               typeof accessor.params === 'function'

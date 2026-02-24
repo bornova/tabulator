@@ -8,7 +8,7 @@ import xlsx from './importers/xlsx.js'
  *
  * @type {{
  *   csv: function(string): Array<Array<string>>,
- *   json: function(string): Array<Object>|Promise<never>,
+ *   json: function(string): *|Promise<never>,
  *   array: function(Array<Object>): Array<Object>,
  *   xlsx: function(*): Array<Array<*>>
  * }}

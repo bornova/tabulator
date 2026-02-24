@@ -32,6 +32,6 @@ export default {
 
     expireDate.setDate(expireDate.getDate() + 10000)
 
-    document.cookie = `${id}-${type}=${JSON.stringify(data)}; expires=${expireDate.toUTCString()}`
+    document.cookie = `${id}-${type}=${JSON.stringify(data)}; expires=${expireDate.toUTCString()}; path=/`
   }
 }

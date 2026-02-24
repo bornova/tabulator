@@ -7,7 +7,8 @@
  */
 export default function (cell) {
   const element = cell.getElement()
-  const color = this.sanitizeHTML(cell.getValue())
+  const value = cell.getValue()
+  const color = value == null ? '' : this.sanitizeHTML(value)
 
   element.style.backgroundColor = color
   return ''

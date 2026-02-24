@@ -969,7 +969,7 @@ export default class Edit {
           for (let key in item.elementAttributes) {
             if (key.charAt(0) === '+') {
               key = key.slice(1)
-              el.setAttribute(key, this.input.getAttribute(key) + item.elementAttributes[`+${key}`])
+              el.setAttribute(key, (el.getAttribute(key) || '') + item.elementAttributes[`+${key}`])
             } else {
               el.setAttribute(key, item.elementAttributes[key])
             }

@@ -63,14 +63,17 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   } else if (!Array.isArray(b)) {
     emptyAlign = 1
   } else {
-    if (type === 'string') {
-      const aValue = String(calc(a)).toLowerCase()
-      const bValue = String(calc(b)).toLowerCase()
+    const aValue = calc(a)
+    const bValue = calc(b)
 
-      return aValue.localeCompare(bValue)
+    if (type === 'string') {
+      const aValueString = String(aValue).toLowerCase()
+      const bValueString = String(bValue).toLowerCase()
+
+      return aValueString.localeCompare(bValueString)
     }
 
-    return calc(b) - calc(a)
+    return bValue - aValue
   }
 
   // fix empty values in position

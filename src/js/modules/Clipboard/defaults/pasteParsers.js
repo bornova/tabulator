@@ -67,6 +67,10 @@ export default {
       }
 
       data.forEach((item) => {
+        if (item.length === 1 && item[0] === '') {
+          return
+        }
+
         const row = {}
 
         item.forEach((value, i) => {

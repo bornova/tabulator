@@ -8,6 +8,8 @@
  * @returns {*} Formatter result.
  */
 export default function (cell, params, onRendered) {
+  params ??= {}
+
   const defaultLookup = (cell) => {
     const value = cell.getValue()
     let formatter = 'plaintext'

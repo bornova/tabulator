@@ -9,6 +9,10 @@ export default function (cell) {
   const config = cell.getRow()._row.modules.responsiveLayout
   const table = cell.getTable()
 
+  if (!config) {
+    return el
+  }
+
   el.classList.add('tabulator-responsive-collapse-toggle')
 
   el.innerHTML = `<svg class='tabulator-responsive-collapse-toggle-open' viewbox="0 0 24 24">

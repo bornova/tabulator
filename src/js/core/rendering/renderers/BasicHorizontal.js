@@ -14,11 +14,13 @@ export default class BasicHorizontal extends Renderer {
     })
     row.element.appendChild(rowFrag)
 
-    if (!inFragment) {
-      row.cells.forEach((cell) => {
-        cell.cellRendered()
-      })
+    if (inFragment) {
+      return
     }
+
+    row.cells.forEach((cell) => {
+      cell.cellRendered()
+    })
   }
 
   /**

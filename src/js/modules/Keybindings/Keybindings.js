@@ -251,6 +251,10 @@ export default class Keybindings extends Module {
     if (this.keydownBinding) {
       this.table.element.removeEventListener('keyup', this.keydownBinding)
     }
+
+    this.keyupBinding = false
+    this.keydownBinding = false
+    this.pressedKeys = []
   }
 
   /**

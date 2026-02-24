@@ -70,13 +70,10 @@ export default class Sort extends Module {
    * @returns {object}
    */
   remoteSortParams(data, config, silent, params) {
-    const sorters = this.getSort()
-
-    sorters.forEach((item) => {
-      delete item.column
-    })
-
-    params.sort = sorters
+    params.sort = this.getSort().map((item) => ({
+      field: item.field,
+      dir: item.dir
+    }))
 
     return params
   }

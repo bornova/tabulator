@@ -58,7 +58,7 @@ export default class TableRegistry {
         }
       } else if (Array.isArray(query)) {
         query.forEach(function (item) {
-          results = results.concat(TableRegistry.registry.lookupTable(item))
+          results = results.concat(TableRegistry.registry.lookupTable(item, silent))
         })
       } else {
         if (!silent) {

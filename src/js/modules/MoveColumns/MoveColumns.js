@@ -318,9 +318,14 @@ export default class MoveColumns extends Module {
     if (e.which === 1 || this.touchMove) {
       this._unbindMouseMove()
 
-      this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling)
-      this.placeholderElement.parentNode.removeChild(this.placeholderElement)
-      this.hoverElement.parentNode.removeChild(this.hoverElement)
+      if (this.placeholderElement.parentNode) {
+        this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling)
+        this.placeholderElement.parentNode.removeChild(this.placeholderElement)
+      }
+
+      if (this.hoverElement && this.hoverElement.parentNode) {
+        this.hoverElement.parentNode.removeChild(this.hoverElement)
+      }
 
       this.table.element.classList.remove('tabulator-block-select')
 

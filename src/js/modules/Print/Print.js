@@ -120,6 +120,8 @@ export default class Print extends Module {
       this.element.parentNode.removeChild(this.element)
       this.table.element.style.display = ''
     }
+
+    this.element = false
   }
 
   /**

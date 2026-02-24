@@ -421,6 +421,10 @@ export default class Range extends CoreFeature {
    * @returns {Array<object>}
    */
   getRows() {
+    if (!Number.isFinite(this.top) || !Number.isFinite(this.bottom)) {
+      return []
+    }
+
     return this._getTableRows().slice(this.top, this.bottom + 1)
   }
 
@@ -429,6 +433,10 @@ export default class Range extends CoreFeature {
    * @returns {Array<object>}
    */
   getColumns() {
+    if (!Number.isFinite(this.left) || !Number.isFinite(this.right)) {
+      return []
+    }
+
     return this._getTableColumns().slice(this.left, this.right + 1)
   }
 

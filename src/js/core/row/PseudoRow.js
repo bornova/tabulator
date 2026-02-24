@@ -1,3 +1,5 @@
+const EMPTY_ROW_DATA = Object.freeze({})
+
 export default class PseudoRow {
   /**
    * @param {string} type Pseudo row type.
@@ -38,7 +40,7 @@ export default class PseudoRow {
    * @returns {object}
    */
   getData() {
-    return {}
+    return EMPTY_ROW_DATA
   }
 
   /**

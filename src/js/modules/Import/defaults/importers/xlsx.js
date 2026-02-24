@@ -7,6 +7,11 @@
  */
 export default function (input) {
   const xlsxLib = this.dependencyRegistry.lookup('XLSX')
+
+  if (!xlsxLib) {
+    throw new Error('Import Error - XLSX dependency not found')
+  }
+
   const workbook = xlsxLib.read(input)
   const firstSheetName = workbook.SheetNames[0]
   const sheet = workbook.Sheets[firstSheetName]

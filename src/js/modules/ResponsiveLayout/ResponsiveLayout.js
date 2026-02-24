@@ -426,6 +426,6 @@ export default class ResponsiveLayout extends Module {
       list.appendChild(row)
     })
 
-    return Object.keys(data).length ? list : ''
+    return data.length ? list : ''
   }
 }

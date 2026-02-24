@@ -12,6 +12,8 @@
  * @returns {number} Sort result.
  */
 export default function (a, b, aRow, bRow, column, dir, params) {
+  params = params || {}
+
   const alignEmptyValues = params.alignEmptyValues
   const decimal = params.decimalSeparator
   const thousand = params.thousandSeparator

@@ -35,6 +35,11 @@ export default class Helpers {
     let output
 
     for (let i = 0; i < length; i++) {
+      if (data == null) {
+        output = data
+        break
+      }
+
       data = data[structure[i]]
 
       output = data

@@ -35,7 +35,15 @@ export default class ResizeRows extends Module {
    * @returns {number}
    */
   getScreenY(e) {
-    return typeof e.screenY === 'undefined' ? e.touches[0].screenY : e.screenY
+    if (typeof e.screenY !== 'undefined') {
+      return e.screenY
+    }
+
+    if (e.touches && e.touches.length) {
+      return e.touches[0].screenY
+    }
+
+    return e.changedTouches && e.changedTouches.length ? e.changedTouches[0].screenY : 0
   }
 
   /**

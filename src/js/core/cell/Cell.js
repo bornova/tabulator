@@ -125,27 +125,34 @@ export default class Cell extends CoreFeature {
       return this.element.textContent
     })
 
-    switch (typeof val) {
-      case 'object':
-        if (val instanceof Node) {
-          this.element.replaceChildren(val)
-        } else {
-          this.element.innerHTML = ''
+    this._applyFormattedValue(val)
+  }
 
-          if (val != null) {
-            console.warn(
-              'Format Error - Formatter has returned a type of object, the only valid formatter object return is an instance of Node, the formatter returned:',
-              val
-            )
-          }
-        }
-        break
-      case 'undefined':
-        this.element.innerHTML = ''
-        break
-      default:
-        this.element.innerHTML = val
+  /**
+   * Apply formatter output to the cell element.
+   * @param {*} val Formatter output.
+   * @returns {void}
+   */
+  _applyFormattedValue(val) {
+    if (typeof val === 'object') {
+      if (val instanceof Node) {
+        this.element.replaceChildren(val)
+        return
+      }
+
+      if (val != null) {
+        console.warn(
+          'Format Error - Formatter has returned a type of object, the only valid formatter object return is an instance of Node, the formatter returned:',
+          val
+        )
+      }
+
+      val = ''
+    } else if (typeof val === 'undefined') {
+      val = ''
     }
+
+    this.element.innerHTML = val
   }
 
   /**

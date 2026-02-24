@@ -109,8 +109,7 @@ export default class ExternalEventBus {
    * Dispatch an external event.
    * @returns {*}
    */
-  _dispatch() {
-    const args = Array.from(arguments)
+  _dispatch(...args) {
     const key = args.shift()
     let result
 
@@ -131,16 +130,15 @@ export default class ExternalEventBus {
    * Dispatch with optional debug logging.
    * @returns {*}
    */
-  _debugDispatch() {
-    const args = Array.from(arguments)
+  _debugDispatch(...args) {
     const key = args[0]
 
     args[0] = 'ExternalEvent:' + args[0]
 
-    if (this.debug === true || this.debug.includes(key)) {
+    if (this.debug === true || (Array.isArray(this.debug) && this.debug.includes(key))) {
       console.log(...args)
     }
 
-    return this._dispatch(...arguments)
+    return this._dispatch(...args)
   }
 }

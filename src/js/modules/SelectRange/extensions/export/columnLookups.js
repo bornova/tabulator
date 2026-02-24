@@ -14,7 +14,7 @@ export default {
     const columns = this.modules.selectRange.selectedColumns()
 
     if (this.columnManager.rowHeader) {
-      columns.unshift(this.columnManager.rowHeader)
+      return [this.columnManager.rowHeader].concat(columns)
     }
 
     return columns

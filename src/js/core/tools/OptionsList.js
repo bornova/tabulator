@@ -38,7 +38,7 @@ export default class OptionsList {
           console.warn('Invalid ' + this.msgType + ' option:', key)
         }
 
-        output[key] = userOptions.key
+        output[key] = userOptions[key]
       }
     }
 

@@ -632,15 +632,21 @@ export default class DataTree extends Module {
   rowDelete(row) {
     const parent = row.modules.dataTree.parent
     let childIndex
+    let childData
 
     if (parent) {
+      childData = parent.data[this.field]
       childIndex = this.findChildIndex(row, parent)
 
-      if (childIndex !== false) {
-        parent.data[this.field].splice(childIndex, 1)
-      }
+      if (Array.isArray(childData)) {
+        if (childIndex !== false) {
+          childData.splice(childIndex, 1)
+        }
 
-      if (!parent.data[this.field].length) {
+        if (!childData.length) {
+          delete parent.data[this.field]
+        }
+      } else if (childData && typeof childData === 'object' && childData === row.data) {
         delete parent.data[this.field]
       }
 

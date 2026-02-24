@@ -18,7 +18,15 @@ export default {
   local(id, type) {
     const data = localStorage.getItem(`${id}-${type}`)
 
-    return data ? JSON.parse(data) : false
+    if (!data) {
+      return false
+    }
+
+    try {
+      return JSON.parse(data)
+    } catch {
+      return false
+    }
   },
   /**
    * Read persisted data from cookies.
@@ -47,6 +55,14 @@ export default {
       data = cookie.replace(`${key}=`, '')
     }
 
-    return data ? JSON.parse(data) : false
+    if (!data) {
+      return false
+    }
+
+    try {
+      return JSON.parse(data)
+    } catch {
+      return false
+    }
   }
 }

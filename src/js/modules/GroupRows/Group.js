@@ -478,7 +478,10 @@ export default class Group {
       } else {
         this.rows.forEach((row) => {
           const rowEl = row.getElement()
-          rowEl.parentNode.removeChild(rowEl)
+
+          if (rowEl.parentNode) {
+            rowEl.parentNode.removeChild(rowEl)
+          }
         })
       }
     }

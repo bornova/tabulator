@@ -25,7 +25,10 @@ export default {
     }
 
     const singleCell = bounds.start === bounds.end
-    const data = clipboard.split('\n').map((row) => row.split('\t'))
+    const data = clipboard
+      .split('\n')
+      .filter((row, index, rows) => row.length || index < rows.length - 1)
+      .map((row) => row.split('\t'))
     const rows = []
 
     if (!data.length) {

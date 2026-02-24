@@ -220,7 +220,13 @@ export default {
       return true
     }
 
-    const reg = new RegExp(parameters)
+    let reg
+
+    try {
+      reg = new RegExp(parameters)
+    } catch {
+      return false
+    }
 
     return reg.test(value)
   },

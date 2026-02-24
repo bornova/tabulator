@@ -185,5 +185,9 @@ export default class ResizeTable extends Module {
     if (this.containerObserver && tableElement.parentNode) {
       this.containerObserver.unobserve(tableElement.parentNode)
     }
+
+    this.resizeObserver = false
+    this.visibilityObserver = false
+    this.containerObserver = false
   }
 }

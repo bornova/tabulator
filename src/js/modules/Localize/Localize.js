@@ -80,7 +80,7 @@ export default class Localize extends Module {
    */
   _setLangProp(lang, values) {
     for (const key in values) {
-      if (lang[key] && typeof lang[key] === 'object') {
+      if (lang[key] && typeof lang[key] === 'object' && values[key] && typeof values[key] === 'object') {
         this._setLangProp(lang[key], values[key])
       } else {
         lang[key] = values[key]

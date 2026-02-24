@@ -120,17 +120,18 @@ export default class Column extends CoreFeature {
    */
   mapDefinitions() {
     const defaults = this.table.options.columnDefaults
+    const definition = { ...this.definition }
 
     // map columnDefaults onto column definitions
     if (defaults) {
       Object.entries(defaults).forEach(([key, value]) => {
-        if (typeof this.definition[key] === 'undefined') {
-          this.definition[key] = value
+        if (typeof definition[key] === 'undefined') {
+          definition[key] = value
         }
       })
     }
 
-    this.definition = this.table.columnManager.optionsList.generate(Column.defaultOptionList, this.definition)
+    this.definition = this.table.columnManager.optionsList.generate(Column.defaultOptionList, definition)
   }
 
   /**

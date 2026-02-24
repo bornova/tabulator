@@ -1,6 +1,6 @@
 /**
  * Default mutator functions.
  *
- * @type {Object<string, function>}
+ * @type {object}
  */
 export default {}

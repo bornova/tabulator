@@ -71,7 +71,7 @@ export default class Import extends Module {
    * @returns {boolean}
    */
   loadDataCheck(data) {
-    const isImportableArray = Array.isArray(data) && data.length && Array.isArray(data)
+    const isImportableArray = Array.isArray(data) && data.length && Array.isArray(data[0])
 
     return this.table.options.importFormat && (typeof data === 'string' || isImportableArray)
   }

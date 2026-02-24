@@ -17,7 +17,7 @@ import jsonLines from './downloaders/jsonLines.js'
  *   html: function(Object, Array<Object>, Object): void
  * }}
  */
-export default {
+const defaultDownloaders = {
   csv,
   json,
   jsonLines,
@@ -25,3 +25,5 @@ export default {
   xlsx,
   html
 }
+
+export default defaultDownloaders

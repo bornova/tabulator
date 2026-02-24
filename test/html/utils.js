@@ -152,6 +152,8 @@ const testFiles = [
   'core_all.html',
   'editors.html',
   'filters.html',
+  'frozen_columns.html',
+  'frozen_rows.html',
   'groupBy.html',
   'layouts.html',
   'menus.html',
@@ -159,7 +161,8 @@ const testFiles = [
   'nested_data.html',
   'pagination.html',
   'resizable.html',
-  'selectable_range.html'
+  'selectable_range.html',
+  'spreadsheet.html'
 ]
 
 export const initializeTestFileNavigator = () => {

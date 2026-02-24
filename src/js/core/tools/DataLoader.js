@@ -36,9 +36,24 @@ export default class DataLoader extends CoreFeature {
 
     this.dispatchExternal('dataLoading', data)
 
-    // parse json data to array
-    if (data && (data.indexOf('{') == 0 || data.indexOf('[') == 0)) {
-      data = JSON.parse(data)
+    // parse JSON-string data
+    if (typeof data === 'string' && (data.indexOf('{') === 0 || data.indexOf('[') === 0)) {
+      try {
+        data = JSON.parse(data)
+      } catch (error) {
+        console.error('Data Load Error - Unable to parse JSON data: ', error)
+        this.dispatchExternal('dataLoadError', error)
+
+        if (!silent) {
+          this.alertError()
+        }
+
+        setTimeout(() => {
+          this.clearAlert()
+        }, this.table.options.dataLoaderErrorTimeout)
+
+        return Promise.reject(error)
+      }
     }
 
     if (this.confirm('data-loading', [data, params, config, silent])) {
@@ -64,7 +79,7 @@ export default class DataLoader extends CoreFeature {
 
             const rowData = this.chain('data-loaded', [response], null, response)
 
-            if (requestNo == this.requestOrder) {
+            if (requestNo === this.requestOrder) {
               this.clearAlert()
 
               if (rowData !== false) {

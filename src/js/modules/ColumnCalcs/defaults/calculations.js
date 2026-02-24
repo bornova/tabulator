@@ -146,7 +146,7 @@ export default {
    */
   unique(values) {
     const unique = values.filter((value, index) => {
-      return (values || value === 0) && values.indexOf(value) === index
+      return (value || value === 0) && values.indexOf(value) === index
     })
 
     return unique.length

@@ -233,14 +233,14 @@ export default class InteractionManager extends CoreFeature {
    * @returns {void}
    */
   track(type, e) {
-    const path = (e.composedPath && e.composedPath()) || e.path
+    const path = (e.composedPath && e.composedPath()) || e.path || []
 
     let targets = this.findTargets(path)
     targets = this.bindComponents(type, targets)
 
     this.triggerEvents(type, e, targets)
 
-    if (this.pseudoTracking && (type == 'mouseover' || type == 'mouseleave') && !Object.keys(targets).length) {
+    if (this.pseudoTracking && (type === 'mouseover' || type === 'mouseleave') && !Object.keys(targets).length) {
       this.pseudoMouseLeave('none', e)
     }
   }

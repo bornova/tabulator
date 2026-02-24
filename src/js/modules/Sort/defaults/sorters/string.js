@@ -13,6 +13,8 @@
  * @returns {number} Sort result.
  */
 export default function (a, b, aRow, bRow, column, dir, params) {
+  params = params || {}
+
   const alignEmptyValues = params.alignEmptyValues
   let emptyAlign
   let locale
@@ -29,9 +31,12 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   }
 
   // handle empty values
-  if (!a) {
-    emptyAlign = !b ? 0 : -1
-  } else if (!b) {
+  const aEmpty = a === null || typeof a === 'undefined' || a === ''
+  const bEmpty = b === null || typeof b === 'undefined' || b === ''
+
+  if (aEmpty) {
+    emptyAlign = bEmpty ? 0 : -1
+  } else if (bEmpty) {
     emptyAlign = 1
   } else {
     locale = resolveLocale()

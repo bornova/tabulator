@@ -17,10 +17,14 @@ export default function (cell, formatterParams) {
   let data
 
   function labelTraverse(path, data) {
+    if (data == null) {
+      return data
+    }
+
     const item = path.shift()
     const value = data[item]
 
-    if (path.length && typeof value === 'object') {
+    if (path.length && value !== null && typeof value === 'object') {
       return labelTraverse(path, value)
     }
 

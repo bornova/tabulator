@@ -3,4 +3,6 @@
  *
  * @type {Object<string, function>}
  */
-export default {}
+const defaultColumnLookups = {}
+
+export default defaultColumnLookups

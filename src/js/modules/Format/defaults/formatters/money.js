@@ -7,6 +7,8 @@
  * @returns {string} Formatted currency value.
  */
 export default function (cell, formatterParams) {
+  formatterParams ??= {}
+
   let floatVal = parseFloat(cell.getValue())
   let sign = ''
 

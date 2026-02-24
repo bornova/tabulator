@@ -38,7 +38,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
       min
     success(calcVal)
     element.setAttribute('aria-valuenow', calcVal)
-    element.setAttribute('aria-label', value)
+    element.setAttribute('aria-label', calcVal)
   }
 
   // style handle

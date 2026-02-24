@@ -174,7 +174,7 @@ export default class VirtualDomHorizontal extends Renderer {
           if (colPos + width > this.vDomScrollPosLeft && colPos < this.vDomScrollPosRight) {
             // column is visible
 
-            if (this.leftCol == -1) {
+            if (this.leftCol === -1) {
               this.leftCol = this.columns.length
               this.vDomPadLeft = colPos
             }

@@ -4,12 +4,20 @@ import * as allModules from '../core/modules/optional.js'
 
 class TabulatorFull extends Tabulator {
   /**
+   * Initialize module binder with all optional modules.
+   * @returns {void}
+   */
+  static initializeAllModules() {
+    Tabulator.initializeModuleBinder(allModules)
+  }
+
+  /**
    * Extend an installed module namespace on the full build.
    * @param {...*} args Extension arguments.
    * @returns {void}
    */
   static extendModule(...args) {
-    Tabulator.initializeModuleBinder(allModules)
+    TabulatorFull.initializeAllModules()
     Tabulator._extendModule(...args)
   }
 
@@ -19,7 +27,7 @@ class TabulatorFull extends Tabulator {
    * @returns {void}
    */
   static registerModule(...args) {
-    Tabulator.initializeModuleBinder(allModules)
+    TabulatorFull.initializeAllModules()
     Tabulator._registerModule(...args)
   }
 

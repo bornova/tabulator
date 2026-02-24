@@ -291,7 +291,9 @@ export default class Clipboard extends Module {
    */
   checkPasteOrigin(e) {
     const blocked = this.confirm('clipboard-paste', [e])
-    return !(blocked || !['DIV', 'SPAN'].includes(e.target.tagName))
+    const tagName = e.target && e.target.tagName ? e.target.tagName : ''
+
+    return !(blocked || !['DIV', 'SPAN'].includes(tagName))
   }
 
   /**
