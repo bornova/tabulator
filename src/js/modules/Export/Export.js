@@ -700,6 +700,30 @@ export default class Export extends Module {
 
         if (this.table.modExists('format') && this.config.formatCells !== false) {
           value = this.table.modules.format.formatExportValue(cellWrapper, this.colVisProp)
+
+          if (this.colVisProp === 'clipboard') {
+            let rawValue
+
+            switch (typeof col.value) {
+              case 'object':
+                rawValue = col.value !== null ? JSON.stringify(col.value) : ''
+                break
+
+              case 'undefined':
+                rawValue = ''
+                break
+
+              default:
+                rawValue = col.value
+            }
+
+            const formattedHasHtml = typeof value === 'string' && /<[^>]+>/.test(value)
+            const formattedHasNoText = value === '' && rawValue !== ''
+
+            if (value instanceof Node || formattedHasHtml || formattedHasNoText) {
+              value = rawValue
+            }
+          }
         } else {
           switch (typeof value) {
             case 'object':

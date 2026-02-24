@@ -27,12 +27,15 @@ test('clipboard module', async ({ page }) => {
 
     window.tabulatorInstance = new Tabulator(holder, {
       data: [
-        { id: 1, value: 'A' },
-        { id: 2, value: 'B' }
+        { id: 1, value: 'A', rating: 4, progress: 55, completed: true },
+        { id: 2, value: 'B', rating: 2, progress: 20, completed: false }
       ],
       columns: [
         { title: 'ID', field: 'id', clipboard: true, titleClipboard: 'Identifier' },
-        { title: 'Value', field: 'value' }
+        { title: 'Value', field: 'value' },
+        { title: 'Rating', field: 'rating', formatter: 'star' },
+        { title: 'Progress', field: 'progress', formatter: 'progress' },
+        { title: 'Completed', field: 'completed', formatter: 'tickCross' }
       ],
       clipboard: true,
       clipboardCopyStyled: false,
@@ -77,6 +80,22 @@ test('clipboard module', async ({ page }) => {
     })
     expect(allRows).toContain('A')
     expect(allRows).toContain('B')
+    expect(allRows).toContain('4')
+    expect(allRows).toContain('55')
+    expect(allRows).toContain('true')
+  })
+
+  await test.step('clipboard html export keeps formatter columns as text values', async () => {
+    const clipboardContent = await page.evaluate(() => {
+      window.tabulatorInstance.modules.clipboard.rowRange = window.tabulatorInstance.options.clipboardCopyRowRange
+
+      return window.tabulatorInstance.modules.clipboard.generateClipboardContent()
+    })
+
+    expect(clipboardContent.html).toContain('<td')
+    expect(clipboardContent.html).toContain('>4<')
+    expect(clipboardContent.html).toContain('>55<')
+    expect(clipboardContent.html).toContain('>true<')
   })
 
   await test.step('column clipboard and titleClipboard options present', async () => {

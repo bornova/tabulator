@@ -39,7 +39,18 @@
         },
         columns: [
           { title: 'Id', field: 'id' },
-          { title: 'Name', field: 'name', sorter: 'string' },
+          {
+            title: 'Name',
+            field: 'name',
+            sorter: 'string',
+            formatter: function (cell, formatterParams, onRendered) {
+              //cell - the cell component
+              //formatterParams - parameters set for the column
+              //onRendered - function to call when the formatter has been rendered
+
+              return 'Mr. ' + cell.getValue() //return the contents of the cell;
+            }
+          },
           { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
           { title: 'Gender', field: 'gender', sorter: 'string' },
           { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
