@@ -344,7 +344,7 @@ export default class SelectRow extends Module {
     const row = this.table.rowManager.findRow(rowInfo)
 
     if (row) {
-      if (this.selectedRows.indexOf(row) === -1) {
+      if (!this.selectedRows.includes(row)) {
         row.getElement().classList.add('tabulator-selected')
         if (!row.modules.select) {
           row.modules.select = {}
@@ -380,7 +380,7 @@ export default class SelectRow extends Module {
    * @returns {boolean}
    */
   isRowSelected(row) {
-    return this.selectedRows.indexOf(row) !== -1
+    return this.selectedRows.includes(row)
   }
 
   /**

@@ -117,15 +117,12 @@ export default class Persistence extends Module {
         retrievedData = this.retrieveData('page')
 
         if (retrievedData) {
-          if (
-            typeof retrievedData.paginationSize !== 'undefined' &&
-            (this.config.page === true || this.config.page.size)
-          ) {
+          if (retrievedData.paginationSize !== undefined && (this.config.page === true || this.config.page.size)) {
             this.table.options.paginationSize = retrievedData.paginationSize
           }
 
           if (
-            typeof retrievedData.paginationInitialPage !== 'undefined' &&
+            retrievedData.paginationInitialPage !== undefined &&
             (this.config.page === true || this.config.page.page)
           ) {
             this.table.options.paginationInitialPage = retrievedData.paginationInitialPage
@@ -138,20 +135,17 @@ export default class Persistence extends Module {
         retrievedData = this.retrieveData('group')
 
         if (retrievedData) {
-          if (
-            typeof retrievedData.groupBy !== 'undefined' &&
-            (this.config.group === true || this.config.group.groupBy)
-          ) {
+          if (retrievedData.groupBy !== undefined && (this.config.group === true || this.config.group.groupBy)) {
             this.table.options.groupBy = retrievedData.groupBy
           }
           if (
-            typeof retrievedData.groupStartOpen !== 'undefined' &&
+            retrievedData.groupStartOpen !== undefined &&
             (this.config.group === true || this.config.group.groupStartOpen)
           ) {
             this.table.options.groupStartOpen = retrievedData.groupStartOpen
           }
           if (
-            typeof retrievedData.groupHeader !== 'undefined' &&
+            retrievedData.groupHeader !== undefined &&
             (this.config.group === true || this.config.group.groupHeader)
           ) {
             this.table.options.groupHeader = retrievedData.groupHeader
@@ -366,7 +360,7 @@ export default class Persistence extends Module {
         }
 
         keys.forEach((key) => {
-          if (key !== 'columns' && typeof column[key] !== 'undefined') {
+          if (key !== 'columns' && column[key] !== undefined) {
             from[key] = column[key]
           }
         })
@@ -558,7 +552,7 @@ export default class Persistence extends Module {
               break
 
             default:
-              if (typeof colDef[key] !== 'function' && excludedKeys.indexOf(key) === -1) {
+              if (typeof colDef[key] !== 'function' && !excludedKeys.includes(key)) {
                 defStore[key] = colDef[key]
               }
           }

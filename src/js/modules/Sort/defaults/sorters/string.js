@@ -31,8 +31,8 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   }
 
   // handle empty values
-  const aEmpty = a === null || typeof a === 'undefined' || a === ''
-  const bEmpty = b === null || typeof b === 'undefined' || b === ''
+  const aEmpty = a == null || a === ''
+  const bEmpty = b == null || b === ''
 
   if (aEmpty) {
     emptyAlign = bEmpty ? 0 : -1

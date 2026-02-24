@@ -57,15 +57,15 @@ export default class Format extends Module {
   initializeColumn(column) {
     column.modules.format = this.lookupTypeFormatter(column, '')
 
-    if (typeof column.definition.formatterPrint !== 'undefined') {
+    if (column.definition.formatterPrint !== undefined) {
       column.modules.format.print = this.lookupTypeFormatter(column, 'Print')
     }
 
-    if (typeof column.definition.formatterClipboard !== 'undefined') {
+    if (column.definition.formatterClipboard !== undefined) {
       column.modules.format.clipboard = this.lookupTypeFormatter(column, 'Clipboard')
     }
 
-    if (typeof column.definition.formatterHtmlOutput !== 'undefined') {
+    if (column.definition.formatterHtmlOutput !== undefined) {
       column.modules.format.htmlOutput = this.lookupTypeFormatter(column, 'HtmlOutput')
     }
   }
@@ -166,9 +166,7 @@ export default class Format extends Module {
       getColumn() {
         return column.getComponent()
       },
-      getTable: () => {
-        return this.table
-      }
+      getTable: () => this.table
     }
 
     const params =
@@ -234,6 +232,6 @@ export default class Format extends Module {
    * @returns {*}
    */
   emptyToSpace(value) {
-    return value === null || typeof value === 'undefined' || value === '' ? '&nbsp;' : value
+    return value == null || value === '' ? '&nbsp;' : value
   }
 }

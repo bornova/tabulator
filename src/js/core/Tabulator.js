@@ -752,9 +752,7 @@ class Tabulator extends ModuleBinder {
     }
 
     // sort rows into correct order to ensure smooth delete from table
-    foundRows.sort((a, b) => {
-      return this.rowManager.rows.indexOf(a) > this.rowManager.rows.indexOf(b) ? 1 : -1
-    })
+    foundRows.sort((a, b) => (this.rowManager.rows.indexOf(a) > this.rowManager.rows.indexOf(b) ? 1 : -1))
 
     // delete rows
     foundRows.forEach((row) => {

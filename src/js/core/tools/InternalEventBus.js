@@ -44,9 +44,7 @@ export default class InternalEventBus {
 
     this.events[key].push({ callback, priority })
 
-    this.events[key].sort((a, b) => {
-      return a.priority - b.priority
-    })
+    this.events[key].sort((a, b) => a.priority - b.priority)
 
     this._notifySubscriptionChange(key, true)
   }
@@ -62,9 +60,7 @@ export default class InternalEventBus {
 
     if (this.events[key]) {
       if (callback) {
-        index = this.events[key].findIndex((item) => {
-          return item.callback === callback
-        })
+        index = this.events[key].findIndex((item) => item.callback === callback)
 
         if (index > -1) {
           this.events[key].splice(index, 1)
@@ -107,7 +103,7 @@ export default class InternalEventBus {
 
     if (this.subscribed(key)) {
       this.events[key].forEach((subscriber) => {
-        value = subscriber.callback.apply(this, args.concat([value]))
+        value = subscriber.callback.call(this, ...args, value)
       })
 
       return value
@@ -131,7 +127,7 @@ export default class InternalEventBus {
 
     if (this.subscribed(key)) {
       this.events[key].forEach((subscriber) => {
-        if (subscriber.callback.apply(this, args)) {
+        if (subscriber.callback.call(this, ...args)) {
           confirmed = true
         }
       })
@@ -150,9 +146,7 @@ export default class InternalEventBus {
     const notifiers = this.subscriptionNotifiers[key]
 
     if (notifiers) {
-      notifiers.forEach((callback) => {
-        callback(subscribed)
-      })
+      notifiers.forEach((callback) => callback(subscribed))
     }
   }
 
@@ -163,7 +157,7 @@ export default class InternalEventBus {
   _dispatch(key, ...args) {
     if (this.events[key]) {
       this.events[key].forEach((subscriber) => {
-        subscriber.callback.apply(this, args)
+        subscriber.callback.call(this, ...args)
       })
     }
   }

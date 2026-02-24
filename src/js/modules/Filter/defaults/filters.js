@@ -105,12 +105,12 @@ export default {
    * @returns {boolean} True if row value contains filter text.
    */
   like(filterVal, rowVal) {
-    if (filterVal === null || filterVal === undefined) {
+    if (filterVal == null) {
       return rowVal === filterVal
     }
 
-    if (rowVal !== undefined && rowVal !== null) {
-      return String(rowVal).toLowerCase().indexOf(filterVal.toLowerCase()) > -1
+    if (rowVal != null) {
+      return String(rowVal).toLowerCase().includes(filterVal.toLowerCase())
     }
 
     return false
@@ -127,17 +127,17 @@ export default {
    * @returns {boolean} True if keyword match rules are satisfied.
    */
   keywords(filterVal, rowVal, rowData, filterParams) {
-    const keywords = filterVal.toLowerCase().split(filterParams.separator === undefined ? ' ' : filterParams.separator)
-    const value = String(rowVal === null || rowVal === undefined ? '' : rowVal).toLowerCase()
-    const matches = []
+    const keywords = filterVal.toLowerCase().split(filterParams.separator ?? ' ')
+    const value = String(rowVal ?? '').toLowerCase()
+    let matchCount = 0
 
     keywords.forEach((keyword) => {
       if (value.includes(keyword)) {
-        matches.push(true)
+        matchCount++
       }
     })
 
-    return filterParams.matchAll ? matches.length === keywords.length : !!matches.length
+    return filterParams.matchAll ? matchCount === keywords.length : matchCount > 0
   },
 
   // starts with the string
@@ -149,11 +149,11 @@ export default {
    * @returns {boolean} True if row value starts with filter text.
    */
   starts(filterVal, rowVal) {
-    if (filterVal === null || filterVal === undefined) {
+    if (filterVal == null) {
       return rowVal === filterVal
     }
 
-    if (rowVal !== undefined && rowVal !== null) {
+    if (rowVal != null) {
       return String(rowVal).toLowerCase().startsWith(filterVal.toLowerCase())
     }
 
@@ -169,11 +169,11 @@ export default {
    * @returns {boolean} True if row value ends with filter text.
    */
   ends(filterVal, rowVal) {
-    if (filterVal === null || filterVal === undefined) {
+    if (filterVal == null) {
       return rowVal === filterVal
     }
 
-    if (rowVal !== undefined && rowVal !== null) {
+    if (rowVal != null) {
       return String(rowVal).toLowerCase().endsWith(filterVal.toLowerCase())
     }
 

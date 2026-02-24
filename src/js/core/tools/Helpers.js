@@ -77,9 +77,7 @@ export default class Helpers {
         typeof subject === 'object' &&
         (subject.__proto__ === objectProto || subject.__proto__ === arrayProto)
       ) {
-        match = list.findIndex((item) => {
-          return item.subject === subject
-        })
+        match = list.findIndex((item) => item.subject === subject)
 
         if (match > -1) {
           clone[i] = list[match].copy

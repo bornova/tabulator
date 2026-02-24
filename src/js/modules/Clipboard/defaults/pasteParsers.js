@@ -28,9 +28,10 @@ export default {
     if (data.length && !(data.length === 1 && data[0].length < 2)) {
       // check if headers are present by title
       data[0].forEach((value) => {
-        const column = columns.find((column) => {
-          return value && column.definition.title && value.trim() && column.definition.title.trim() === value.trim()
-        })
+        const column = columns.find(
+          (column) =>
+            value && column.definition.title && value.trim() && column.definition.title.trim() === value.trim()
+        )
 
         if (column) {
           columnMap.push(column)
@@ -45,9 +46,9 @@ export default {
         columnMap = []
 
         data[0].forEach((value) => {
-          const column = columns.find((column) => {
-            return value && column.field && value.trim() && column.field.trim() === value.trim()
-          })
+          const column = columns.find(
+            (column) => value && column.field && value.trim() && column.field.trim() === value.trim()
+          )
 
           if (column) {
             columnMap.push(column)

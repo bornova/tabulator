@@ -186,14 +186,12 @@ export default class Edit {
     const valueKeys = ['values', 'valuesURL', 'valuesLookup']
     let valueCheck
 
-    params = Object.assign({}, params)
+    params = { ...params }
 
     params.verticalNavigation = params.verticalNavigation || 'editor'
-    params.placeholderLoading =
-      typeof params.placeholderLoading === 'undefined' ? 'Searching ...' : params.placeholderLoading
-    params.placeholderEmpty =
-      typeof params.placeholderEmpty === 'undefined' ? 'No Results Found' : params.placeholderEmpty
-    params.filterDelay = typeof params.filterDelay === 'undefined' ? 300 : params.filterDelay
+    params.placeholderLoading = params.placeholderLoading === undefined ? 'Searching ...' : params.placeholderLoading
+    params.placeholderEmpty = params.placeholderEmpty === undefined ? 'No Results Found' : params.placeholderEmpty
+    params.filterDelay = params.filterDelay === undefined ? 300 : params.filterDelay
 
     params.emptyValue = Object.keys(params).includes('emptyValue') ? params.emptyValue : ''
 
@@ -511,9 +509,9 @@ export default class Edit {
 
     this.filterTerm += character
 
-    const match = this.displayItems.find((item) => {
-      return typeof item.label !== 'undefined' && item.label.toLowerCase().startsWith(this.filterTerm)
-    })
+    const match = this.displayItems.find(
+      (item) => item.label !== undefined && item.label.toLowerCase().startsWith(this.filterTerm)
+    )
 
     if (match) {
       this._focusItem(match)
@@ -697,7 +695,7 @@ export default class Edit {
   }
 
   _emptyValueCheck(value) {
-    return value === null || value === undefined || value === ''
+    return value == null || value === ''
   }
 
   _parseList(inputValues) {
@@ -793,9 +791,7 @@ export default class Edit {
   }
 
   _sortGroup(sorter, options) {
-    options.sort((a, b) => {
-      return sorter(a.label, b.label, a.value, b.value, a.original, b.original)
-    })
+    options.sort((a, b) => sorter(a.label, b.label, a.value, b.value, a.original, b.original))
 
     options.forEach((option) => {
       if (option.group) {
@@ -889,8 +885,8 @@ export default class Edit {
   _defaultFilterFunc(term, label, value) {
     term = String(term).toLowerCase()
 
-    if (label !== null && label !== undefined) {
-      if (String(label).toLowerCase().indexOf(term) > -1 || String(value).toLowerCase().indexOf(term) > -1) {
+    if (label != null) {
+      if (String(label).toLowerCase().includes(term) || String(value).toLowerCase().includes(term)) {
         return true
       }
     }
@@ -1134,7 +1130,7 @@ export default class Edit {
         } else {
           initialValue = Array.isArray(this.initialValues) ? this.initialValues[0] : this.initialValues
 
-          if (initialValue === null || initialValue === undefined || initialValue === '') {
+          if (initialValue == null || initialValue === '') {
             output = initialValue
           } else {
             output = this.params.emptyValue

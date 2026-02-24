@@ -11,11 +11,11 @@ export default function (cell, formatterParams) {
 
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const inputFormat = formatterParams.inputFormat || 'yyyy-MM-dd HH:mm:ss'
-  const invalid = typeof formatterParams.invalidPlaceholder !== 'undefined' ? formatterParams.invalidPlaceholder : ''
-  const suffix = typeof formatterParams.suffix !== 'undefined' ? formatterParams.suffix : false
-  const unit = typeof formatterParams.unit !== 'undefined' ? formatterParams.unit : 'days'
-  const humanize = typeof formatterParams.humanize !== 'undefined' ? formatterParams.humanize : false
-  const date = typeof formatterParams.date !== 'undefined' ? formatterParams.date : DT ? DT.now() : null
+  const invalid = formatterParams.invalidPlaceholder !== undefined ? formatterParams.invalidPlaceholder : ''
+  const suffix = formatterParams.suffix !== undefined ? formatterParams.suffix : false
+  const unit = formatterParams.unit !== undefined ? formatterParams.unit : 'days'
+  const humanize = formatterParams.humanize !== undefined ? formatterParams.humanize : false
+  const date = formatterParams.date !== undefined ? formatterParams.date : DT ? DT.now() : null
   const value = cell.getValue()
 
   if (typeof DT !== 'undefined') {

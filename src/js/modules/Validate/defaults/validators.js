@@ -3,7 +3,7 @@
  * @param {*} value Value to check.
  * @returns {boolean}
  */
-const isEmptyValue = (value) => value === '' || value === null || typeof value === 'undefined'
+const isEmptyValue = (value) => value === '' || value == null
 
 /**
  * Alphanumeric validation regex.
@@ -204,7 +204,7 @@ export default {
       parameters = parameters.split('|')
     }
 
-    return parameters.indexOf(value) > -1
+    return parameters.includes(value)
   },
 
   // must match provided regex

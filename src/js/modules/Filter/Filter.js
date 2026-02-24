@@ -308,7 +308,7 @@ export default class Filter extends Module {
       let type = ''
       let filterFunc
 
-      if (typeof column.modules.filter.prevSuccess === 'undefined' || column.modules.filter.prevSuccess !== value) {
+      if (column.modules.filter.prevSuccess === undefined || column.modules.filter.prevSuccess !== value) {
         column.modules.filter.prevSuccess = value
 
         if (!column.modules.filter.emptyFunc(value)) {
@@ -355,7 +355,7 @@ export default class Filter extends Module {
                   const colVal = column.getFieldValue(data)
 
                   if (colVal !== undefined && colVal !== null) {
-                    return String(colVal).toLowerCase().indexOf(String(value).toLowerCase()) > -1
+                    return String(colVal).toLowerCase().includes(String(value).toLowerCase())
                   }
 
                   return false
@@ -364,9 +364,7 @@ export default class Filter extends Module {
                 break
 
               default:
-                filterFunc = (data) => {
-                  return column.getFieldValue(data) == value
-                }
+                filterFunc = (data) => column.getFieldValue(data) == value
                 type = '='
             }
           }
@@ -435,11 +433,7 @@ export default class Filter extends Module {
 
     if (field) {
       // set empty value function
-      column.modules.filter.emptyFunc =
-        column.definition.headerFilterEmptyCheck ||
-        ((value) => {
-          return !value && value !== 0
-        })
+      column.modules.filter.emptyFunc = column.definition.headerFilterEmptyCheck || ((value) => !value && value !== 0)
 
       filterElement = document.createElement('div')
       filterElement.classList.add('tabulator-header-filter')
@@ -454,9 +448,7 @@ export default class Filter extends Module {
               (column.definition.headerFilter === 'tick' || column.definition.headerFilter === 'tickCross') &&
               !column.definition.headerFilterEmptyCheck
             ) {
-              column.modules.filter.emptyFunc = (value) => {
-                return value !== true && value !== false
-              }
+              column.modules.filter.emptyFunc = (value) => value !== true && value !== false
             }
           } else {
             console.warn('Filter Error - Cannot build header filter, No such editor found: ', column.definition.editor)
@@ -478,9 +470,7 @@ export default class Filter extends Module {
                 (column.definition.formatter === 'tick' || column.definition.formatter === 'tickCross') &&
                 !column.definition.headerFilterEmptyCheck
               ) {
-                column.modules.filter.emptyFunc = (value) => {
-                  return value !== true && value !== false
-                }
+                column.modules.filter.emptyFunc = (value) => value !== true && value !== false
               }
             } else {
               editor = this.table.modules.edit.editors.input
@@ -492,7 +482,7 @@ export default class Filter extends Module {
       if (editor) {
         cellWrapper = {
           getValue() {
-            return initialValue !== undefined ? initialValue : ''
+            return initialValue ?? ''
           },
           getField() {
             return column.definition.field
@@ -503,12 +493,8 @@ export default class Filter extends Module {
           getColumn() {
             return column.getComponent()
           },
-          getTable: () => {
-            return this.table
-          },
-          getType: () => {
-            return 'header'
-          },
+          getTable: () => this.table,
+          getType: () => 'header',
           getRow() {
             return {
               normalizeHeight() {}
@@ -829,21 +815,17 @@ export default class Filter extends Module {
     let filterFunc = false
 
     if (typeof filter.field === 'function') {
-      filterFunc = (data) => {
-        return filter.field(data, filter.type || {}) // pass params to custom filter function
-      }
+      filterFunc = (data) => filter.field(data, filter.type || {}) // pass params to custom filter function
     } else {
       if (Filter.filters[filter.type]) {
         column = this.table.columnManager.getColumnByField(filter.field)
 
         if (column) {
-          filterFunc = (data) => {
-            return Filter.filters[filter.type](filter.value, column.getFieldValue(data), data, filter.params || {})
-          }
+          filterFunc = (data) =>
+            Filter.filters[filter.type](filter.value, column.getFieldValue(data), data, filter.params || {})
         } else {
-          filterFunc = (data) => {
-            return Filter.filters[filter.type](filter.value, data[filter.field], data, filter.params || {})
-          }
+          filterFunc = (data) =>
+            Filter.filters[filter.type](filter.value, data[filter.field], data, filter.params || {})
         }
       } else {
         console.warn('Filter Error - No such filter type found, ignoring: ', filter.type)
@@ -963,12 +945,11 @@ export default class Filter extends Module {
     field.forEach((filter) => {
       const index =
         typeof filter.field === 'object'
-          ? this.filterList.findIndex((element) => {
-              return filter === element
-            })
-          : this.filterList.findIndex((element) => {
-              return filter.field === element.field && filter.type === element.type && filter.value === element.value
-            })
+          ? this.filterList.findIndex((element) => filter === element)
+          : this.filterList.findIndex(
+              (element) =>
+                filter.field === element.field && filter.type === element.type && filter.value === element.value
+            )
 
       if (index > -1) {
         this.filterList.splice(index, 1)

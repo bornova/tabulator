@@ -79,7 +79,7 @@ export default class HtmlTableImport extends Module {
 
       for (let i = 0; i < cells.length; i++) {
         const cell = cells[i]
-        if (typeof this.fieldIndex[i] !== 'undefined') {
+        if (this.fieldIndex[i] !== undefined) {
           item[this.fieldIndex[i]] = cell.innerHTML
         }
       }
@@ -116,7 +116,7 @@ export default class HtmlTableImport extends Module {
       if (attrib && typeof attrib === 'object' && attrib.name && attrib.name.indexOf('tabulator-') === 0) {
         name = attrib.name.replace('tabulator-', '')
 
-        if (typeof optionsList[name] !== 'undefined') {
+        if (optionsList[name] !== undefined) {
           options[optionsList[name]] = this._attribValue(attrib.value)
         }
       }

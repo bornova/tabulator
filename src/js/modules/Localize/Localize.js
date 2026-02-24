@@ -199,7 +199,7 @@ export default class Localize extends Module {
       }
 
       const rootPath = root[level]
-      root = typeof rootPath !== 'undefined' ? rootPath : false
+      root = rootPath !== undefined ? rootPath : false
     }
 
     return root

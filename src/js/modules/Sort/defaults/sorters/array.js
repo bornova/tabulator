@@ -41,10 +41,10 @@ export default function (a, b, aRow, bRow, column, dir, params) {
         return mappedValue.reduce((current, next) => current + next, 0)
 
       case 'max':
-        return Math.max.apply(null, mappedValue)
+        return Math.max(...mappedValue)
 
       case 'min':
-        return Math.min.apply(null, mappedValue)
+        return Math.min(...mappedValue)
 
       case 'avg':
         return mappedValue.length ? mappedValue.reduce((current, next) => current + next, 0) / mappedValue.length : 0

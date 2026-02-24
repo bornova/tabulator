@@ -13,11 +13,11 @@ export default function (cell, formatterParams) {
   const el = document.createElement('span')
   const max = formatterParams.max ?? 100
   const min = formatterParams.min ?? 0
-  const colors = typeof formatterParams.color !== 'undefined' ? formatterParams.color : ['red', 'orange', 'green']
+  const colors = formatterParams.color !== undefined ? formatterParams.color : ['red', 'orange', 'green']
   let color = '#666666'
   let percentValue
 
-  if (Number.isNaN(Number(value)) || typeof cell.getValue() === 'undefined') {
+  if (Number.isNaN(Number(value)) || cell.getValue() === undefined) {
     return
   }
 

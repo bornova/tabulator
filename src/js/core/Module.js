@@ -54,7 +54,7 @@ export default class Module extends CoreFeature {
    * @returns {void}
    */
   registerTableFunction(name, func) {
-    if (typeof this.table[name] === 'undefined') {
+    if (this.table[name] === undefined) {
       this.table[name] = (...args) => {
         this.table.initGuard(name)
 
@@ -111,9 +111,7 @@ export default class Module extends CoreFeature {
     let index = this.table.rowManager.displayRows.length - 1
 
     if (this._handler) {
-      const lookupIndex = this.table.rowManager.displayPipeline.findIndex((item) => {
-        return item.handler === this._handler
-      })
+      const lookupIndex = this.table.rowManager.displayPipeline.findIndex((item) => item.handler === this._handler)
 
       if (lookupIndex > -1) {
         index = lookupIndex

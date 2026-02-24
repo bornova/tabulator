@@ -28,7 +28,7 @@ export default class DeprecationAdvisor extends CoreFeature {
   check(oldOption, newOption, convert) {
     let msg
 
-    if (typeof this.options(oldOption) !== 'undefined') {
+    if (this.options(oldOption) !== undefined) {
       msg = 'Deprecated Setup Option - Use of the %c' + oldOption + '%c option is now deprecated'
 
       if (newOption) {
@@ -55,7 +55,7 @@ export default class DeprecationAdvisor extends CoreFeature {
    * @returns {boolean}
    */
   checkMsg(oldOption, msg) {
-    if (typeof this.options(oldOption) !== 'undefined') {
+    if (this.options(oldOption) !== undefined) {
       this._warnUser(
         '%cDeprecated Setup Option - Use of the %c' + oldOption + ' %c option is now deprecated, ' + msg,
         'font-weight: normal;',

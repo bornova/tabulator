@@ -17,7 +17,7 @@ export default function (cell, formatterParams) {
   const negativeSign = formatterParams.negativeSign || '-'
   const symbol = formatterParams.symbol || ''
   const after = !!formatterParams.symbolAfter
-  const precision = typeof formatterParams.precision !== 'undefined' ? formatterParams.precision : 2
+  const precision = formatterParams.precision !== undefined ? formatterParams.precision : 2
 
   if (Number.isNaN(floatVal)) {
     return this.emptyToSpace(this.sanitizeHTML(cell.getValue()))

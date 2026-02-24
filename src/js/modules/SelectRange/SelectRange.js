@@ -1223,6 +1223,6 @@ export default class SelectRange extends Module {
    * @returns {boolean}
    */
   isEmpty(value) {
-    return value === null || value === undefined || value === ''
+    return value == null || value === ''
   }
 }

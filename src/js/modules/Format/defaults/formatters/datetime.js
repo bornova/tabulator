@@ -12,7 +12,7 @@ export default function (cell, formatterParams) {
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const inputFormat = formatterParams.inputFormat || 'yyyy-MM-dd HH:mm:ss'
   const outputFormat = formatterParams.outputFormat || 'dd/MM/yyyy HH:mm:ss'
-  const invalid = typeof formatterParams.invalidPlaceholder !== 'undefined' ? formatterParams.invalidPlaceholder : ''
+  const invalid = formatterParams.invalidPlaceholder !== undefined ? formatterParams.invalidPlaceholder : ''
   const value = cell.getValue()
 
   if (typeof DT !== 'undefined') {

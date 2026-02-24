@@ -46,7 +46,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   })
 
   function onChange() {
-    if (((cellValue === null || cellValue === undefined) && input.value !== '') || input.value !== cellValue) {
+    if ((cellValue == null && input.value !== '') || input.value !== cellValue) {
       if (success(input.value)) {
         cellValue = input.value // persist value if successfully validated incase editor is used as header filter
       }

@@ -69,7 +69,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     let value = input.value
     let luxDateTime
 
-    if (((cellValue === null || cellValue === undefined) && value !== '') || value !== cellValue) {
+    if ((cellValue == null && value !== '') || value !== cellValue) {
       if (value && inputFormat && DT) {
         luxDateTime = DT.fromISO(String(value))
 

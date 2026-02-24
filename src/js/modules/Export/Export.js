@@ -120,7 +120,7 @@ export default class Export extends Module {
       rows = rowLookup.call(this.table)
     }
 
-    return Object.assign([], rows)
+    return [...rows]
   }
 
   /**
@@ -279,7 +279,7 @@ export default class Export extends Module {
 
       header.forEach((col) => {
         if (col) {
-          const title = typeof col.title === 'undefined' ? '' : col.title
+          const title = col.title === undefined ? '' : col.title
           columns.push(new ExportColumn(title, col.column.getComponent(), col.width, col.height, col.depth))
         } else {
           columns.push(null)
@@ -798,9 +798,7 @@ export default class Export extends Module {
     if (setup.rowFormatter && row.type === 'row' && this.config.formatCells !== false) {
       const formatComponent = Object.assign(row.component)
 
-      formatComponent.getElement = () => {
-        return rowEl
-      }
+      formatComponent.getElement = () => rowEl
 
       setup.rowFormatter(row.component)
     }

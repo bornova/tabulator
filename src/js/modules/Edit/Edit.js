@@ -125,7 +125,7 @@ export default class Edit extends Module {
               if (typeof newRow === 'function') {
                 newRow = this.table.addRow(newRow(cell.row.getComponent()))
               } else {
-                newRow = this.table.addRow(Object.assign({}, newRow))
+                newRow = this.table.addRow({ ...newRow })
               }
             }
 
@@ -439,7 +439,7 @@ export default class Edit extends Module {
    * @returns {void}
    */
   initializeColumnCheck(column) {
-    if (typeof column.definition.editor !== 'undefined') {
+    if (column.definition.editor !== undefined) {
       this.initializeColumn(column)
     }
   }
@@ -924,7 +924,7 @@ export default class Edit extends Module {
    * @returns {boolean}
    */
   emptyValueCheck(value) {
-    return value === '' || value === null || value === undefined
+    return value === '' || value == null
   }
 
   /**
@@ -965,13 +965,7 @@ export default class Edit extends Module {
    * @returns {Array<object>}
    */
   getEditedCells() {
-    const output = []
-
-    this.editedCells.forEach((cell) => {
-      output.push(cell.getComponent())
-    })
-
-    return output
+    return this.editedCells.map((cell) => cell.getComponent())
   }
 
   /**

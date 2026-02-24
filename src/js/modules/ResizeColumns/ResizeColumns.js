@@ -142,7 +142,7 @@ export default class ResizeColumns extends Module {
    * @returns {number}
    */
   getClientX(e) {
-    if (typeof e.clientX !== 'undefined') {
+    if (e.clientX !== undefined) {
       return e.clientX
     }
 

@@ -14,7 +14,7 @@ export default class ColumnComponent {
           return Reflect.get(target, name, receiver)
         }
 
-        if (typeof target[name] !== 'undefined') {
+        if (target[name] !== undefined) {
           return target[name]
         }
 

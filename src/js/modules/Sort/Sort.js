@@ -223,9 +223,7 @@ export default class Sort extends Module {
           if (this.table.options.columnHeaderSortMulti && (e.shiftKey || e.ctrlKey)) {
             sorters = this.getSort()
 
-            match = sorters.findIndex((sorter) => {
-              return sorter.field === column.getField()
-            })
+            match = sorters.findIndex((sorter) => sorter.field === column.getField())
 
             if (match > -1) {
               sorters[match].dir = dir
@@ -540,8 +538,8 @@ export default class Sort extends Module {
     a = column.getFieldValue(el1.getData())
     b = column.getFieldValue(el2.getData())
 
-    a = typeof a !== 'undefined' ? a : ''
-    b = typeof b !== 'undefined' ? b : ''
+    a = a !== undefined ? a : ''
+    b = b !== undefined ? b : ''
 
     el1Comp = el1.getComponent()
     el2Comp = el2.getComponent()

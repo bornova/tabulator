@@ -222,9 +222,9 @@ export default class ColumnManager extends CoreFeature {
             }
 
             cols.splice(index, 0, col)
-            collProgress[key] = typeof value === 'undefined' ? col : true
+            collProgress[key] = value === undefined ? col : true
           } else if (collProgress[key] !== true) {
-            if (typeof value !== 'undefined') {
+            if (value !== undefined) {
               collProgress[key].sorter = this.calculateSorterFromValue(value)
               collProgress[key] = true
             }
@@ -241,9 +241,7 @@ export default class ColumnManager extends CoreFeature {
           case 'object':
             if (Array.isArray(definitions)) {
               cols.forEach((col) => {
-                const match = definitions.find((def) => {
-                  return def.field === col.field
-                })
+                const match = definitions.find((def) => def.field === col.field)
 
                 if (match) {
                   Object.assign(col, match)
@@ -453,9 +451,7 @@ export default class ColumnManager extends CoreFeature {
         })
 
         // subject is a HTML element of the column header
-        const match = columns.find((column) => {
-          return column.element === subject
-        })
+        const match = columns.find((column) => column.element === subject)
 
         return match || false
       }
@@ -492,9 +488,7 @@ export default class ColumnManager extends CoreFeature {
   }
 
   getFirstVisibleColumn() {
-    const index = this.columnsByIndex.findIndex((col) => {
-      return col.visible
-    })
+    const index = this.columnsByIndex.findIndex((col) => col.visible)
 
     return index > -1 ? this.columnsByIndex[index] : false
   }
@@ -703,7 +697,7 @@ export default class ColumnManager extends CoreFeature {
         minWidth = Number.parseInt(column.minWidth, 10)
 
         if (typeof width === 'string') {
-          if (width.indexOf('%') > -1) {
+          if (width.includes('%')) {
             colWidth = (totalWidth / 100) * Number.parseInt(width, 10)
           } else {
             colWidth = Number.parseInt(width, 10)

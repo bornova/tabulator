@@ -453,9 +453,7 @@ export default class Row extends CoreFeature {
       this.generateCells()
     }
 
-    match = this.cells.find((cell) => {
-      return cell.column === column
-    })
+    match = this.cells.find((cell) => cell.column === column)
 
     return match
   }
@@ -466,9 +464,7 @@ export default class Row extends CoreFeature {
    * @returns {number}
    */
   getCellIndex(findCell) {
-    return this.cells.findIndex((cell) => {
-      return cell === findCell
-    })
+    return this.cells.findIndex((cell) => cell === findCell)
   }
 
   /**
@@ -477,9 +473,7 @@ export default class Row extends CoreFeature {
    * @returns {object|undefined}
    */
   findCell(subject) {
-    return this.cells.find((cell) => {
-      return cell.element === subject
-    })
+    return this.cells.find((cell) => cell.element === subject)
   }
 
   /**

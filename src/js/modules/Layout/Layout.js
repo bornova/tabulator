@@ -48,10 +48,10 @@ export default class Layout extends Module {
    * @returns {void}
    */
   initializeColumn(column) {
-    if (typeof column.definition.widthGrow !== 'undefined') {
+    if (column.definition.widthGrow !== undefined) {
       column.definition.widthGrow = Number(column.definition.widthGrow)
     }
-    if (typeof column.definition.widthShrink !== 'undefined') {
+    if (column.definition.widthShrink !== undefined) {
       column.definition.widthShrink = Number(column.definition.widthShrink)
     }
   }

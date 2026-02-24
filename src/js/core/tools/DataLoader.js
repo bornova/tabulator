@@ -87,7 +87,7 @@ export default class DataLoader extends CoreFeature {
                 this.table.rowManager.setData(
                   rowData,
                   replace,
-                  typeof columnsChanged === 'undefined' ? !replace : columnsChanged
+                  columnsChanged === undefined ? !replace : columnsChanged
                 )
               }
             } else {
@@ -121,7 +121,7 @@ export default class DataLoader extends CoreFeature {
         data = []
       }
 
-      this.table.rowManager.setData(data, replace, typeof columnsChanged === 'undefined' ? !replace : columnsChanged)
+      this.table.rowManager.setData(data, replace, columnsChanged === undefined ? !replace : columnsChanged)
       return Promise.resolve()
     }
   }

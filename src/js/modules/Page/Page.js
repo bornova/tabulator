@@ -367,11 +367,11 @@ export default class Page extends Module {
         pageSizes = this.table.options.paginationSizeSelector.slice()
         this.pageSizes = pageSizes
 
-        if (this.pageSizes.indexOf(this.size) === -1) {
+        if (!this.pageSizes.includes(this.size)) {
           pageSizes.unshift(this.size)
         }
       } else {
-        if (this.pageSizes.indexOf(this.size) === -1) {
+        if (!this.pageSizes.includes(this.size)) {
           pageSizes = []
 
           for (let i = 1; i < 5; i++) {
@@ -911,9 +911,7 @@ export default class Page extends Module {
     let end
     let actualStartRow
 
-    const actualRows = data.filter((row) => {
-      return row.type === 'row'
-    })
+    const actualRows = data.filter((row) => row.type === 'row')
 
     if (this.mode === 'local') {
       output = []
@@ -1005,7 +1003,7 @@ export default class Page extends Module {
   _parseRemoteData(data) {
     let margin, paginationOutOfRange
 
-    if (typeof data.last_page === 'undefined') {
+    if (data.last_page === undefined) {
       this.logPageWarning(
         "Remote Pagination Error - Server response missing '" +
           (this.options('dataReceiveParams').last_page || 'last_page') +
@@ -1018,7 +1016,7 @@ export default class Page extends Module {
       this.max = lastPage
 
       this.remoteRowCountEstimate =
-        typeof data.last_row !== 'undefined'
+        data.last_row !== undefined
           ? data.last_row
           : lastPage * this.size - (this.page === lastPage ? this.size - data.data.length : 0)
 

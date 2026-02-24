@@ -190,9 +190,7 @@ export default class RowManager extends CoreFeature {
         return subject._getSelf() || false
       } else if (typeof HTMLElement !== 'undefined' && subject instanceof HTMLElement) {
         // subject is a HTML element of the row
-        const match = this.rows.find((row) => {
-          return row.getElement() === subject
-        })
+        const match = this.rows.find((row) => row.getElement() === subject)
 
         return match || false
       } else if (subject === null) {
@@ -202,9 +200,7 @@ export default class RowManager extends CoreFeature {
       return false
     } else {
       // subject should be treated as the index of the row
-      const match = this.rows.find((row) => {
-        return row.data[this.table.options.index] == subject
-      })
+      const match = this.rows.find((row) => row.data[this.table.options.index] == subject)
 
       return match || false
     }
@@ -219,9 +215,7 @@ export default class RowManager extends CoreFeature {
    * @returns {object|boolean}
    */
   getRowFromDataObject(data) {
-    const match = this.rows.find((row) => {
-      return row.data === data
-    })
+    const match = this.rows.find((row) => row.data === data)
 
     return match || false
   }
@@ -232,9 +226,9 @@ export default class RowManager extends CoreFeature {
    * @returns {object|undefined}
    */
   getRowFromPosition(position) {
-    return this.getDisplayRows().find((row) => {
-      return row.type === 'row' && row.getPosition() === position && row.isDisplayed()
-    })
+    return this.getDisplayRows().find(
+      (row) => row.type === 'row' && row.getPosition() === position && row.isDisplayed()
+    )
   }
 
   /**
@@ -396,7 +390,7 @@ export default class RowManager extends CoreFeature {
         data = [data]
       }
 
-      if ((typeof index === 'undefined' && pos) || (typeof index !== 'undefined' && !pos)) {
+      if ((index === undefined && pos) || (index !== undefined && !pos)) {
         data.reverse()
       }
 
@@ -439,7 +433,7 @@ export default class RowManager extends CoreFeature {
   }
 
   findAddRowPos(pos) {
-    if (typeof pos === 'undefined') {
+    if (pos === undefined) {
       pos = this.table.options.addRowPos
     }
 
@@ -468,7 +462,7 @@ export default class RowManager extends CoreFeature {
       top = chainResult.top
     }
 
-    if (typeof index !== 'undefined') {
+    if (index !== undefined) {
       index = this.findRow(index)
     }
 
@@ -670,22 +664,18 @@ export default class RowManager extends CoreFeature {
   }
 
   registerDataPipelineHandler(handler, priority) {
-    if (typeof priority !== 'undefined') {
+    if (priority !== undefined) {
       this.dataPipeline.push({ handler, priority })
-      this.dataPipeline.sort((a, b) => {
-        return a.priority - b.priority
-      })
+      this.dataPipeline.sort((a, b) => a.priority - b.priority)
     } else {
       console.error('Data pipeline handlers must have a priority in order to be registered')
     }
   }
 
   registerDisplayPipelineHandler(handler, priority) {
-    if (typeof priority !== 'undefined') {
+    if (priority !== undefined) {
       this.displayPipeline.push({ handler, priority })
-      this.displayPipeline.sort((a, b) => {
-        return a.priority - b.priority
-      })
+      this.displayPipeline.sort((a, b) => a.priority - b.priority)
     } else {
       console.error('Display pipeline handlers must have a priority in order to be registered')
     }
@@ -700,9 +690,7 @@ export default class RowManager extends CoreFeature {
 
     if (!this.table.destroyed) {
       if (typeof handler === 'function') {
-        index = this.dataPipeline.findIndex((item) => {
-          return item.handler === handler
-        })
+        index = this.dataPipeline.findIndex((item) => item.handler === handler)
 
         if (index > -1) {
           stage = 'dataPipeline'
@@ -715,9 +703,7 @@ export default class RowManager extends CoreFeature {
             }
           }
         } else {
-          index = this.displayPipeline.findIndex((item) => {
-            return item.handler === handler
-          })
+          index = this.displayPipeline.findIndex((item) => item.handler === handler)
 
           if (index > -1) {
             stage = 'displayPipeline'
@@ -874,7 +860,7 @@ export default class RowManager extends CoreFeature {
   }
 
   getVisibleRows(chain, viewable) {
-    let rows = Object.assign([], this.renderer.visibleRows(!viewable))
+    let rows = [...this.renderer.visibleRows(!viewable)]
 
     if (chain) {
       rows = this.chain('rows-visible', [viewable], rows, rows)

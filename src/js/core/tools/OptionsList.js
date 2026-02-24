@@ -7,7 +7,7 @@ export default class OptionsList {
   constructor(table, msgType, defaults = {}) {
     this.table = table
     this.msgType = msgType
-    this.registeredDefaults = Object.assign({}, defaults)
+    this.registeredDefaults = { ...defaults }
   }
 
   /**
@@ -27,7 +27,7 @@ export default class OptionsList {
    * @returns {object}
    */
   generate(defaultOptions, userOptions = {}) {
-    const output = Object.assign({}, this.registeredDefaults)
+    const output = { ...this.registeredDefaults }
     const warn = this.table.options.debugInvalidOptions || userOptions.debugInvalidOptions === true
 
     Object.assign(output, defaultOptions)
@@ -47,10 +47,10 @@ export default class OptionsList {
         output[key] = userOptions[key]
       } else {
         if (Array.isArray(output[key])) {
-          output[key] = Object.assign([], output[key])
+          output[key] = [...output[key]]
         } else if (typeof output[key] === 'object' && output[key] !== null) {
-          output[key] = Object.assign({}, output[key])
-        } else if (typeof output[key] === 'undefined') {
+          output[key] = { ...output[key] }
+        } else if (output[key] === undefined) {
           delete output[key]
         }
       }

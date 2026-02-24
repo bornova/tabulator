@@ -17,7 +17,7 @@ export default class DependencyRegistry extends CoreFeature {
    * @returns {void}
    */
   initialize() {
-    this.deps = Object.assign({}, this.options('dependencies'))
+    this.deps = { ...this.options('dependencies') }
   }
 
   /**

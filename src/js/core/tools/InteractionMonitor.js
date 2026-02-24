@@ -258,17 +258,13 @@ export default class InteractionManager extends CoreFeature {
     for (const el of path) {
       const classList = el.classList ? [...el.classList] : []
 
-      const abort = classList.filter((item) => {
-        return this.abortClasses.includes(item)
-      })
+      const abort = classList.filter((item) => this.abortClasses.includes(item))
 
       if (abort.length) {
         break
       }
 
-      const elTargets = classList.filter((item) => {
-        return componentMap.includes(item)
-      })
+      const elTargets = classList.filter((item) => componentMap.includes(item))
 
       for (const target of elTargets) {
         if (!targets[this.componentMap[target]]) {
@@ -316,9 +312,7 @@ export default class InteractionManager extends CoreFeature {
             ) {
               const rows = this.table.rowManager.getVisibleRows(true)
 
-              component = rows.find((row) => {
-                return row.getElement() === target
-              })
+              component = rows.find((row) => row.getElement() === target)
 
               if (targets.row && targets.row.parentNode && targets.row.parentNode.closest('.tabulator-row')) {
                 targets[key] = false

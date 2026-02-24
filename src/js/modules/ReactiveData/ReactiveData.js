@@ -193,7 +193,7 @@ export default class ReactiveData extends Module {
 
           // delete removed rows
           if (end !== 0) {
-            const oldRows = data.slice(start, typeof args[1] === 'undefined' ? args[1] : start + end)
+            const oldRows = data.slice(start, args[1] === undefined ? args[1] : start + end)
 
             oldRows.forEach((rowData, i) => {
               const row = self.table.rowManager.getRowFromDataObject(rowData)

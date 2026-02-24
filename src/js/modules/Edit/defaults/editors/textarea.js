@@ -13,7 +13,7 @@ import maskInput from '../../inputMask.js'
 export default function (cell, onRendered, success, cancel, editorParams) {
   let cellValue = cell.getValue()
   const vertNav = editorParams.verticalNavigation || 'hybrid'
-  const value = String(cellValue !== null && cellValue !== undefined ? cellValue : '')
+  const value = String(cellValue ?? '')
   const input = document.createElement('textarea')
   let scrollHeight = 0
 
@@ -55,7 +55,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   })
 
   function onChange() {
-    if (((cellValue === null || cellValue === undefined) && input.value !== '') || input.value !== cellValue) {
+    if ((cellValue == null && input.value !== '') || input.value !== cellValue) {
       if (success(input.value)) {
         cellValue = input.value // persist value if successfully validated incase editor is used as header filter
       }

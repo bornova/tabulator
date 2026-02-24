@@ -125,7 +125,7 @@ export default class Column extends CoreFeature {
     // map columnDefaults onto column definitions
     if (defaults) {
       Object.entries(defaults).forEach(([key, value]) => {
-        if (typeof definition[key] === 'undefined') {
+        if (definition[key] === undefined) {
           definition[key] = value
         }
       })
@@ -234,7 +234,7 @@ export default class Column extends CoreFeature {
     this.dispatch('column-layout', this)
 
     // set column visibility
-    if (typeof def.visible !== 'undefined') {
+    if (def.visible !== undefined) {
       if (def.visible) {
         this.show(true)
       } else {
@@ -460,7 +460,7 @@ export default class Column extends CoreFeature {
         dataObj[structure[i]] = value
       } else {
         if (!dataObj[structure[i]]) {
-          if (typeof value !== 'undefined') {
+          if (value !== undefined) {
             dataObj[structure[i]] = {}
           } else {
             break
@@ -1095,7 +1095,7 @@ export default class Column extends CoreFeature {
     this.widthFixed = false
 
     // set width if present
-    if (typeof this.definition.width !== 'undefined' && !force) {
+    if (this.definition.width !== undefined && !force) {
       // maxInitialWidth ignored here as width specified
       this.setWidth(this.definition.width)
     }
@@ -1171,9 +1171,7 @@ export default class Column extends CoreFeature {
             this.field = false // clear field name to prevent deletion of duplicate column from arrays
           }
 
-          return this.delete().then(() => {
-            return column.getComponent()
-          })
+          return this.delete().then(() => column.getComponent())
         })
       } else {
         console.error('Column Update Error - The updateDefinition function is only available on ungrouped columns')

@@ -678,7 +678,7 @@ export default class DataTree extends Module {
       row.modules.dataTree.open = this.startOpen(row.getComponent(), row.modules.dataTree.index)
     }
 
-    if (typeof index !== 'undefined') {
+    if (index !== undefined) {
       childIndex = this.findChildIndex(index, row)
 
       if (childIndex !== false) {
@@ -718,9 +718,9 @@ export default class DataTree extends Module {
         match = subject._getSelf().data
       } else if (typeof HTMLElement !== 'undefined' && subject instanceof HTMLElement) {
         if (parent.modules.dataTree) {
-          match = parent.modules.dataTree.children.find((childRow) => {
-            return childRow instanceof Row ? childRow.element === subject : false
-          })
+          match = parent.modules.dataTree.children.find((childRow) =>
+            childRow instanceof Row ? childRow.element === subject : false
+          )
 
           if (match) {
             match = match.data
@@ -733,9 +733,7 @@ export default class DataTree extends Module {
       match = false
     } else {
       // subject should be treated as the index of the row
-      match = parent.data[this.field].find((row) => {
-        return row.data[this.table.options.index] === subject
-      })
+      match = parent.data[this.field].find((row) => row.data[this.table.options.index] === subject)
     }
 
     if (match) {

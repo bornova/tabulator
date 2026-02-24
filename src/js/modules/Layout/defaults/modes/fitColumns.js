@@ -22,7 +22,7 @@ export default function (columns) {
     let colWidth
 
     if (typeof width === 'string') {
-      if (width.indexOf('%') > -1) {
+      if (width.includes('%')) {
         colWidth = (totalWidth / 100) * parseInt(width, 10)
       } else {
         colWidth = parseInt(width, 10)

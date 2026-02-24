@@ -24,7 +24,7 @@ export default class Sheet extends CoreFeature {
     this.grid = new GridCalculator(this.columnCount, this.rowCount)
 
     this.defaultColumnDefinition = { width: 100, headerHozAlign: 'center', headerSort: false }
-    this.columnDefinition = Object.assign({}, this.defaultColumnDefinition, this.options('spreadsheetColumnDefinition'))
+    this.columnDefinition = { ...this.defaultColumnDefinition, ...this.options('spreadsheetColumnDefinition') }
 
     this.columnDefs = []
     this.rowDefs = []
@@ -198,7 +198,7 @@ export default class Sheet extends CoreFeature {
     // trim output
     if (!full && !this.options('spreadsheetOutputFull')) {
       // calculate used area of data
-      rowWidths = output.map((row) => row.findLastIndex((val) => typeof val !== 'undefined') + 1)
+      rowWidths = output.map((row) => row.findLastIndex((val) => val !== undefined) + 1)
       outputWidth = rowWidths.length ? Math.max(...rowWidths) : 0
       outputHeight = rowWidths.findLastIndex((width) => width > 0) + 1
 

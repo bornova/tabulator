@@ -148,7 +148,7 @@ export default class Cell extends CoreFeature {
       }
 
       val = ''
-    } else if (typeof val === 'undefined') {
+    } else if (val === undefined) {
       val = ''
     }
 

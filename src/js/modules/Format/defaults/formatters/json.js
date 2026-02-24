@@ -9,7 +9,7 @@ export default function (cell, formatterParams) {
   formatterParams ??= {}
 
   const indent = formatterParams.indent ?? '\t'
-  const multiline = typeof formatterParams.multiline === 'undefined' ? true : formatterParams.multiline
+  const multiline = formatterParams.multiline === undefined ? true : formatterParams.multiline
   const replacer = formatterParams.replacer || null
   const value = cell.getValue()
   const element = cell.getElement()

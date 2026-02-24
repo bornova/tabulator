@@ -59,9 +59,7 @@ export default class ExternalEventBus {
 
     if (this.events[key]) {
       if (callback) {
-        index = this.events[key].findIndex((item) => {
-          return item === callback
-        })
+        index = this.events[key].findIndex((item) => item === callback)
 
         if (index > -1) {
           this.events[key].splice(index, 1)

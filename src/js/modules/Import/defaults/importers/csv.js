@@ -21,7 +21,7 @@ export default function (input) {
     const rowData = data[row] || (data[row] = [])
 
     // Initialize empty row
-    if (typeof rowData[col] === 'undefined') {
+    if (rowData[col] === undefined) {
       rowData[col] = ''
     }
 

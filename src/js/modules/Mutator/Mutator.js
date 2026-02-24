@@ -122,7 +122,7 @@ export default class Mutator extends Module {
    */
   transformRow(data, type, updatedData) {
     const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
-    const sourceData = typeof updatedData !== 'undefined' ? updatedData : data
+    const sourceData = updatedData !== undefined ? updatedData : data
 
     if (!this.enabled) {
       return data
@@ -141,7 +141,7 @@ export default class Mutator extends Module {
 
       const value = column.getFieldValue(sourceData)
 
-      if ((type === 'data' && !updatedData) || typeof value !== 'undefined') {
+      if ((type === 'data' && !updatedData) || value !== undefined) {
         const component = column.getComponent()
         const params =
           typeof mutator.params === 'function' ? mutator.params(value, data, type, component) : mutator.params

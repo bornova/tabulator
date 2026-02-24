@@ -37,7 +37,7 @@ export default class Group {
 
     this.visible = oldGroup
       ? oldGroup.visible
-      : typeof groupManager.startOpen[level] !== 'undefined'
+      : groupManager.startOpen[level] !== undefined
         ? groupManager.startOpen[level]
         : groupManager.startOpen[0]
 

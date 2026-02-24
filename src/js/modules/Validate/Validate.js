@@ -213,7 +213,7 @@ export default class Validate extends Module {
    * @returns {void}
    */
   initializeColumnCheck(column) {
-    if (typeof column.definition.validator !== 'undefined') {
+    if (column.definition.validator !== undefined) {
       this.initializeColumn(column)
     }
   }

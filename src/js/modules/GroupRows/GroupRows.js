@@ -138,7 +138,7 @@ export default class GroupRows extends Module {
         this.headerGenerator[0] = (value, count) => {
           // header layout function
           return (
-            (typeof value === 'undefined' ? '' : value) +
+            (value === undefined ? '' : value) +
             '<span>(' +
             count +
             ' ' +
@@ -250,9 +250,7 @@ export default class GroupRows extends Module {
     let rows = this.table.rowManager.getVisibleRows()
 
     if (this.table.options.groupBy) {
-      rows = rows.filter((row) => {
-        return row.type !== 'group'
-      })
+      rows = rows.filter((row) => row.type !== 'group')
 
       el.style.minWidth = !rows.length ? `${this.table.columnManager.getWidth()}px` : ''
     } else {
@@ -274,7 +272,7 @@ export default class GroupRows extends Module {
       const groupRows = row.modules.group.rows
 
       if (groupRows.length > 1) {
-        if (!index || (index && groupRows.indexOf(index) === -1)) {
+        if (!index || (index && !groupRows.includes(index))) {
           if (top) {
             if (groupRows[0] !== row) {
               index = groupRows[0]
@@ -734,9 +732,7 @@ export default class GroupRows extends Module {
       // figure out if new group path is the same as old group path
       samePath =
         oldGroupPath.length === newGroupPath.length &&
-        oldGroupPath.every((element, index) => {
-          return element === newGroupPath[index]
-        })
+        oldGroupPath.every((element, index) => element === newGroupPath[index])
 
       // refresh if they new path and old path aren't the same (aka the row's groupings have changed)
       if (!samePath) {

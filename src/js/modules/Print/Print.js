@@ -138,8 +138,8 @@ export default class Print extends Module {
     const headerEl = document.createElement('div')
     const footerEl = document.createElement('div')
     const tableEl = this.table.modules.export.generateTable(
-      typeof config !== 'undefined' ? config : printConfig,
-      typeof style !== 'undefined' ? style : printStyled,
+      config !== undefined ? config : printConfig,
+      style !== undefined ? style : printStyled,
       visible || printRowRange,
       'print'
     )

@@ -12,7 +12,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const value = cell.getValue()
   const input = document.createElement('input')
   const tristate = editorParams.tristate
-  const indetermValue = editorParams.indeterminateValue === undefined ? null : editorParams.indeterminateValue
+  const indetermValue = editorParams.indeterminateValue ?? null
   let indetermState = false
   const trueValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'trueValue')
   const falseValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'falseValue')
@@ -34,7 +34,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   input.value = value
 
-  if (tristate && (typeof value === 'undefined' || value === indetermValue || value === '')) {
+  if (tristate && (value === undefined || value === indetermValue || value === '')) {
     indetermState = true
     input.indeterminate = true
   }

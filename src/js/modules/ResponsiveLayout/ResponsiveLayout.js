@@ -58,7 +58,7 @@ export default class ResponsiveLayout extends Module {
    * @returns {void}
    */
   tableRedraw(force) {
-    if (['fitColumns', 'fitDataStretch'].indexOf(this.layoutMode()) === -1) {
+    if (!['fitColumns', 'fitDataStretch'].includes(this.layoutMode())) {
       if (!force) {
         this.update()
       }
@@ -135,7 +135,7 @@ export default class ResponsiveLayout extends Module {
     const def = column.getDefinition()
 
     column.modules.responsive = {
-      order: typeof def.responsive === 'undefined' ? 1 : def.responsive,
+      order: def.responsive === undefined ? 1 : def.responsive,
       visible: def.visible !== false
     }
   }
@@ -360,9 +360,7 @@ export default class ResponsiveLayout extends Module {
             getColumn: function () {
               return column.getComponent()
             },
-            getTable: () => {
-              return this.table
-            }
+            getTable: () => this.table
           }
 
           function onRendered(callback) {

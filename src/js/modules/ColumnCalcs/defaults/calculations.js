@@ -22,12 +22,10 @@ export default {
    */
   avg(values, data, calcParams) {
     let output = 0
-    const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : 2
+    const precision = calcParams.precision !== undefined ? calcParams.precision : 2
 
     if (values.length) {
-      output = values.reduce((sum, value) => {
-        return Number(sum) + Number(value)
-      })
+      output = values.reduce((sum, value) => Number(sum) + Number(value))
 
       output = output / values.length
 
@@ -46,7 +44,7 @@ export default {
    */
   max(values, data, calcParams) {
     let output = null
-    const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
+    const precision = calcParams.precision !== undefined ? calcParams.precision : false
 
     values.forEach((value) => {
       value = Number(value)
@@ -68,7 +66,7 @@ export default {
    */
   min(values, data, calcParams) {
     let output = null
-    const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
+    const precision = calcParams.precision !== undefined ? calcParams.precision : false
 
     values.forEach((value) => {
       value = Number(value)
@@ -90,7 +88,7 @@ export default {
    */
   sum(values, data, calcParams) {
     let output = 0
-    const precision = typeof calcParams.precision !== 'undefined' ? calcParams.precision : false
+    const precision = calcParams.precision !== undefined ? calcParams.precision : false
 
     if (values.length) {
       values.forEach((value) => {
@@ -112,9 +110,7 @@ export default {
     let output = 0
 
     if (values.length) {
-      output = values.reduce((sum, value) => {
-        return String(sum) + String(value)
-      })
+      output = values.reduce((sum, value) => String(sum) + String(value))
     }
 
     return output
@@ -145,9 +141,7 @@ export default {
    * @returns {number} Number of unique values.
    */
   unique(values) {
-    const unique = values.filter((value, index) => {
-      return (value || value === 0) && values.indexOf(value) === index
-    })
+    const unique = values.filter((value, index) => (value || value === 0) && values.indexOf(value) === index)
 
     return unique.length
   }

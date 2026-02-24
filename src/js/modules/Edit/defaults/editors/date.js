@@ -82,7 +82,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     let value = input.value
     let luxDate
 
-    if (((cellValue === null || cellValue === undefined) && value !== '') || value !== cellValue) {
+    if ((cellValue == null && value !== '') || value !== cellValue) {
       if (value && inputFormat && DT) {
         luxDate = DT.fromFormat(String(value), 'yyyy-MM-dd')
 
