@@ -36,7 +36,6 @@ export default class Cell extends CoreFeature {
     this.maxWidth = null
 
     this.component = null
-    this.deleted = false
 
     this.loaded = false // track if the cell has been added to the DOM yet
 
@@ -80,15 +79,15 @@ export default class Cell extends CoreFeature {
     const field = this.column.getField()
 
     // set text alignment
-    this._setStyleValue('textAlign', this.column.hozAlign)
+    element.style.textAlign = this.column.hozAlign
 
     if (this.column.vertAlign) {
-      this._setStyleValue('display', this._getDisplayValue())
+      element.style.display = 'inline-flex'
 
-      this._setStyleValue('alignItems', VERTICAL_ALIGN_TO_FLEX[this.column.vertAlign] || '')
+      element.style.alignItems = VERTICAL_ALIGN_TO_FLEX[this.column.vertAlign] || ''
 
       if (this.column.hozAlign) {
-        this._setStyleValue('justifyContent', HORIZONTAL_ALIGN_TO_FLEX[this.column.hozAlign] || '')
+        element.style.justifyContent = HORIZONTAL_ALIGN_TO_FLEX[this.column.hozAlign] || ''
       }
     }
 
@@ -116,38 +115,29 @@ export default class Cell extends CoreFeature {
    * Generate and render the formatted cell contents.
    */
   _generateContents() {
-    const val = this.chain('cell-format', this, null, () => {
-      this.element.textContent = this.value
-      return this.element.textContent
-    })
+    const val = this.chain('cell-format', this, null, () => (this.element.innerHTML = this.value))
 
-    this._applyFormattedValue(val)
-  }
+    switch (typeof val) {
+      case 'object':
+        if (val instanceof Node) {
+          this.element.replaceChildren(val)
+        } else {
+          this.element.innerHTML = ''
 
-  /**
-   * Apply formatter output to the cell element.
-   * @param {*} val Formatter output.
-   */
-  _applyFormattedValue(val) {
-    if (typeof val === 'object') {
-      if (val instanceof Node) {
-        this.element.replaceChildren(val)
-        return
-      }
-
-      if (val != null) {
-        console.warn(
-          'Format Error - Formatter has returned a type of object, the only valid formatter object return is an instance of Node, the formatter returned:',
-          val
-        )
-      }
-
-      val = ''
-    } else if (val === undefined) {
-      val = ''
+          if (val != null) {
+            console.warn(
+              'Format Error - Formatter has returned a type of object, the only valid formatter object return is an instance of Node, the formatter returned:',
+              val
+            )
+          }
+        }
+        break
+      case 'undefined':
+        this.element.innerHTML = ''
+        break
+      default:
+        this.element.innerHTML = val
     }
-
-    this.element.innerHTML = val
   }
 
   /**
@@ -227,14 +217,19 @@ export default class Cell extends CoreFeature {
    * @returns {boolean} True when the value is considered changed.
    */
   setValueProcessData(value, mutate, force) {
-    const changed = this.value !== value || force
+    let changed = false
 
-    if (changed && mutate) {
-      value = this.chain('cell-value-changing', [this, value], null, value)
+    if (this.value !== value || force) {
+      changed = true
+
+      if (mutate) {
+        value = this.chain('cell-value-changing', [this, value], null, value)
+      }
     }
 
+    this.setValueActual(value)
+
     if (changed) {
-      this.setValueActual(value)
       this.dispatch('cell-value-changed', this)
     }
 
@@ -279,7 +274,9 @@ export default class Cell extends CoreFeature {
 
     this.width = width
 
-    this._setStyleValue('width', widthStyled)
+    if (this.element.style.width !== widthStyled) {
+      this.element.style.width = widthStyled
+    }
   }
 
   /**
@@ -311,7 +308,9 @@ export default class Cell extends CoreFeature {
 
     this.minWidth = minWidth
 
-    this._setStyleValue('minWidth', minWidthStyled)
+    if (this.element.style.minWidth !== minWidthStyled) {
+      this.element.style.minWidth = minWidthStyled
+    }
   }
 
   /**
@@ -323,7 +322,9 @@ export default class Cell extends CoreFeature {
 
     this.maxWidth = maxWidth
 
-    this._setStyleValue('maxWidth', maxWidthStyled)
+    if (this.element.style.maxWidth !== maxWidthStyled) {
+      this.element.style.maxWidth = maxWidthStyled
+    }
   }
 
   /**
@@ -366,54 +367,35 @@ export default class Cell extends CoreFeature {
    * Show the cell element.
    */
   show() {
-    this._setStyleValue('display', this._getDisplayValue())
+    const display = this.column.vertAlign ? 'inline-flex' : ''
+
+    if (this.element.style.display !== display) {
+      this.element.style.display = display
+    }
   }
 
   /**
    * Hide the cell element.
    */
   hide() {
-    this._setStyleValue('display', 'none')
+    if (this.element.style.display !== 'none') {
+      this.element.style.display = 'none'
+    }
   }
 
   /**
    * Remove the cell and clean up row/column references.
    */
   delete() {
-    if (this.deleted) {
-      return
-    }
-
-    this.deleted = true
-
     this.dispatch('cell-delete', this)
 
-    if (!this.table.rowManager.redrawBlock && this.element && this.element.parentNode) {
+    if (!this.table.rowManager.redrawBlock && this.element.parentNode) {
       this.element.parentNode.removeChild(this.element)
     }
 
     this.element = null
     this.column.deleteCell(this)
     this.row.deleteCell(this)
-  }
-
-  /**
-   * Compute the default display mode for a visible cell.
-   * @returns {string}
-   */
-  _getDisplayValue() {
-    return this.column.vertAlign ? 'inline-flex' : ''
-  }
-
-  /**
-   * Set a style property only when the value differs.
-   * @param {keyof CSSStyleDeclaration|string} property Style property name.
-   * @param {string} value Style value.
-   */
-  _setStyleValue(property, value) {
-    if (this.element.style[property] !== value) {
-      this.element.style[property] = value
-    }
   }
 
   /**

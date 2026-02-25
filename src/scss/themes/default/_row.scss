@@ -191,6 +191,8 @@
     }
 
     &.tabulator-editing {
+      display: inline-flex;
+      align-items: center;
       outline: none;
       border: 1px solid light-dark($color-blue-700, $color-blue-500);
       padding: 0;

@@ -88,7 +88,6 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   // style holding element
   starsHolder.style.alignItems = 'center'
   starsHolder.style.display = 'inline-flex'
-  starsHolder.style.padding = '4px'
 
   // style star
   star.setAttribute('width', size)

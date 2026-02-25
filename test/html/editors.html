@@ -58,7 +58,7 @@
             editor: 'list',
             editorParams: { valuesLookup: 'active' }
           },
-          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+          { title: 'Rating', field: 'rating', formatter: 'star', editor: true },
           { title: 'Color', field: 'col', sorter: 'string' },
           { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
           { title: 'Address', field: 'address', sorter: 'string' },
@@ -70,8 +70,8 @@
             editorParams: { valuesLookup: 'active' },
             sorter: 'string'
           },
-          { title: 'Progress', field: 'progress', formatter: 'progress' },
-          { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
+          { title: 'Progress', field: 'progress', formatter: 'progress', editor: true },
+          { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center', editor: true }
         ]
       })
     </script>
