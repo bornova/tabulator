@@ -153,7 +153,7 @@ export default class ResponsiveLayout extends Module {
       }
 
       if (!this.collapseStartOpen) {
-        el.style.display = 'none'
+        el.classList.add('tabulator-display-none')
       }
     }
   }

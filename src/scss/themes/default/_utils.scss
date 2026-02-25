@@ -20,6 +20,10 @@
     margin-right: 0;
     width: 3px;
   }
+
+  &.tabulator-col-resize-handle-frozen {
+    position: sticky;
+  }
 }
 
 //row resize handles
@@ -76,11 +80,155 @@
     background: $color-blue-600;
   }
 
+  &.tabulator-toggle-on-reverse {
+    flex-direction: row-reverse;
+  }
+
   .tabulator-toggle-switch {
     box-sizing: border-box;
     margin: 1px;
     background: light-dark($color-white, $color-ash-100);
   }
+}
+
+.tabulator-editor-input {
+  box-sizing: border-box;
+  padding: 4px;
+  width: 100%;
+}
+
+.tabulator-editor-full-height {
+  height: 100%;
+}
+
+.tabulator-editor-static-input {
+  caret-color: transparent;
+  cursor: default;
+}
+
+.tabulator-editor-textarea {
+  display: block;
+  box-sizing: border-box;
+  padding: 2px;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  white-space: pre-wrap;
+}
+
+.tabulator-editor-checkbox {
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+.tabulator-cell-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.tabulator-cell-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabulator-stars-holder {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tabulator-star-icon {
+  padding: 0 1px;
+}
+
+.tabulator-progress-editor-cell {
+  padding: 10px;
+}
+
+.tabulator-progress-editor-bar {
+  display: inline-flex;
+  position: relative;
+  background-color: $color-blue-500;
+  width: 0;
+  min-width: 0%;
+  max-width: 100%;
+  height: 100%;
+}
+
+.tabulator-progress-editor-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 5px;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      cursor: ew-resize;
+    }
+  }
+}
+
+.tabulator-progress-formatter {
+  position: relative;
+  min-width: 30px;
+}
+
+.tabulator-progress-formatter-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.tabulator-progress-formatter-bar {
+  display: inline-flex;
+  height: 100%;
+}
+
+.tabulator-progress-formatter-legend {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.tabulator-progress-formatter-holder {
+  position: absolute;
+  inset: 4px;
+}
+
+.tabulator-frozen-sticky {
+  position: sticky;
+}
+
+.tabulator-moving-origin {
+  left: 0;
+  top: 0;
+}
+
+.tabulator-moving-origin-x {
+  left: 0;
+}
+
+.tabulator-moving-nowrap {
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tabulator-display-none {
+  display: none;
+}
+
+.tabulator-visibility-hidden {
+  visibility: hidden;
+}
+
+.tabulator-cell-inline-flex {
+  display: inline-flex;
+}
+
+.tabulator-box-border {
+  box-sizing: border-box;
 }
 
 // Popup Container

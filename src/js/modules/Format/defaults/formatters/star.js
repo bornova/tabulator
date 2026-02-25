@@ -16,16 +16,14 @@ export default function (cell, formatterParams) {
   const starInactive =
     '<polygon fill="#D2D2D2" stroke="#686868" stroke-width="37.6152" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="259.216,29.942 330.27,173.919 489.16,197.007 374.185,309.08 401.33,467.31 259.216,392.612 117.104,467.31 144.25,309.08 29.274,197.007 188.165,173.919 "/>'
 
-  // style stars holder
-  stars.style.display = 'inline-flex'
-  stars.style.alignItems = 'center'
+  stars.classList.add('tabulator-stars-holder')
 
   // style star
   star.setAttribute('width', '14')
   star.setAttribute('height', '14')
   star.setAttribute('viewBox', '0 0 512 512')
   star.setAttribute('xml:space', 'preserve')
-  star.style.padding = '0 1px'
+  star.classList.add('tabulator-star-icon')
 
   const parsedValue = value && !Number.isNaN(Number(value)) ? Number.parseInt(value, 10) : 0
   const normalizedValue = Math.max(0, Math.min(parsedValue, maxStars))
@@ -37,9 +35,7 @@ export default function (cell, formatterParams) {
     stars.appendChild(nextStar)
   }
 
-  element.style.whiteSpace = 'nowrap'
-  element.style.overflow = 'hidden'
-  element.style.textOverflow = 'ellipsis'
+  element.classList.add('tabulator-cell-truncate')
 
   element.setAttribute('aria-label', normalizedValue)
 

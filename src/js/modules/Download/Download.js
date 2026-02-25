@@ -166,7 +166,7 @@ export default class Download extends Module {
           element.setAttribute('download', filename)
 
           // trigger download
-          element.style.display = 'none'
+          element.classList.add('tabulator-display-none')
           document.body.appendChild(element)
           element.click()
 

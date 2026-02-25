@@ -99,7 +99,7 @@ export default class Print extends Module {
         this.table.modules.export.generateTable(printConfig, printStyled, printRowRange, 'print')
       )
 
-      this.table.element.style.display = 'none'
+      this.table.element.classList.add('tabulator-display-none')
 
       this.table.element.parentNode.insertBefore(this.element, this.table.element)
     }
@@ -113,7 +113,7 @@ export default class Print extends Module {
 
     if (this.element && this.element.parentNode) {
       this.element.parentNode.removeChild(this.element)
-      this.table.element.style.display = ''
+      this.table.element.classList.remove('tabulator-display-none')
     }
 
     this.element = false

@@ -18,13 +18,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   let scrollHeight = 0
 
   // create and style input
-  input.style.display = 'block'
-  input.style.padding = '2px'
-  input.style.height = '100%'
-  input.style.width = '100%'
-  input.style.boxSizing = 'border-box'
-  input.style.whiteSpace = 'pre-wrap'
-  input.style.resize = 'none'
+  input.classList.add('tabulator-editor-textarea')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
@@ -42,7 +36,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   onRendered(() => {
     if (cell.getType() === 'cell') {
       input.focus({ preventScroll: true })
-      input.style.height = '100%'
+      input.classList.add('tabulator-editor-full-height')
 
       input.scrollHeight
       input.style.height = `${input.scrollHeight}px`

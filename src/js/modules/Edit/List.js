@@ -87,7 +87,7 @@ export default class Edit {
     }
 
     if (!this.isFilter) {
-      this.input.style.height = '100%'
+      this.input.classList.add('tabulator-editor-full-height')
       this.input.focus({ preventScroll: true })
     }
 
@@ -143,13 +143,10 @@ export default class Edit {
 
     input.setAttribute('type', this.params.clearable ? 'search' : 'text')
 
-    input.style.padding = '4px'
-    input.style.width = '100%'
-    input.style.boxSizing = 'border-box'
+    input.classList.add('tabulator-editor-input')
 
     if (!this.params.autocomplete) {
-      input.style.cursor = 'default'
-      input.style.caretColor = 'transparent'
+      input.classList.add('tabulator-editor-static-input')
       // input.readOnly = (this.edit.currentCell != false);
     }
 

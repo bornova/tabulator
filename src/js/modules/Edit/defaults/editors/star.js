@@ -80,21 +80,16 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     starChange(val)
   }
 
-  // style cell
-  element.style.whiteSpace = 'nowrap'
-  element.style.overflow = 'hidden'
-  element.style.textOverflow = 'ellipsis'
+  element.classList.add('tabulator-cell-truncate')
 
-  // style holding element
-  starsHolder.style.alignItems = 'center'
-  starsHolder.style.display = 'inline-flex'
+  starsHolder.classList.add('tabulator-stars-holder')
 
   // style star
   star.setAttribute('width', size)
   star.setAttribute('height', size)
   star.setAttribute('viewBox', '0 0 512 512')
   star.setAttribute('xml:space', 'preserve')
-  star.style.padding = '0 1px'
+  star.classList.add('tabulator-star-icon')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {

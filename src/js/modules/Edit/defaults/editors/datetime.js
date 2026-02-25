@@ -19,9 +19,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const input = document.createElement('input')
 
   input.type = 'datetime-local'
-  input.style.padding = '4px'
-  input.style.width = '100%'
-  input.style.boxSizing = 'border-box'
+  input.classList.add('tabulator-editor-input')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
@@ -57,7 +55,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   onRendered(() => {
     if (cell.getType() === 'cell') {
       input.focus({ preventScroll: true })
-      input.style.height = '100%'
+      input.classList.add('tabulator-editor-full-height')
 
       if (editorParams.selectContents) {
         input.select()

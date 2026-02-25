@@ -224,7 +224,7 @@ export default class ResizeColumns extends Module {
       })
 
       if (column.modules.frozen) {
-        handle.style.position = 'sticky'
+        handle.classList.add('tabulator-col-resize-handle-frozen')
         handle.style[column.modules.frozen.position] = this.frozenColumnOffset(column)
       }
 

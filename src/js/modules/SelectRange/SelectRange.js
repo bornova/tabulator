@@ -2,6 +2,8 @@ import Module from '../../core/Module.js'
 import Range from './Range.js'
 import extensions from './extensions/extensions.js'
 
+const RANGE_OVERLAY_HIDDEN_CLASS = 'tabulator-range-overlay-hidden'
+
 export default class SelectRange extends Module {
   static moduleName = 'selectRange'
   static moduleInitOrder = 1
@@ -81,7 +83,7 @@ export default class SelectRange extends Module {
    */
   initializeTable() {
     this.overlay = document.createElement('div')
-    this.overlay.classList.add('tabulator-range-overlay')
+    this.overlay.classList.add('tabulator-range-overlay', RANGE_OVERLAY_HIDDEN_CLASS)
 
     this.rangeContainer = document.createElement('div')
     this.rangeContainer.classList.add('tabulator-range-container')
@@ -387,7 +389,7 @@ export default class SelectRange extends Module {
    */
   handleColumnMoving(column) {
     this.resetRanges().setBounds(column)
-    this.overlay.style.visibility = 'hidden'
+    this.setOverlayVisible(false)
   }
 
   /**
@@ -992,7 +994,7 @@ export default class SelectRange extends Module {
    * Queue layout recompute for range overlays.
    */
   layoutChange() {
-    this.overlay.style.visibility = 'hidden'
+    this.setOverlayVisible(false)
     clearTimeout(this.layoutChangeTimeout)
     this.layoutChangeTimeout = setTimeout(() => this.layoutRanges(), 200)
   }
@@ -1099,7 +1101,15 @@ export default class SelectRange extends Module {
 
     this.ranges.forEach((range) => range.layout())
 
-    this.overlay.style.visibility = 'visible'
+    this.setOverlayVisible(true)
+  }
+
+  /**
+   * Toggle visibility class on range overlay.
+   * @param {boolean} visible Overlay visibility state.
+   */
+  setOverlayVisible(visible) {
+    this.overlay.classList.toggle(RANGE_OVERLAY_HIDDEN_CLASS, !visible)
   }
 
   /// ////////////////////////////////

@@ -20,7 +20,7 @@ export default function (cell, formatterParams) {
 
   if (state) {
     containEl.classList.add('tabulator-toggle-on')
-    containEl.style.flexDirection = 'row-reverse'
+    containEl.classList.add('tabulator-toggle-on-reverse')
 
     if (formatterParams.onColor) {
       containEl.style.background = formatterParams.onColor

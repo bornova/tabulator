@@ -8,9 +8,7 @@
 export default function (cell) {
   const element = cell.getElement()
 
-  if (element.style.whiteSpace !== 'pre-wrap') {
-    element.style.whiteSpace = 'pre-wrap'
-  }
+  element.classList.add('tabulator-cell-pre-wrap')
 
   return this.emptyToSpace(this.sanitizeHTML(cell.getValue()))
 }

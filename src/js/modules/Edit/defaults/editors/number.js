@@ -30,9 +30,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // create and style input
-  input.style.padding = '4px'
-  input.style.width = '100%'
-  input.style.boxSizing = 'border-box'
+  input.classList.add('tabulator-editor-input')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
@@ -55,7 +53,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
       input.removeEventListener('blur', blurFunc)
 
       input.focus({ preventScroll: true })
-      input.style.height = '100%'
+      input.classList.add('tabulator-editor-full-height')
 
       // submit new value on blur
       input.addEventListener('blur', blurFunc)

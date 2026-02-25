@@ -1202,7 +1202,7 @@ export default class RowManager extends CoreFeature {
    */
   renderEmptyScroll() {
     if (this.placeholder) {
-      this.tableElement.style.display = 'none'
+      this.tableElement.classList.add('tabulator-display-none')
     } else {
       this.tableElement.style.minWidth = this.table.columnManager.getWidth() + 'px'
       // this.tableElement.style.minHeight = "1px";
@@ -1271,7 +1271,7 @@ export default class RowManager extends CoreFeature {
 
     // clear empty table placeholder min
     this.tableElement.style.minWidth = ''
-    this.tableElement.style.display = ''
+    this.tableElement.classList.remove('tabulator-display-none')
   }
 
   /**

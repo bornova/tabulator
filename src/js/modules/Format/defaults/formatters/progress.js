@@ -91,32 +91,25 @@ export default function (cell, formatterParams = {}, onRendered) {
       legendColor = '#000'
   }
 
-  element.style.minWidth = '30px'
-  element.style.position = 'relative'
+  element.classList.add('tabulator-progress-formatter')
 
   element.setAttribute('aria-label', percentValue)
 
   const barEl = document.createElement('div')
-  barEl.style.display = 'inline-flex'
+  barEl.classList.add('tabulator-progress-formatter-bar')
   barEl.style.width = `${percentValue}%`
   barEl.style.backgroundColor = color
-  barEl.style.height = '100%'
 
   barEl.setAttribute('data-max', max)
   barEl.setAttribute('data-min', min)
 
   const barContainer = document.createElement('div')
-  barContainer.style.position = 'relative'
-  barContainer.style.width = '100%'
-  barContainer.style.height = '100%'
+  barContainer.classList.add('tabulator-progress-formatter-container')
 
   if (legend) {
     legendEl = document.createElement('div')
-    legendEl.style.position = 'absolute'
-    legendEl.style.top = 0
-    legendEl.style.left = 0
+    legendEl.classList.add('tabulator-progress-formatter-legend')
     legendEl.style.textAlign = legendAlign
-    legendEl.style.width = '100%'
     legendEl.style.color = legendColor
     legendEl.innerHTML = legend
   }
@@ -125,11 +118,7 @@ export default function (cell, formatterParams = {}, onRendered) {
     // handle custom element needed if formatter is to be included in printed/downloaded output
     if (!(cell instanceof CellComponent)) {
       const holderEl = document.createElement('div')
-      holderEl.style.position = 'absolute'
-      holderEl.style.top = '4px'
-      holderEl.style.bottom = '4px'
-      holderEl.style.left = '4px'
-      holderEl.style.right = '4px'
+      holderEl.classList.add('tabulator-progress-formatter-holder')
 
       element.appendChild(holderEl)
 

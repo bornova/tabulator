@@ -18,8 +18,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const falseValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'falseValue')
 
   input.setAttribute('type', 'checkbox')
-  input.style.marginTop = '5px'
-  input.style.boxSizing = 'border-box'
+  input.classList.add('tabulator-editor-checkbox')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {

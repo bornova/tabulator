@@ -243,7 +243,7 @@ export default class MoveColumns extends Module {
 
     headerElement.appendChild(this.hoverElement)
 
-    this.hoverElement.style.left = '0'
+    this.hoverElement.classList.add('tabulator-moving-origin-x')
     this.hoverElement.style.bottom = `${headerElement.clientHeight - headersElement.offsetHeight}px`
 
     if (!this.touchMove) {

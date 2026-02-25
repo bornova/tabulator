@@ -142,7 +142,7 @@ export default class FooterManager extends CoreFeature {
       this.active = true
       if (!this.external) {
         this.table.element.appendChild(this.getElement())
-        this.table.element.style.display = ''
+        this.table.element.classList.remove('tabulator-display-none')
       }
     }
   }

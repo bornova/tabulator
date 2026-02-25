@@ -15,7 +15,7 @@ export default function (cell, formatterParams) {
   const element = cell.getElement()
 
   if (multiline) {
-    element.style.whiteSpace = 'pre-wrap'
+    element.classList.add('tabulator-cell-pre-wrap')
   }
 
   return JSON.stringify(value, replacer, indent)

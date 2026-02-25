@@ -13,6 +13,8 @@ const HORIZONTAL_ALIGN_TO_FLEX = {
   center: 'center'
 }
 
+const CELL_INLINE_FLEX_CLASS = 'tabulator-cell-inline-flex'
+
 export default class Cell extends CoreFeature {
   /**
    * @param {object} column Column instance that owns this cell.
@@ -84,7 +86,7 @@ export default class Cell extends CoreFeature {
     }
 
     if (this.column.vertAlign) {
-      element.style.display = 'inline-flex'
+      element.classList.add(CELL_INLINE_FLEX_CLASS)
 
       element.style.alignItems = VERTICAL_ALIGN_TO_FLEX[this.column.vertAlign] || ''
 
@@ -369,20 +371,16 @@ export default class Cell extends CoreFeature {
    * Show the cell element.
    */
   show() {
-    const display = this.column.vertAlign ? 'inline-flex' : ''
+    this.element.classList.remove('tabulator-display-none')
 
-    if (this.element.style.display !== display) {
-      this.element.style.display = display
-    }
+    this.element.classList.toggle(CELL_INLINE_FLEX_CLASS, !!this.column.vertAlign)
   }
 
   /**
    * Hide the cell element.
    */
   hide() {
-    if (this.element.style.display !== 'none') {
-      this.element.style.display = 'none'
-    }
+    this.element.classList.add('tabulator-display-none')
   }
 
   /**

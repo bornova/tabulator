@@ -658,7 +658,7 @@ export default class Column extends CoreFeature {
     if (!this.visible) {
       this.visible = true
 
-      this.element.style.display = ''
+      this.element.classList.remove('tabulator-display-none')
 
       if (this.parent.isGroup) {
         this.parent.checkColumnVisibility()
@@ -699,7 +699,7 @@ export default class Column extends CoreFeature {
     if (this.visible) {
       this.visible = false
 
-      this.element.style.display = 'none'
+      this.element.classList.add('tabulator-display-none')
 
       this.table.columnManager.verticalAlignHeaders()
 

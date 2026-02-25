@@ -500,7 +500,7 @@ export default class Export extends Module {
         cellEl.innerHTML = column.value
 
         if (this.cloneTableStyle) {
-          cellEl.style.boxSizing = 'border-box'
+          cellEl.classList.add('tabulator-box-border')
         }
 
         classNames.forEach(function (className) {

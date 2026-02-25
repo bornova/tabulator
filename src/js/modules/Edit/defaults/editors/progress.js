@@ -41,25 +41,14 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     element.setAttribute('aria-label', calcVal)
   }
 
-  // style handle
-  handle.style.position = 'absolute'
-  handle.style.right = '0'
-  handle.style.top = '0'
-  handle.style.bottom = '0'
-  handle.style.width = '5px'
-  handle.classList.add('tabulator-progress-handle')
+  handle.classList.add('tabulator-progress-handle', 'tabulator-progress-editor-handle')
 
   // style bar
-  bar.style.display = 'inline-flex'
-  bar.style.position = 'relative'
+  bar.classList.add('tabulator-progress-editor-bar')
   // bar.style.top = "8px";
   // bar.style.bottom = "8px";
   // bar.style.left = "4px";
   // bar.style.marginRight = "4px";
-  bar.style.height = '100%'
-  bar.style.backgroundColor = '#488CE9'
-  bar.style.maxWidth = '100%'
-  bar.style.minWidth = '0%'
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
@@ -73,7 +62,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // style cell
-  element.style.padding = '10px'
+  element.classList.add('tabulator-progress-editor-cell')
 
   // make sure value is in range
   value = Math.min(parseFloat(value), max)
@@ -92,10 +81,6 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   handle.addEventListener('mousedown', (e) => {
     mouseDrag = e.screenX
     mouseDragWidth = bar.offsetWidth
-  })
-
-  handle.addEventListener('mouseover', () => {
-    handle.style.cursor = 'ew-resize'
   })
 
   element.addEventListener('mousemove', (e) => {

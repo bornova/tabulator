@@ -178,7 +178,7 @@ export default class Page extends Module {
     } else {
       testElRow = document.createElement('div')
       testElRow.classList.add('tabulator-row')
-      testElRow.style.visibility = 'hidden'
+      testElRow.classList.add('tabulator-visibility-hidden')
 
       testElCell = document.createElement('div')
       testElCell.classList.add('tabulator-cell')
@@ -1072,15 +1072,13 @@ export default class Page extends Module {
    */
   footerRedraw() {
     const footer = this.table.footerManager.containerElement
+    let hidePages = Math.ceil(footer.clientWidth) - footer.scrollWidth < 0
 
-    if (Math.ceil(footer.clientWidth) - footer.scrollWidth < 0) {
-      this.pagesElement.style.display = 'none'
-    } else {
-      this.pagesElement.style.display = ''
-
-      if (Math.ceil(footer.clientWidth) - footer.scrollWidth < 0) {
-        this.pagesElement.style.display = 'none'
-      }
+    if (!hidePages) {
+      this.pagesElement.classList.remove('tabulator-display-none')
+      hidePages = Math.ceil(footer.clientWidth) - footer.scrollWidth < 0
     }
+
+    this.pagesElement.classList.toggle('tabulator-display-none', hidePages)
   }
 }

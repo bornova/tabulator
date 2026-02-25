@@ -388,17 +388,13 @@ export default class MoveRows extends Module {
 
     if (this.connection) {
       document.body.appendChild(this.hoverElement)
-      this.hoverElement.style.left = '0'
-      this.hoverElement.style.top = '0'
+      this.hoverElement.classList.add('tabulator-moving-origin')
       this.hoverElement.style.width = `${this.table.element.clientWidth}px`
-      this.hoverElement.style.whiteSpace = 'nowrap'
-      this.hoverElement.style.overflow = 'hidden'
-      this.hoverElement.style.pointerEvents = 'none'
+      this.hoverElement.classList.add('tabulator-moving-nowrap')
     } else {
       this.table.rowManager.getTableElement().appendChild(this.hoverElement)
 
-      this.hoverElement.style.left = '0'
-      this.hoverElement.style.top = '0'
+      this.hoverElement.classList.add('tabulator-moving-origin')
 
       this._bindMouseMove()
     }

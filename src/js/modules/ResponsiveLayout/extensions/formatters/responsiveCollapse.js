@@ -34,10 +34,10 @@ export default function (cell) {
     if (collapseEl) {
       if (config.open) {
         el.classList.add('open')
-        collapseEl.style.display = ''
+        collapseEl.classList.remove('tabulator-display-none')
       } else {
         el.classList.remove('open')
-        collapseEl.style.display = 'none'
+        collapseEl.classList.add('tabulator-display-none')
       }
     }
   }

@@ -618,7 +618,7 @@ export default class Filter extends Module {
   hideHeaderFilterElements() {
     this.headerFilterColumns.forEach((column) => {
       if (column.modules.filter && column.modules.filter.headerElement) {
-        column.modules.filter.headerElement.style.display = 'none'
+        column.modules.filter.headerElement.classList.add('tabulator-display-none')
       }
     })
   }
@@ -630,7 +630,7 @@ export default class Filter extends Module {
   showHeaderFilterElements() {
     this.headerFilterColumns.forEach((column) => {
       if (column.modules.filter && column.modules.filter.headerElement) {
-        column.modules.filter.headerElement.style.display = ''
+        column.modules.filter.headerElement.classList.remove('tabulator-display-none')
       }
     })
   }

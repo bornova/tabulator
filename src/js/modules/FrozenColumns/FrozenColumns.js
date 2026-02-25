@@ -333,7 +333,7 @@ export default class FrozenColumns extends Module {
     const frozen = column.modules.frozen
 
     if (frozen && element) {
-      element.style.position = 'sticky'
+      element.classList.add('tabulator-frozen-sticky')
 
       const position = this.table.rtl ? (frozen.position === 'left' ? 'right' : 'left') : frozen.position
 
