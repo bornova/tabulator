@@ -73,7 +73,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   }
 
   // style cell
-  element.style.padding = '4px 4px'
+  element.style.padding = '10px'
 
   // make sure value is in range
   value = Math.min(parseFloat(value), max)

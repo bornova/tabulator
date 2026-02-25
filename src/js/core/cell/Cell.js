@@ -79,7 +79,9 @@ export default class Cell extends CoreFeature {
     const field = this.column.getField()
 
     // set text alignment
-    element.style.textAlign = this.column.hozAlign
+    if (this.column.hozAlign) {
+      element.style.justifyContent = HORIZONTAL_ALIGN_TO_FLEX[this.column.hozAlign] || ''
+    }
 
     if (this.column.vertAlign) {
       element.style.display = 'inline-flex'

@@ -4,11 +4,11 @@
 .tabulator {
   position: relative;
   transform: translateZ(0);
-  border: 1px solid light-dark($color-slate-300, $color-slate-700);
+  border: 1px solid light-dark($color-slate-300, $color-ash-700);
   border-radius: 5px;
-  background-color: light-dark($color-white, $color-slate-900);
+  background-color: light-dark($color-white, $color-ash-900);
   overflow: hidden;
-  color: light-dark($color-gray-900, $color-slate-100);
+  color: light-dark($color-gray-900, $color-ash-100);
   color-scheme: inherit;
   text-align: left;
 

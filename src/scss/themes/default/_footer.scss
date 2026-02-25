@@ -2,9 +2,9 @@
 
 //footer element
 .tabulator-footer {
-  border-top: 1px solid light-dark($color-slate-200, $color-slate-700);
-  background-color: light-dark($color-slate-50, $color-slate-800);
-  color: light-dark($color-gray-500, $color-slate-300);
+  border-top: 1px solid light-dark($color-slate-200, $color-ash-700);
+  background-color: light-dark($color-slate-50, $color-ash-800);
+  color: light-dark($color-gray-500, $color-ash-300);
   font-weight: 600;
   user-select: none;
   white-space: nowrap;
@@ -27,7 +27,7 @@
 
     .tabulator-spreadsheet-tab {
       display: inline-flex;
-      border: light-dark($color-slate-200, $color-slate-700) 1px solid;
+      border: light-dark($color-slate-200, $color-ash-700) 1px solid;
       border-top: none;
       border-bottom-right-radius: 5px;
       border-bottom-left-radius: 5px;
@@ -40,7 +40,7 @@
       }
 
       &.tabulator-spreadsheet-tab-active {
-        background: light-dark($color-white, $color-slate-800);
+        background: light-dark($color-white, $color-ash-800);
       }
     }
   }
@@ -55,8 +55,8 @@
 
     .tabulator-row {
       display: inline-flex;
-      border-bottom: 1px solid light-dark($color-slate-100, $color-slate-700);
-      background: light-dark($color-white, $color-slate-900);
+      border-bottom: 1px solid light-dark($color-slate-100, $color-ash-700);
+      background: light-dark($color-white, $color-ash-900);
 
       .tabulator-col-resize-handle {
         display: none;
@@ -79,7 +79,7 @@
 
   .tabulator-paginator {
     flex: 1;
-    color: light-dark($color-gray-500, $color-slate-300);
+    color: light-dark($color-gray-500, $color-ash-300);
     font-weight: inherit;
     font-size: inherit;
     font-family: inherit;
@@ -110,18 +110,18 @@
   }
 
   & button {
-    border: 1px solid light-dark($color-slate-300, $color-slate-600);
+    border: 1px solid light-dark($color-slate-300, $color-ash-600);
   }
 
   //pagination container element
   .tabulator-page-size {
     display: inline-flex;
     margin: 0 8px;
-    border: 1px solid light-dark($color-slate-200, $color-slate-700);
+    border: 1px solid light-dark($color-slate-200, $color-ash-700);
     border-radius: 3px;
-    background: light-dark($color-white, $color-slate-800);
+    background: light-dark($color-white, $color-ash-800);
     padding: 5px;
-    color: light-dark($color-gray-500, $color-slate-100);
+    color: light-dark($color-gray-500, $color-ash-100);
   }
 
   .tabulator-pages {
@@ -141,12 +141,12 @@
     display: inline-flex;
     align-content: center;
     align-items: center;
-    background: light-dark($color-white, $color-slate-800);
+    background: light-dark($color-white, $color-ash-800);
     padding: 6px 10px;
-    color: light-dark($color-gray-500, $color-slate-200);
+    color: light-dark($color-gray-500, $color-ash-200);
 
     &.active {
-      background-color: light-dark($color-slate-100, $color-slate-700);
+      background-color: light-dark($color-slate-100, $color-ash-700);
       color: light-dark($color-blue-900, $color-blue-200);
       font-weight: 700;
     }
@@ -155,7 +155,7 @@
       @media (hover: hover) and (pointer: fine) {
         &:hover {
           cursor: pointer;
-          background: light-dark($color-slate-100, $color-slate-700);
+          background: light-dark($color-slate-100, $color-ash-700);
         }
       }
     }

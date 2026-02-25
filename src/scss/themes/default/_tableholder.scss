@@ -28,7 +28,7 @@
     .tabulator-placeholder-contents {
       display: inline-flex;
       padding: 10px;
-      color: light-dark($color-gray-500, $color-slate-400);
+      color: light-dark($color-gray-500, $color-ash-400);
       font-weight: 600;
       font-size: 20px;
       text-align: center;
@@ -41,15 +41,15 @@
     display: inline-flex;
     flex-direction: column;
     position: relative;
-    background-color: light-dark($color-white, $color-slate-900);
+    background-color: light-dark($color-white, $color-ash-900);
     overflow: visible;
-    color: light-dark($color-gray-900, $color-slate-100);
+    color: light-dark($color-gray-900, $color-ash-100);
     white-space: nowrap;
 
     //row element
     .tabulator-row {
       &.tabulator-calcs {
-        background: light-dark($color-gray-50, $color-slate-800);
+        background: light-dark($color-gray-50, $color-ash-800);
         font-weight: 600;
       }
     }

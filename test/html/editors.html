@@ -43,8 +43,8 @@
           {
             title: 'Age',
             field: 'age',
-            sorter: 'number',
             hozAlign: 'right',
+            headerHozAlign: 'right',
             editor: 'number',
             validator: {
               type: 'max',
@@ -59,7 +59,7 @@
             editorParams: { valuesLookup: 'active' }
           },
           { title: 'Rating', field: 'rating', formatter: 'star', editor: true },
-          { title: 'Color', field: 'col', sorter: 'string' },
+          { title: 'Color', field: 'col', sorter: 'string', editor: 'input', hozAlign: 'center' },
           { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
           { title: 'Address', field: 'address', sorter: 'string' },
           { title: 'State', field: 'state', sorter: 'string' },
