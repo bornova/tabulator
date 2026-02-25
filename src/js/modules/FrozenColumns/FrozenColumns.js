@@ -194,11 +194,7 @@ export default class FrozenColumns extends Module {
         leftMargin += column.getWidth()
       }
 
-      if (i === this.leftColumns.length - 1) {
-        column.modules.frozen.edge = true
-      } else {
-        column.modules.frozen.edge = false
-      }
+      column.modules.frozen.edge = i === this.leftColumns.length - 1
 
       if (column.parent.isGroup) {
         const parentEl = this.getColGroupParentElement(column)
@@ -234,11 +230,7 @@ export default class FrozenColumns extends Module {
         rightMargin += column.getWidth()
       }
 
-      if (i === this.rightColumns.length - 1) {
-        column.modules.frozen.edge = true
-      } else {
-        column.modules.frozen.edge = false
-      }
+      column.modules.frozen.edge = i === this.rightColumns.length - 1
 
       if (column.parent.isGroup) {
         this.layoutElement(this.getColGroupParentElement(column), column)

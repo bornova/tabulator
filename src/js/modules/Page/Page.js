@@ -404,11 +404,7 @@ export default class Page extends Module {
     let pageCounter
 
     if (counter) {
-      if (typeof counter === 'function') {
-        pageCounter = counter
-      } else {
-        pageCounter = Page.pageCounters[counter]
-      }
+      pageCounter = typeof counter === 'function' ? counter : Page.pageCounters[counter]
 
       if (pageCounter) {
         this.pageCounter = pageCounter

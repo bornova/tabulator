@@ -72,11 +72,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
           return checkedValue
         }
       } else {
-        if (indetermState) {
-          return indetermValue
-        } else {
-          return checkedValue
-        }
+        return indetermState ? indetermValue : checkedValue
       }
     } else {
       return checkedValue

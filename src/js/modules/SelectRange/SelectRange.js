@@ -918,10 +918,8 @@ export default class SelectRange extends Module {
       } else {
         this.selecting = 'column'
       }
-    } else if (element.column === this.rowHeader) {
-      this.selecting = 'row'
     } else {
-      this.selecting = 'cell'
+      this.selecting = element.column === this.rowHeader ? 'row' : 'cell'
     }
 
     if (event.shiftKey) {
