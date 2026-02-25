@@ -70,7 +70,15 @@
             editorParams: { valuesLookup: 'active' },
             sorter: 'string'
           },
-          { title: 'Progress', field: 'progress', formatter: 'progress', editor: true },
+          {
+            title: 'Progress',
+            field: 'progress',
+            formatter: 'progress',
+            editor: true,
+            formatterParams: {
+              legend: true
+            }
+          },
           { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center', editor: true }
         ]
       })

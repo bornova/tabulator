@@ -22,20 +22,19 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   let mouseDrag
   let mouseDragWidth
 
+  function getEditorInnerWidth() {
+    const style = window.getComputedStyle(element, null)
+    const paddingLeft = Number.parseInt(style.getPropertyValue('padding-left'), 10) || 0
+    const paddingRight = Number.parseInt(style.getPropertyValue('padding-right'), 10) || 0
+
+    return element.clientWidth - paddingLeft - paddingRight
+  }
+
   // set new value
   function updateValue() {
-    const style = window.getComputedStyle(element, null)
+    const editorInnerWidth = getEditorInnerWidth()
 
-    const calcVal =
-      percent *
-        Math.round(
-          bar.offsetWidth /
-            ((element.clientWidth -
-              Number.parseInt(style.getPropertyValue('padding-left'), 10) -
-              Number.parseInt(style.getPropertyValue('padding-right'), 10)) /
-              100)
-        ) +
-      min
+    const calcVal = percent * Math.round(bar.offsetWidth / (editorInnerWidth / 100)) + min
     success(calcVal)
     element.setAttribute('aria-valuenow', calcVal)
     element.setAttribute('aria-label', calcVal)
@@ -106,12 +105,12 @@ export default function (cell, onRendered, success, cancel, editorParams) {
     switch (e.key) {
       case 'ArrowRight': // right arrow
         e.preventDefault()
-        bar.style.width = `${bar.clientWidth + element.clientWidth / 100}px`
+        bar.style.width = `${bar.clientWidth + getEditorInnerWidth() / 100}px`
         break
 
       case 'ArrowLeft': // left arrow
         e.preventDefault()
-        bar.style.width = `${bar.clientWidth - element.clientWidth / 100}px`
+        bar.style.width = `${bar.clientWidth - getEditorInnerWidth() / 100}px`
         break
 
       case 'Tab': // tab

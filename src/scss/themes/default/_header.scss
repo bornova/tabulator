@@ -103,9 +103,9 @@
           box-sizing: border-box;
           border: 1px solid light-dark($color-slate-200, $color-ash-600);
           background: light-dark($color-white, $color-ash-900);
-          color: light-dark($color-gray-500, $color-ash-100);
           padding: 1px;
           width: 100%;
+          color: light-dark($color-gray-500, $color-ash-100);
         }
 
         .tabulator-header-popup-button + .tabulator-title-editor {

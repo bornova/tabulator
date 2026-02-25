@@ -102,8 +102,8 @@
 }
 
 .tabulator-editor-static-input {
-  caret-color: transparent;
   cursor: default;
+  caret-color: transparent;
 }
 
 .tabulator-editor-textarea {
@@ -141,7 +141,7 @@
 }
 
 .tabulator-progress-editor-cell {
-  padding: 10px;
+  padding: 10px !important;
 }
 
 .tabulator-progress-editor-bar {
@@ -201,8 +201,8 @@
 }
 
 .tabulator-moving-origin {
-  left: 0;
   top: 0;
+  left: 0;
 }
 
 .tabulator-moving-origin-x {
@@ -211,8 +211,8 @@
 
 .tabulator-moving-nowrap {
   overflow: hidden;
-  white-space: nowrap;
   pointer-events: none;
+  white-space: nowrap;
 }
 
 .tabulator-display-none {
