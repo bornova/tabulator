@@ -245,7 +245,7 @@ test('format module', async ({ page }) => {
       modulePresent: !!table.modules.format,
       plaintextEscaped: !plainCell.querySelector('b') && plainCell.textContent.includes('<b>x</b>'),
       htmlRendered: !!htmlCell.querySelector('b'),
-      textareaWrapped: window.getComputedStyle(textareaCell).whiteSpace === 'pre-wrap',
+      textareaWrapped: textareaCell.classList.contains('tabulator-cell-pre-wrap'),
       moneyFormatted: moneyCell.textContent.includes('$1,234.50'),
       linkRendered: !!linkCell.querySelector('a[href="https://example.com/docs"]'),
       imageRendered: !!imageCell.querySelector('img'),

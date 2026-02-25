@@ -125,12 +125,12 @@ test('responsiveLayout module', async ({ page }) => {
 
       return {
         open: row.modules.responsiveLayout.open,
-        display: row.modules.responsiveLayout.element.style.display
+        hiddenClass: row.modules.responsiveLayout.element.classList.contains('tabulator-display-none')
       }
     })
 
     expect(result.open).toBe(false)
-    expect(result.display).toBe('none')
+    expect(result.hiddenClass).toBe(true)
   })
 
   await test.step('responsiveLayoutCollapseUseFormatters toggles formatter usage in collapsed data', async () => {
