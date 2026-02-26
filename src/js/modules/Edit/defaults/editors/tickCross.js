@@ -19,6 +19,8 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   let indetermState = false
 
   input.setAttribute('type', 'checkbox')
+  input.setAttribute('name', 'tabulator-editor-checkbox')
+
   input.classList.add('tabulator-editor-checkbox')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {

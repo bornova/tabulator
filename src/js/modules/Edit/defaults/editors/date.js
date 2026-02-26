@@ -32,6 +32,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   input.type = 'date'
   input.classList.add('tabulator-editor-input')
+  input.setAttribute('name', 'tabulator-editor-input')
 
   if (editorParams.max) {
     input.setAttribute('max', inputFormat && DT ? convertDate(editorParams.max) : editorParams.max)

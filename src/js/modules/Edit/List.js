@@ -142,6 +142,7 @@ export default class Edit {
     const input = document.createElement('input')
 
     input.setAttribute('type', this.params.clearable ? 'search' : 'text')
+    input.setAttribute('name', 'tabulator-editor-input')
 
     input.classList.add('tabulator-editor-input')
 

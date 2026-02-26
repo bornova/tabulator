@@ -12,8 +12,10 @@ export default function (cell, formatterParams) {
   formatterParams = formatterParams || {}
 
   const checkbox = document.createElement('input')
+
   checkbox.type = 'checkbox'
   checkbox.setAttribute('aria-label', 'Select Row')
+  checkbox.setAttribute('name', 'tabulator-row-select')
 
   if (!this.table.modExists('selectRow', true)) {
     return checkbox

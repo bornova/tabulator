@@ -21,6 +21,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
 
   input.type = 'datetime-local'
   input.classList.add('tabulator-editor-input')
+  input.setAttribute('name', 'tabulator-editor-input')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {

@@ -22,6 +22,8 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   input.type = 'time'
   input.classList.add('tabulator-editor-input')
 
+  input.setAttribute('name', 'tabulator-editor-input')
+
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
     for (let key in editorParams.elementAttributes) {
       if (key.charAt(0) === '+') {

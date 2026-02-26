@@ -14,6 +14,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   let cellValue = cell.getValue()
 
   input.setAttribute('type', 'range')
+  input.setAttribute('name', 'tabulator-editor-input')
 
   if (editorParams.max !== undefined) {
     input.setAttribute('max', editorParams.max)

@@ -306,6 +306,7 @@ export default class Column extends CoreFeature {
       const titleElement = document.createElement('input')
 
       titleElement.classList.add('tabulator-title-editor')
+      titleElement.setAttribute('name', 'tabulator-title-editor')
 
       titleElement.addEventListener('click', (e) => {
         e.stopPropagation()

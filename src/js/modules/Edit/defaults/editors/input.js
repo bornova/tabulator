@@ -17,6 +17,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   let cellValue = cell.getValue()
 
   input.setAttribute('type', editorParams.search ? 'search' : 'text')
+  input.setAttribute('name', 'tabulator-editor-input')
 
   input.classList.add('tabulator-editor-input')
 

@@ -145,8 +145,11 @@ export default class Import extends Module {
   pickFile(extensions, importReader) {
     return new Promise((resolve, reject) => {
       const input = document.createElement('input')
+
       input.type = 'file'
       input.accept = extensions
+
+      input.setAttribute('name', 'tabulator-import-file')
 
       input.addEventListener('change', () => {
         const file = input.files[0]
