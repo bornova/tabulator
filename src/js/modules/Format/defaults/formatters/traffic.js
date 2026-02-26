@@ -15,6 +15,9 @@ export default function (cell, formatterParams) {
   const min = formatterParams.min ?? 0
   const colors = formatterParams.color !== undefined ? formatterParams.color : ['red', 'orange', 'green']
 
+  const parsedValue = parseFloat(value)
+  const percent = (max - min) / 100
+
   let color = '#666666'
   let percentValue
 
@@ -25,12 +28,9 @@ export default function (cell, formatterParams) {
   el.classList.add('tabulator-traffic-light')
 
   // make sure value is in range
-  const parsedValue = parseFloat(value)
   percentValue = parsedValue <= max ? parsedValue : max
   percentValue = parseFloat(percentValue) >= min ? parseFloat(percentValue) : min
-
   // workout percentage
-  const percent = (max - min) / 100
   percentValue = Math.round((percentValue - min) / percent)
 
   // set color

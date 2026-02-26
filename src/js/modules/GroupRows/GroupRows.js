@@ -109,9 +109,10 @@ export default class GroupRows extends Module {
    */
   configureGroupSetup() {
     if (this.table.options.groupBy) {
+      const groupHeader = this.table.options.groupHeader
+
       let groupBy = this.table.options.groupBy
       let startOpen = this.table.options.groupStartOpen
-      const groupHeader = this.table.options.groupHeader
 
       this.allowedValues = this.table.options.groupValues
 
@@ -264,9 +265,9 @@ export default class GroupRows extends Module {
    */
   rowAddingIndex(row, index, top) {
     if (this.table.options.groupBy) {
-      this.assignRowToGroup(row)
-
       const groupRows = row.modules.group.rows
+
+      this.assignRowToGroup(row)
 
       if (groupRows.length > 1) {
         if (!index || (index && !groupRows.includes(index))) {
@@ -544,9 +545,11 @@ export default class GroupRows extends Module {
 
     groupList.forEach((group) => {
       const groupHeader = {}
+
       groupHeader.level = 0
       groupHeader.rowCount = 0
       groupHeader.headerContent = ''
+
       let childData
 
       if (group.hasSubGroups) {

@@ -638,8 +638,9 @@ export default class Edit {
    * @returns {Promise<Array<object>>}
    */
   async _generateOptions(silent) {
-    let values = []
     const iteration = ++this.listIteration
+
+    let values = []
 
     this.filtered = false
 

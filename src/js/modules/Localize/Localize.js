@@ -90,8 +90,6 @@ export default class Localize extends Module {
    * @param {string|boolean} desiredLocale Locale key or true for browser locale.
    */
   setLocale(desiredLocale) {
-    let locale = desiredLocale || 'default'
-
     // fill in any matching language values
     const traverseLang = (trans, path) => {
       for (const prop in trans) {
@@ -105,6 +103,8 @@ export default class Localize extends Module {
         }
       }
     }
+
+    let locale = desiredLocale || 'default'
 
     // determining correct locale to load
     if (locale === true && navigator.language) {
@@ -194,6 +194,7 @@ export default class Localize extends Module {
       }
 
       const rootPath = root[level]
+
       root = rootPath !== undefined ? rootPath : false
     }
 

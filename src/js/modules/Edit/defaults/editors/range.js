@@ -9,8 +9,9 @@
  * @returns {HTMLInputElement}
  */
 export default function (cell, onRendered, success, cancel, editorParams) {
-  let cellValue = cell.getValue()
   const input = document.createElement('input')
+
+  let cellValue = cell.getValue()
 
   input.setAttribute('type', 'range')
 

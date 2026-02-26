@@ -21,8 +21,9 @@ export default {
    * @returns {string} Average value.
    */
   avg(values, data, calcParams) {
-    let output = 0
     const precision = calcParams.precision !== undefined ? calcParams.precision : 2
+
+    let output = 0
 
     if (values.length) {
       output = values.reduce((sum, value) => Number(sum) + Number(value))
@@ -43,8 +44,9 @@ export default {
    * @returns {string|number} Maximum value.
    */
   max(values, data, calcParams) {
-    let output = null
     const precision = calcParams.precision !== undefined ? calcParams.precision : false
+
+    let output = null
 
     values.forEach((value) => {
       value = Number(value)
@@ -65,8 +67,9 @@ export default {
    * @returns {string|number} Minimum value.
    */
   min(values, data, calcParams) {
-    let output = null
     const precision = calcParams.precision !== undefined ? calcParams.precision : false
+
+    let output = null
 
     values.forEach((value) => {
       value = Number(value)
@@ -87,8 +90,9 @@ export default {
    * @returns {string|number} Summed value.
    */
   sum(values, data, calcParams) {
-    let output = 0
     const precision = calcParams.precision !== undefined ? calcParams.precision : false
+
+    let output = 0
 
     if (values.length) {
       values.forEach((value) => {

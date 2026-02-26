@@ -12,8 +12,9 @@ import maskInput from '../../inputMask.js'
  */
 export default function (cell, onRendered, success, cancel, editorParams) {
   // create and style input
-  let cellValue = cell.getValue()
   const input = document.createElement('input')
+
+  let cellValue = cell.getValue()
 
   input.setAttribute('type', editorParams.search ? 'search' : 'text')
 

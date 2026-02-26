@@ -371,9 +371,10 @@ export default class Range extends CoreFeature {
    * @returns {Array<object>}
    */
   getCells(structured, component) {
-    let cells = []
     const rows = this.getRows()
     const columns = this.getColumns()
+
+    let cells = []
 
     if (structured) {
       cells = rows.map((row) => {

@@ -11,9 +11,10 @@ import maskInput from '../../inputMask.js'
  * @returns {HTMLInputElement}
  */
 export default function (cell, onRendered, success, cancel, editorParams) {
-  let cellValue = cell.getValue()
   const vertNav = editorParams.verticalNavigation || 'editor'
   const input = document.createElement('input')
+
+  let cellValue = cell.getValue()
 
   input.setAttribute('type', 'number')
 

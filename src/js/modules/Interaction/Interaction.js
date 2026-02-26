@@ -252,10 +252,11 @@ export default class Interaction extends Module {
    * @param {string} key External event key.
    */
   unsubscribeTouchEvents(key) {
-    let noTouch = true
     const type = this.eventMap[key]
     const startEvent = `${type}-touchstart`
     const endEvent = `${type}-touchend`
+
+    let noTouch = true
 
     if (this.subscribers[key] && !this.subscribedExternal(key)) {
       delete this.subscribers[key]

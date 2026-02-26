@@ -11,10 +11,8 @@ export default class Menu extends Module {
 
     this.menuContainer = null
     this.nestedMenuBlock = false
-
     this.currentComponent = null
     this.rootPopup = null
-
     this.columnSubscribers = {}
 
     // this.registerTableOption("menuContainer", undefined); //deprecated
@@ -139,9 +137,10 @@ export default class Menu extends Module {
    * @param {object} column Internal column.
    */
   initializeColumnHeaderMenu(column) {
-    let icon = column.definition.headerMenuIcon
     const headerMenuEl = document.createElement('span')
     headerMenuEl.classList.add('tabulator-header-popup-button')
+
+    let icon = column.definition.headerMenuIcon
 
     if (icon) {
       if (typeof icon === 'function') {

@@ -96,6 +96,7 @@ export default class ResponsiveLayout extends Module {
     columns = columns.reverse()
     columns = columns.sort((a, b) => {
       const diff = b.modules.responsive.order - a.modules.responsive.order
+
       return diff || b.modules.responsive.index - a.modules.responsive.index
     })
 
@@ -234,8 +235,9 @@ export default class ResponsiveLayout extends Module {
    * Adjust visible columns to fit available width.
    */
   update() {
-    let working = true
     const isFitColumns = this.table.modules.layout.getMode() === 'fitColumns'
+
+    let working = true
 
     while (working) {
       const width = isFitColumns ? this.table.columnManager.getFlexBaseWidth() : this.table.columnManager.getWidth()
@@ -391,10 +393,10 @@ export default class ResponsiveLayout extends Module {
       const row = document.createElement('tr')
       const titleData = document.createElement('td')
       const valueData = document.createElement('td')
+      const titleHighlight = document.createElement('strong')
 
       let node_content
 
-      const titleHighlight = document.createElement('strong')
       titleData.appendChild(titleHighlight)
 
       this.modules.localize.bind(`columns|${item.field}`, (text) => {

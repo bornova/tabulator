@@ -67,8 +67,6 @@ export default class Download extends Module {
    * @param {boolean|Function} [interceptCallback] Intercept callback or open-in-tab flag.
    */
   download(type, filename, options, range, interceptCallback) {
-    let downloadFunc = false
-
     const buildLink = (data, mime) => {
       if (interceptCallback) {
         if (interceptCallback === true) {
@@ -80,6 +78,8 @@ export default class Download extends Module {
         this.triggerDownload(data, mime, type, filename)
       }
     }
+
+    let downloadFunc = false
 
     if (typeof type === 'function') {
       downloadFunc = type

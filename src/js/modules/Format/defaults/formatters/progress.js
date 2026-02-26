@@ -16,6 +16,9 @@ export default function (cell, formatterParams = {}, onRendered) {
   const min = formatterParams.min ?? 0
   const legendAlign = formatterParams.legendAlign ? formatterParams.legendAlign : 'center'
 
+  const parsedValue = parseFloat(value)
+  const percent = (max - min) / 100
+
   let element = cell.getElement()
   let percentValue
   let color
@@ -24,12 +27,9 @@ export default function (cell, formatterParams = {}, onRendered) {
   let legendEl
 
   // make sure value is in range
-  const parsedValue = parseFloat(value)
   percentValue = parsedValue <= max ? parsedValue : max
   percentValue = parseFloat(percentValue) >= min ? parseFloat(percentValue) : min
-
   // workout percentage
-  const percent = (max - min) / 100
   percentValue = Math.round((percentValue - min) / percent)
 
   // set bar color

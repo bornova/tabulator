@@ -135,7 +135,7 @@ export default class ReactiveData extends Module {
     Object.defineProperty(this.data, 'pop', {
       enumerable: false,
       configurable: true,
-      value: function () {
+      value: () => {
         let row, result
 
         if (!self.blocked && version === self.currentVersion) {
@@ -164,7 +164,7 @@ export default class ReactiveData extends Module {
     Object.defineProperty(this.data, 'splice', {
       enumerable: false,
       configurable: true,
-      value: function (...args) {
+      value: (...args) => {
         const start = args[0] < 0 ? data.length + args[0] : args[0]
         const end = args[1]
 
@@ -312,9 +312,9 @@ export default class ReactiveData extends Module {
   watchKey(row, data, key) {
     const self = this
     const props = Object.getOwnPropertyDescriptor(data, key)
+    const version = this.currentVersion
 
     let value = data[key]
-    const version = this.currentVersion
 
     Object.defineProperty(data, key, {
       configurable: true,

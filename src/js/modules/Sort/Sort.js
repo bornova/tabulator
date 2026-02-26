@@ -275,7 +275,9 @@ export default class Sort extends Module {
    */
   hasChanged() {
     const changed = this.changed
+
     this.changed = false
+
     return changed
   }
 
@@ -518,11 +520,11 @@ export default class Sort extends Module {
    * @returns {number}
    */
   _sortRow(a, b, column, dir, params) {
-    let el1Comp, el2Comp
-
     // switch elements depending on search direction
     const el1 = dir === 'asc' ? a : b
     const el2 = dir === 'asc' ? b : a
+
+    let el1Comp, el2Comp
 
     a = column.getFieldValue(el1.getData())
     b = column.getFieldValue(el2.getData())

@@ -295,6 +295,7 @@ export default class Filter extends Module {
         column.modules.filter.tagType === 'textarea'
           ? 'partial'
           : 'match'
+
       let type = ''
       let filterFunc
 
@@ -309,8 +310,9 @@ export default class Filter extends Module {
               if (Filter.filters[column.definition.headerFilterFunc]) {
                 type = column.definition.headerFilterFunc
                 filterFunc = (data) => {
-                  let params = column.definition.headerFilterFuncParams || {}
                   const fieldVal = column.getFieldValue(data)
+
+                  let params = column.definition.headerFilterFuncParams || {}
 
                   params = typeof params === 'function' ? params(value, fieldVal, data) : params
 
@@ -326,8 +328,9 @@ export default class Filter extends Module {
 
             case 'function':
               filterFunc = (data) => {
-                let params = column.definition.headerFilterFuncParams || {}
                 const fieldVal = column.getFieldValue(data)
+
+                let params = column.definition.headerFilterFuncParams || {}
 
                 params = typeof params === 'function' ? params(value, fieldVal, data) : params
 
@@ -529,7 +532,6 @@ export default class Filter extends Module {
 
         editorElement.addEventListener('focus', () => {
           const left = this.table.columnManager.contentsElement.scrollLeft
-
           const headerPos = this.table.rowManager.element.scrollLeft
 
           if (left !== headerPos) {
@@ -730,7 +732,9 @@ export default class Filter extends Module {
    */
   hasChanged() {
     const changed = this.changed
+
     this.changed = false
+
     return changed
   }
 
@@ -1024,8 +1028,9 @@ export default class Filter extends Module {
    * @returns {Array<object>}
    */
   filter(rowList) {
-    let activeRows = []
     const activeRowComponents = []
+
+    let activeRows = []
 
     if (this.subscribedExternal('dataFiltering')) {
       this.dispatchExternal('dataFiltering', this.getFilters(true))
@@ -1062,8 +1067,9 @@ export default class Filter extends Module {
    * @returns {boolean}
    */
   filterRow(row) {
-    let match = true
     const data = row.getData()
+
+    let match = true
 
     this.filterList.forEach((filter) => {
       if (!this.filterRecurse(filter, data)) {

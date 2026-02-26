@@ -29,9 +29,9 @@ export default function (cell, formatterParams) {
   }
 
   const number = String(precision !== false ? floatVal.toFixed(precision) : floatVal).split('.')
+  const decimal = number.length > 1 ? `${decimalSym}${number[1]}` : ''
 
   let integer = number[0]
-  const decimal = number.length > 1 ? `${decimalSym}${number[1]}` : ''
 
   if (formatterParams.thousand !== false) {
     const rgx = /(\d+)(\d{3})/
@@ -45,6 +45,7 @@ export default function (cell, formatterParams) {
 
   if (sign === true) {
     const wrappedValue = `(${value})`
+
     return after ? `${wrappedValue}${symbol}` : `${symbol}${wrappedValue}`
   } else {
     return after ? `${sign}${value}${symbol}` : `${sign}${symbol}${value}`

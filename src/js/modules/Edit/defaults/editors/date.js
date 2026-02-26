@@ -12,10 +12,9 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const inputFormat = editorParams.format
   const vertNav = editorParams.verticalNavigation || 'editor'
   const DT = inputFormat ? this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime') : null
-
-  // create and style input
-  let cellValue = cell.getValue()
   const input = document.createElement('input')
+
+  let cellValue = cell.getValue()
 
   function convertDate(value) {
     let newDatetime

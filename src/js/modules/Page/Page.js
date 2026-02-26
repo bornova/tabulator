@@ -277,6 +277,7 @@ export default class Page extends Module {
    */
   scrollVertical(top, dir) {
     let element, diff, margin
+
     if (!dir && !this.table.dataLoader.loading) {
       element = this.table.rowManager.getElement()
       diff = element.scrollHeight - element.clientHeight - top
@@ -884,13 +885,13 @@ export default class Page extends Module {
    * @returns {Array<object>}
    */
   getRows(data) {
+    const actualRows = data.filter((row) => row.type === 'row')
+
     let actualRowPageSize = 0
     let output
     let start
     let end
     let actualStartRow
-
-    const actualRows = data.filter((row) => row.type === 'row')
 
     if (this.mode === 'local') {
       output = []

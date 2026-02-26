@@ -12,11 +12,7 @@ export default function (cell, formatterParams) {
   formatterParams = formatterParams || {}
 
   const checkbox = document.createElement('input')
-
-  let blocked = false
-
   checkbox.type = 'checkbox'
-
   checkbox.setAttribute('aria-label', 'Select Row')
 
   if (!this.table.modExists('selectRow', true)) {
@@ -25,6 +21,8 @@ export default function (cell, formatterParams) {
 
   const selectRowModule = this.table.modules.selectRow
   const isClickRangeMode = this.table.options.selectableRowsRangeMode === 'click'
+
+  let blocked = false
 
   checkbox.addEventListener('click', (e) => {
     e.stopPropagation()

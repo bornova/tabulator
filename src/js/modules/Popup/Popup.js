@@ -139,9 +139,10 @@ export default class Popup extends Module {
    * @param {object} column Internal column.
    */
   initializeColumnHeaderPopup(column) {
-    let icon = column.definition.headerPopupIcon
     const headerPopupEl = document.createElement('span')
     headerPopupEl.classList.add('tabulator-header-popup-button')
+
+    let icon = column.definition.headerPopupIcon
 
     if (icon) {
       if (typeof icon === 'function') {
@@ -240,6 +241,7 @@ export default class Popup extends Module {
    */
   loadPopup(e, component, contents, renderedCallback, position) {
     const touch = !(e instanceof MouseEvent)
+    const componentRef = component.getComponent()
 
     let contentsEl
     let popup
@@ -272,8 +274,6 @@ export default class Popup extends Module {
     } else {
       popup.show(component.getElement(), position || 'center')
     }
-
-    const componentRef = component.getComponent()
 
     popup.hideOnBlur(() => {
       this.dispatchExternal('popupClosed', componentRef)

@@ -27,12 +27,12 @@ export default function (a, b, aRow, bRow, column, dir, params) {
     }
   }
 
-  let emptyAlign
-  let locale
-
   // handle empty values
   const aEmpty = a == null || a === ''
   const bEmpty = b == null || b === ''
+
+  let emptyAlign
+  let locale
 
   if (aEmpty) {
     emptyAlign = bEmpty ? 0 : -1
