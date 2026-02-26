@@ -45,11 +45,13 @@ export default class Accessor extends Module {
    * @param {object} column Internal column.
    */
   initializeColumn(column) {
-    let match = false
     const config = {}
+
+    let match = false
 
     this.allowedTypes.forEach((type) => {
       const key = `accessor${type.charAt(0).toUpperCase() + type.slice(1)}`
+
       let accessor
 
       if (column.definition[key]) {

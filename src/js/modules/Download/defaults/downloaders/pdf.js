@@ -7,7 +7,6 @@
 export default function (list, options = {}, setFileContents) {
   const header = []
   const body = []
-  let autoTableParams = {}
   const rowGroupStyles = options.rowGroupStyles || {
     fontStyle: 'bold',
     fontSize: 12,
@@ -22,6 +21,8 @@ export default function (list, options = {}, setFileContents) {
   }
   const jsPDFParams = options.jsPDF || {}
   const title = options.title || ''
+
+  let autoTableParams = {}
   let jspdfLib
   let doc
 

@@ -10,6 +10,7 @@ export default function (cell, formatterParams) {
 
   const el = document.createElement('img')
   const cellValue = cell.getValue()
+
   let src = cellValue
 
   if (formatterParams.urlPrefix) {

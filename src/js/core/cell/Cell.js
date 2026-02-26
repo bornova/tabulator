@@ -100,6 +100,7 @@ export default class Cell extends CoreFeature {
     // add class to cell if needed
     if (this.column.definition.cssClass) {
       const classNames = this.column.definition.cssClass.split(/\s+/).filter(Boolean)
+
       classNames.forEach((className) => {
         element.classList.add(className)
       })

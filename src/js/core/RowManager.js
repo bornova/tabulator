@@ -487,6 +487,7 @@ export default class RowManager extends CoreFeature {
    */
   addRowActual(data, pos, index, blockRedraw) {
     const row = data instanceof Row ? data : new Row(data || {}, this)
+
     let top = this.findAddRowPos(pos)
     let allIndex = -1
     let activeIndex
@@ -669,6 +670,7 @@ export default class RowManager extends CoreFeature {
    */
   nextDisplayRow(row, rowOnly) {
     const index = this.getDisplayRowIndex(row)
+
     let nextRow = false
 
     if (index !== false && index < this.displayRowsCount - 1) {
@@ -690,6 +692,7 @@ export default class RowManager extends CoreFeature {
    */
   prevDisplayRow(row, rowOnly) {
     const index = this.getDisplayRowIndex(row)
+
     let prevRow = false
 
     if (index) {
@@ -807,9 +810,10 @@ export default class RowManager extends CoreFeature {
    */
   refreshActiveData(handler, skipStage, renderInPosition) {
     const table = this.table
+    const cascadeOrder = ['all', 'dataPipeline', 'display', 'displayPipeline', 'end']
+
     let stage
     let index
-    const cascadeOrder = ['all', 'dataPipeline', 'display', 'displayPipeline', 'end']
 
     if (!this.table.destroyed) {
       if (typeof handler === 'function') {
@@ -951,6 +955,7 @@ export default class RowManager extends CoreFeature {
    */
   regenerateRowPositions() {
     const rows = this.getDisplayRows()
+
     let index = 1
 
     rows.forEach((row) => {
@@ -1115,12 +1120,12 @@ export default class RowManager extends CoreFeature {
    * Initialize vertical renderer implementation.
    */
   initializeRenderer() {
-    let renderClass
-
     const renderers = {
       virtual: RendererVirtualDomVertical,
       basic: RendererBasicVertical
     }
+
+    let renderClass
 
     if (typeof this.table.options.renderVertical === 'string') {
       renderClass = renderers[this.table.options.renderVertical]
@@ -1316,6 +1321,7 @@ export default class RowManager extends CoreFeature {
    */
   adjustTableSize() {
     const initialHeight = this.element.clientHeight
+
     let minHeight
     let resized = false
 

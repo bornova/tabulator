@@ -9,28 +9,19 @@ export default class VirtualDomVertical extends Renderer {
     super(table)
 
     this.verticalFillMode = 'fill'
-
     this.scrollTop = 0
     this.scrollLeft = 0
-
     this.vDomRowHeight = 20 // approximation of row heights for padding
-
     this.vDomTop = 0 // hold position for first rendered row in the virtual DOM
     this.vDomBottom = 0 // hold position for last rendered row in the virtual DOM
-
     this.vDomScrollPosTop = 0 // last scroll position of the vDom top;
     this.vDomScrollPosBottom = 0 // last scroll position of the vDom bottom;
-
     this.vDomTopPad = 0 // hold value of padding for top of virtual DOM
     this.vDomBottomPad = 0 // hold value of padding for bottom of virtual DOM
-
     this.vDomMaxRenderChain = 90 // the maximum number of dom elements that can be rendered in 1 go
-
     this.vDomWindowBuffer = 0 // window row buffer before removing elements, to smooth scrolling
-
     this.vDomWindowMinTotalRows = 20 // minimum number of rows to be generated in virtual dom (prevent buffering issues on tables with tall rows)
     this.vDomWindowMinMarginRows = 5 // minimum number of rows to be generated in virtual dom margin
-
     this.vDomTopNewRows = [] // rows to normalize after appending to optimize render speed
     this.vDomBottomNewRows = [] // rows to normalize after appending to optimize render speed
   }
@@ -80,12 +71,11 @@ export default class VirtualDomVertical extends Renderer {
    */
   rerenderRows(callback) {
     const scrollTop = this.elementVertical.scrollTop
+    const left = this.table.rowManager.scrollLeft
+    const rows = this.rows()
+
     let topRow = false
     let topOffset = false
-
-    const left = this.table.rowManager.scrollLeft
-
-    const rows = this.rows()
 
     for (let i = this.vDomTop; i <= this.vDomBottom; i++) {
       if (rows[i]) {
@@ -142,9 +132,11 @@ export default class VirtualDomVertical extends Renderer {
     if (-topDiff > margin || bottomDiff > margin) {
       // if big scroll redraw table;
       const left = this.table.rowManager.scrollLeft
+
       this._virtualRenderFill(
         Math.floor((this.elementVertical.scrollTop / this.elementVertical.scrollHeight) * rows.length)
       )
+
       this.scrollColumns(left)
     } else {
       if (dir) {
@@ -217,10 +209,11 @@ export default class VirtualDomVertical extends Renderer {
   visibleRows(includingBuffer) {
     const topEdge = this.elementVertical.scrollTop
     const bottomEdge = this.elementVertical.clientHeight + topEdge
+    const rows = this.rows()
+
     let topFound = false
     let topRow = 0
     let bottomRow = 0
-    const rows = this.rows()
 
     if (includingBuffer) {
       topRow = this.vDomTop
@@ -268,23 +261,24 @@ export default class VirtualDomVertical extends Renderer {
   _virtualRenderFill(position, forceMove, offset) {
     const element = this.tableElement
     const holder = this.elementVertical
+    const rows = this.rows()
+    const rowsCount = rows.length
+    const fixedHeight = this.table.rowManager.fixedHeight
+
+    let containerHeight = this.elementVertical.clientHeight
+    let avgRowHeight = this.table.options.rowHeight
     let topPad = 0
     let rowsHeight = 0
     let rowHeight = 0
     let heightOccupied
     let topPadHeight = 0
+    let totalRowsRendered = 0
+    let rowsToRender = 0
     let i
-    const rows = this.rows()
-    const rowsCount = rows.length
     let index
     let row
     let rowFragment
     let renderedRows
-    let totalRowsRendered = 0
-    let rowsToRender = 0
-    const fixedHeight = this.table.rowManager.fixedHeight
-    let containerHeight = this.elementVertical.clientHeight
-    let avgRowHeight = this.table.options.rowHeight
     let resized
 
     position ??= 0
@@ -389,6 +383,7 @@ export default class VirtualDomVertical extends Renderer {
           if (rowHeight > this.vDomWindowBuffer) {
             this.vDomWindowBuffer = rowHeight * 2
           }
+
           totalRowsRendered++
         })
 
@@ -396,6 +391,7 @@ export default class VirtualDomVertical extends Renderer {
         containerHeight = this.elementVertical.clientHeight
         if (resized && (fixedHeight || this.table.options.maxHeight)) {
           avgRowHeight = rowsHeight / totalRowsRendered
+
           rowsToRender = Math.max(
             this.vDomWindowMinTotalRows,
             Math.ceil(containerHeight / avgRowHeight + this.vDomWindowBuffer / avgRowHeight)
@@ -455,6 +451,7 @@ export default class VirtualDomVertical extends Renderer {
   _addTopRow(rows, fillableSpace) {
     const table = this.tableElement
     const addedRows = []
+
     let paddingAdjust = 0
     let index = this.vDomTop - 1
     let i = 0
@@ -463,6 +460,7 @@ export default class VirtualDomVertical extends Renderer {
     while (working) {
       if (this.vDomTop) {
         const row = rows[index]
+
         let rowHeight
         let initialized
 
@@ -534,12 +532,14 @@ export default class VirtualDomVertical extends Renderer {
    */
   _removeTopRow(rows, fillableSpace) {
     const removableRows = []
+
     let paddingAdjust = 0
     let i = 0
     let working = true
 
     while (working) {
       const row = rows[this.vDomTop]
+
       let rowHeight
 
       if (row && i < this.vDomMaxRenderChain) {
@@ -584,6 +584,7 @@ export default class VirtualDomVertical extends Renderer {
   _addBottomRow(rows, fillableSpace) {
     const table = this.tableElement
     const addedRows = []
+
     let paddingAdjust = 0
     let index = this.vDomBottom + 1
     let i = 0
@@ -591,6 +592,7 @@ export default class VirtualDomVertical extends Renderer {
 
     while (working) {
       const row = rows[index]
+
       let rowHeight
       let initialized
 
@@ -655,12 +657,14 @@ export default class VirtualDomVertical extends Renderer {
    */
   _removeBottomRow(rows, fillableSpace) {
     const removableRows = []
+
     let paddingAdjust = 0
     let i = 0
     let working = true
 
     while (working) {
       const row = rows[this.vDomBottom]
+
       let rowHeight
 
       if (row && i < this.vDomMaxRenderChain) {

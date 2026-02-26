@@ -320,6 +320,7 @@ export default class ResponsiveLayout extends Module {
   generateCollapsedRowData(row) {
     const data = row.getData()
     const output = []
+
     let mockCellComponent
 
     this.hiddenColumns.forEach((column) => {
@@ -390,6 +391,7 @@ export default class ResponsiveLayout extends Module {
       const row = document.createElement('tr')
       const titleData = document.createElement('td')
       const valueData = document.createElement('td')
+
       let node_content
 
       const titleHighlight = document.createElement('strong')

@@ -154,8 +154,8 @@ export default class Renderer extends CoreFeature {
    */
   styleRow(row, index) {
     const rowEl = row.getElement()
-
     const isEven = Boolean(index % 2)
+
     rowEl.classList.toggle('tabulator-row-even', isEven)
     rowEl.classList.toggle('tabulator-row-odd', !isEven)
   }
@@ -203,6 +203,7 @@ export default class Renderer extends CoreFeature {
   scrollToRowPosition(row, position, ifVisible) {
     const rowIndex = this.rows().indexOf(row)
     const rowEl = row.getElement()
+
     let offset = 0
 
     return new Promise((resolve, reject) => {

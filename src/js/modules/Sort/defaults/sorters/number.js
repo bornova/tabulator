@@ -17,8 +17,6 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   const alignEmptyValues = params.alignEmptyValues
   const decimal = params.decimalSeparator
   const thousand = params.thousandSeparator
-  let emptyAlign
-
   const normalizeNumber = (value) => {
     let normalized = String(value)
 
@@ -32,6 +30,8 @@ export default function (a, b, aRow, bRow, column, dir, params) {
 
     return parseFloat(normalized)
   }
+
+  let emptyAlign
 
   a = normalizeNumber(a)
   b = normalizeNumber(b)

@@ -65,6 +65,7 @@ export default class MoveColumns extends Module {
    */
   initializeColumn(column) {
     const config = {}
+
     let colEl
 
     if (!column.modules.frozen && !column.isGroup && !column.isRowHeader) {
@@ -120,6 +121,7 @@ export default class MoveColumns extends Module {
    */
   bindTouchEvents(column) {
     const colEl = column.getElement()
+
     let startXMove = false // shifting center position of the cell
     let nextCol
     let prevCol
@@ -343,6 +345,7 @@ export default class MoveColumns extends Module {
     const columnHolder = this.table.columnManager.getContentsElement()
     const scrollLeft = columnHolder.scrollLeft
     const xPos = (this.touchMove ? e.touches[0].pageX : e.pageX) - Helpers.elOffset(columnHolder).left + scrollLeft
+
     let scrollPos
 
     this.hoverElement.style.left = `${xPos - this.startX}px`

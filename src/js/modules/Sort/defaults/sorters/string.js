@@ -16,9 +16,6 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   params = params || {}
 
   const alignEmptyValues = params.alignEmptyValues
-  let emptyAlign
-  let locale
-
   const resolveLocale = () => {
     switch (typeof params.locale) {
       case 'boolean':
@@ -29,6 +26,9 @@ export default function (a, b, aRow, bRow, column, dir, params) {
         return undefined
     }
   }
+
+  let emptyAlign
+  let locale
 
   // handle empty values
   const aEmpty = a == null || a === ''

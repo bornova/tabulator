@@ -142,6 +142,7 @@ export default class Range extends CoreFeature {
    */
   setEndBound(element) {
     const rowsCount = this._getTableRows().length
+
     let row
     let col
     let isRowHeader

@@ -234,6 +234,7 @@ export default class Menu extends Module {
     const touch = !(e instanceof MouseEvent)
     const componentRef = component.getComponent()
     const menuEl = document.createElement('div')
+
     let popup
 
     menuEl.classList.add('tabulator-menu')
@@ -270,6 +271,7 @@ export default class Menu extends Module {
 
     menu.forEach((item) => {
       const itemEl = document.createElement('div')
+
       let label = item.label
       let disabled = item.disabled
 

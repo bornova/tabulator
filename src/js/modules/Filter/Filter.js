@@ -398,6 +398,7 @@ export default class Filter extends Module {
   generateHeaderFilterElement(column, initialValue, reinitialize) {
     const success = column.modules.filter.success
     const field = column.getField()
+
     let filterElement
     let editor
     let editorElement

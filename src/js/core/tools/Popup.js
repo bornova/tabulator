@@ -139,6 +139,7 @@ export default class Popup extends CoreFeature {
    */
   elementPositionCoords(element, position = 'right') {
     const offset = Helpers.elOffset(element)
+
     let containerOffset
     let x
     let y

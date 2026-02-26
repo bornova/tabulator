@@ -32,6 +32,7 @@ export default class Helpers {
   static retrieveNestedData(separator, field, data) {
     const structure = separator ? field.split(separator) : [field]
     const length = structure.length
+
     let output
 
     for (let i = 0; i < length; i++) {
@@ -69,6 +70,7 @@ export default class Helpers {
 
     for (const i in obj) {
       const subject = obj[i]
+
       let match
       let copy
 

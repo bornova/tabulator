@@ -271,6 +271,7 @@ export default class Persistence extends Module {
 
       keys.forEach((key) => {
         const props = Object.getOwnPropertyDescriptor(def, key)
+
         let value = def[key]
 
         if (props) {
@@ -342,6 +343,7 @@ export default class Persistence extends Module {
 
     newCols.forEach((column) => {
       const from = this._findColumn(oldCols, column)
+
       let keys
 
       if (from) {
@@ -520,6 +522,7 @@ export default class Persistence extends Module {
     columns.forEach((column) => {
       const defStore = {}
       const colDef = column.getDefinition()
+
       let keys
 
       if (column.isGroup) {

@@ -207,11 +207,11 @@ export default class Popup extends Module {
    * @param {string} [position] Popup position.
    */
   loadPopupEvent(contents, e, component, position) {
-    let renderedCallback
-
     const onRendered = (callback) => {
       renderedCallback = callback
     }
+
+    let renderedCallback
 
     if (component._group) {
       component = component._group
@@ -240,6 +240,7 @@ export default class Popup extends Module {
    */
   loadPopup(e, component, contents, renderedCallback, position) {
     const touch = !(e instanceof MouseEvent)
+
     let contentsEl
     let popup
 

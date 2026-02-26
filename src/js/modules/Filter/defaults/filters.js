@@ -129,6 +129,7 @@ export default {
   keywords(filterVal, rowVal, rowData, filterParams) {
     const keywords = filterVal.toLowerCase().split(filterParams.separator ?? ' ')
     const value = String(rowVal ?? '').toLowerCase()
+
     let matchCount = 0
 
     keywords.forEach((keyword) => {

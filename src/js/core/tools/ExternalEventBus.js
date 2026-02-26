@@ -106,6 +106,7 @@ export default class ExternalEventBus {
    */
   _dispatch(...args) {
     const key = args.shift()
+
     let result
 
     if (this.events[key]) {

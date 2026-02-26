@@ -15,6 +15,7 @@ export default class PseudoRow {
    */
   _createElement() {
     const element = document.createElement('div')
+
     element.classList.add('tabulator-row')
     return element
   }

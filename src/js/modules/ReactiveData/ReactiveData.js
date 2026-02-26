@@ -39,6 +39,7 @@ export default class ReactiveData extends Module {
    */
   watchData(data) {
     const self = this
+
     let version
 
     this.currentVersion++
@@ -166,6 +167,7 @@ export default class ReactiveData extends Module {
       value: function (...args) {
         const start = args[0] < 0 ? data.length + args[0] : args[0]
         const end = args[1]
+
         let newRows = args[2] ? args.slice(2) : false
         let startRow
         let result
@@ -310,6 +312,7 @@ export default class ReactiveData extends Module {
   watchKey(row, data, key) {
     const self = this
     const props = Object.getOwnPropertyDescriptor(data, key)
+
     let value = data[key]
     const version = this.currentVersion
 

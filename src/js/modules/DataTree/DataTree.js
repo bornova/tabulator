@@ -50,8 +50,9 @@ export default class DataTree extends Module {
    */
   initialize() {
     if (this.table.options.dataTree) {
-      let dummyEl
       const options = this.table.options
+
+      let dummyEl
 
       this.field = options.dataTreeChildField
       this.indent = options.dataTreeChildIndent
@@ -398,8 +399,9 @@ export default class DataTree extends Module {
    */
   getChildren(row, allChildren, sortOnly) {
     const config = row.modules.dataTree
-    let children
     const output = []
+
+    let children
 
     if (!config) {
       return output
@@ -571,6 +573,7 @@ export default class DataTree extends Module {
   getFilteredTreeChildren(row) {
     const config = row.modules.dataTree
     const output = []
+
     let children
 
     if (config.children) {
@@ -616,6 +619,7 @@ export default class DataTree extends Module {
    */
   rowDelete(row) {
     const parent = row.modules.dataTree.parent
+
     let childIndex
     let childData
 

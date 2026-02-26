@@ -147,6 +147,7 @@ export default class Download extends Module {
   triggerDownload(data, mime, type, filename, newTab) {
     const element = document.createElement('a')
     const blob = this.table.options.downloadEncoder(data, mime)
+
     let blobUrl
 
     if (blob) {

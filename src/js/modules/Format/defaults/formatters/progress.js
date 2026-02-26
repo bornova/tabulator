@@ -12,10 +12,11 @@ import CellComponent from '../../../../core/cell/CellComponent.js'
 export default function (cell, formatterParams = {}, onRendered) {
   // progress bar
   const value = this.sanitizeHTML(cell.getValue()) || 0
-  let element = cell.getElement()
   const max = formatterParams.max ?? 100
   const min = formatterParams.min ?? 0
   const legendAlign = formatterParams.legendAlign ? formatterParams.legendAlign : 'center'
+
+  let element = cell.getElement()
   let percentValue
   let color
   let legend
@@ -42,6 +43,7 @@ export default function (cell, formatterParams = {}, onRendered) {
     case 'object':
       if (Array.isArray(formatterParams.color)) {
         const unit = 100 / formatterParams.color.length
+
         let index = Math.floor(percentValue / unit)
 
         index = Math.min(index, formatterParams.color.length - 1)
@@ -80,6 +82,7 @@ export default function (cell, formatterParams = {}, onRendered) {
     case 'object':
       if (Array.isArray(formatterParams.legendColor)) {
         const unit = 100 / formatterParams.legendColor.length
+
         let index = Math.floor(percentValue / unit)
 
         index = Math.min(index, formatterParams.legendColor.length - 1)

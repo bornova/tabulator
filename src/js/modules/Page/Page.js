@@ -146,6 +146,7 @@ export default class Page extends Module {
   rowAddingPosition(row, top) {
     const rowManager = this.table.rowManager
     const displayRows = rowManager.getDisplayRows()
+
     let index
 
     if (top) {
@@ -401,6 +402,7 @@ export default class Page extends Module {
    */
   initializePageCounter() {
     const counter = this.table.options.paginationCounter
+
     let pageCounter
 
     if (counter) {
@@ -1068,6 +1070,7 @@ export default class Page extends Module {
    */
   footerRedraw() {
     const footer = this.table.footerManager.containerElement
+
     let hidePages = Math.ceil(footer.clientWidth) - footer.scrollWidth < 0
 
     if (!hidePages) {

@@ -36,8 +36,9 @@ export default {
    * @returns {Object|boolean} Parsed data or false.
    */
   cookie(id, type) {
-    let cookie = document.cookie
     const key = `${id}-${type}`
+
+    let cookie = document.cookie
     const cookiePos = cookie.indexOf(`${key}=`)
     let end
     let data

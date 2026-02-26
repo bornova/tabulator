@@ -16,9 +16,10 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const min =
     editorParams.min === undefined ? (firstInnerDiv && firstInnerDiv.getAttribute('min')) || 0 : editorParams.min
   const percent = (max - min) / 100
-  let value = cell.getValue() || 0
   const handle = document.createElement('div')
   const bar = document.createElement('div')
+
+  let value = cell.getValue() || 0
   let mouseDrag
   let mouseDragWidth
 

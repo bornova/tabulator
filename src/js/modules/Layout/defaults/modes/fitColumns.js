@@ -6,13 +6,14 @@
  * @param {Array<Object>} columns Columns to resize.
  */
 export default function (columns) {
+  const flexColumns = [] // array of flexible width columns
+  const fixedShrinkColumns = [] // array of fixed width columns that can shrink
+
   let totalWidth = this.table.rowManager.element.getBoundingClientRect().width // table element width
   let fixedWidth = 0 // total width of columns with a defined width
   let flexWidth = 0 // total width available to flexible columns
   let flexGrowUnits = 0 // total number of widthGrow blocks across all columns
   let flexColWidth // desired width of flexible columns
-  const flexColumns = [] // array of flexible width columns
-  const fixedShrinkColumns = [] // array of fixed width columns that can shrink
   let flexShrinkUnits = 0 // total number of widthShrink blocks across all columns
   let overflowWidth // horizontal overflow width
   let gapFill // number of pixels to be added to final column to close and half pixel gaps
@@ -36,23 +37,20 @@ export default function (columns) {
   // ensure columns resize to take up the correct amount of space
   function scaleColumns(columns, freeSpace, colWidth, shrinkCols) {
     const oversizeCols = []
+    const undersizeCols = []
+
+    const getChangeUnit = (col) =>
+      shrinkCols ? col.column.definition.widthShrink || 1 : col.column.definition.widthGrow || 1
+
+    const calcGrow = (col) => colWidth * (col.column.definition.widthGrow || 1)
+    const calcShrink = (col) => calcWidth(col.width) - colWidth * (col.column.definition.widthShrink || 0)
+
+    let gap
+    let changeUnits = 0
     let oversizeSpace = 0
     let remainingSpace
     let nextColWidth
     let remainingFlexGrowUnits = flexGrowUnits
-    let gap
-    let changeUnits = 0
-    const undersizeCols = []
-    const getChangeUnit = (col) =>
-      shrinkCols ? col.column.definition.widthShrink || 1 : col.column.definition.widthGrow || 1
-
-    function calcGrow(col) {
-      return colWidth * (col.column.definition.widthGrow || 1)
-    }
-
-    function calcShrink(col) {
-      return calcWidth(col.width) - colWidth * (col.column.definition.widthShrink || 0)
-    }
 
     columns.forEach((col) => {
       const width = shrinkCols ? calcShrink(col) : calcGrow(col)

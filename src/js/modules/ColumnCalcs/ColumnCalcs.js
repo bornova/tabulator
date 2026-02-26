@@ -529,6 +529,7 @@ export default class ColumnCalcs extends Module {
    */
   generateRow(pos, data) {
     const rowData = this.generateRowData(pos, data)
+
     let row
 
     if (this.table.modExists('mutator')) {
@@ -607,6 +608,7 @@ export default class ColumnCalcs extends Module {
     const rowData = {}
     const calcs = pos === 'top' ? this.topCalcs : this.botCalcs
     const type = pos === 'top' ? 'topCalc' : 'botCalc'
+
     let params
     let paramKey
 
@@ -695,6 +697,7 @@ export default class ColumnCalcs extends Module {
     const groupObj = group._getSelf()
     const subGroups = group.getSubGroups()
     const subGroupResults = {}
+
     let results
 
     subGroups.forEach((subgroup) => {

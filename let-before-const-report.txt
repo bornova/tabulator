@@ -1,0 +1,283 @@
+AST-based scan: let-before-const occurrences
+
+Definition used:
+- A `let` declaration appears before a later `const` declaration in the same lexical statement list (Program / BlockStatement / SwitchCase).
+
+Totals:
+- Occurrences: 192
+- Files with matches: 38
+
+Matches by file (letLine -> constLine):
+
+src/js/modules/ColumnCalcs/defaults/calculations.js
+  24->25
+  46->47
+  68->69
+  90->91
+
+src/js/modules/Download/defaults/downloaders/pdf.js
+  64->76
+
+src/js/modules/Download/Download.js
+  70->72
+
+src/js/modules/Edit/defaults/editors/date.js
+  17->18
+
+src/js/modules/Edit/defaults/editors/input.js
+  15->16
+
+src/js/modules/Edit/defaults/editors/number.js
+  14->15
+  14->16
+  14->48
+
+src/js/modules/Edit/defaults/editors/range.js
+  12->13
+
+src/js/modules/Edit/Edit.js
+  694->696
+  695->696
+  758->775
+  758->816
+  758->826
+  759->775
+  759->816
+  759->826
+  760->775
+  760->816
+  760->826
+  761->775
+  761->816
+  761->826
+  762->775
+  762->816
+  762->826
+  763->775
+  763->816
+  763->826
+
+src/js/modules/Edit/List.js
+  641->642
+
+src/js/modules/Export/Export.js
+  157->158
+  157->160
+  231->233
+  662->666
+  662->698
+  663->666
+  663->698
+  664->666
+  664->698
+  708->723
+  708->724
+
+src/js/modules/Filter/Filter.js
+  312->313
+  329->330
+  402->414
+  402->416
+  403->414
+  403->416
+  404->414
+  404->416
+  405->414
+  405->416
+  406->414
+  406->416
+  407->414
+  407->416
+  408->414
+  408->416
+  409->414
+  409->416
+  1027->1028
+  1065->1066
+
+src/js/modules/Format/defaults/formatters/money.js
+  19->31
+  19->34
+  19->44
+  20->31
+  20->34
+  20->44
+  33->34
+  33->44
+
+src/js/modules/Format/defaults/formatters/progress.js
+  19->27
+  19->32
+  19->101
+  19->109
+  20->27
+  20->32
+  20->101
+  20->109
+  21->27
+  21->32
+  21->101
+  21->109
+  22->27
+  22->32
+  22->101
+  22->109
+  23->27
+  23->32
+  23->101
+  23->109
+  24->27
+  24->32
+  24->101
+  24->109
+
+src/js/modules/Format/defaults/formatters/traffic.js
+  18->28
+  18->33
+  19->28
+  19->33
+
+src/js/modules/GroupRows/GroupRows.js
+  112->114
+  113->114
+
+src/js/modules/Interaction/Interaction.js
+  255->256
+  255->257
+  255->258
+
+src/js/modules/Localize/Localize.js
+  93->96
+
+src/js/modules/Menu/Menu.js
+  142->143
+
+src/js/modules/Page/Page.js
+  887->893
+  888->893
+  889->893
+  890->893
+  891->893
+
+src/js/modules/Popup/Popup.js
+  142->143
+  214->226
+  244->276
+  245->276
+
+src/js/modules/ReactiveData/ReactiveData.js
+  316->317
+
+src/js/modules/ResizeColumns/ResizeColumns.js
+  371->386
+  371->394
+
+src/js/modules/ResizeRows/ResizeRows.js
+  126->141
+  126->149
+
+src/js/modules/ResponsiveLayout/ResponsiveLayout.js
+  237->238
+  395->397
+
+src/js/modules/SelectRange/Range.js
+  374->375
+  374->376
+
+src/js/modules/SelectRow/extensions/formatters/rowSelection.js
+  16->26
+  16->27
+  16->46
+
+src/js/modules/Sort/defaults/sorters/array.js
+  22->34
+  23->34
+
+src/js/modules/Sort/defaults/sorters/string.js
+  30->34
+  30->35
+  31->34
+  31->35
+
+src/js/modules/Sort/Sort.js
+  521->524
+  521->525
+
+test/html/utils.js
+  86->133
+  86->138
+  86->139
+  125->133
+  125->138
+  125->139
+
+test/smoke/modules/download.spec.js
+  82->83
+
+test/smoke/modules/menu.spec.js
+  27->30
+  27->58
+  27->110
+  27->111
+  27->112
+  27->113
+  27->114
+  27->116
+  27->120
+  27->127
+  27->162
+  27->200
+  28->30
+  28->58
+  28->110
+  28->111
+  28->112
+  28->113
+  28->114
+  28->116
+  28->120
+  28->127
+  28->162
+  28->200
+
+test/smoke/modules/moveRow.spec.js
+  163->164
+  163->170
+  163->180
+  163->181
+  179->180
+  179->181
+  232->233
+  232->240
+  232->256
+  232->257
+  232->258
+
+test/smoke/modules/print.spec.js
+  51->54
+  52->54
+  112->113
+  156->158
+  156->159
+  157->158
+  157->159
+
+test/smoke/modules/resizeTable.spec.js
+  129->130
+
+test/smoke/modules/selectRange.spec.js
+  161->162
+  161->163
+
+test/smoke/modules/sort.spec.js
+  273->275
+
+test/smoke/modules/tooltip.spec.js
+  36->37
+  36->46
+  36->49
+
+Method notes:
+- AST parse with espree (`sourceType: module` fallback to `script`).
+- Traversed Program/BlockStatement/SwitchCase and compared declaration order in each statement list.
+- Ignored: node_modules, .git, dist, build, coverage, test-results.

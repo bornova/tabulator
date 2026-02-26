@@ -12,6 +12,7 @@ export default function (cell, params, onRendered) {
 
   const defaultLookup = (cell) => {
     const value = cell.getValue()
+
     let formatter = 'plaintext'
 
     switch (typeof value) {

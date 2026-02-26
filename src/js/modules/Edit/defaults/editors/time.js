@@ -12,11 +12,12 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const inputFormat = editorParams.format
   const vertNav = editorParams.verticalNavigation || 'editor'
   const DT = inputFormat ? this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime') : null
+  const input = document.createElement('input')
+
   let newDatetime
 
   // create and style input
   let cellValue = cell.getValue()
-  const input = document.createElement('input')
 
   input.type = 'time'
   input.classList.add('tabulator-editor-input')

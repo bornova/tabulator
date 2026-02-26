@@ -8,8 +8,9 @@
 export default function (columns) {
   const table = this.table
   const hasResponsiveLayout = table.options.responsiveLayout && table.modExists('responsiveLayout', true)
-  let colsWidth = 0
   const tableWidth = table.rowManager.element.clientWidth
+
+  let colsWidth = 0
   let gap
   let lastCol = false
 

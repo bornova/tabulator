@@ -177,6 +177,7 @@ export default class Edit {
    */
   _initializeParams(params) {
     const valueKeys = ['values', 'valuesURL', 'valuesLookup']
+
     let valueCheck
 
     params = { ...params }
@@ -731,8 +732,9 @@ export default class Edit {
    * @returns {Array<string>}
    */
   _uniqueColumnValues(field) {
-    let output = {}
     const data = this.table.getData(this.params.valuesLookup)
+
+    let output = {}
     let column
 
     if (field) {
@@ -910,14 +912,15 @@ export default class Edit {
    * @returns {*} Return value.
    */
   _defaultSortFunction(as, bs) {
+    const rx = /(\d+)|(\D+)/g
+    const rd = /\d/
+
     let a
     let b
     let a1
     let b1
     let i = 0
     let L
-    const rx = /(\d+)|(\D+)/g
-    const rd = /\d/
     let emptyAlign
 
     if (this.params.sort === 'desc') {

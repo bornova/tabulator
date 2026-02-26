@@ -182,10 +182,11 @@ export default class ResizeColumns extends Module {
    * @param {HTMLElement} element Target element.
    */
   initializeColumn(type, component, column, element) {
-    let variableHeight
     const mode = column.definition.resizable
-    let config = {}
     const nearestColumn = column.getLastColumn()
+
+    let variableHeight
+    let config = {}
 
     // set column resize mode
     if (type === 'header') {
@@ -284,6 +285,7 @@ export default class ResizeColumns extends Module {
    */
   resize(e, column) {
     const x = this.getClientX(e)
+
     let startDiff = x - this.startX
     let moveDiff = x - this.latestX
     let blockedBefore
@@ -340,6 +342,7 @@ export default class ResizeColumns extends Module {
     const tableX = this.table.element.getBoundingClientRect().x
     const columnX = column.element.getBoundingClientRect().left - tableX
     const mouseDiff = mouseX - this.startX
+
     let pos = Math.max(handleX + mouseDiff, columnX + column.minWidth)
 
     if (column.maxWidth) {

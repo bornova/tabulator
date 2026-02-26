@@ -9,15 +9,15 @@
 export default function (cell, formatterParams) {
   formatterParams ??= {}
 
-  let floatVal = parseFloat(cell.getValue())
-  let sign = ''
-
   const decimalSym = formatterParams.decimal || '.'
   const thousandSym = formatterParams.thousand || ','
   const negativeSign = formatterParams.negativeSign || '-'
   const symbol = formatterParams.symbol || ''
   const after = !!formatterParams.symbolAfter
   const precision = formatterParams.precision !== undefined ? formatterParams.precision : 2
+
+  let floatVal = parseFloat(cell.getValue())
+  let sign = ''
 
   if (Number.isNaN(floatVal)) {
     return this.emptyToSpace(this.sanitizeHTML(cell.getValue()))

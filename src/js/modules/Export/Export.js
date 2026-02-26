@@ -153,6 +153,7 @@ export default class Export extends Module {
    */
   processColumnGroup(column) {
     const subGroups = column.columns
+
     let maxDepth = 0
     const title = column.definition[`title${this.colVisPropAttach}`] || column.definition.title
 
@@ -225,8 +226,9 @@ export default class Export extends Module {
    */
   headersToExportRows(columns) {
     const headers = []
-    let headerDepth = 0
     const exportRows = []
+
+    let headerDepth = 0
 
     const parseColumnGroup = (column, level) => {
       const depth = headerDepth - level
@@ -336,6 +338,7 @@ export default class Export extends Module {
     rows.forEach((row) => {
       const rowData = row.getData(this.colVisProp)
       const exportCols = []
+
       let indent = 0
 
       switch (row.type) {
@@ -655,6 +658,7 @@ export default class Export extends Module {
         const column = col.component._column
         const table = this.table
         const index = table.columnManager.findColumnIndex(column)
+
         let value = col.value
         let cellStyle
         let styleProps

@@ -939,6 +939,7 @@ export default class SelectRange extends Module {
    */
   autoScroll(range, row, column) {
     const tableHolder = this.table.rowManager.element
+
     let rect
     let view
     let withinHorizontalView
@@ -1036,8 +1037,9 @@ export default class SelectRange extends Module {
    */
   layoutRow(row) {
     const el = row.getElement()
-    let selected = false
     const occupied = this.ranges.some((range) => range.occupiesRow(row))
+
+    let selected = false
 
     if (this.selecting === 'row') {
       selected = occupied
@@ -1055,8 +1057,9 @@ export default class SelectRange extends Module {
    */
   layoutColumn(column) {
     const el = column.getElement()
-    let selected = false
     const occupied = this.ranges.some((range) => range.occupiesColumn(column))
+
+    let selected = false
 
     if (this.selecting === 'column') {
       selected = occupied

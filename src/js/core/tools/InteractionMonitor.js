@@ -122,11 +122,12 @@ export default class InteractionManager extends CoreFeature {
    * @param {Event} e Source event.
    */
   pseudoMouseLeave(key, e) {
-    let leaveList = Object.keys(this.pseudoTrackers)
     const linkedKeys = {
       row: ['cell'],
       cell: ['row']
     }
+
+    let leaveList = Object.keys(this.pseudoTrackers)
 
     leaveList = leaveList.filter((item) => {
       const links = linkedKeys[key]
@@ -171,6 +172,7 @@ export default class InteractionManager extends CoreFeature {
   subscriptionChanged(component, key, added) {
     const listener = this.listeners[key].components
     const index = listener.indexOf(component)
+
     let changed = false
 
     if (added) {
@@ -286,9 +288,10 @@ export default class InteractionManager extends CoreFeature {
     const targetMatches = {}
 
     for (const key of keys) {
-      let component
       const target = targets[key]
       const previousTarget = this.previousTargets[key]
+
+      let component
 
       if (previousTarget && previousTarget.target === target) {
         component = previousTarget.component

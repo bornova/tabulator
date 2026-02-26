@@ -368,6 +368,7 @@ export default class Interaction extends Module {
    */
   dispatchEvent(action, e, component) {
     const componentObj = component.getComponent()
+
     let callback
 
     if (this.columnSubscribers[action]) {

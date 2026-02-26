@@ -147,6 +147,7 @@ export default class VirtualDomHorizontal extends Renderer {
 
     this.table.columnManager.columnsByIndex.forEach((column) => {
       const config = {}
+
       let width
 
       if (column.visible) {
@@ -682,6 +683,7 @@ export default class VirtualDomHorizontal extends Renderer {
         row.modules.vdomHoz.rightCol !== this.rightCol
       ) {
         const rowEl = row.getElement()
+
         rowEl.replaceChildren()
 
         this.initializeRow(row)

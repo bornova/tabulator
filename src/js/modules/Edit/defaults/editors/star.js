@@ -10,7 +10,6 @@
  */
 export default function (cell, onRendered, success, cancel, editorParams) {
   const element = cell.getElement()
-  let value = cell.getValue()
   const maxStars = element.getElementsByTagName('svg').length || 5
   const size = element.getElementsByTagName('svg')[0]
     ? element.getElementsByTagName('svg')[0].getAttribute('width')
@@ -19,6 +18,8 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const starsHolder = document.createElement('div')
   const star = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   const isIE = this.table.browser === 'ie'
+
+  let value = cell.getValue()
 
   // change star type
   function starChange(val) {

@@ -14,6 +14,7 @@ export default function (cell, formatterParams) {
   const max = formatterParams.max ?? 100
   const min = formatterParams.min ?? 0
   const colors = formatterParams.color !== undefined ? formatterParams.color : ['red', 'orange', 'green']
+
   let color = '#666666'
   let percentValue
 
@@ -43,6 +44,7 @@ export default function (cell, formatterParams) {
     case 'object':
       if (Array.isArray(colors)) {
         const unit = 100 / colors.length
+
         let index = Math.floor(percentValue / unit)
 
         index = Math.min(index, colors.length - 1)

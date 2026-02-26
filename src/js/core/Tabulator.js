@@ -266,8 +266,9 @@ class Tabulator extends ModuleBinder {
    * Build root table element and apply size constraints.
    */
   _buildElement() {
-    let element = this.element
     const options = this.options
+
+    let element = this.element
     let newElement
 
     if (element.tagName === 'TABLE') {
@@ -630,6 +631,7 @@ class Tabulator extends ModuleBinder {
    */
   updateOrAddData(data) {
     const rows = []
+
     let responses = 0
 
     this.initGuard()

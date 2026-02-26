@@ -150,6 +150,7 @@ export default class MoveRows extends Module {
    */
   initializeRow(row) {
     const config = {}
+
     let rowEl
 
     // inter table drag drop
@@ -415,6 +416,7 @@ export default class MoveRows extends Module {
   setStartPosition(e, row) {
     const pageX = this.touchMove ? e.touches[0].pageX : e.pageX
     const pageY = this.touchMove ? e.touches[0].pageY : e.pageY
+
     let element
     let position
 

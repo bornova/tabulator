@@ -12,12 +12,13 @@
  * @returns {number} Sort result.
  */
 export default function (as, bs, aRow, bRow, column, dir, params) {
-  let a
-  let b
-  let i = 0
   const rx = /(\d+)|(\D+)/g
   const rd = /\d/
   const alignEmptyValues = params.alignEmptyValues
+
+  let a
+  let b
+  let i = 0
   let emptyAlign
 
   // handle empty values

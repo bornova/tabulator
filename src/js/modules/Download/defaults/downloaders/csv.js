@@ -8,8 +8,9 @@
  */
 export default function (list, options = {}, setFileContents) {
   const delimiter = options.delimiter || ','
-  let fileContents = []
   const headers = []
+
+  let fileContents = []
 
   list.forEach((row) => {
     const item = []

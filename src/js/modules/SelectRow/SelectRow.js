@@ -195,6 +195,7 @@ export default class SelectRow extends Module {
       const toRowIdx = lastClickedRowIdx >= rowIdx ? lastClickedRowIdx : rowIdx
 
       const rows = this.table.rowManager.getDisplayRows()
+
       let toggledRows = rows.slice(fromRowIdx, toRowIdx + 1)
 
       if (e.ctrlKey || e.metaKey) {
@@ -265,6 +266,7 @@ export default class SelectRow extends Module {
    */
   selectRows(rows) {
     const changes = []
+
     let rowMatch
     let change
 
@@ -382,6 +384,7 @@ export default class SelectRow extends Module {
    */
   deselectRows(rows, silent) {
     const changes = []
+
     let rowMatch
     let change
 
@@ -435,6 +438,7 @@ export default class SelectRow extends Module {
    */
   _deselectRow(rowInfo, silent) {
     const row = this.table.rowManager.findRow(rowInfo)
+
     let index
     let element
 

@@ -12,6 +12,7 @@ export default function (cell, formatterParams) {
   formatterParams = formatterParams || {}
 
   const checkbox = document.createElement('input')
+
   let blocked = false
 
   checkbox.type = 'checkbox'

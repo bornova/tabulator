@@ -157,9 +157,10 @@ export default class HtmlTableImport extends Module {
   _extractHeaders(headers) {
     for (let index = 0; index < headers.length; index++) {
       const header = headers[index]
+      const width = header.getAttribute('width')
+
       let exists = false
       let col = this._findCol(header.textContent)
-      const width = header.getAttribute('width')
 
       if (col) {
         exists = true

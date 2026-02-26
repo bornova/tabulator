@@ -9,11 +9,12 @@ import Helpers from '../../../../core/tools/Helpers.js'
  * @returns {HTMLAnchorElement|string} Anchor element or non-breaking space.
  */
 export default function (cell, formatterParams) {
-  let value = cell.getValue()
   const urlPrefix = formatterParams.urlPrefix || ''
+  const el = document.createElement('a')
+
+  let value = cell.getValue()
   let download = formatterParams.download
   let label = value
-  const el = document.createElement('a')
   let data
 
   function labelTraverse(path, data) {

@@ -18,8 +18,6 @@ export default function (a, b, aRow, bRow, column, dir, params) {
   const DT = this.table.dependencyRegistry.lookup(['luxon', 'DateTime'], 'DateTime')
   const format = params.format || 'dd/MM/yyyy HH:mm:ss'
   const alignEmptyValues = params.alignEmptyValues
-  let emptyAlign
-
   const parseDateTime = (value) => {
     if (DT.isDateTime(value)) {
       return value
@@ -27,6 +25,8 @@ export default function (a, b, aRow, bRow, column, dir, params) {
 
     return format === 'iso' ? DT.fromISO(String(value)) : DT.fromFormat(String(value), format)
   }
+
+  let emptyAlign
 
   if (typeof DT === 'undefined') {
     console.error("Sort Error - 'datetime' sorter is dependant on luxon.js")

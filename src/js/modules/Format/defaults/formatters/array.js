@@ -12,8 +12,9 @@ export default function (cell, formatterParams) {
   formatterParams ??= {}
 
   const delimiter = formatterParams.delimiter ?? ','
-  let value = cell.getValue()
   const table = this.table
+
+  let value = cell.getValue()
   let valueMap
 
   if (formatterParams.valueMap) {

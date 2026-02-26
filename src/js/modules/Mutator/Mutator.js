@@ -60,11 +60,13 @@ export default class Mutator extends Module {
    * @param {object} column Internal column.
    */
   initializeColumn(column) {
-    let match = false
     const config = {}
+
+    let match = false
 
     this.allowedTypes.forEach((type) => {
       const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
+
       let mutator
 
       if (column.definition[key]) {

@@ -12,6 +12,7 @@ export default function (cell, onRendered, success, cancel, params) {
 
   const defaultLookup = (cell) => {
     const value = cell.getValue()
+
     let editor = 'input'
 
     switch (typeof value) {

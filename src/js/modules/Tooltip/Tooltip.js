@@ -100,12 +100,12 @@ export default class Tooltip extends Module {
    * @param {boolean|string|HTMLElement|Function} tooltip Tooltip definition.
    */
   loadTooltip(e, component, tooltip) {
-    let contentsEl
-    let renderedCallback
-
     const onRendered = (callback) => {
       renderedCallback = callback
     }
+
+    let contentsEl
+    let renderedCallback
 
     if (typeof tooltip === 'function') {
       tooltip = tooltip(e, component.getComponent(), onRendered)

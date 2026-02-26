@@ -27,7 +27,6 @@ export default class Format extends Module {
 
     this.registerColumnOption('formatter')
     this.registerColumnOption('formatterParams')
-
     this.registerColumnOption('formatterPrint')
     this.registerColumnOption('formatterPrintParams')
     this.registerColumnOption('formatterClipboard')

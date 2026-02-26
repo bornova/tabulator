@@ -25,9 +25,7 @@ export default class Row extends CoreFeature {
     this.heightInitialized = false // element has resized cells to fit
     this.position = 0 // store position of element in row list
     this.positionWatchers = []
-
     this.component = null
-
     this.created = false
 
     this.setData(data)
@@ -333,6 +331,7 @@ export default class Row extends CoreFeature {
    */
   updateData(updatedData) {
     const visible = this.element && Helpers.elVisible(this.element)
+
     let tempData = {}
     let newRowData
     let component
@@ -476,6 +475,7 @@ export default class Row extends CoreFeature {
    */
   nextRow() {
     const row = this.table.rowManager.nextDisplayRow(this, true)
+
     return row || false
   }
 

@@ -8,9 +8,11 @@ export default class BasicHorizontal extends Renderer {
    */
   renderRowCells(row, inFragment) {
     const rowFrag = document.createDocumentFragment()
+
     row.cells.forEach((cell) => {
       rowFrag.appendChild(cell.getElement())
     })
+
     row.element.appendChild(rowFrag)
 
     if (inFragment) {

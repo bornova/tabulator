@@ -11,10 +11,11 @@ import maskInput from '../../inputMask.js'
  * @returns {HTMLTextAreaElement}
  */
 export default function (cell, onRendered, success, cancel, editorParams) {
-  let cellValue = cell.getValue()
   const vertNav = editorParams.verticalNavigation || 'hybrid'
-  const value = String(cellValue ?? '')
+  const value = String(cell.getValue() ?? '')
   const input = document.createElement('textarea')
+
+  let cellValue = cell.getValue()
   let scrollHeight = 0
 
   // create and style input

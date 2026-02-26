@@ -237,6 +237,7 @@ export default class Column extends CoreFeature {
     // assign additional css classes to column header
     if (def.cssClass) {
       const classNames = def.cssClass.split(/\s+/).filter(Boolean)
+
       classNames.forEach((className) => {
         this.element.classList.add(className)
       })
@@ -272,6 +273,7 @@ export default class Column extends CoreFeature {
    */
   _buildColumnHeaderContent() {
     const contentElement = document.createElement('div')
+
     contentElement.classList.add('tabulator-col-content')
 
     this.titleHolderElement = document.createElement('div')
@@ -292,8 +294,8 @@ export default class Column extends CoreFeature {
    */
   _buildColumnHeaderTitle() {
     const def = this.definition
-
     const titleHolderElement = document.createElement('div')
+
     titleHolderElement.classList.add('tabulator-col-title')
 
     if (def.headerWordWrap) {
@@ -302,6 +304,7 @@ export default class Column extends CoreFeature {
 
     if (def.editableTitle) {
       const titleElement = document.createElement('input')
+
       titleElement.classList.add('tabulator-title-editor')
 
       titleElement.addEventListener('click', (e) => {
@@ -404,9 +407,10 @@ export default class Column extends CoreFeature {
    * @returns {*}
    */
   _getNestedData(data) {
-    let dataObj = data
     const structure = this.fieldStructure
     const length = structure.length
+
+    let dataObj = data
     let output
 
     for (let i = 0; i < length; i++) {
@@ -439,9 +443,10 @@ export default class Column extends CoreFeature {
    * @param {*} value Value to set.
    */
   _setNestedData(data, value) {
-    let dataObj = data
     const structure = this.fieldStructure
     const length = structure.length
+
+    let dataObj = data
 
     for (let i = 0; i < length; i++) {
       if (i === length - 1) {

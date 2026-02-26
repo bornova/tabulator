@@ -13,9 +13,10 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   const input = document.createElement('input')
   const tristate = editorParams.tristate
   const indetermValue = editorParams.indeterminateValue ?? null
-  let indetermState = false
   const trueValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'trueValue')
   const falseValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'falseValue')
+
+  let indetermState = false
 
   input.setAttribute('type', 'checkbox')
   input.classList.add('tabulator-editor-checkbox')

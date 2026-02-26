@@ -467,6 +467,7 @@ export default class Sort extends Module {
    */
   setColumnHeaderSortIcon(column, dir) {
     const sortEl = column.modules.sort.element
+
     let arrowEl
 
     if (column.definition.headerSort && typeof this.table.options.headerSortElement === 'function') {

@@ -36,9 +36,10 @@ export default class BasicVertical extends Renderer {
    */
   renderRows() {
     const element = this.tableElement
-    let onlyGroupHeaders = true
     const tableFrag = document.createDocumentFragment()
     const rows = this.rows()
+
+    let onlyGroupHeaders = true
 
     rows.forEach((row, index) => {
       this.styleRow(row, index)
@@ -82,6 +83,7 @@ export default class BasicVertical extends Renderer {
     }
 
     const rows = this.rows()
+
     this.renderRows()
 
     if (!rows.length) {

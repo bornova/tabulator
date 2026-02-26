@@ -109,6 +109,7 @@ export default class Edit extends Module {
    */
   keybindingNavigateNext(e) {
     const cell = this.currentCell
+
     let newRow = this.options('tabEndNewRow')
 
     if (cell) {
@@ -553,6 +554,7 @@ export default class Edit extends Module {
    */
   clearEditor(cancel) {
     const cell = this.currentCell
+
     let cellEl
 
     this.invalidEdit = false
@@ -750,10 +752,11 @@ export default class Edit extends Module {
    * @returns {boolean|undefined}
    */
   edit(cell, e, forceEdit) {
-    let allowEdit
-    let rendered = () => {}
     const element = cell.getElement()
     const editModule = cell.column.modules.edit
+
+    let allowEdit
+    let rendered = () => {}
     let editFinished = false
     let cellEditor
     let component
@@ -920,6 +923,7 @@ export default class Edit extends Module {
   transformEmptyValues(value, cell) {
     const mod = cell.column.modules.edit
     const convert = mod.convertEmptyValues || this.convertEmptyValues
+
     let checkFunc
 
     if (convert) {

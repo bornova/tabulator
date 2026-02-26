@@ -54,6 +54,7 @@ export default class RowComponent {
    */
   getCell(column) {
     const cell = this._row.getCell(column)
+
     return cell ? cell.getComponent() : false
   }
 
@@ -153,6 +154,7 @@ export default class RowComponent {
    */
   getNextRow() {
     const row = this._row.nextRow()
+
     return row ? row.getComponent() : row
   }
 
@@ -162,6 +164,7 @@ export default class RowComponent {
    */
   getPrevRow() {
     const row = this._row.prevRow()
+
     return row ? row.getComponent() : row
   }
 }

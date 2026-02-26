@@ -70,12 +70,12 @@ export default class ColumnManager extends CoreFeature {
    * Initialize horizontal renderer.
    */
   initializeRenderer() {
-    let renderClass
-
     const renderers = {
       virtual: RendererVirtualDomHorizontal,
       basic: RendererBasicHorizontal
     }
+
+    let renderClass
 
     if (typeof this.table.options.renderHorizontal === 'string') {
       renderClass = renderers[this.table.options.renderHorizontal]
@@ -179,8 +179,9 @@ export default class ColumnManager extends CoreFeature {
    */
   initializeScrollWheelWatcher() {
     this.contentsElement.addEventListener('wheel', (e) => {
-      let left
       const deltaX = e.deltaX || (e.shiftKey ? e.deltaY : 0)
+
+      let left
 
       if (deltaX) {
         left = this.contentsElement.scrollLeft + deltaX
@@ -206,6 +207,7 @@ export default class ColumnManager extends CoreFeature {
       rowSample.forEach((row) => {
         Object.keys(row).forEach((key, index) => {
           const value = row[key]
+
           let col
 
           if (!collProgress[key]) {
@@ -353,6 +355,7 @@ export default class ColumnManager extends CoreFeature {
   _addColumn(definition, before, nextToColumn) {
     const column = new Column(definition, this)
     const colEl = column.getElement()
+
     let index = nextToColumn ? this.findColumnIndex(nextToColumn) : nextToColumn
 
     // prevent adding of rows in front of row header
@@ -687,6 +690,7 @@ export default class ColumnManager extends CoreFeature {
    */
   _moveColumnInArray(columns, from, to, after, updateRows) {
     const fromIndex = columns.indexOf(from)
+
     let toIndex
     let rows
 
@@ -728,10 +732,11 @@ export default class ColumnManager extends CoreFeature {
    * @returns {*} Return value.
    */
   scrollToColumn(column, position, ifVisible) {
-    let left = 0
     const offset = column.getLeftOffset()
-    let adjust = 0
     const colEl = column.getElement()
+
+    let left = 0
+    let adjust = 0
 
     return new Promise((resolve, reject) => {
       position ??= this.table.options.scrollToColumnPosition
@@ -867,6 +872,7 @@ export default class ColumnManager extends CoreFeature {
    */
   deregisterColumn(column) {
     const field = column.getField()
+
     let index
 
     // remove from field list

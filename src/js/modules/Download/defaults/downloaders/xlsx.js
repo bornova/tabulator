@@ -10,10 +10,11 @@ export default function (list, options = {}, setFileContents) {
   const self = this
   const sheetName = options.sheetName || 'Sheet1'
   const XLSXLib = this.dependencyRegistry.lookup('XLSX')
-  let workbook = XLSXLib.utils.book_new()
   const tableFeatures = new CoreFeature(this)
   const compression = 'compress' in options ? options.compress : true
   const writeOptions = options.writeOptions || { bookType: 'xlsx', bookSST: true, compression }
+
+  let workbook = XLSXLib.utils.book_new()
   let output
 
   writeOptions.type = 'binary'

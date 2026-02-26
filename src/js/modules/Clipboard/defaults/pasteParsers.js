@@ -13,10 +13,11 @@ export default {
    */
   table(clipboard) {
     const data = []
-    let headerFindSuccess = true
     const columns = this.table.columnManager.columns
-    let columnMap = []
     const rows = []
+
+    let headerFindSuccess = true
+    let columnMap = []
 
     // get data from clipboard into array of columns and rows.
     clipboard = clipboard.split('\n')

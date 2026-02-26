@@ -243,6 +243,7 @@ export default class GroupRows extends Module {
    */
   virtualRenderFill() {
     const el = this.table.rowManager.tableElement
+
     let rows = this.table.rowManager.getVisibleRows()
 
     if (this.table.options.groupBy) {
@@ -649,6 +650,7 @@ export default class GroupRows extends Module {
    */
   createGroup(groupID, level, oldGroups) {
     const groupKey = `${level}_${groupID}`
+
     let group
 
     oldGroups = oldGroups || []
@@ -709,6 +711,7 @@ export default class GroupRows extends Module {
       const oldRowGroup = row.modules.group
       const oldGroupPath = oldRowGroup.getPath()
       const newGroupPath = this.getExpectedPath(row)
+
       let samePath
 
       // figure out if new group path is the same as old group path
@@ -786,6 +789,7 @@ export default class GroupRows extends Module {
    */
   removeGroup(group) {
     const groupKey = `${group.level}_${group.key}`
+
     let index
 
     if (this.groups[groupKey]) {
@@ -804,6 +808,7 @@ export default class GroupRows extends Module {
    */
   checkBasicModeGroupHeaderWidth() {
     const element = this.table.rowManager.tableElement
+
     let onlyGroupHeaders = true
 
     this.table.rowManager.getDisplayRows().forEach((row, index) => {

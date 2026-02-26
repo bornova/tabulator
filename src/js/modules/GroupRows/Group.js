@@ -305,6 +305,7 @@ export default class Group {
    */
   removeGroup(group) {
     const groupKey = `${group.level}_${group.key}`
+
     let index
 
     if (this.groups[groupKey]) {
