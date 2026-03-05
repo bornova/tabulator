@@ -1,69 +1,128 @@
-//public group object
+// public group object
 export default class GroupComponent {
-	constructor (group){
-		this._group = group;
-		this.type = "GroupComponent";
+  /**
+   * @param {object} group Internal Group instance.
+   * @returns {GroupComponent}
+   */
+  constructor(group) {
+    this._group = group
+    this.type = 'GroupComponent'
 
-		return new Proxy(this, {
-			get: function(target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
-				}else{
-					return target._group.groupManager.table.componentFunctionBinder.handle("group", target._group, name);
-				}
-			}
-		});
-	}
+    return new Proxy(this, {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
 
-	getKey(){
-		return this._group.key;
-	}
+        if (Reflect.has(target, name)) {
+          return Reflect.get(target, name, receiver)
+        }
 
-	getField(){
-		return this._group.field;
-	}
+        return target._group.groupManager.table.componentFunctionBinder.handle('group', target._group, name)
+      }
+    })
+  }
 
-	getElement(){
-		return this._group.element;
-	}
+  /**
+   * Get the group key value.
+   * @returns {*}
+   */
+  getKey() {
+    return this._group.key
+  }
 
-	getRows(){
-		return this._group.getRows(true);
-	}
+  /**
+   * Get the group field name.
+   * @returns {string}
+   */
+  getField() {
+    return this._group.field
+  }
 
-	getSubGroups(){
-		return this._group.getSubGroups(true);
-	}
+  /**
+   * Get the group DOM element.
+   * @returns {HTMLElement|null}
+   */
+  getElement() {
+    return this._group.element
+  }
 
-	getParentGroup(){
-		return this._group.parent ? this._group.parent.getComponent() : false;
-	}
+  /**
+   * Get row components contained in this group.
+   * @returns {Array<object>}
+   */
+  getRows() {
+    return this._group.getRows(true)
+  }
 
-	isVisible(){
-		return this._group.visible;
-	}
+  /**
+   * Get subgroup components contained in this group.
+   * @returns {Array<object>}
+   */
+  getSubGroups() {
+    return this._group.getSubGroups(true)
+  }
 
-	show(){
-		this._group.show();
-	}
+  /**
+   * Get parent group component.
+   * @returns {object|boolean}
+   */
+  getParentGroup() {
+    return this._group.parent ? this._group.parent.getComponent() : false
+  }
 
-	hide(){
-		this._group.hide();
-	}
+  /**
+   * Check whether this group is visible.
+   * @returns {boolean}
+   */
+  isVisible() {
+    return this._group.visible
+  }
 
-	toggle(){
-		this._group.toggleVisibility();
-	}
+  /**
+   * Show this group.
+   */
+  show() {
+    this._group.show()
+  }
 
-	scrollTo(position, ifVisible){
-		return this._group.groupManager.table.rowManager.scrollToRow(this._group, position, ifVisible);
-	}
+  /**
+   * Hide this group.
+   */
+  hide() {
+    this._group.hide()
+  }
 
-	_getSelf(){
-		return this._group;
-	}
+  /**
+   * Toggle this group visibility.
+   */
+  toggle() {
+    this._group.toggleVisibility()
+  }
 
-	getTable(){
-		return this._group.groupManager.table;
-	}
+  /**
+   * Scroll this group into view.
+   * @param {string} [position] Scroll alignment position.
+   * @param {boolean} [ifVisible] Only scroll if not visible when true.
+   * @returns {Promise<void>|boolean}
+   */
+  scrollTo(position, ifVisible) {
+    return this._group.groupManager.table.rowManager.scrollToRow(this._group, position, ifVisible)
+  }
+
+  /**
+   * Get internal group instance.
+   * @returns {object}
+   */
+  _getSelf() {
+    return this._group
+  }
+
+  /**
+   * Get parent table instance.
+   * @returns {object}
+   */
+  getTable() {
+    return this._group.groupManager.table
+  }
 }

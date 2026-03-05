@@ -1,18 +1,50 @@
+/**
+ * Default export row lookup functions.
+ *
+ * @type {{
+ *   visible: function(): Array<Object>,
+ *   all: function(): Array<Object>,
+ *   selected: function(): Array<Object>,
+ *   active: function(): Array<Object>
+ * }}
+ */
 export default {
-	visible:function(){
-		return this.rowManager.getVisibleRows(false, true);
-	},
-	all:function(){
-		return this.rowManager.rows;
-	},
-	selected:function(){
-		return this.modules.selectRow.selectedRows;
-	},
-	active:function(){
-		if(this.options.pagination){
-			return this.rowManager.getDisplayRows(this.rowManager.displayRows.length - 2);
-		}else{
-			return this.rowManager.getDisplayRows();
-		}
-	},
-};
+  /**
+   * Lookup visible rows.
+   *
+   * @this {Object}
+   * @returns {Array<Object>} Visible rows.
+   */
+  visible() {
+    return this.rowManager.getVisibleRows(false, true)
+  },
+  /**
+   * Lookup all rows.
+   *
+   * @this {Object}
+   * @returns {Array<Object>} All rows.
+   */
+  all() {
+    return this.rowManager.rows
+  },
+  /**
+   * Lookup selected rows.
+   *
+   * @this {Object}
+   * @returns {Array<Object>} Selected rows.
+   */
+  selected() {
+    return this.modules.selectRow ? this.modules.selectRow.selectedRows : []
+  },
+  /**
+   * Lookup active display rows.
+   *
+   * @this {Object}
+   * @returns {Array<Object>} Active rows.
+   */
+  active() {
+    return this.options.pagination
+      ? this.rowManager.getDisplayRows(this.rowManager.displayRows.length - 2)
+      : this.rowManager.getDisplayRows()
+  }
+}

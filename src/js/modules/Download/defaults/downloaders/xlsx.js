@@ -1,103 +1,119 @@
-import CoreFeature from '../../../../core/CoreFeature.js';
+import CoreFeature from '../../../../core/CoreFeature'
 
-export default function(list, options, setFileContents){
-	var self = this,
-	sheetName = options.sheetName || "Sheet1",
-	XLSXLib = this.dependencyRegistry.lookup("XLSX"),
-	workbook = XLSXLib.utils.book_new(),
-	tableFeatures = new CoreFeature(this),
-	compression =  'compress' in options ? options.compress : true,
-	writeOptions = options.writeOptions || {bookType:'xlsx', bookSST:true, compression},
-	output;
+/**
+ * Generate XLSX workbook output from export rows.
+ * @param {Array<object>} list Export row list.
+ * @param {object} options Downloader options.
+ * @param {Function} setFileContents Callback to receive file payload.
+ */
+export default function (list, options = {}, setFileContents) {
+  const activeTable = this.active
+  const sheetName = options.sheetName || 'Sheet1'
+  const XLSXLib = this.dependencyRegistry.lookup('XLSX')
+  const tableFeatures = new CoreFeature(this)
+  const compression = 'compress' in options ? options.compress : true
+  const writeOptions = options.writeOptions || { bookType: 'xlsx', bookSST: true, compression }
 
-	writeOptions.type = 'binary';
+  let workbook = XLSXLib.utils.book_new()
+  let output
 
-	workbook.SheetNames = [];
-	workbook.Sheets = {};
+  writeOptions.type = 'binary'
 
-	function generateSheet(){
-		var rows = [],
-		merges = [],
-		worksheet = {},
-		range = {s: {c:0, r:0}, e: {c:(list[0] ? list[0].columns.reduce((a, b) => a + (b && b.width ? b.width : 1), 0) : 0), r:list.length }};
+  workbook.SheetNames = []
+  workbook.Sheets = {}
 
-		//parse row list
-		list.forEach((row, i) => {
-			var rowData = [];
+  /**
+   * Build worksheet data from export rows.
+   * @returns {object}
+   */
+  function generateSheet() {
+    const rows = []
+    const merges = []
+    const worksheet = {}
+    const range = {
+      s: { c: 0, r: 0 },
+      e: { c: list[0] ? list[0].columns.reduce((a, b) => a + (b && b.width ? b.width : 1), 0) : 0, r: list.length }
+    }
 
-			row.columns.forEach(function(col, j){
+    // parse row list
+    list.forEach((row, i) => {
+      const rowData = []
 
-				if(col){
-					rowData.push(!(col.value instanceof Date) && typeof col.value === "object" ? JSON.stringify(col.value) : col.value);
+      row.columns.forEach((col, j) => {
+        if (col) {
+          rowData.push(
+            !(col.value instanceof Date) && typeof col.value === 'object' ? JSON.stringify(col.value) : col.value
+          )
 
-					if(col.width > 1 || col.height > -1){
-						if(col.height > 1 || col.width > 1){
-							merges.push({s:{r:i,c:j},e:{r:i + col.height - 1,c:j + col.width - 1}});
-						}
-					}
-				}else{
-					rowData.push("");
-				}
-			});
+          if (col.height > 1 || col.width > 1) {
+            merges.push({ s: { r: i, c: j }, e: { r: i + col.height - 1, c: j + col.width - 1 } })
+          }
+        } else {
+          rowData.push('')
+        }
+      })
 
-			rows.push(rowData);
-		});
+      rows.push(rowData)
+    })
 
-		//convert rows to worksheet
-		XLSXLib.utils.sheet_add_aoa(worksheet, rows);
+    // convert rows to worksheet
+    XLSXLib.utils.sheet_add_aoa(worksheet, rows)
 
-		worksheet['!ref'] = XLSXLib.utils.encode_range(range);
+    worksheet['!ref'] = XLSXLib.utils.encode_range(range)
 
-		if(merges.length){
-			worksheet["!merges"] = merges;
-		}
+    if (merges.length) {
+      worksheet['!merges'] = merges
+    }
 
-		return worksheet;
-	}
+    return worksheet
+  }
 
-	if(options.sheetOnly){
-		setFileContents(generateSheet());
-		return;
-	}
+  if (options.sheetOnly) {
+    setFileContents(generateSheet())
+    return
+  }
 
-	if(options.sheets){
-		for(var sheet in options.sheets){
+  if (options.sheets) {
+    for (const sheet in options.sheets) {
+      if (options.sheets[sheet] === true) {
+        workbook.SheetNames.push(sheet)
+        workbook.Sheets[sheet] = generateSheet()
+      } else {
+        workbook.SheetNames.push(sheet)
 
-			if(options.sheets[sheet] === true){
-				workbook.SheetNames.push(sheet);
-				workbook.Sheets[sheet] = generateSheet();
-			}else{
+        tableFeatures.commsSend(options.sheets[sheet], 'download', 'intercept', {
+          type: 'xlsx',
+          options: { sheetOnly: true },
+          active: activeTable,
+          intercept: function (data) {
+            workbook.Sheets[sheet] = data
+          }
+        })
+      }
+    }
+  } else {
+    workbook.SheetNames.push(sheetName)
+    workbook.Sheets[sheetName] = generateSheet()
+  }
 
-				workbook.SheetNames.push(sheet);
+  if (options.documentProcessing) {
+    workbook = options.documentProcessing(workbook)
+  }
 
-				tableFeatures.commsSend(options.sheets[sheet], "download", "intercept",{
-					type:"xlsx",
-					options:{sheetOnly:true},
-					active:self.active,
-					intercept:function(data){
-						workbook.Sheets[sheet] = data;
-					}
-				});
-			}
-		}
-	}else{
-		workbook.SheetNames.push(sheetName);
-		workbook.Sheets[sheetName] = generateSheet();
-	}
+  // convert workbook to binary array
+  /**
+   * Convert binary string to ArrayBuffer.
+   * @param {string} s Binary string.
+   * @returns {ArrayBuffer}
+   */
+  function s2ab(s) {
+    const buf = new ArrayBuffer(s.length)
+    const view = new Uint8Array(buf)
+    for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xff
+    return buf
+  }
 
-	if(options.documentProcessing){
-		workbook = options.documentProcessing(workbook);
-	}
+  output = XLSXLib.write(workbook, writeOptions)
 
-	//convert workbook to binary array
-	function s2ab(s) {
-		var buf = new ArrayBuffer(s.length);
-		var view = new Uint8Array(buf);
-		for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-		return buf;
-	}
-
-	output = XLSXLib.write(workbook, writeOptions);
-
-	setFileContents(s2ab(output), "application/octet-stream");
+  setFileContents(s2ab(output), 'application/octet-stream')
 }

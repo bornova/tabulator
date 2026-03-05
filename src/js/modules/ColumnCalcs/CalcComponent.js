@@ -1,46 +1,74 @@
-export default class CalcComponent{
-	constructor (row){
-		this._row = row;
+export default class CalcComponent {
+  /**
+   * @param {object} row Internal calc row instance.
+   * @returns {CalcComponent}
+   */
+  constructor(row) {
+    this._row = row
 
-		return new Proxy(this, {
-			get: function(target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
-				}else{
-					return target._row.table.componentFunctionBinder.handle("row", target._row, name);
-				}
-			}
-		});
-	}
+    return new Proxy(this, {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
 
-	getData(transform){
-		return this._row.getData(transform);
-	}
+        if (name in target) {
+          return target[name]
+        }
 
-	getElement(){
-		return this._row.getElement();
-	}
+        return target._row.table.componentFunctionBinder.handle('row', target._row, name)
+      }
+    })
+  }
 
-	getTable(){
-		return this._row.table;
-	}
+  /**
+   * Get calc row data.
+   * @param {string|boolean} [transform] Optional transform lookup key.
+   * @returns {object}
+   */
+  getData(transform) {
+    return this._row.getData(transform)
+  }
 
-	getCells(){
-		var cells = [];
+  /**
+   * Get the calc row DOM element.
+   * @returns {HTMLElement|boolean}
+   */
+  getElement() {
+    return this._row.getElement()
+  }
 
-		this._row.getCells().forEach(function(cell){
-			cells.push(cell.getComponent());
-		});
+  /**
+   * Get parent table instance.
+   * @returns {object}
+   */
+  getTable() {
+    return this._row.table
+  }
 
-		return cells;
-	}
+  /**
+   * Get cell components in this calc row.
+   * @returns {Array<object>}
+   */
+  getCells() {
+    return this._row.getCells().map((cell) => cell.getComponent())
+  }
 
-	getCell(column){
-		var cell = this._row.getCell(column);
-		return cell ? cell.getComponent() : false;
-	}
+  /**
+   * Get a cell component by column lookup.
+   * @param {*} column Column lookup accepted by column manager.
+   * @returns {object|boolean}
+   */
+  getCell(column) {
+    const cell = this._row.getCell(column)
+    return cell ? cell.getComponent() : false
+  }
 
-	_getSelf(){
-		return this._row;
-	}
+  /**
+   * Get internal row instance.
+   * @returns {object}
+   */
+  _getSelf() {
+    return this._row
+  }
 }

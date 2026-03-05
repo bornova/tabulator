@@ -1,40 +1,56 @@
-export default function(pageSize, currentRow, currentPage, totalRows, totalPages){
-	var el = document.createElement("span"),
-	showingEl = document.createElement("span"),
-	valueEl = document.createElement("span"),
-	ofEl = document.createElement("span"),
-	totalEl = document.createElement("span"),
-	rowsEl = document.createElement("span");
+/**
+ * Render row-based pagination counter content.
+ *
+ * @this {Object}
+ * @param {number} pageSize Current page size.
+ * @param {number} currentRow First row index in the current page.
+ * @param {number} currentPage Current page number.
+ * @param {number} totalRows Total row count.
+ * @returns {HTMLElement} Counter element.
+ */
+export default function (pageSize, currentRow, currentPage, totalRows) {
+  const el = document.createElement('span')
+  const showingEl = document.createElement('span')
+  const valueEl = document.createElement('span')
+  const ofEl = document.createElement('span')
+  const totalEl = document.createElement('span')
+  const rowsEl = document.createElement('span')
+  const { localize } = this.table.modules
 
-	this.table.modules.localize.langBind("pagination|counter|showing", (value) => {
-		showingEl.innerHTML = value;
-	});
+  if (!localize) {
+    el.innerHTML = totalRows ? `${currentRow}-${Math.min(currentRow + pageSize - 1, totalRows)} / ${totalRows}` : '0'
+    return el
+  }
 
-	this.table.modules.localize.langBind("pagination|counter|of", (value) => {
-		ofEl.innerHTML = value;
-	});
+  localize.langBind('pagination|counter|showing', (value) => {
+    showingEl.innerHTML = value
+  })
 
-	this.table.modules.localize.langBind("pagination|counter|rows", (value) => {
-		rowsEl.innerHTML = value;
-	});
+  localize.langBind('pagination|counter|of', (value) => {
+    ofEl.innerHTML = value
+  })
 
-	if(totalRows){
-		valueEl.innerHTML = " " + currentRow + "-" + Math.min((currentRow + pageSize - 1), totalRows) + " ";
-		
-		totalEl.innerHTML = " " + totalRows + " ";
-		
-		el.appendChild(showingEl);
-		el.appendChild(valueEl);
-		el.appendChild(ofEl);
-		el.appendChild(totalEl);
-		el.appendChild(rowsEl);
-	}else{
-		valueEl.innerHTML = " 0 ";
+  localize.langBind('pagination|counter|rows', (value) => {
+    rowsEl.innerHTML = value
+  })
 
-		el.appendChild(showingEl);
-		el.appendChild(valueEl);
-		el.appendChild(rowsEl);
-	}
-	
-	return el;
+  if (totalRows) {
+    valueEl.innerHTML = ` ${currentRow}-${Math.min(currentRow + pageSize - 1, totalRows)} `
+
+    totalEl.innerHTML = ` ${totalRows} `
+
+    el.appendChild(showingEl)
+    el.appendChild(valueEl)
+    el.appendChild(ofEl)
+    el.appendChild(totalEl)
+    el.appendChild(rowsEl)
+  } else {
+    valueEl.innerHTML = ' 0 '
+
+    el.appendChild(showingEl)
+    el.appendChild(valueEl)
+    el.appendChild(rowsEl)
+  }
+
+  return el
 }

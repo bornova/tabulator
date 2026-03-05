@@ -1,82 +1,93 @@
-import Helpers from '../../../../core/tools/Helpers.js';
+import Helpers from '../../../../core/tools/Helpers'
 
+/**
+ * Render a hyperlink from the cell value.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component.
+ * @param {Object} formatterParams Formatter parameters.
+ * @returns {HTMLAnchorElement|string} Anchor element or non-breaking space.
+ */
+export default function (cell, formatterParams) {
+  const urlPrefix = formatterParams.urlPrefix || ''
+  const el = document.createElement('a')
 
-export default function(cell, formatterParams, onRendered){
-	var value = cell.getValue(),
-	urlPrefix = formatterParams.urlPrefix || "",
-	download = formatterParams.download,
-	label = value,
-	el = document.createElement("a"),
-	data;
+  let value = cell.getValue()
+  let download = formatterParams.download
+  let label = value
+  let data
 
-	function labelTraverse(path, data){
-		var item = path.shift(),
-		value = data[item];
-		
-		if(path.length && typeof value === "object"){
-			return labelTraverse(path, value);
-		}
+  function labelTraverse(path, data) {
+    if (data == null) {
+      return data
+    }
 
-		return value;
-	}
+    const item = path.shift()
+    const value = data[item]
 
-	if(formatterParams.labelField){
-		data = cell.getData();
-		label = labelTraverse(formatterParams.labelField.split(this.table.options.nestedFieldSeparator), data);
-	}
+    if (path.length && value !== null && typeof value === 'object') {
+      return labelTraverse(path, value)
+    }
 
-	if(formatterParams.label){
-		switch(typeof formatterParams.label){
-			case "string":
-				label = formatterParams.label;
-				break;
+    return value
+  }
 
-			case "function":
-				label = formatterParams.label(cell);
-				break;
-		}
-	}
+  if (formatterParams.labelField) {
+    data = cell.getData()
+    label = labelTraverse(formatterParams.labelField.split(this.table.options.nestedFieldSeparator), data)
+  }
 
-	if(label){
-		if(formatterParams.urlField){
-			data = cell.getData();
+  if (formatterParams.label) {
+    switch (typeof formatterParams.label) {
+      case 'string':
+        label = formatterParams.label
+        break
 
-			value = Helpers.retrieveNestedData(this.table.options.nestedFieldSeparator, formatterParams.urlField, data);
-		}
+      case 'function':
+        label = formatterParams.label(cell)
+        break
+    }
+  }
 
-		if(formatterParams.url){
-			switch(typeof formatterParams.url){
-				case "string":
-					value = formatterParams.url;
-					break;
+  if (label) {
+    if (formatterParams.urlField) {
+      data = cell.getData()
 
-				case "function":
-					value = formatterParams.url(cell);
-					break;
-			}
-		}
+      value = Helpers.retrieveNestedData(this.table.options.nestedFieldSeparator, formatterParams.urlField, data)
+    }
 
-		el.setAttribute("href", urlPrefix + value);
+    if (formatterParams.url) {
+      switch (typeof formatterParams.url) {
+        case 'string':
+          value = formatterParams.url
+          break
 
-		if(formatterParams.target){
-			el.setAttribute("target", formatterParams.target);
-		}
+        case 'function':
+          value = formatterParams.url(cell)
+          break
+      }
+    }
 
-		if(formatterParams.download){
+    el.setAttribute('href', `${urlPrefix}${value}`)
 
-			if(typeof download == "function"){
-				download = download(cell);
-			}else{
-				download = download === true ? "" : download;
-			}
+    if (formatterParams.target) {
+      el.setAttribute('target', formatterParams.target)
+    }
 
-			el.setAttribute("download", download);
-		}
+    if (formatterParams.download) {
+      if (typeof download === 'function') {
+        download = download(cell)
+      } else {
+        download = download === true ? '' : download
+      }
 
-		el.innerHTML = this.emptyToSpace(this.sanitizeHTML(label));
+      el.setAttribute('download', download)
+    }
 
-		return el;
-	}else{
-		return "&nbsp;";
-	}
+    el.innerHTML = this.emptyToSpace(this.sanitizeHTML(label))
+
+    return el
+  }
+
+  return '&nbsp;'
 }

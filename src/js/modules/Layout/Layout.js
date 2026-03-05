@@ -1,66 +1,84 @@
-import Module from '../../core/Module.js';
+import Module from '../../core/Module'
 
-import defaultModes from './defaults/modes.js';
+import defaultModes from './defaults/modes'
 
-export default class Layout extends Module{
+export default class Layout extends Module {
+  static moduleName = 'layout'
 
-	static moduleName = "layout";
+  // load defaults
+  static modes = defaultModes
 
-	//load defaults
-	static modes = defaultModes;
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table, 'layout')
 
-	constructor(table){
-		super(table, "layout");
+    this.mode = null
 
-		this.mode = null;
+    this.registerTableOption('layout', 'fitData') // layout type
+    this.registerTableOption('layoutColumnsOnNewData', false) // update column widths on setData
 
-		this.registerTableOption("layout", "fitData"); //layout type
-		this.registerTableOption("layoutColumnsOnNewData", false); //update column widths on setData
+    this.registerColumnOption('widthGrow')
+    this.registerColumnOption('widthShrink')
+  }
 
-		this.registerColumnOption("widthGrow");
-		this.registerColumnOption("widthShrink");
-	}
+  // initialize layout system
+  /**
+   * Initialize the configured layout mode.
+   */
+  initialize() {
+    const layout = this.table.options.layout
+    const modeExists = Boolean(Layout.modes[layout])
 
-	//initialize layout system
-	initialize(){
-		var layout = this.table.options.layout;
+    this.mode = modeExists ? layout : 'fitData'
 
-		if(Layout.modes[layout]){
-			this.mode = layout;
-		}else{
-			console.warn("Layout Error - invalid mode set, defaulting to 'fitData' : " + layout);
-			this.mode = 'fitData';
-		}
+    if (!modeExists) {
+      console.warn(`Layout Error - invalid mode set, defaulting to 'fitData' : ${layout}`)
+    }
 
-		this.table.element.setAttribute("tabulator-layout", this.mode);
-		this.subscribe("column-init", this.initializeColumn.bind(this));
-	}
+    this.table.element.setAttribute('tabulator-layout', this.mode)
+    this.subscribe('column-init', this.initializeColumn.bind(this))
+  }
 
-	initializeColumn(column){
-		if(column.definition.widthGrow){
-			column.definition.widthGrow = Number(column.definition.widthGrow);
-		}
-		if(column.definition.widthShrink){
-			column.definition.widthShrink = Number(column.definition.widthShrink);
-		}
-	}
+  /**
+   * Normalize column width configuration values.
+   * @param {object} column Internal column.
+   */
+  initializeColumn(column) {
+    if (column.definition.widthGrow !== undefined) {
+      column.definition.widthGrow = Number(column.definition.widthGrow)
+    }
+    if (column.definition.widthShrink !== undefined) {
+      column.definition.widthShrink = Number(column.definition.widthShrink)
+    }
+  }
 
-	getMode(){
-		return this.mode;
-	}
+  /**
+   * Get the active layout mode.
+   * @returns {string|null}
+   */
+  getMode() {
+    return this.mode
+  }
 
-	//trigger table layout
-	layout(dataChanged){
+  // trigger table layout
+  /**
+   * Run the current layout strategy.
+   * @param {boolean} dataChanged Whether data has changed.
+   */
+  layout(dataChanged) {
+    const hasVariableHeightColumns = this.table.columnManager.columnsByIndex.find(
+      (column) => column.definition.variableHeight || column.definition.formatter === 'textarea'
+    )
 
-		var variableHeight = this.table.columnManager.columnsByIndex.find((column) => column.definition.variableHeight || column.definition.formatter === "textarea");
-		
-		this.dispatch("layout-refreshing");
-		Layout.modes[this.mode].call(this, this.table.columnManager.columnsByIndex, dataChanged);
+    this.dispatch('layout-refreshing')
+    Layout.modes[this.mode].call(this, this.table.columnManager.columnsByIndex, dataChanged)
 
-		if(variableHeight){
-			this.table.rowManager.normalizeHeight(true);
-		}
+    if (hasVariableHeightColumns) {
+      this.table.rowManager.normalizeHeight(true)
+    }
 
-		this.dispatch("layout-refreshed");
-	}
+    this.dispatch('layout-refreshed')
+  }
 }

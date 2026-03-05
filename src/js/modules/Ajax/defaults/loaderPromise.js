@@ -1,87 +1,88 @@
-export default function(url, config, params){
-	var contentType;
+/**
+ * Default ajax loader that fetches JSON data and resolves with parsed content.
+ *
+ * @this {Object}
+ * @param {string} url Request url.
+ * @param {RequestInit} config Fetch configuration.
+ * @param {Object} params Request parameters.
+ * @returns {Promise<*>} Promise resolving to response data.
+ */
+export default function (url, config, params) {
+  return new Promise((resolve, reject) => {
+    const method = (config.method || 'GET').toUpperCase()
 
-	return new Promise((resolve, reject) => {
-		//set url
-		url = this.urlGenerator.call(this.table, url, config, params);
+    // set url
+    url = this.urlGenerator.call(this.table, url, config, params)
 
-		//set body content if not GET request
-		if(config.method.toUpperCase() != "GET"){
-			contentType = typeof this.table.options.ajaxContentType === "object" ?  this.table.options.ajaxContentType : this.contentTypeFormatters[this.table.options.ajaxContentType];
-			if(contentType){
+    // set body content if not GET request
+    if (method !== 'GET') {
+      const contentType =
+        typeof this.table.options.ajaxContentType === 'object'
+          ? this.table.options.ajaxContentType
+          : this.contentTypeFormatters[this.table.options.ajaxContentType]
 
-				for(var key in contentType.headers){
-					if(!config.headers){
-						config.headers = {};
-					}
+      if (contentType) {
+        config.headers ??= {}
 
-					if(typeof config.headers[key] === "undefined"){
-						config.headers[key] = contentType.headers[key];
-					}
-				}
+        for (const key in contentType.headers) {
+          if (config.headers[key] === undefined) {
+            config.headers[key] = contentType.headers[key]
+          }
+        }
 
-				config.body = contentType.body.call(this, url, config, params);
+        config.body = contentType.body.call(this, url, config, params)
+      } else {
+        console.warn('Ajax Error - Invalid ajaxContentType value:', this.table.options.ajaxContentType)
+      }
+    }
 
-			}else{
-				console.warn("Ajax Error - Invalid ajaxContentType value:", this.table.options.ajaxContentType);
-			}
-		}
+    if (url) {
+      // configure headers
+      config.headers ??= {}
+      config.headers.Accept ??= 'application/json'
+      config.headers['X-Requested-With'] ??= 'XMLHttpRequest'
 
-		if(url){
-			//configure headers
-			if(typeof config.headers === "undefined"){
-				config.headers = {};
-			}
+      config.mode ??= 'cors'
 
-			if(typeof config.headers.Accept === "undefined"){
-				config.headers.Accept = "application/json";
-			}
+      if (config.mode === 'cors') {
+        if (config.headers.Origin === undefined) {
+          config.headers.Origin = window.location.origin
+        }
 
-			if(typeof config.headers["X-Requested-With"] === "undefined"){
-				config.headers["X-Requested-With"] = "XMLHttpRequest";
-			}
+        if (config.credentials === undefined) {
+          config.credentials = 'same-origin'
+        }
+      } else {
+        if (config.credentials === undefined) {
+          config.credentials = 'include'
+        }
+      }
 
-			if(typeof config.mode === "undefined"){
-				config.mode = "cors";
-			}
-
-			if(config.mode == "cors"){
-				if(typeof config.headers["Origin"] === "undefined"){
-					config.headers["Origin"] = window.location.origin;
-				}
-        
-				if(typeof config.credentials === "undefined"){
-					config.credentials = 'same-origin';
-				}
-			}else{
-				if(typeof config.credentials === "undefined"){
-					config.credentials = 'include';
-				}
-			}
-
-			//send request
-			fetch(url, config)
-				.then((response)=>{
-					if(response.ok) {
-						response.json()
-							.then((data)=>{
-								resolve(data);
-							}).catch((error)=>{
-								reject(error);
-								console.warn("Ajax Load Error - Invalid JSON returned", error);
-							});
-					}else{
-						console.error("Ajax Load Error - Connection Error: " + response.status, response.statusText);
-						reject(response);
-					}
-				})
-				.catch((error)=>{
-					console.error("Ajax Load Error - Connection Error: ", error);
-					reject(error);
-				});
-		}else{
-			console.warn("Ajax Load Error - No URL Set");
-			resolve([]);
-		}
-	});
+      // send request
+      fetch(url, config)
+        .then((response) => {
+          if (response.ok) {
+            response
+              .json()
+              .then((data) => {
+                resolve(data)
+              })
+              .catch((error) => {
+                reject(error)
+                console.warn('Ajax Load Error - Invalid JSON returned', error)
+              })
+          } else {
+            console.error('Ajax Load Error - Connection Error: ' + response.status, response.statusText)
+            reject(response)
+          }
+        })
+        .catch((error) => {
+          console.error('Ajax Load Error - Connection Error: ', error)
+          reject(error)
+        })
+    } else {
+      console.warn('Ajax Load Error - No URL Set')
+      resolve([])
+    }
+  })
 }

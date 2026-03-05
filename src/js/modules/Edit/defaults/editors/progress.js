@@ -1,127 +1,129 @@
-//draggable progress bar
-export default function(cell, onRendered, success, cancel, editorParams){
-	var element = cell.getElement(),
-	max = typeof editorParams.max === "undefined" ? ((element.getElementsByTagName("div")[0] && element.getElementsByTagName("div")[0].getAttribute("max")) || 100) : editorParams.max,
-	min = typeof editorParams.min === "undefined" ? ((element.getElementsByTagName("div")[0] && element.getElementsByTagName("div")[0].getAttribute("min")) || 0) : editorParams.min,
-	percent = (max - min) / 100,
-	value = cell.getValue() || 0,
-	handle = document.createElement("div"),
-	bar = document.createElement("div"),
-	mouseDrag, mouseDragWidth;
+// draggable progress bar
+/**
+ * Draggable progress-bar editor.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} editorParams Editor params.
+ * @returns {HTMLElement}
+ */
+export default function (cell, onRendered, success, cancel, editorParams) {
+  const element = cell.getElement()
+  const firstInnerDiv = element.getElementsByTagName('div')[0]
+  const max =
+    editorParams.max === undefined ? (firstInnerDiv && firstInnerDiv.getAttribute('max')) || 100 : editorParams.max
+  const min =
+    editorParams.min === undefined ? (firstInnerDiv && firstInnerDiv.getAttribute('min')) || 0 : editorParams.min
+  const percent = (max - min) / 100
+  const handle = document.createElement('div')
+  const bar = document.createElement('div')
 
-	//set new value
-	function updateValue(){
-		var style = window.getComputedStyle(element, null);
+  let value = cell.getValue() || 0
+  let mouseDrag
+  let mouseDragWidth
 
-		var calcVal = (percent * Math.round(bar.offsetWidth / ((element.clientWidth - parseInt(style.getPropertyValue("padding-left")) - parseInt(style.getPropertyValue("padding-right")))/100))) + min;
-		success(calcVal);
-		element.setAttribute("aria-valuenow", calcVal);
-		element.setAttribute("aria-label", value);
-	}
+  function getEditorInnerWidth() {
+    const style = window.getComputedStyle(element, null)
+    const paddingLeft = Number.parseInt(style.getPropertyValue('padding-left'), 10) || 0
+    const paddingRight = Number.parseInt(style.getPropertyValue('padding-right'), 10) || 0
 
-	//style handle
-	handle.style.position = "absolute";
-	handle.style.right = "0";
-	handle.style.top = "0";
-	handle.style.bottom = "0";
-	handle.style.width = "5px";
-	handle.classList.add("tabulator-progress-handle");
+    return element.clientWidth - paddingLeft - paddingRight
+  }
 
-	//style bar
-	bar.style.display = "inline-block";
-	bar.style.position = "relative";
-	// bar.style.top = "8px";
-	// bar.style.bottom = "8px";
-	// bar.style.left = "4px";
-	// bar.style.marginRight = "4px";
-	bar.style.height = "100%";
-	bar.style.backgroundColor = "#488CE9";
-	bar.style.maxWidth = "100%";
-	bar.style.minWidth = "0%";
+  // set new value
+  function updateValue() {
+    const editorInnerWidth = getEditorInnerWidth()
 
-	if(editorParams.elementAttributes && typeof editorParams.elementAttributes == "object"){
-		for (let key in editorParams.elementAttributes){
-			if(key.charAt(0) == "+"){
-				key = key.slice(1);
-				bar.setAttribute(key, bar.getAttribute(key) + editorParams.elementAttributes["+" + key]);
-			}else{
-				bar.setAttribute(key, editorParams.elementAttributes[key]);
-			}
-		}
-	}
+    const calcVal = percent * Math.round(bar.offsetWidth / (editorInnerWidth / 100)) + min
+    success(calcVal)
+    element.setAttribute('aria-valuenow', calcVal)
+    element.setAttribute('aria-label', calcVal)
+  }
 
-	//style cell
-	element.style.padding = "4px 4px";
+  handle.classList.add('tabulator-progress-handle', 'tabulator-progress-editor-handle')
 
-	//make sure value is in range
-	value = Math.min(parseFloat(value), max);
-	value = Math.max(parseFloat(value), min);
+  // style bar
+  bar.classList.add('tabulator-progress-editor-bar')
 
-	//workout percentage
-	value = Math.round((value - min) / percent);
-	// bar.style.right = value + "%";
-	bar.style.width = value + "%";
+  if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
+    for (let key in editorParams.elementAttributes) {
+      if (key.charAt(0) === '+') {
+        key = key.slice(1)
+        bar.setAttribute(key, bar.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
+      } else {
+        bar.setAttribute(key, editorParams.elementAttributes[key])
+      }
+    }
+  }
 
-	element.setAttribute("aria-valuemin", min);
-	element.setAttribute("aria-valuemax", max);
+  // style cell
+  element.classList.add('tabulator-progress-editor-cell')
 
-	bar.appendChild(handle);
+  // make sure value is in range
+  value = Math.min(parseFloat(value), max)
+  value = Math.max(parseFloat(value), min)
 
-	handle.addEventListener("mousedown", function(e){
-		mouseDrag = e.screenX;
-		mouseDragWidth = bar.offsetWidth;
-	});
+  // workout percentage
+  value = Math.round((value - min) / percent)
+  // bar.style.right = value + "%";
+  bar.style.width = `${value}%`
 
-	handle.addEventListener("mouseover", function(){
-		handle.style.cursor = "ew-resize";
-	});
+  element.setAttribute('aria-valuemin', min)
+  element.setAttribute('aria-valuemax', max)
 
-	element.addEventListener("mousemove", function(e){
-		if(mouseDrag){
-			bar.style.width = (mouseDragWidth + e.screenX - mouseDrag) + "px";
-		}
-	});
+  bar.appendChild(handle)
 
-	element.addEventListener("mouseup", function(e){
-		if(mouseDrag){
-			e.stopPropagation();
-			e.stopImmediatePropagation();
+  handle.addEventListener('mousedown', (e) => {
+    mouseDrag = e.screenX
+    mouseDragWidth = bar.offsetWidth
+  })
 
-			mouseDrag = false;
-			mouseDragWidth = false;
+  element.addEventListener('mousemove', (e) => {
+    if (mouseDrag) {
+      bar.style.width = `${mouseDragWidth + e.screenX - mouseDrag}px`
+    }
+  })
 
-			updateValue();
-		}
-	});
+  element.addEventListener('mouseup', (e) => {
+    if (mouseDrag) {
+      e.stopPropagation()
+      e.stopImmediatePropagation()
 
-	//allow key based navigation
-	element.addEventListener("keydown", function(e){
-		switch(e.keyCode){
-			case 39: //right arrow
-				e.preventDefault();
-				bar.style.width = (bar.clientWidth + element.clientWidth/100) + "px";
-				break;
+      mouseDrag = false
+      mouseDragWidth = false
 
-			case 37: //left arrow
-				e.preventDefault();
-				bar.style.width = (bar.clientWidth - element.clientWidth/100) + "px";
-				break;
+      updateValue()
+    }
+  })
 
-			case 9: //tab
-			case 13: //enter
-				updateValue();
-				break;
+  // allow key based navigation
+  element.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+        e.preventDefault()
+        bar.style.width = `${bar.clientWidth + getEditorInnerWidth() / 100}px`
+        break
 
-			case 27: //escape
-				cancel();
-				break;
+      case 'ArrowLeft':
+        e.preventDefault()
+        bar.style.width = `${bar.clientWidth - getEditorInnerWidth() / 100}px`
+        break
 
-		}
-	});
+      case 'Tab':
+      case 'Enter':
+        updateValue()
+        break
 
-	element.addEventListener("blur", function(){
-		cancel();
-	});
+      case 'Escape':
+        cancel()
+        break
+    }
+  })
 
-	return bar;
+  element.addEventListener('blur', () => {
+    cancel()
+  })
+
+  return bar
 }

@@ -1,59 +1,115 @@
 export default class SheetComponent {
-	constructor(sheet) {
-		this._sheet = sheet;
+  /**
+   * @param {object} sheet Internal sheet instance.
+   * @returns {SheetComponent}
+   */
+  constructor(sheet) {
+    this._sheet = sheet
 
-		return new Proxy(this, {
-			get: function (target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
-				} else {
-					return target._sheet.table.componentFunctionBinder.handle("sheet", target._sheet, name);
-				}
-			},
-		});
-	}
+    return new Proxy(this, {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
 
-	getTitle(){
-		return this._sheet.title;
-	}
+        if (Reflect.has(target, name)) {
+          return Reflect.get(target, name, receiver)
+        }
 
-	getKey(){
-		return this._sheet.key;
-	}
+        return target._sheet.table.componentFunctionBinder.handle('sheet', target._sheet, name)
+      }
+    })
+  }
 
-	getDefinition(){
-		return this._sheet.getDefinition();
-	}
+  /**
+   * Get sheet title.
+   * @returns {string}
+   */
+  getTitle() {
+    return this._sheet.title
+  }
 
-	getData() {
-		return this._sheet.getData();
-	}
+  /**
+   * Get sheet key.
+   * @returns {*}
+   */
+  getKey() {
+    return this._sheet.key
+  }
 
-	setData(data) {
-		return this._sheet.setData(data);
-	}
+  /**
+   * Get sheet definition.
+   * @returns {object}
+   */
+  getDefinition() {
+    return this._sheet.getDefinition()
+  }
 
-	clear(){
-		return this._sheet.clear();
-	}
+  /**
+   * Get sheet data.
+   * @returns {*}
+   */
+  getData() {
+    return this._sheet.getData()
+  }
 
-	remove(){
-		return this._sheet.remove();
-	}
-	
-	active(){
-		return this._sheet.active();
-	}
+  /**
+   * Replace sheet data.
+   * @param {*} data Sheet data payload.
+   * @returns {Promise<void>|void}
+   */
+  setData(data) {
+    return this._sheet.setData(data)
+  }
 
-	setTitle(title){
-		return this._sheet.setTitle(title);
-	}
+  /**
+   * Clear sheet content.
+   * @returns {Promise<void>|void}
+   */
+  clear() {
+    return this._sheet.clear()
+  }
 
-	setRows(rows){
-		return this._sheet.setRows(rows);
-	}
+  /**
+   * Remove this sheet.
+   * @returns {Promise<void>|void}
+   */
+  remove() {
+    return this._sheet.remove()
+  }
 
-	setColumns(columns){
-		return this._sheet.setColumns(columns);
-	}
+  /**
+   * Activate this sheet.
+   * @returns {Promise<void>|void}
+   */
+  active() {
+    return this._sheet.active()
+  }
+
+  /**
+   * Set sheet title.
+   * @param {string} title New title.
+   * @returns {Promise<void>|void}
+   */
+  setTitle(title) {
+    return this._sheet.setTitle(title)
+  }
+
+  /**
+   * Set row definitions for this sheet.
+   * @param {Array<object>} rows Row definitions.
+   * @returns {Promise<void>|void}
+   */
+  setRows(rows) {
+    return this._sheet.setRows(rows)
+  }
+
+  /**
+   * Set column definitions for this sheet.
+   * @param {Array<object>} columns Column definitions.
+   * @returns {Promise<void>|void}
+   */
+  setColumns(columns) {
+    return this._sheet.setColumns(columns)
+  }
 }

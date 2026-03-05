@@ -1,40 +1,52 @@
-//resize columns to fit data the contain and stretch last column to fill table
-export default function(columns, forced){
-	var colsWidth = 0,
-	tableWidth = this.table.rowManager.element.clientWidth,
-	gap = 0,
-	lastCol = false;
+// resize columns to fit data the contain and stretch last column to fill table
+/**
+ * Resize columns to fit content and stretch the last visible column.
+ *
+ * @this {Object}
+ * @param {Array<Object>} columns Columns to resize.
+ */
+export default function (columns) {
+  const table = this.table
+  const hasResponsiveLayout = table.options.responsiveLayout && table.modExists('responsiveLayout', true)
+  const tableWidth = table.rowManager.element.clientWidth
 
-	columns.forEach((column, i) => {
-		if(!column.widthFixed){
-			column.reinitializeWidth();
-		}
+  let colsWidth = 0
+  let gap
+  let lastCol = false
 
-		if(this.table.options.responsiveLayout ? column.modules.responsive.visible : column.visible){
-			lastCol = column;
-		}
+  columns.forEach((column) => {
+    if (!column.widthFixed) {
+      column.reinitializeWidth()
+    }
 
-		if(column.visible){
-			colsWidth += column.getWidth();
-		}
-	});
+    const responsiveVisible = column.modules.responsive ? column.modules.responsive.visible : column.visible
 
-	if(lastCol){
-		gap = tableWidth - colsWidth + lastCol.getWidth();
+    if (hasResponsiveLayout ? responsiveVisible : column.visible) {
+      lastCol = column
+    }
 
-		if(this.table.options.responsiveLayout && this.table.modExists("responsiveLayout", true)){
-			lastCol.setWidth(0);
-			this.table.modules.responsiveLayout.update();
-		}
+    if (column.visible) {
+      colsWidth += column.getWidth()
+    }
+  })
 
-		if(gap > 0){
-			lastCol.setWidth(gap);
-		}else{
-			lastCol.reinitializeWidth();
-		}
-	}else{
-		if(this.table.options.responsiveLayout && this.table.modExists("responsiveLayout", true)){
-			this.table.modules.responsiveLayout.update();
-		}
-	}
+  if (lastCol) {
+    gap = tableWidth - colsWidth + lastCol.getWidth()
+
+    if (hasResponsiveLayout) {
+      lastCol.setWidth(0)
+      table.modules.responsiveLayout.update()
+    }
+
+    if (gap > 0) {
+      lastCol.setWidth(gap)
+    } else {
+      lastCol.reinitializeWidth()
+    }
+    return
+  }
+
+  if (hasResponsiveLayout) {
+    table.modules.responsiveLayout.update()
+  }
 }

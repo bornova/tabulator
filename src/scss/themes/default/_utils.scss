@@ -1,0 +1,417 @@
+@use 'colors' as *;
+
+//column resize handles
+.tabulator-col-resize-handle {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  z-index: 11;
+  margin-right: -3px;
+  margin-left: -3px;
+  width: 6px;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      cursor: ew-resize;
+    }
+  }
+
+  &:last-of-type {
+    margin-right: 0;
+    width: 3px;
+  }
+
+  &.tabulator-col-resize-handle-frozen {
+    position: sticky;
+  }
+}
+
+//row resize handles
+.tabulator-row-resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 5px;
+
+  &.prev {
+    top: 0;
+    bottom: auto;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      cursor: ns-resize;
+    }
+  }
+}
+
+//column resize guide
+.tabulator-col-resize-guide {
+  position: absolute;
+  top: 0;
+  opacity: 0.5;
+  margin-left: -0.5px;
+  background-color: light-dark($color-gray-400, $color-ash-500);
+  width: 4px;
+  height: 100%;
+}
+
+//row resize guide
+.tabulator-row-resize-guide {
+  position: absolute;
+  left: 0;
+  opacity: 0.5;
+  margin-top: -0.5px;
+  background-color: light-dark($color-gray-400, $color-ash-500);
+  width: 100%;
+  height: 4px;
+}
+
+// Toggle Switch
+.tabulator-toggle {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  border: 1px solid light-dark($color-slate-200, $color-ash-600);
+  background: light-dark($color-gray-200, $color-ash-700);
+
+  &.tabulator-toggle-on {
+    background: $color-blue-600;
+  }
+
+  &.tabulator-toggle-on-reverse {
+    flex-direction: row-reverse;
+  }
+
+  .tabulator-toggle-switch {
+    box-sizing: border-box;
+    margin: 1px;
+    background: light-dark($color-white, $color-ash-100);
+  }
+}
+
+.tabulator-editor-input {
+  box-sizing: border-box;
+  padding: 4px;
+  width: 100%;
+}
+
+.tabulator-editor-full-height {
+  height: 100%;
+}
+
+.tabulator-editor-static-input {
+  cursor: default;
+  caret-color: transparent;
+}
+
+.tabulator-editor-textarea {
+  display: block;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  padding: 2px;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  white-space: pre-wrap;
+}
+
+.tabulator-editor-checkbox {
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+.tabulator-cell-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.tabulator-cell-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabulator-stars-holder {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tabulator-star-icon {
+  padding: 0 1px;
+}
+
+.tabulator-progress-editor-cell {
+  padding: 10px !important;
+}
+
+.tabulator-progress-editor-bar {
+  display: inline-flex;
+  position: relative;
+  background-color: $color-blue-500;
+  width: 0;
+  min-width: 0%;
+  max-width: 100%;
+  height: 100%;
+}
+
+.tabulator-progress-editor-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 5px;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      cursor: ew-resize;
+    }
+  }
+}
+
+.tabulator-progress-formatter {
+  position: relative;
+  min-width: 30px;
+}
+
+.tabulator-progress-formatter-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.tabulator-progress-formatter-bar {
+  display: inline-flex;
+  height: 100%;
+}
+
+.tabulator-progress-formatter-legend {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.tabulator-progress-formatter-holder {
+  position: absolute;
+  inset: 4px;
+}
+
+.tabulator-frozen-sticky {
+  position: sticky;
+}
+
+.tabulator-moving-origin {
+  top: 0;
+  left: 0;
+}
+
+.tabulator-moving-origin-x {
+  left: 0;
+}
+
+.tabulator-moving-nowrap {
+  overflow: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.tabulator-display-none {
+  display: none !important;
+}
+
+.tabulator-visibility-hidden {
+  visibility: hidden;
+}
+
+.tabulator-cell-inline-flex {
+  display: inline-flex;
+}
+
+.tabulator-box-border {
+  box-sizing: border-box;
+}
+
+// Popup Container
+.tabulator-popup-container {
+  display: inline-flex;
+  position: absolute;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0 0 8px 0 light-dark($color-black-alpha-300, $color-black-alpha-900);
+  border: 1px solid light-dark($color-slate-300, $color-ash-700);
+  background: light-dark($color-white, $color-ash-800);
+  overflow-y: auto;
+  color: light-dark($color-gray-900, $color-ash-100);
+  -webkit-overflow-scrolling: touch;
+  z-index: 10000;
+}
+
+.tabulator-popup {
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.tabulator-tooltip {
+  box-shadow: none;
+  border-radius: 2px;
+  padding: 3px 5px;
+  max-width: min(500px, 100%);
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.tabulator-menu {
+  .tabulator-menu-item {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    user-select: none;
+
+    &.tabulator-menu-item-disabled {
+      opacity: 0.5;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:not(.tabulator-menu-item-disabled):hover {
+        cursor: pointer;
+        background: light-dark($color-white, $color-ash-700);
+      }
+    }
+
+    &.tabulator-menu-item-submenu {
+      padding-right: 25px;
+
+      &::after {
+        position: absolute;
+        right: 10px;
+        transform: rotate(45deg);
+        border-width: 1px 1px 0 0;
+        border-style: solid;
+        border-color: light-dark($color-slate-600, $color-ash-300);
+        width: 5px;
+        height: 5px;
+        content: '';
+      }
+    }
+  }
+
+  .tabulator-menu-separator {
+    border-top: 1px solid light-dark($color-slate-100, $color-ash-700);
+  }
+}
+
+.tabulator-edit-list {
+  max-height: 200px;
+  overflow-y: auto;
+
+  -webkit-overflow-scrolling: touch;
+
+  .tabulator-edit-list-item {
+    outline: none;
+    padding: 4px;
+    color: light-dark($color-gray-900, $color-ash-100);
+
+    &.active {
+      background: $color-blue-500;
+      color: $color-white;
+
+      &.focused {
+        outline: 1px solid $color-white-alpha-500;
+      }
+    }
+
+    &.focused {
+      outline: 1px solid $color-blue-500;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        cursor: pointer;
+        background: $color-blue-500;
+        color: $color-white;
+      }
+    }
+  }
+
+  .tabulator-edit-list-placeholder {
+    padding: 4px;
+    color: light-dark($color-gray-900, $color-ash-300);
+    text-align: center;
+  }
+
+  .tabulator-edit-list-group {
+    border-bottom: 1px solid light-dark($color-slate-100, $color-ash-700);
+    padding: 4px;
+    padding-top: 6px;
+    color: light-dark($color-gray-900, $color-ash-200);
+    font-weight: 600;
+  }
+
+  .tabulator-edit-list-item,
+  .tabulator-edit-list-group {
+    &.tabulator-edit-list-group-level-2 {
+      padding-left: 12px;
+    }
+
+    &.tabulator-edit-list-group-level-3 {
+      padding-left: 20px;
+    }
+
+    &.tabulator-edit-list-group-level-4 {
+      padding-left: 28px;
+    }
+
+    &.tabulator-edit-list-group-level-5 {
+      padding-left: 36px;
+    }
+  }
+}
+
+//holding div that contains loader and covers tabulator element to prevent interaction
+.tabulator-alert {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  align-items: center;
+  z-index: 100;
+  background: $color-black-alpha-400;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+
+  //loading message element
+  .tabulator-alert-msg {
+    display: inline-flex;
+    margin: 0 auto;
+    border-radius: 5px;
+    background: light-dark($color-white, $color-ash-800);
+    padding: 10px 20px;
+
+    //loading message
+    &.tabulator-alert-state-msg {
+      border: 2px solid light-dark($color-indigo-600, $color-indigo-400);
+      color: light-dark($color-black, $color-ash-100);
+    }
+
+    //error message
+    &.tabulator-alert-state-error {
+      border: 2px solid $color-red-600;
+      color: light-dark($color-red-900, $color-red-300);
+    }
+  }
+}
+
+.tabulator-block-select {
+  user-select: none;
+}
+
+.tabulator-ranges {
+  .tabulator-cell:not(.tabulator-editing) {
+    user-select: none;
+  }
+}

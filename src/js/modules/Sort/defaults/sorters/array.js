@@ -1,82 +1,86 @@
-import Helpers from '../../../../core/tools/Helpers.js';
+import Helpers from '../../../../core/tools/Helpers'
 
-//sort if element contains any data
-export default function(a, b, aRow, bRow, column, dir, params){
-	var type = params.type || "length",
-	alignEmptyValues = params.alignEmptyValues,
-	emptyAlign = 0,
-	table = this.table,
-	valueMap;
+// sort if element contains any data
+/**
+ * Sort array values using configured aggregation.
+ *
+ * @this {Object}
+ * @param {*} a First value.
+ * @param {*} b Second value.
+ * @param {Object} aRow First row.
+ * @param {Object} bRow Second row.
+ * @param {Object} column Column definition.
+ * @param {string} dir Sort direction.
+ * @param {{type?: string, alignEmptyValues?: string, valueMap?: string|function(Array<*>): Array<*>}} params Sort parameters.
+ * @returns {number} Sort result.
+ */
+export default function (a, b, aRow, bRow, column, dir, params) {
+  const type = params.type || 'length'
+  const alignEmptyValues = params.alignEmptyValues
+  const table = this.table
 
-	if(params.valueMap){
-		if(typeof params.valueMap === "string"){
-			valueMap = function(value){
-				return value.map((item) => {
-					return Helpers.retrieveNestedData(table.options.nestedFieldSeparator, params.valueMap, item);
-				});
-			};
-		}else{
-			valueMap = params.valueMap;
-		}
-	}
+  let emptyAlign
+  let valueMap
 
-	function calc(value){
-		var result;
-		
-		if(valueMap){
-			value = valueMap(value);
-		}
+  if (params.valueMap) {
+    if (typeof params.valueMap === 'string') {
+      valueMap = (value) =>
+        value.map((item) => Helpers.retrieveNestedData(table.options.nestedFieldSeparator, params.valueMap, item))
+    } else {
+      valueMap = params.valueMap
+    }
+  }
 
-		switch(type){
-			case "length":
-				result = value.length;
-				break;
+  const calc = (value) => {
+    const mappedValue = valueMap ? valueMap(value) : value
 
-			case "sum":
-				result = value.reduce(function(c, d){
-					return c + d;
-				});
-				break;
+    switch (type) {
+      case 'length':
+        return mappedValue.length
 
-			case "max":
-				result = Math.max.apply(null, value) ;
-				break;
+      case 'sum':
+        return mappedValue.reduce((current, next) => current + next, 0)
 
-			case "min":
-				result = Math.min.apply(null, value) ;
-				break;
+      case 'max':
+        return Math.max(...mappedValue)
 
-			case "avg":
-				result = value.reduce(function(c, d){
-					return c + d;
-				}) / value.length;
-				break;
+      case 'min':
+        return Math.min(...mappedValue)
 
-			case "string":
-				result = value.join("");
-				break;
-		}
+      case 'avg':
+        return mappedValue.length ? mappedValue.reduce((current, next) => current + next, 0) / mappedValue.length : 0
 
-		return result;
-	}
+      case 'string':
+        return mappedValue.join('')
 
-	//handle non array values
-	if(!Array.isArray(a)){
-		emptyAlign = !Array.isArray(b) ? 0 : -1;
-	}else if(!Array.isArray(b)){
-		emptyAlign = 1;
-	}else{
-		if(type === "string"){
-			return String(calc(a)).toLowerCase().localeCompare(String(calc(b)).toLowerCase());
-		}else{
-			return calc(b) - calc(a);
-		}
-	}
+      default:
+        return mappedValue.length
+    }
+  }
 
-	//fix empty values in position
-	if((alignEmptyValues === "top" && dir === "desc") || (alignEmptyValues === "bottom" && dir === "asc")){
-		emptyAlign *= -1;
-	}
+  // handle non array values
+  if (!Array.isArray(a)) {
+    emptyAlign = !Array.isArray(b) ? 0 : -1
+  } else if (!Array.isArray(b)) {
+    emptyAlign = 1
+  } else {
+    const aValue = calc(a)
+    const bValue = calc(b)
 
-	return emptyAlign;
+    if (type === 'string') {
+      const aValueString = String(aValue).toLowerCase()
+      const bValueString = String(bValue).toLowerCase()
+
+      return aValueString.localeCompare(bValueString)
+    }
+
+    return bValue - aValue
+  }
+
+  // fix empty values in position
+  if ((alignEmptyValues === 'top' && dir === 'desc') || (alignEmptyValues === 'bottom' && dir === 'asc')) {
+    emptyAlign *= -1
+  }
+
+  return emptyAlign
 }

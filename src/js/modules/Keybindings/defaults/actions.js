@@ -1,90 +1,163 @@
+/**
+ * Default keybinding actions.
+ *
+ * @type {Object<string, function(KeyboardEvent): void>}
+ */
 export default {
-	keyBlock:function(e){
-		e.stopPropagation();
-		e.preventDefault();
-	},
+  /**
+   * Block default key handling.
+   *
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  keyBlock(e) {
+    e.stopPropagation()
+    e.preventDefault()
+  },
 
-	scrollPageUp:function(e){
-		var rowManager = this.table.rowManager,
-		newPos = rowManager.scrollTop - rowManager.element.clientHeight;
+  /**
+   * Scroll up by one page.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  scrollPageUp(e) {
+    const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
+    const newPos = rowManager.scrollTop - rowManager.element.clientHeight
 
-		e.preventDefault();
+    e.preventDefault()
 
-		if(rowManager.displayRowsCount){
-			if(newPos >= 0){
-				rowManager.element.scrollTop = newPos;
-			}else{
-				rowManager.scrollToRow(rowManager.getDisplayRows()[0]);
-			}
-		}
+    if (rowManager.displayRowsCount) {
+      if (newPos >= 0) {
+        rowManager.element.scrollTop = newPos
+      } else {
+        rowManager.scrollToRow(displayRows[0])
+      }
+    }
 
-		this.table.element.focus();
-	},
+    this.table.element.focus()
+  },
 
-	scrollPageDown:function(e){
-		var rowManager = this.table.rowManager,
-		newPos = rowManager.scrollTop + rowManager.element.clientHeight,
-		scrollMax = rowManager.element.scrollHeight;
+  /**
+   * Scroll down by one page.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  scrollPageDown(e) {
+    const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
+    const newPos = rowManager.scrollTop + rowManager.element.clientHeight
+    const scrollMax = rowManager.element.scrollHeight
 
-		e.preventDefault();
+    e.preventDefault()
 
-		if(rowManager.displayRowsCount){
-			if(newPos <= scrollMax){
-				rowManager.element.scrollTop = newPos;
-			}else{
-				rowManager.scrollToRow(rowManager.getDisplayRows()[rowManager.displayRowsCount - 1]);
-			}
-		}
+    if (rowManager.displayRowsCount) {
+      if (newPos <= scrollMax) {
+        rowManager.element.scrollTop = newPos
+      } else {
+        rowManager.scrollToRow(displayRows[rowManager.displayRowsCount - 1])
+      }
+    }
 
-		this.table.element.focus();
+    this.table.element.focus()
+  },
 
-	},
+  /**
+   * Scroll to the first displayed row.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  scrollToStart(e) {
+    const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
 
-	scrollToStart:function(e){
-		var rowManager = this.table.rowManager;
+    e.preventDefault()
 
-		e.preventDefault();
+    if (rowManager.displayRowsCount) {
+      rowManager.scrollToRow(displayRows[0])
+    }
 
-		if(rowManager.displayRowsCount){
-			rowManager.scrollToRow(rowManager.getDisplayRows()[0]);
-		}
+    this.table.element.focus()
+  },
 
-		this.table.element.focus();
-	},
+  /**
+   * Scroll to the last displayed row.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  scrollToEnd(e) {
+    const rowManager = this.table.rowManager
+    const displayRows = rowManager.getDisplayRows()
 
-	scrollToEnd:function(e){
-		var rowManager = this.table.rowManager;
+    e.preventDefault()
 
-		e.preventDefault();
+    if (rowManager.displayRowsCount) {
+      rowManager.scrollToRow(displayRows[rowManager.displayRowsCount - 1])
+    }
 
-		if(rowManager.displayRowsCount){
-			rowManager.scrollToRow(rowManager.getDisplayRows()[rowManager.displayRowsCount - 1]);
-		}
+    this.table.element.focus()
+  },
 
-		this.table.element.focus();
-	},
+  /**
+   * Dispatch navigation to previous focusable element.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  navPrev(e) {
+    this.dispatch('keybinding-nav-prev', e)
+  },
 
-	navPrev:function(e){
-		this.dispatch("keybinding-nav-prev", e);
-	},
+  /**
+   * Dispatch navigation to next focusable element.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  navNext(e) {
+    this.dispatch('keybinding-nav-next', e)
+  },
 
-	navNext:function(e){
-		this.dispatch("keybinding-nav-next", e);
-	},
+  /**
+   * Dispatch left navigation.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  navLeft(e) {
+    this.dispatch('keybinding-nav-left', e)
+  },
 
-	navLeft:function(e){
-		this.dispatch("keybinding-nav-left", e);
-	},
+  /**
+   * Dispatch right navigation.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  navRight(e) {
+    this.dispatch('keybinding-nav-right', e)
+  },
 
-	navRight:function(e){
-		this.dispatch("keybinding-nav-right", e);
-	},
+  /**
+   * Dispatch upward navigation.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  navUp(e) {
+    this.dispatch('keybinding-nav-up', e)
+  },
 
-	navUp:function(e){
-		this.dispatch("keybinding-nav-up", e);
-	},
-
-	navDown:function(e){
-		this.dispatch("keybinding-nav-down", e);
-	},
-};
+  /**
+   * Dispatch downward navigation.
+   *
+   * @this {Object}
+   * @param {KeyboardEvent} e Keyboard event.
+   */
+  navDown(e) {
+    this.dispatch('keybinding-nav-down', e)
+  }
+}

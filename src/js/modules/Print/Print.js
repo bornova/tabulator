@@ -1,136 +1,173 @@
-import Module from '../../core/Module.js';
+import Module from '../../core/Module'
 
-export default class Print extends Module{
+export default class Print extends Module {
+  static moduleName = 'print'
 
-	static moduleName = "print";
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
 
-	constructor(table){
-		super(table);
+    this.element = false
+    this.manualBlock = false
+    this.beforeprintEventHandler = null
+    this.afterprintEventHandler = null
 
-		this.element = false;
-		this.manualBlock = false;
-		this.beforeprintEventHandler = null;
-		this.afterprintEventHandler = null;
+    this.registerTableOption('printAsHtml', false) // enable print as html
+    this.registerTableOption('printFormatter', false) // printing page formatter
+    this.registerTableOption('printHeader', false) // page header contents
+    this.registerTableOption('printFooter', false) // page footer contents
+    this.registerTableOption('printStyled', true) // enable print as html styling
+    this.registerTableOption('printRowRange', 'visible') // restrict print to visible rows only
+    this.registerTableOption('printConfig', {}) // print config options
 
-		this.registerTableOption("printAsHtml", false); //enable print as html
-		this.registerTableOption("printFormatter", false); //printing page formatter
-		this.registerTableOption("printHeader", false); //page header contents
-		this.registerTableOption("printFooter", false); //page footer contents
-		this.registerTableOption("printStyled", true); //enable print as html styling
-		this.registerTableOption("printRowRange", "visible"); //restrict print to visible rows only
-		this.registerTableOption("printConfig", {}); //print config options
+    this.registerColumnOption('print')
+    this.registerColumnOption('titlePrint')
+  }
 
-		this.registerColumnOption("print");
-		this.registerColumnOption("titlePrint");
-	}
+  /**
+   * Initialize print handlers and table print API.
+   */
+  initialize() {
+    if (this.table.options.printAsHtml) {
+      this.beforeprintEventHandler = this.replaceTable.bind(this)
+      this.afterprintEventHandler = this.cleanup.bind(this)
 
-	initialize(){
-		if(this.table.options.printAsHtml){
-			this.beforeprintEventHandler = this.replaceTable.bind(this);
-			this.afterprintEventHandler = this.cleanup.bind(this);
+      window.addEventListener('beforeprint', this.beforeprintEventHandler)
+      window.addEventListener('afterprint', this.afterprintEventHandler)
+      this.subscribe('table-destroy', this.destroy.bind(this))
+    }
 
-			window.addEventListener("beforeprint", this.beforeprintEventHandler );
-			window.addEventListener("afterprint", this.afterprintEventHandler);
-			this.subscribe("table-destroy", this.destroy.bind(this));
-		}
+    this.registerTableFunction('print', this.printFullscreen.bind(this))
+  }
 
-		this.registerTableFunction("print", this.printFullscreen.bind(this));
-	}
+  /**
+   * Remove print listeners on module teardown.
+   */
+  destroy() {
+    if (this.table.options.printAsHtml) {
+      window.removeEventListener('beforeprint', this.beforeprintEventHandler)
+      window.removeEventListener('afterprint', this.afterprintEventHandler)
+    }
+  }
 
-	destroy(){
-		if(this.table.options.printAsHtml){
-			window.removeEventListener( "beforeprint", this.beforeprintEventHandler );
-			window.removeEventListener( "afterprint", this.afterprintEventHandler );
-		}
-	}
+  /// ////////////////////////////////
+  /// ////// Table Functions /////////
+  /// ////////////////////////////////
 
-	///////////////////////////////////
-	///////// Table Functions /////////
-	///////////////////////////////////
+  /// ////////////////////////////////
+  /// ////// Internal Logic //////////
+  /// ////////////////////////////////
 
-	///////////////////////////////////
-	///////// Internal Logic //////////
-	///////////////////////////////////
+  /**
+   * Resolve print section content option.
+   * @param {string|HTMLElement|Function} contentOption Content value or resolver.
+   * @returns {string|HTMLElement}
+   */
+  resolvePrintContent(contentOption) {
+    return typeof contentOption === 'function' ? contentOption.call(this.table) : contentOption
+  }
 
-	replaceTable(){
-		if(!this.manualBlock){
-			this.element = document.createElement("div");
-			this.element.classList.add("tabulator-print-table");
+  /**
+   * Append a print section to the print root element.
+   * @param {HTMLElement} rootElement Root print wrapper.
+   * @param {HTMLElement} sectionElement Section element.
+   * @param {string|HTMLElement} content Section content.
+   */
+  appendPrintSection(rootElement, sectionElement, content) {
+    if (typeof content === 'string') {
+      sectionElement.innerHTML = content
+    } else {
+      sectionElement.appendChild(content)
+    }
 
-			this.element.appendChild(this.table.modules.export.generateTable(this.table.options.printConfig, this.table.options.printStyled, this.table.options.printRowRange, "print"));
+    rootElement.appendChild(sectionElement)
+  }
 
-			this.table.element.style.display = "none";
+  /**
+   * Replace table with printable markup for browser print events.
+   */
+  replaceTable() {
+    const { printConfig, printStyled, printRowRange } = this.table.options
 
-			this.table.element.parentNode.insertBefore(this.element, this.table.element);
-		}
-	}
+    if (!this.manualBlock) {
+      this.element = document.createElement('div')
+      this.element.classList.add('tabulator-print-table')
 
-	cleanup(){
-		document.body.classList.remove("tabulator-print-fullscreen-hide");
+      this.element.appendChild(
+        this.table.modules.export.generateTable(printConfig, printStyled, printRowRange, 'print')
+      )
 
-		if(this.element && this.element.parentNode){
-			this.element.parentNode.removeChild(this.element);
-			this.table.element.style.display = "";
-		}
-	}
+      this.table.element.classList.add('tabulator-display-none')
 
-	printFullscreen(visible, style, config){
-		var scrollX = window.scrollX,
-		scrollY = window.scrollY,
-		headerEl = document.createElement("div"),
-		footerEl = document.createElement("div"),
-		tableEl = this.table.modules.export.generateTable(typeof config != "undefined" ? config : this.table.options.printConfig, typeof style != "undefined" ? style : this.table.options.printStyled, visible || this.table.options.printRowRange, "print"),
-		headerContent, footerContent;
+      this.table.element.parentNode.insertBefore(this.element, this.table.element)
+    }
+  }
 
-		this.manualBlock = true;
+  /**
+   * Cleanup print-only DOM and restore table display.
+   */
+  cleanup() {
+    document.body.classList.remove('tabulator-print-fullscreen-hide')
 
-		this.element = document.createElement("div");
-		this.element.classList.add("tabulator-print-fullscreen");
+    if (this.element && this.element.parentNode) {
+      this.element.parentNode.removeChild(this.element)
+      this.table.element.classList.remove('tabulator-display-none')
+    }
 
-		if(this.table.options.printHeader){
-			headerEl.classList.add("tabulator-print-header");
+    this.element = false
+  }
 
-			headerContent = typeof this.table.options.printHeader == "function" ? this.table.options.printHeader.call(this.table) : this.table.options.printHeader;
+  /**
+   * Print the table in fullscreen print mode.
+   * @param {string} [visible] Row range to print.
+   * @param {boolean} [style] Include print styling.
+   * @param {object} [config] Print config override.
+   */
+  printFullscreen(visible, style, config) {
+    const { printConfig, printStyled, printRowRange, printHeader, printFooter, printFormatter } = this.table.options
+    const scrollX = window.scrollX
+    const scrollY = window.scrollY
+    const headerEl = document.createElement('div')
+    const footerEl = document.createElement('div')
+    const tableEl = this.table.modules.export.generateTable(
+      config !== undefined ? config : printConfig,
+      style !== undefined ? style : printStyled,
+      visible || printRowRange,
+      'print'
+    )
 
-			if(typeof headerContent == "string"){
-				headerEl.innerHTML = headerContent;
-			}else{
-				headerEl.appendChild(headerContent);
-			}
+    this.manualBlock = true
 
-			this.element.appendChild(headerEl);
-		}
+    this.element = document.createElement('div')
+    this.element.classList.add('tabulator-print-fullscreen')
 
-		this.element.appendChild(tableEl);
+    if (printHeader) {
+      headerEl.classList.add('tabulator-print-header')
+      this.appendPrintSection(this.element, headerEl, this.resolvePrintContent(printHeader))
+    }
 
-		if(this.table.options.printFooter){
-			footerEl.classList.add("tabulator-print-footer");
+    this.element.appendChild(tableEl)
 
-			footerContent = typeof this.table.options.printFooter == "function" ? this.table.options.printFooter.call(this.table) : this.table.options.printFooter;
+    if (printFooter) {
+      footerEl.classList.add('tabulator-print-footer')
+      this.appendPrintSection(this.element, footerEl, this.resolvePrintContent(printFooter))
+    }
 
+    document.body.classList.add('tabulator-print-fullscreen-hide')
+    document.body.appendChild(this.element)
 
-			if(typeof footerContent == "string"){
-				footerEl.innerHTML = footerContent;
-			}else{
-				footerEl.appendChild(footerContent);
-			}
+    if (printFormatter) {
+      printFormatter(this.element, tableEl)
+    }
 
-			this.element.appendChild(footerEl);
-		}
+    window.print()
 
-		document.body.classList.add("tabulator-print-fullscreen-hide");
-		document.body.appendChild(this.element);
+    this.cleanup()
 
-		if(this.table.options.printFormatter){
-			this.table.options.printFormatter(this.element, tableEl);
-		}
+    window.scrollTo(scrollX, scrollY)
 
-		window.print();
-
-		this.cleanup();
-
-		window.scrollTo(scrollX, scrollY);
-
-		this.manualBlock = false;
-	}
+    this.manualBlock = false
+  }
 }

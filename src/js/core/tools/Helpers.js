@@ -1,66 +1,98 @@
-export default class Helpers{
+export default class Helpers {
+  /**
+   * Check whether an element has a visible box.
+   * @param {HTMLElement} el Target element.
+   * @returns {boolean}
+   */
+  static elVisible(el) {
+    return !(el.offsetWidth <= 0 && el.offsetHeight <= 0)
+  }
 
-	static elVisible(el){
-		return !(el.offsetWidth <= 0 && el.offsetHeight <= 0);
-	}
+  /**
+   * Get page-offset coordinates for an element.
+   * @param {HTMLElement} el Target element.
+   * @returns {{top:number,left:number}}
+   */
+  static elOffset(el) {
+    const box = el.getBoundingClientRect()
 
-	static elOffset(el){
-		var box = el.getBoundingClientRect();
+    return {
+      top: box.top + window.pageYOffset - document.documentElement.clientTop,
+      left: box.left + window.pageXOffset - document.documentElement.clientLeft
+    }
+  }
 
-		return {
-			top: box.top + window.pageYOffset - document.documentElement.clientTop,
-			left: box.left + window.pageXOffset - document.documentElement.clientLeft
-		};
-	}
+  /**
+   * Retrieve nested data from an object using a delimited field path.
+   * @param {string} separator Nested field separator.
+   * @param {string} field Field path.
+   * @param {object} data Source object.
+   * @returns {*}
+   */
+  static retrieveNestedData(separator, field, data) {
+    const structure = separator ? field.split(separator) : [field]
+    const length = structure.length
 
-	static retrieveNestedData(separator, field, data){
-		var structure = separator ? field.split(separator) : [field],
-		length = structure.length,
-		output;
+    let output
 
-		for(let i = 0; i < length; i++){
+    for (let i = 0; i < length; i++) {
+      if (data == null) {
+        output = data
+        break
+      }
 
-			data = data[structure[i]];
+      data = data[structure[i]]
 
-			output = data;
+      output = data
 
-			if(!data){
-				break;
-			}
-		}
+      if (!data) {
+        break
+      }
+    }
 
-		return output;
-	}
+    return output
+  }
 
-	static deepClone(obj, clone, list = []){
-		var objectProto = {}.__proto__,
-		arrayProto = [].__proto__;
+  /**
+   * Deep clone plain objects/arrays with circular reference handling.
+   * @param {object|Array<*>} obj Source value.
+   * @param {object|Array<*>} [clone] Existing clone target.
+   * @param {Array<object>} [list=[]] Internal reference map.
+   * @returns {object|Array<*>}
+   */
+  static deepClone(obj, clone, list = []) {
+    const objectProto = Object.prototype
+    const arrayProto = Array.prototype
 
-		if (!clone){
-			clone = Object.assign(Array.isArray(obj) ? [] : {}, obj);
-		}
+    if (!clone) {
+      clone = Object.assign(Array.isArray(obj) ? [] : {}, obj)
+    }
 
-		for(var i in obj) {
-			let subject = obj[i],
-			match, copy;
+    for (const i in obj) {
+      const subject = obj[i]
 
-			if(subject != null && typeof subject === "object" && (subject.__proto__ === objectProto || subject.__proto__ === arrayProto)){
-				match = list.findIndex((item) => {
-					return item.subject === subject;
-				});
+      let match
+      let copy
 
-				if(match > -1){
-					clone[i] = list[match].copy;
-				}else{
-					copy = Object.assign(Array.isArray(subject) ? [] : {}, subject);
+      if (
+        subject != null &&
+        typeof subject === 'object' &&
+        (Object.getPrototypeOf(subject) === objectProto || Object.getPrototypeOf(subject) === arrayProto)
+      ) {
+        match = list.findIndex((item) => item.subject === subject)
 
-					list.unshift({subject, copy});
+        if (match > -1) {
+          clone[i] = list[match].copy
+        } else {
+          copy = Object.assign(Array.isArray(subject) ? [] : {}, subject)
 
-					clone[i] = this.deepClone(subject, copy, list);
-				}
-			}
-		}
+          list.unshift({ subject, copy })
 
-		return clone;
-	}
+          clone[i] = this.deepClone(subject, copy, list)
+        }
+      }
+    }
+
+    return clone
+  }
 }

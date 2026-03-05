@@ -1,64 +1,89 @@
-export default class GridCalculator{
-	constructor(columns, rows){
-		this.columnCount = columns;
-		this.rowCount = rows;
+export default class GridCalculator {
+  /**
+   * @param {number} columns Initial column count.
+   * @param {number} rows Initial row count.
+   */
+  constructor(columns, rows) {
+    this.columnCount = columns
+    this.rowCount = rows
 
-		this.columnString = [];
-		this.columns = [];
-		this.rows = [];
-	}
+    this.columnString = []
+    this.columns = []
+    this.rows = []
+  }
 
-	genColumns(data){
-		var colCount = Math.max(this.columnCount, Math.max(...data.map(item => item.length)));
+  /**
+   * Generate spreadsheet column refs (A, B, ...).
+   * @param {Array<Array<*>>} data Sheet data.
+   * @returns {Array<string>}
+   */
+  genColumns(data) {
+    const maxDataColumns = data.length ? Math.max(...data.map((item) => item.length)) : 0
+    const colCount = Math.max(this.columnCount, maxDataColumns)
 
-		this.columnString = [];
-		this.columns = [];
+    this.columnString = []
+    this.columns = []
 
-		for(let i = 1; i <= colCount; i++){
-			this.incrementChar(this.columnString.length - 1);
-			this.columns.push(this.columnString.join(""));
-		}
+    for (let i = 1; i <= colCount; i++) {
+      this.incrementChar(this.columnString.length - 1)
+      this.columns.push(this.columnString.join(''))
+    }
 
-		return this.columns;
-	}
+    return this.columns
+  }
 
-	genRows(data){
-		var rowCount = Math.max(this.rowCount, data.length);
+  /**
+   * Generate spreadsheet row refs.
+   * @param {Array<Array<*>>} data Sheet data.
+   * @returns {Array<number>}
+   */
+  genRows(data) {
+    const rowCount = Math.max(this.rowCount, data.length)
 
-		this.rows = [];
+    this.rows = Array.from({ length: rowCount }, (_value, index) => index + 1)
 
-		for(let i = 1; i <= rowCount; i++){
-			this.rows.push(i);
-		}
-		
-		return this.rows;
-	}
+    return this.rows
+  }
 
-	incrementChar(i){
-		let char = this.columnString[i];
+  /**
+   * Increment alphabetic column token.
+   * @param {number} i Token index.
+   */
+  incrementChar(i) {
+    const currentChar = this.columnString[i]
 
-		if(char){
-			if(char !== "Z"){
-				this.columnString[i] = String.fromCharCode(this.columnString[i].charCodeAt(0) + 1);
-			}else{
-				this.columnString[i] = "A";
-				
-				if(i){
-					this.incrementChar(i-1);
-				}else{
-					this.columnString.push("A");
-				}
-			}
-		}else{
-			this.columnString.push("A");
-		}
-	}
+    if (!currentChar) {
+      this.columnString.push('A')
+      return
+    }
 
-	setRowCount(count){
-		this.rowCount = count;
-	}
+    if (currentChar !== 'Z') {
+      this.columnString[i] = String.fromCharCode(currentChar.charCodeAt(0) + 1)
+      return
+    }
 
-	setColumnCount(count){
-		this.columnCount = count;
-	}
+    this.columnString[i] = 'A'
+
+    if (i > 0) {
+      this.incrementChar(i - 1)
+    } else {
+      this.columnString.push('A')
+    }
+  }
+
+  /**
+   * Set row count.
+   * @param {number} count Row count.
+   */
+  setRowCount(count) {
+    this.rowCount = count
+  }
+
+  /**
+   * Set column count.
+   * @param {number} count Column count.
+   */
+  setColumnCount(count) {
+    this.columnCount = count
+  }
 }

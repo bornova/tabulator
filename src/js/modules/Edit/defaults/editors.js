@@ -1,27 +1,47 @@
-import input from './editors/input.js';
-import textarea from './editors/textarea.js';
-import number from './editors/number.js';
-import range from './editors/range.js';
-import date from './editors/date.js';
-import time from './editors/time.js';
-import datetime from './editors/datetime.js';
-import list from './editors/list.js';
-import star from './editors/star.js';
-import progress from './editors/progress.js';
-import tickCross from './editors/tickCross.js';
-import adaptable from './editors/adaptable.js';
+import input from './editors/input'
+import textarea from './editors/textarea'
+import number from './editors/number'
+import range from './editors/range'
+import date from './editors/date'
+import time from './editors/time'
+import datetime from './editors/datetime'
+import list from './editors/list'
+import star from './editors/star'
+import progress from './editors/progress'
+import tickCross from './editors/tickCross'
+import adaptable from './editors/adaptable'
 
-export default {
-	input:input,
-	textarea:textarea,
-	number:number,
-	range:range,
-	date:date,
-	time:time,
-	datetime:datetime,
-	list:list,
-	star:star,
-	progress:progress,
-	tickCross:tickCross,
-	adaptable:adaptable,
-};
+/**
+ * Default editor implementations.
+ *
+ * @type {{
+ *   input: function(Object, function, function, function, Object): HTMLElement,
+ *   textarea: function(Object, function, function, function, Object): HTMLElement,
+ *   number: function(Object, function, function, function, Object): HTMLElement,
+ *   range: function(Object, function, function, function, Object): HTMLElement,
+ *   date: function(Object, function, function, function, Object): HTMLElement,
+ *   time: function(Object, function, function, function, Object): HTMLElement,
+ *   datetime: function(Object, function, function, function, Object): HTMLElement,
+ *   list: function(Object, function, function, function, Object): HTMLElement,
+ *   star: function(Object, function, function, function, Object): HTMLElement,
+ *   progress: function(Object, function, function, function, Object): HTMLElement,
+ *   tickCross: function(Object, function, function, function, Object): HTMLElement,
+ *   adaptable: function(Object, function, function, function, Object): HTMLElement
+ * }}
+ */
+const defaultEditors = {
+  input,
+  textarea,
+  number,
+  range,
+  date,
+  time,
+  datetime,
+  list,
+  star,
+  progress,
+  tickCross,
+  adaptable
+}
+
+export default defaultEditors

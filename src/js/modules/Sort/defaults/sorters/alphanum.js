@@ -1,44 +1,84 @@
-//sort alpha numeric strings
-export default function(as, bs, aRow, bRow, column, dir, params){
-	var a, b, a1, b1, i= 0, L, rx = /(\d+)|(\D+)/g, rd = /\d/;
-	var alignEmptyValues = params.alignEmptyValues;
-	var emptyAlign = 0;
+// sort alpha numeric strings
+/**
+ * Sort alpha-numeric values.
+ *
+ * @param {*} as First value.
+ * @param {*} bs Second value.
+ * @param {Object} aRow First row.
+ * @param {Object} bRow Second row.
+ * @param {Object} column Column definition.
+ * @param {string} dir Sort direction.
+ * @param {{alignEmptyValues?: string}} params Sort parameters.
+ * @returns {number} Sort result.
+ */
+export default function (as, bs, aRow, bRow, column, dir, params) {
+  const rx = /(\d+)|(\D+)/g
+  const rd = /\d/
+  const alignEmptyValues = params.alignEmptyValues
 
-	//handle empty values
-	if(!as && as!== 0){
-		emptyAlign =  !bs && bs!== 0 ? 0 : -1;
-	}else if(!bs && bs!== 0){
-		emptyAlign =  1;
-	}else{
+  let a
+  let b
+  let i = 0
+  let emptyAlign
 
-		if(isFinite(as) && isFinite(bs)) return as - bs;
-		a = String(as).toLowerCase();
-		b = String(bs).toLowerCase();
-		if(a === b) return 0;
-		if(!(rd.test(a) && rd.test(b))) return a > b ? 1 : -1;
-		a = a.match(rx);
-		b = b.match(rx);
-		L = a.length > b.length ? b.length : a.length;
-		while(i < L){
-			a1= a[i];
-			b1= b[i++];
-			if(a1 !== b1){
-				if(isFinite(a1) && isFinite(b1)){
-					if(a1.charAt(0) === "0") a1 = "." + a1;
-					if(b1.charAt(0) === "0") b1 = "." + b1;
-					return a1 - b1;
-				}
-				else return a1 > b1 ? 1 : -1;
-			}
-		}
+  // handle empty values
+  if (!as && as !== 0) {
+    emptyAlign = !bs && bs !== 0 ? 0 : -1
+  } else if (!bs && bs !== 0) {
+    emptyAlign = 1
+  } else {
+    if (isFinite(as) && isFinite(bs)) {
+      return as - bs
+    }
 
-		return a.length > b.length;
-	}
+    a = String(as).toLowerCase()
+    b = String(bs).toLowerCase()
 
-	//fix empty values in position
-	if((alignEmptyValues === "top" && dir === "desc") || (alignEmptyValues === "bottom" && dir === "asc")){
-		emptyAlign *= -1;
-	}
+    if (a === b) {
+      return 0
+    }
 
-	return emptyAlign;
+    if (!(rd.test(a) && rd.test(b))) {
+      return a > b ? 1 : -1
+    }
+
+    a = a.match(rx)
+    b = b.match(rx)
+    const minLength = Math.min(a.length, b.length)
+
+    while (i < minLength) {
+      let a1 = a[i]
+      let b1 = b[i]
+      i += 1
+
+      if (a1 !== b1) {
+        if (isFinite(a1) && isFinite(b1)) {
+          if (a1.charAt(0) === '0') {
+            a1 = `.${a1}`
+          }
+
+          if (b1.charAt(0) === '0') {
+            b1 = `.${b1}`
+          }
+
+          return a1 - b1
+        }
+
+        return a1 > b1 ? 1 : -1
+      }
+    }
+
+    if (a.length === b.length) {
+      return 0
+    }
+
+    return a.length > b.length ? 1 : -1
+  }
+
+  // fix empty values in position
+  if ((alignEmptyValues === 'top' && dir === 'desc') || (alignEmptyValues === 'bottom' && dir === 'asc')) {
+    emptyAlign *= -1
+  }
+
+  return emptyAlign
 }

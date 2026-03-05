@@ -1,171 +1,297 @@
-import Module from '../../core/Module.js';
+import Module from '../../core/Module'
 
-import defaultBindings from './defaults/bindings.js';
-import defaultActions from './defaults/actions.js';
+import defaultBindings from './defaults/bindings'
+import defaultActions from './defaults/actions'
 
-export default class Keybindings extends Module{
+export default class Keybindings extends Module {
+  static moduleName = 'keybindings'
 
-	static moduleName = "keybindings";
+  // load defaults
+  static bindings = defaultBindings
+  static actions = defaultActions
 
-	//load defaults
-	static bindings = defaultBindings;
-	static actions = defaultActions;
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
 
-	constructor(table){
-		super(table);
+    this.watchKeys = null
+    this.pressedKeys = null
+    this.keyupBinding = false
+    this.keydownBinding = false
 
-		this.watchKeys = null;
-		this.pressedKeys = null;
-		this.keyupBinding = false;
-		this.keydownBinding = false;
+    this.registerTableOption('keybindings', {}) // array for keybindings
+    this.registerTableOption('tabEndNewRow', false) // create new row when tab to end of table
+  }
 
-		this.registerTableOption("keybindings", {}); //array for keybindings
-		this.registerTableOption("tabEndNewRow", false); //create new row when tab to end of table
-	}
+  /**
+   * Initialize keybinding mappings and DOM listeners.
+   */
+  initialize() {
+    const bindings = this.table.options.keybindings
+    const mergedBindings = { ...Keybindings.bindings, ...bindings }
 
-	initialize(){
-		var bindings = this.table.options.keybindings,
-		mergedBindings = {};
+    this.watchKeys = {}
+    this.pressedKeys = []
 
-		this.watchKeys = {};
-		this.pressedKeys = [];
+    if (bindings !== false) {
+      this.mapBindings(mergedBindings)
+      this.bindEvents()
+    }
 
-		if(bindings !== false){
-			Object.assign(mergedBindings, Keybindings.bindings);
-			Object.assign(mergedBindings, bindings);
+    this.subscribe('table-destroy', this.clearBindings.bind(this))
+  }
 
-			this.mapBindings(mergedBindings);
-			this.bindEvents();
-		}
+  /**
+   * Map configured action bindings into key watch lists.
+   * @param {object} bindings Binding definitions.
+   */
+  mapBindings(bindings) {
+    for (const key in bindings) {
+      if (!Keybindings.actions[key]) {
+        console.warn('Key Binding Error - no such action:', key)
+        continue
+      }
 
-		this.subscribe("table-destroy", this.clearBindings.bind(this));
-	}
+      if (!bindings[key]) {
+        continue
+      }
 
-	mapBindings(bindings){
-		for(let key in bindings){
-			if(Keybindings.actions[key]){
-				if(bindings[key]){
-					if(typeof bindings[key] !== "object"){
-						bindings[key] = [bindings[key]];
-					}
+      const actionBindings = Array.isArray(bindings[key]) ? bindings[key] : [bindings[key]]
 
-					bindings[key].forEach((binding) => {
-						var bindingList = Array.isArray(binding) ?  binding : [binding];
-						
-						bindingList.forEach((item) => {
-							this.mapBinding(key, item);
-						});						
-					});
-				}
-			}else{
-				console.warn("Key Binding Error - no such action:", key);
-			}
-		}
-	}
+      actionBindings.forEach((binding) => {
+        const bindingList = Array.isArray(binding) ? binding : [binding]
 
-	mapBinding(action, symbolsList){
-		var binding = {
-			action: Keybindings.actions[action],
-			keys: [],
-			ctrl: false,
-			shift: false,
-			meta: false,
-		};
+        bindingList.forEach((item) => {
+          this.mapBinding(key, item)
+        })
+      })
+    }
+  }
 
-		var symbols = symbolsList.toString().toLowerCase().split(" ").join("").split("+");
+  /**
+   * Map one action binding string/array into normalized key metadata.
+   * @param {string} action Action name.
+   * @param {string|number|Array<string|number>} symbolsList Binding symbols.
+   */
+  mapBinding(action, symbolsList) {
+    const binding = {
+      action: Keybindings.actions[action],
+      keys: [],
+      ctrl: false,
+      shift: false,
+      meta: false
+    }
 
-		symbols.forEach((symbol) => {
-			switch(symbol){
-				case "ctrl":
-					binding.ctrl = true;
-					break;
+    const symbols = symbolsList.toString().toLowerCase().replace(/\s+/g, '').split('+')
 
-				case "shift":
-					binding.shift = true;
-					break;
+    symbols.forEach((symbol) => {
+      switch (symbol) {
+        case 'ctrl':
+          binding.ctrl = true
+          break
 
-				case "meta":
-					binding.meta = true;
-					break;
+        case 'shift':
+          binding.shift = true
+          break
 
-				default:
-					symbol = isNaN(symbol) ? symbol.toUpperCase().charCodeAt(0) : parseInt(symbol);
-					binding.keys.push(symbol);
+        case 'meta':
+          binding.meta = true
+          break
 
-					if(!this.watchKeys[symbol]){
-						this.watchKeys[symbol] = [];
-					}
+        default: {
+          const key = this._normalizeBindingSymbol(symbol)
 
-					this.watchKeys[symbol].push(binding);
-			}
-		});
-	}
+          if (!key) {
+            return
+          }
 
-	bindEvents(){
-		var self = this;
+          binding.keys.push(key)
 
-		this.keyupBinding = function(e){
-			var code = e.keyCode;
-			var bindings = self.watchKeys[code];
+          if (!this.watchKeys[key]) {
+            this.watchKeys[key] = []
+          }
 
-			if(bindings){
+          this.watchKeys[key].push(binding)
+        }
+      }
+    })
+  }
 
-				self.pressedKeys.push(code);
+  /**
+   * Normalize a keybinding symbol.
+   * @param {*} symbol - Parameter value.
+   * @returns {*} Return value.
+   */
+  _normalizeBindingSymbol(symbol) {
+    if (!Number.isNaN(Number(symbol))) {
+      return this._keyFromLegacyCode(parseInt(symbol, 10))
+    }
 
-				bindings.forEach(function(binding){
-					self.checkBinding(e, binding);
-				});
-			}
-		};
+    const aliases = {
+      up: 'arrowup',
+      down: 'arrowdown',
+      left: 'arrowleft',
+      right: 'arrowright',
+      esc: 'escape',
+      del: 'delete',
+      return: 'enter',
+      pgup: 'pageup',
+      pgdn: 'pagedown',
+      space: ' ',
+      spacebar: ' '
+    }
 
-		this.keydownBinding = function(e){
-			var code = e.keyCode;
-			var bindings = self.watchKeys[code];
+    return aliases[symbol] || symbol
+  }
 
-			if(bindings){
+  /**
+   * Map a legacy key code to a normalized key.
+   * @param {*} code - Parameter value.
+   * @returns {*} Return value.
+   */
+  _keyFromLegacyCode(code) {
+    const knownCodes = {
+      8: 'backspace',
+      9: 'tab',
+      13: 'enter',
+      27: 'escape',
+      32: ' ',
+      33: 'pageup',
+      34: 'pagedown',
+      35: 'end',
+      36: 'home',
+      37: 'arrowleft',
+      38: 'arrowup',
+      39: 'arrowright',
+      40: 'arrowdown',
+      45: 'insert',
+      46: 'delete'
+    }
 
-				var index = self.pressedKeys.indexOf(code);
+    if (knownCodes[code]) {
+      return knownCodes[code]
+    }
 
-				if(index > -1){
-					self.pressedKeys.splice(index, 1);
-				}
-			}
-		};
+    if (code >= 48 && code <= 90) {
+      return String.fromCharCode(code).toLowerCase()
+    }
 
-		this.table.element.addEventListener("keydown", this.keyupBinding);
+    if (code >= 96 && code <= 105) {
+      return String(code - 96)
+    }
 
-		this.table.element.addEventListener("keyup", this.keydownBinding);
-	}
+    if (code >= 112 && code <= 123) {
+      return `f${code - 111}`
+    }
 
-	clearBindings(){
-		if(this.keyupBinding){
-			this.table.element.removeEventListener("keydown", this.keyupBinding);
-		}
+    return null
+  }
 
-		if(this.keydownBinding){
-			this.table.element.removeEventListener("keyup", this.keydownBinding);
-		}
-	}
+  /**
+   * Normalize keyboard event key values.
+   * @param {*} e - Parameter value.
+   * @returns {*} Return value.
+   */
+  _normalizeEventKey(e) {
+    const key = e.key
 
-	checkBinding(e, binding){
-		var match = true;
+    if (!key) {
+      return null
+    }
 
-		if(e.ctrlKey == binding.ctrl && e.shiftKey == binding.shift && e.metaKey == binding.meta){
-			binding.keys.forEach((key) => {
-				var index = this.pressedKeys.indexOf(key);
+    if (key.length === 1) {
+      return key.toLowerCase()
+    }
 
-				if(index == -1){
-					match = false;
-				}
-			});
+    const loweredKey = key.toLowerCase()
+    const aliases = {
+      esc: 'escape',
+      spacebar: ' ',
+      space: ' '
+    }
 
-			if(match){
-				binding.action.call(this, e);
-			}
+    return aliases[loweredKey] || loweredKey
+  }
 
-			return true;
-		}
+  /**
+   * Bind keydown/keyup listeners on the table element.
+   */
+  bindEvents() {
+    this.keyupBinding = (e) => {
+      const key = this._normalizeEventKey(e)
+      const bindings = this.watchKeys[key]
 
-		return false;
-	}
+      if (bindings) {
+        this.pressedKeys.push(key)
+
+        bindings.forEach((binding) => {
+          this.checkBinding(e, binding)
+        })
+      }
+    }
+
+    this.keydownBinding = (e) => {
+      const key = this._normalizeEventKey(e)
+      const bindings = this.watchKeys[key]
+
+      if (bindings) {
+        const index = this.pressedKeys.indexOf(key)
+
+        if (index > -1) {
+          this.pressedKeys.splice(index, 1)
+        }
+      }
+    }
+
+    this.table.element.addEventListener('keydown', this.keyupBinding)
+
+    this.table.element.addEventListener('keyup', this.keydownBinding)
+  }
+
+  /**
+   * Remove keybinding listeners from the table element.
+   */
+  clearBindings() {
+    if (this.keyupBinding) {
+      this.table.element.removeEventListener('keydown', this.keyupBinding)
+    }
+
+    if (this.keydownBinding) {
+      this.table.element.removeEventListener('keyup', this.keydownBinding)
+    }
+
+    this.keyupBinding = false
+    this.keydownBinding = false
+    this.pressedKeys = []
+  }
+
+  /**
+   * Check a key event against a normalized binding and run action on match.
+   * @param {KeyboardEvent} e Keyboard event.
+   * @param {object} binding Normalized binding object.
+   * @returns {boolean}
+   */
+  checkBinding(e, binding) {
+    let match = true
+
+    if (e.ctrlKey === binding.ctrl && e.shiftKey === binding.shift && e.metaKey === binding.meta) {
+      binding.keys.forEach((key) => {
+        const index = this.pressedKeys.indexOf(key)
+
+        if (index === -1) {
+          match = false
+        }
+      })
+
+      if (match) {
+        binding.action.call(this, e)
+      }
+
+      return true
+    }
+
+    return false
+  }
 }

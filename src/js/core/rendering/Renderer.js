@@ -1,204 +1,280 @@
-import CoreFeature from '../CoreFeature.js';
-import Helpers from '../tools/Helpers.js';
+import CoreFeature from '../CoreFeature'
+import Helpers from '../tools/Helpers'
 
-export default class Renderer extends CoreFeature{
-	constructor(table){
-		super(table);
+export default class Renderer extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
 
-		this.elementVertical = table.rowManager.element;
-		this.elementHorizontal = table.columnManager.element;
-		this.tableElement =  table.rowManager.tableElement;
+    this.elementVertical = table.rowManager.element
+    this.elementHorizontal = table.columnManager.element
+    this.tableElement = table.rowManager.tableElement
 
-		this.verticalFillMode = "fit"; // used by row manager to determine how to size the render area ("fit" - fits container to the contents, "fill" - fills the container without resizing it)
-	}
+    this.verticalFillMode = 'fit' // used by row manager to determine how to size the render area ("fit" - fits container to the contents, "fill" - fills the container without resizing it)
+  }
 
+  /// ////////////////////////////////
+  /// //// Internal Bindings /////////
+  /// ////////////////////////////////
 
-	///////////////////////////////////
-	/////// Internal Bindings /////////
-	///////////////////////////////////
+  /**
+   * Initialize renderer internals and event bindings.
+   */
+  initialize() {
+    // initialize core functionality
+  }
 
-	initialize(){
-		//initialize core functionality
-	}
+  /**
+   * Clear rendered row layout.
+   */
+  clearRows() {
+    // clear down existing rows layout
+  }
 
-	clearRows(){
-		//clear down existing rows layout
-	}
+  /**
+   * Clear rendered column layout.
+   */
+  clearColumns() {
+    // clear down existing columns layout
+  }
 
-	clearColumns(){
-		//clear down existing columns layout
-	}
+  /**
+   * Reinitialize widths for the provided columns.
+   */
+  reinitializeColumnWidths() {
+    // resize columns to fit data
+  }
 
+  /**
+   * Render rows from a clean state.
+   */
+  renderRows() {
+    // render rows from a clean slate
+  }
 
-	reinitializeColumnWidths(columns){
-		//resize columns to fit data
-	}
+  /**
+   * Render columns from a clean state.
+   */
+  renderColumns() {
+    // render columns from a clean slate
+  }
 
+  /**
+   * Re-render rows while preserving scroll context when possible.
+   * @param {Function} [callback] Optional callback between clear and render steps.
+   */
+  rerenderRows(callback) {
+    // rerender rows and keep position
+    callback?.()
+  }
 
-	renderRows(){
-		//render rows from a clean slate
-	}
+  /**
+   * Re-render columns.
+   */
+  rerenderColumns() {
+    // rerender columns
+  }
 
-	renderColumns(){
-		//render columns from a clean slate
-	}
+  /**
+   * Render cells for a specific row.
+   */
+  renderRowCells() {
+    // render the cells in a row
+  }
 
-	rerenderRows(callback){
-		// rerender rows and keep position
-		if(callback){
-			callback();
-		}
-	}
+  /**
+   * Re-render cells for a specific row.
+   */
+  rerenderRowCells() {
+    // rerender the cells in a row
+  }
 
-	rerenderColumns(update, blockRedraw){
-		//rerender columns
-	}
+  /**
+   * Handle horizontal scroll updates.
+   */
+  scrollColumns() {
+    // handle horizontal scrolling
+  }
 
-	renderRowCells(row){
-		//render the cells in a row
-	}
+  /**
+   * Handle vertical scroll updates.
+   */
+  scrollRows() {
+    // handle vertical scrolling
+  }
 
-	rerenderRowCells(row, force){
-		//rerender the cells in a row
-	}
+  /**
+   * Handle container resize recalculations without re-rendering.
+   */
+  resize() {
+    // container has resized, carry out any needed recalculations (DO NOT RERENDER IN THIS FUNCTION)
+  }
 
-	scrollColumns(left, dir){
-		//handle horizontal scrolling
-	}
+  /**
+   * Scroll to a specific row.
+   */
+  scrollToRow() {
+    // scroll to a specific row
+  }
 
-	scrollRows(top, dir){
-		//handle vertical scrolling
-	}
+  /**
+   * Determine whether a row is closer to the top edge than the bottom edge.
+   */
+  scrollToRowNearestTop() {
+    // determine weather the row is nearest the top or bottom of the table, return true for top or false for bottom
+  }
 
-	resize(){
-		//container has resized, carry out any needed recalculations (DO NOT RERENDER IN THIS FUNCTION)
-	}
+  /**
+   * Return rows currently visible in this renderer.
+   * @returns {Array<object>}
+   */
+  visibleRows() {
+    // return the visible rows
+    return []
+  }
 
-	scrollToRow(row){
-		//scroll to a specific row
-	}
+  /// ////////////////////////////////
+  /// ///// Helper Functions /////////
+  /// ////////////////////////////////
 
-	scrollToRowNearestTop(row){
-		//determine weather the row is nearest the top or bottom of the table, return true for top or false for bottom
-	}
+  /**
+   * Return current display rows.
+   * @returns {Array<object>}
+   */
+  rows() {
+    return this.table.rowManager.getDisplayRows()
+  }
 
-	visibleRows(includingBuffer){
-		//return the visible rows
-		return [];
-	}
+  /**
+   * Apply even/odd styling classes to a row.
+   * @param {object} row Internal row instance.
+   * @param {number} index Row display index.
+   */
+  styleRow(row, index) {
+    const rowEl = row.getElement()
+    const isEven = Boolean(index % 2)
 
-	///////////////////////////////////
-	//////// Helper Functions /////////
-	///////////////////////////////////
+    rowEl.classList.toggle('tabulator-row-even', isEven)
+    rowEl.classList.toggle('tabulator-row-odd', !isEven)
+  }
 
-	rows(){
-		return this.table.rowManager.getDisplayRows();
-	}
+  /// ////////////////////////////////
+  /// //// External Triggers /////////
+  /// //// (DO NOT OVERRIDE) /////////
+  /// ////////////////////////////////
 
-	styleRow(row, index){
-		var rowEl = row.getElement();
+  /**
+   * Clear current row and column render output.
+   */
+  clear() {
+    // clear down existing layout
+    this.clearRows()
+    this.clearColumns()
+  }
 
-		if(index % 2){
-			rowEl.classList.add("tabulator-row-even");
-			rowEl.classList.remove("tabulator-row-odd");
-		}else{
-			rowEl.classList.add("tabulator-row-odd");
-			rowEl.classList.remove("tabulator-row-even");
-		}
-	}
+  /**
+   * Render rows and columns from a clean state.
+   */
+  render() {
+    // render from a clean slate
+    this.renderRows()
+    this.renderColumns()
+  }
 
-	///////////////////////////////////
-	/////// External Triggers /////////
-	/////// (DO NOT OVERRIDE) /////////
-	///////////////////////////////////
+  /**
+   * Re-render rows and columns while preserving position when possible.
+   * @param {Function} [callback] Optional callback used by row re-render logic.
+   */
+  rerender(callback) {
+    // rerender and keep position
+    this.rerenderRows(callback)
+    this.rerenderColumns()
+  }
 
-	clear(){
-		//clear down existing layout
-		this.clearRows();
-		this.clearColumns();
-	}
+  /**
+   * Scroll a row to a given position in the viewport.
+   * @param {object} row Internal row instance.
+   * @param {string} [position] One of top, bottom, middle/center, or nearest.
+   * @param {boolean} [ifVisible] Skip scrolling when row is already visible.
+   * @returns {Promise<void>}
+   */
+  scrollToRowPosition(row, position, ifVisible) {
+    const rowIndex = this.rows().indexOf(row)
+    const rowEl = row.getElement()
 
-	render(){
-		//render from a clean slate
-		this.renderRows();
-		this.renderColumns();
-	}
+    let offset = 0
 
-	rerender(callback){
-		// rerender and keep position
-		this.rerenderRows();
-		this.rerenderColumns();
-	}
+    return new Promise((resolve, reject) => {
+      if (rowIndex > -1) {
+        ifVisible ??= this.table.options.scrollToRowIfVisible
 
-	scrollToRowPosition(row, position, ifVisible){
-		var rowIndex = this.rows().indexOf(row),
-		rowEl = row.getElement(),
-		offset = 0;
+        // check row visibility
+        if (!ifVisible) {
+          if (Helpers.elVisible(rowEl)) {
+            offset = Helpers.elOffset(rowEl).top - Helpers.elOffset(this.elementVertical).top
 
-		return new Promise((resolve, reject) => {
-			if(rowIndex > -1){
+            if (offset > 0 && offset < this.elementVertical.clientHeight - rowEl.offsetHeight) {
+              resolve()
+              return
+            }
+          }
+        }
 
-				if(typeof ifVisible === "undefined"){
-					ifVisible = this.table.options.scrollToRowIfVisible;
-				}
+        position ??= this.table.options.scrollToRowPosition
 
-				//check row visibility
-				if(!ifVisible){
-					if(Helpers.elVisible(rowEl)){
-						offset = Helpers.elOffset(rowEl).top - Helpers.elOffset(this.elementVertical).top;
-						
-						if(offset > 0 && offset < this.elementVertical.clientHeight - rowEl.offsetHeight){
-							resolve();
-							return false;
-						}
-					}
-				}
+        if (position === 'nearest') {
+          position = this.scrollToRowNearestTop(row) ? 'top' : 'bottom'
+        }
 
-				if(typeof position === "undefined"){
-					position = this.table.options.scrollToRowPosition;
-				}
+        // scroll to row
+        this.scrollToRow(row)
 
-				if(position === "nearest"){
-					position = this.scrollToRowNearestTop(row) ? "top" : "bottom";
-				}
+        // align to correct position
+        switch (position) {
+          case 'middle':
+          case 'center':
+            if (
+              this.elementVertical.scrollHeight - this.elementVertical.scrollTop ===
+              this.elementVertical.clientHeight
+            ) {
+              this.elementVertical.scrollTop =
+                this.elementVertical.scrollTop +
+                (rowEl.offsetTop - this.elementVertical.scrollTop) -
+                (this.elementVertical.scrollHeight - rowEl.offsetTop) / 2
+            } else {
+              this.elementVertical.scrollTop = this.elementVertical.scrollTop - this.elementVertical.clientHeight / 2
+            }
 
-				//scroll to row
-				this.scrollToRow(row);
+            break
 
-				//align to correct position
-				switch(position){
-					case "middle":
-					case "center":
+          case 'bottom':
+            if (
+              this.elementVertical.scrollHeight - this.elementVertical.scrollTop ===
+              this.elementVertical.clientHeight
+            ) {
+              this.elementVertical.scrollTop =
+                this.elementVertical.scrollTop -
+                (this.elementVertical.scrollHeight - rowEl.offsetTop) +
+                rowEl.offsetHeight
+            } else {
+              this.elementVertical.scrollTop =
+                this.elementVertical.scrollTop - this.elementVertical.clientHeight + rowEl.offsetHeight
+            }
 
-						if(this.elementVertical.scrollHeight - this.elementVertical.scrollTop == this.elementVertical.clientHeight){
-							this.elementVertical.scrollTop = this.elementVertical.scrollTop + (rowEl.offsetTop - this.elementVertical.scrollTop) - ((this.elementVertical.scrollHeight - rowEl.offsetTop) / 2);
-						}else{
-							this.elementVertical.scrollTop = this.elementVertical.scrollTop - (this.elementVertical.clientHeight / 2);
-						}
+            break
 
-						break;
+          case 'top':
+            this.elementVertical.scrollTop = rowEl.offsetTop
+            break
+        }
 
-					case "bottom":
-
-						if(this.elementVertical.scrollHeight - this.elementVertical.scrollTop == this.elementVertical.clientHeight){
-							this.elementVertical.scrollTop = this.elementVertical.scrollTop - (this.elementVertical.scrollHeight - rowEl.offsetTop) + rowEl.offsetHeight;
-						}else{
-							this.elementVertical.scrollTop = this.elementVertical.scrollTop - this.elementVertical.clientHeight + rowEl.offsetHeight;
-						}
-
-						break;
-
-					case "top":
-						this.elementVertical.scrollTop = rowEl.offsetTop;					
-						break;
-				}
-
-				resolve();
-
-			}else{
-				console.warn("Scroll Error - Row not visible");
-				reject("Scroll Error - Row not visible");
-			}
-		});
-	}
+        resolve()
+      } else {
+        console.warn('Scroll Error - Row not visible')
+        reject(new Error('Scroll Error - Row not visible'))
+      }
+    })
+  }
 }

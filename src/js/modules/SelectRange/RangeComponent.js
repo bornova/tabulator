@@ -1,91 +1,167 @@
 export default class RangeComponent {
-	constructor(range) {
-		this._range = range;
+  /**
+   * @param {object} range Internal range instance.
+   * @returns {RangeComponent}
+   */
+  constructor(range) {
+    this._range = range
 
-		return new Proxy(this, {
-			get: function (target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
-				} else {
-					return target._range.table.componentFunctionBinder.handle("range", target._range, name);
-				}
-			},
-		});
-	}
+    return new Proxy(this, {
+      get(target, name, receiver) {
+        if (Reflect.has(target, name)) {
+          return Reflect.get(target, name, receiver)
+        }
 
-	getElement() {
-		return this._range.element;
-	}
+        return target._range.table.componentFunctionBinder.handle('range', target._range, name)
+      }
+    })
+  }
 
-	getData() {
-		return this._range.getData();
-	}
+  /**
+   * Resolve public cell component or internal cell to internal cell instance.
+   * @param {*} cell Cell-like value.
+   * @returns {*}
+   */
+  _resolveCell(cell) {
+    return cell ? cell._cell || cell : cell
+  }
 
-	getCells() {
-		return this._range.getCells(true, true);
-	}
+  /**
+   * Get the range overlay element.
+   * @returns {HTMLElement|null}
+   */
+  getElement() {
+    return this._range.element
+  }
 
-	getStructuredCells() {
-		return this._range.getStructuredCells();
-	}
+  /**
+   * Get range values as a data structure.
+   * @returns {*}
+   */
+  getData() {
+    return this._range.getData()
+  }
 
-	getRows() {
-		return this._range.getRows().map((row) => row.getComponent());
-	}
+  /**
+   * Get all cells in the range.
+   * @returns {Array<object>}
+   */
+  getCells() {
+    return this._range.getCells(true, true)
+  }
 
-	getColumns() {
-		return this._range.getColumns().map((column) => column.getComponent());
-	}
-	
-	getBounds() {
-		return this._range.getBounds();
-	}
+  /**
+   * Get cells grouped by row/column structure.
+   * @returns {Array<Array<object>>}
+   */
+  getStructuredCells() {
+    return this._range.getStructuredCells()
+  }
 
-	getTopEdge() {
-		return this._range.top;
-	}
+  /**
+   * Get row components covered by this range.
+   * @returns {Array<object>}
+   */
+  getRows() {
+    return this._range.getRows().map((row) => row.getComponent())
+  }
 
-	getBottomEdge() {
-		return this._range.bottom;
-	}
+  /**
+   * Get column components covered by this range.
+   * @returns {Array<object>}
+   */
+  getColumns() {
+    return this._range.getColumns().map((column) => column.getComponent())
+  }
 
-	getLeftEdge() {
-		return this._range.left;
-	}
+  /**
+   * Get range bounds.
+   * @returns {object}
+   */
+  getBounds() {
+    return this._range.getBounds()
+  }
 
-	getRightEdge() {
-		return this._range.right;
-	}
+  /**
+   * Get the top boundary cell.
+   * @returns {*}
+   */
+  getTopEdge() {
+    return this._range.top
+  }
 
-	setBounds(start, end){
-		if(this._range.destroyedGuard("setBounds")){
-			this._range.setBounds(start ? start._cell : start, end ? end._cell : end);
-		}
-	}
+  /**
+   * Get the bottom boundary cell.
+   * @returns {*}
+   */
+  getBottomEdge() {
+    return this._range.bottom
+  }
 
-	setStartBound(start){
-		if(this._range.destroyedGuard("setStartBound")){
-			this._range.setEndBound(start ? start._cell : start);
-			this._range.rangeManager.layoutElement();
-		}
-	}
+  /**
+   * Get the left boundary cell.
+   * @returns {*}
+   */
+  getLeftEdge() {
+    return this._range.left
+  }
 
-	setEndBound(end){
-		if(this._range.destroyedGuard("setEndBound")){
-			this._range.setEndBound(end ? end._cell : end);
-			this._range.rangeManager.layoutElement();
-		}
-	}
+  /**
+   * Get the right boundary cell.
+   * @returns {*}
+   */
+  getRightEdge() {
+    return this._range.right
+  }
 
-	clearValues(){
-		if(this._range.destroyedGuard("clearValues")){
-			this._range.clearValues();
-		}
-	}
+  /**
+   * Set both start and end bounds.
+   * @param {*} start Start cell or cell component.
+   * @param {*} end End cell or cell component.
+   */
+  setBounds(start, end) {
+    if (this._range.destroyedGuard('setBounds')) {
+      this._range.setBounds(this._resolveCell(start), this._resolveCell(end))
+    }
+  }
 
-	remove(){
-		if(this._range.destroyedGuard("remove")){
-			this._range.destroy(true);
-		}
-	}
+  /**
+   * Set the start bound.
+   * @param {*} start Start cell or cell component.
+   */
+  setStartBound(start) {
+    if (this._range.destroyedGuard('setStartBound')) {
+      this._range.setStartBound(this._resolveCell(start))
+      this._range.rangeManager.layoutElement()
+    }
+  }
+
+  /**
+   * Set the end bound.
+   * @param {*} end End cell or cell component.
+   */
+  setEndBound(end) {
+    if (this._range.destroyedGuard('setEndBound')) {
+      this._range.setEndBound(this._resolveCell(end))
+      this._range.rangeManager.layoutElement()
+    }
+  }
+
+  /**
+   * Clear values inside the range.
+   */
+  clearValues() {
+    if (this._range.destroyedGuard('clearValues')) {
+      this._range.clearValues()
+    }
+  }
+
+  /**
+   * Remove this range.
+   */
+  remove() {
+    if (this._range.destroyedGuard('remove')) {
+      this._range.destroy(true)
+    }
+  }
 }

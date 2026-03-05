@@ -1,37 +1,45 @@
-export {default as AccessorModule} from '../../modules/Accessor/Accessor.js';
-export {default as AjaxModule} from '../../modules/Ajax/Ajax.js';
-export {default as ClipboardModule} from '../../modules/Clipboard/Clipboard.js';
-export {default as ColumnCalcsModule} from '../../modules/ColumnCalcs/ColumnCalcs.js';
-export {default as DataTreeModule} from '../../modules/DataTree/DataTree.js';
-export {default as DownloadModule} from '../../modules/Download/Download.js';
-export {default as EditModule} from '../../modules/Edit/Edit.js';
-export {default as ExportModule} from '../../modules/Export/Export.js';
-export {default as FilterModule} from '../../modules/Filter/Filter.js';
-export {default as FormatModule} from '../../modules/Format/Format.js';
-export {default as FrozenColumnsModule} from '../../modules/FrozenColumns/FrozenColumns.js';
-export {default as FrozenRowsModule} from '../../modules/FrozenRows/FrozenRows.js';
-export {default as GroupRowsModule} from '../../modules/GroupRows/GroupRows.js';
-export {default as HistoryModule} from '../../modules/History/History.js';
-export {default as HtmlTableImportModule} from '../../modules/HtmlTableImport/HtmlTableImport.js';
-export {default as ImportModule} from '../../modules/Import/Import.js';
-export {default as InteractionModule} from '../../modules/Interaction/Interaction.js';
-export {default as KeybindingsModule} from '../../modules/Keybindings/Keybindings.js';
-export {default as MenuModule} from '../../modules/Menu/Menu.js';
-export {default as MoveColumnsModule} from '../../modules/MoveColumns/MoveColumns.js';
-export {default as MoveRowsModule} from '../../modules/MoveRows/MoveRows.js';
-export {default as MutatorModule} from '../../modules/Mutator/Mutator.js';
-export {default as PageModule} from '../../modules/Page/Page.js';
-export {default as PersistenceModule} from '../../modules/Persistence/Persistence.js';
-export {default as PopupModule} from '../../modules/Popup/Popup.js';
-export {default as PrintModule} from '../../modules/Print/Print.js';
-export {default as ReactiveDataModule} from '../../modules/ReactiveData/ReactiveData.js';
-export {default as ResizeColumnsModule} from '../../modules/ResizeColumns/ResizeColumns.js';
-export {default as ResizeRowsModule} from '../../modules/ResizeRows/ResizeRows.js';
-export {default as ResizeTableModule} from '../../modules/ResizeTable/ResizeTable.js';
-export {default as ResponsiveLayoutModule} from '../../modules/ResponsiveLayout/ResponsiveLayout.js';
-export {default as SelectRowModule} from '../../modules/SelectRow/SelectRow.js';
-export {default as SelectRangeModule} from '../../modules/SelectRange/SelectRange.js';
-export {default as SortModule} from '../../modules/Sort/Sort.js';
-export {default as SpreadsheetModule} from '../../modules/Spreadsheet/Spreadsheet.js';
-export {default as TooltipModule} from '../../modules/Tooltip/Tooltip.js';
-export {default as ValidateModule} from '../../modules/Validate/Validate.js';
+/**
+ * Optional module export bundle.
+ *
+ * Note: some optional modules can rely on external runtime dependencies,
+ * so import only the modules needed by your bundle.
+ *
+ * @module core/modules/optional
+ */
+export { default as AccessorModule } from '../../modules/Accessor/Accessor'
+export { default as AjaxModule } from '../../modules/Ajax/Ajax'
+export { default as ClipboardModule } from '../../modules/Clipboard/Clipboard'
+export { default as ColumnCalcsModule } from '../../modules/ColumnCalcs/ColumnCalcs'
+export { default as DataTreeModule } from '../../modules/DataTree/DataTree'
+export { default as DownloadModule } from '../../modules/Download/Download'
+export { default as EditModule } from '../../modules/Edit/Edit'
+export { default as ExportModule } from '../../modules/Export/Export'
+export { default as FilterModule } from '../../modules/Filter/Filter'
+export { default as FormatModule } from '../../modules/Format/Format'
+export { default as FrozenColumnsModule } from '../../modules/FrozenColumns/FrozenColumns'
+export { default as FrozenRowsModule } from '../../modules/FrozenRows/FrozenRows'
+export { default as GroupRowsModule } from '../../modules/GroupRows/GroupRows'
+export { default as HistoryModule } from '../../modules/History/History'
+export { default as HtmlTableImportModule } from '../../modules/HtmlTableImport/HtmlTableImport'
+export { default as ImportModule } from '../../modules/Import/Import'
+export { default as InteractionModule } from '../../modules/Interaction/Interaction'
+export { default as KeybindingsModule } from '../../modules/Keybindings/Keybindings'
+export { default as MenuModule } from '../../modules/Menu/Menu'
+export { default as MoveColumnsModule } from '../../modules/MoveColumns/MoveColumns'
+export { default as MoveRowsModule } from '../../modules/MoveRows/MoveRows'
+export { default as MutatorModule } from '../../modules/Mutator/Mutator'
+export { default as PageModule } from '../../modules/Page/Page'
+export { default as PersistenceModule } from '../../modules/Persistence/Persistence'
+export { default as PopupModule } from '../../modules/Popup/Popup'
+export { default as PrintModule } from '../../modules/Print/Print'
+export { default as ReactiveDataModule } from '../../modules/ReactiveData/ReactiveData'
+export { default as ResizeColumnsModule } from '../../modules/ResizeColumns/ResizeColumns'
+export { default as ResizeRowsModule } from '../../modules/ResizeRows/ResizeRows'
+export { default as ResizeTableModule } from '../../modules/ResizeTable/ResizeTable'
+export { default as ResponsiveLayoutModule } from '../../modules/ResponsiveLayout/ResponsiveLayout'
+export { default as SelectRowModule } from '../../modules/SelectRow/SelectRow'
+export { default as SelectRangeModule } from '../../modules/SelectRange/SelectRange'
+export { default as SortModule } from '../../modules/Sort/Sort'
+export { default as SpreadsheetModule } from '../../modules/Spreadsheet/Spreadsheet'
+export { default as TooltipModule } from '../../modules/Tooltip/Tooltip'
+export { default as ValidateModule } from '../../modules/Validate/Validate'

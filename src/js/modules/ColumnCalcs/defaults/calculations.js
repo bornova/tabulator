@@ -1,93 +1,152 @@
+/**
+ * Default column calculation functions.
+ *
+ * @type {{
+ *   avg: function(Array<*>, Array<Object>, Object): string,
+ *   max: function(Array<*>, Array<Object>, Object): (string|number),
+ *   min: function(Array<*>, Array<Object>, Object): (string|number),
+ *   sum: function(Array<*>, Array<Object>, Object): (string|number),
+ *   concat: function(Array<*>, Array<Object>, Object): string|number,
+ *   count: function(Array<*>, Array<Object>, Object): number,
+ *   unique: function(Array<*>, Array<Object>, Object): number
+ * }}
+ */
 export default {
-	"avg":function(values, data, calcParams){
-		var output = 0,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : 2;
+  /**
+   * Calculate the average of values.
+   *
+   * @param {Array<*>} values Values to aggregate.
+   * @param {Array<Object>} data Row data.
+   * @param {Object} calcParams Calculation parameters.
+   * @returns {string} Average value.
+   */
+  avg(values, data, calcParams) {
+    const precision = calcParams.precision !== undefined ? calcParams.precision : 2
 
-		if(values.length){
-			output = values.reduce(function(sum, value){
-				return Number(sum) + Number(value);
-			});
+    let output = 0
 
-			output = output / values.length;
+    if (values.length) {
+      output = values.reduce((sum, value) => Number(sum) + Number(value))
 
-			output = precision !== false ? output.toFixed(precision) : output;
-		}
+      output = output / values.length
 
-		return parseFloat(output).toString();
-	},
-	"max":function(values, data, calcParams){
-		var output = null,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : false;
+      output = precision !== false ? output.toFixed(precision) : output
+    }
 
-		values.forEach(function(value){
+    return parseFloat(output).toString()
+  },
+  /**
+   * Calculate the maximum value.
+   *
+   * @param {Array<*>} values Values to aggregate.
+   * @param {Array<Object>} data Row data.
+   * @param {Object} calcParams Calculation parameters.
+   * @returns {string|number} Maximum value.
+   */
+  max(values, data, calcParams) {
+    const precision = calcParams.precision !== undefined ? calcParams.precision : false
 
-			value = Number(value);
+    let output = null
 
-			if(value > output || output === null){
-				output = value;
-			}
-		});
+    values.forEach((value) => {
+      value = Number(value)
 
-		return output !== null ? (precision !== false ? output.toFixed(precision) : output) : "";
-	},
-	"min":function(values, data, calcParams){
-		var output = null,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : false;
+      if (value > output || output === null) {
+        output = value
+      }
+    })
 
-		values.forEach(function(value){
+    return output !== null ? (precision !== false ? output.toFixed(precision) : output) : ''
+  },
+  /**
+   * Calculate the minimum value.
+   *
+   * @param {Array<*>} values Values to aggregate.
+   * @param {Array<Object>} data Row data.
+   * @param {Object} calcParams Calculation parameters.
+   * @returns {string|number} Minimum value.
+   */
+  min(values, data, calcParams) {
+    const precision = calcParams.precision !== undefined ? calcParams.precision : false
 
-			value = Number(value);
+    let output = null
 
-			if(value < output || output === null){
-				output = value;
-			}
-		});
+    values.forEach((value) => {
+      value = Number(value)
 
-		return output !== null ? (precision !== false ? output.toFixed(precision) : output) : "";
-	},
-	"sum":function(values, data, calcParams){
-		var output = 0,
-		precision = typeof calcParams.precision !== "undefined" ? calcParams.precision : false;
+      if (value < output || output === null) {
+        output = value
+      }
+    })
 
-		if(values.length){
-			values.forEach(function(value){
-				value = Number(value);
+    return output !== null ? (precision !== false ? output.toFixed(precision) : output) : ''
+  },
+  /**
+   * Calculate the sum of values.
+   *
+   * @param {Array<*>} values Values to aggregate.
+   * @param {Array<Object>} data Row data.
+   * @param {Object} calcParams Calculation parameters.
+   * @returns {string|number} Summed value.
+   */
+  sum(values, data, calcParams) {
+    const precision = calcParams.precision !== undefined ? calcParams.precision : false
 
-				output += !isNaN(value) ? Number(value) : 0;
-			});
-		}
+    let output = 0
 
-		return precision !== false ? output.toFixed(precision) : output;
-	},
-	"concat":function(values, data, calcParams){
-		var output = 0;
+    if (values.length) {
+      values.forEach((value) => {
+        value = Number(value)
 
-		if(values.length){
-			output = values.reduce(function(sum, value){
-				return String(sum) + String(value);
-			});
-		}
+        output += !Number.isNaN(value) ? Number(value) : 0
+      })
+    }
 
-		return output;
-	},
-	"count":function(values, data, calcParams){
-		var output = 0;
+    return precision !== false ? output.toFixed(precision) : output
+  },
+  /**
+   * Concatenate values into a single string.
+   *
+   * @param {Array<*>} values Values to aggregate.
+   * @returns {string|number} Concatenated value.
+   */
+  concat(values) {
+    let output = 0
 
-		if(values.length){
-			values.forEach(function(value){
-				if(value){
-					output ++;
-				}
-			});
-		}
+    if (values.length) {
+      output = values.reduce((sum, value) => String(sum) + String(value))
+    }
 
-		return output;
-	},
-	"unique":function(values, data, calcParams){
-		var unique = values.filter((value, index) => {
-			return (values || value === 0) && values.indexOf(value) === index;
-		});
+    return output
+  },
+  /**
+   * Count truthy values.
+   *
+   * @param {Array<*>} values Values to aggregate.
+   * @returns {number} Count of truthy values.
+   */
+  count(values) {
+    let output = 0
 
-		return unique.length;
-	},
-};
+    if (values.length) {
+      values.forEach((value) => {
+        if (value) {
+          output++
+        }
+      })
+    }
+
+    return output
+  },
+  /**
+   * Count unique values.
+   *
+   * @param {Array<*>} values Values to aggregate.
+   * @returns {number} Number of unique values.
+   */
+  unique(values) {
+    const unique = values.filter((value, index) => (value || value === 0) && values.indexOf(value) === index)
+
+    return unique.length
+  }
+}

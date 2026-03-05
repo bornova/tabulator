@@ -1,164 +1,215 @@
-import Module from '../../core/Module.js';
+import Module from '../../core/Module'
 
-import defaultMutators from './defaults/mutators.js';
+import defaultMutators from './defaults/mutators'
 
-export default class Mutator extends Module{
+export default class Mutator extends Module {
+  static moduleName = 'mutator'
 
-	static moduleName = "mutator";
+  // load defaults
+  static mutators = defaultMutators
 
-	//load defaults
-	static mutators = defaultMutators;
+  static keyPrefix = 'mutator'
 
-	constructor(table){
-		super(table);
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
 
-		this.allowedTypes = ["", "data", "edit", "clipboard", "import"]; //list of mutation types
-		this.enabled = true;
+    this.allowedTypes = ['', 'data', 'edit', 'clipboard', 'import'] // list of mutation types
+    this.enabled = true
 
-		this.registerColumnOption("mutator");
-		this.registerColumnOption("mutatorParams");
-		this.registerColumnOption("mutatorData");
-		this.registerColumnOption("mutatorDataParams");
-		this.registerColumnOption("mutatorEdit");
-		this.registerColumnOption("mutatorEditParams");
-		this.registerColumnOption("mutatorClipboard");
-		this.registerColumnOption("mutatorClipboardParams");
-		this.registerColumnOption("mutatorImport");
-		this.registerColumnOption("mutatorImportParams");
-		this.registerColumnOption("mutateLink");
-	}
+    this.registerColumnOption('mutator')
+    this.registerColumnOption('mutatorParams')
+    this.registerColumnOption('mutatorData')
+    this.registerColumnOption('mutatorDataParams')
+    this.registerColumnOption('mutatorEdit')
+    this.registerColumnOption('mutatorEditParams')
+    this.registerColumnOption('mutatorClipboard')
+    this.registerColumnOption('mutatorClipboardParams')
+    this.registerColumnOption('mutatorImport')
+    this.registerColumnOption('mutatorImportParams')
+    this.registerColumnOption('mutateLink')
+  }
 
-	initialize(){
-		this.subscribe("cell-value-changing", this.transformCell.bind(this));
-		this.subscribe("cell-value-changed", this.mutateLink.bind(this));
-		this.subscribe("column-layout", this.initializeColumn.bind(this));
-		this.subscribe("row-data-init-before", this.rowDataChanged.bind(this));
-		this.subscribe("row-data-changing", this.rowDataChanged.bind(this));
-	}
+  /**
+   * Initialize mutator event subscriptions.
+   */
+  initialize() {
+    this.subscribe('cell-value-changing', this.transformCell.bind(this))
+    this.subscribe('cell-value-changed', this.mutateLink.bind(this))
+    this.subscribe('column-layout', this.initializeColumn.bind(this))
+    this.subscribe('row-data-init-before', this.rowDataChanged.bind(this))
+    this.subscribe('row-data-changing', this.rowDataChanged.bind(this))
+  }
 
-	rowDataChanged(row, tempData, updatedData){
-		return this.transformRow(tempData, "data", updatedData);
-	}
+  /**
+   * Apply row-level data mutators.
+   * @param {object} row Internal row.
+   * @param {object} tempData Working row data.
+   * @param {object} [updatedData] Explicit updated data.
+   * @returns {object}
+   */
+  rowDataChanged(row, tempData, updatedData) {
+    return this.transformRow(tempData, 'data', updatedData)
+  }
 
-	//initialize column mutator
-	initializeColumn(column){
-		var match = false,
-		config = {};
+  // initialize column mutator
+  /**
+   * Build per-column mutator config.
+   * @param {object} column Internal column.
+   */
+  initializeColumn(column) {
+    const config = {}
 
-		this.allowedTypes.forEach((type) => {
-			var key = "mutator" + (type.charAt(0).toUpperCase() + type.slice(1)),
-			mutator;
+    let match = false
 
-			if(column.definition[key]){
-				mutator = this.lookupMutator(column.definition[key]);
+    this.allowedTypes.forEach((type) => {
+      const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
 
-				if(mutator){
-					match = true;
+      let mutator
 
-					config[key] = {
-						mutator:mutator,
-						params: column.definition[key + "Params"] || {},
-					};
-				}
-			}
-		});
+      if (column.definition[key]) {
+        mutator = this.lookupMutator(column.definition[key])
 
-		if(match){
-			column.modules.mutate = config;
-		}
-	}
+        if (mutator) {
+          match = true
 
-	lookupMutator(value){
-		var mutator = false;
+          config[key] = {
+            mutator,
+            params: column.definition[`${key}Params`] || {}
+          }
+        }
+      }
+    })
 
-		//set column mutator
-		switch(typeof value){
-			case "string":
-				if(Mutator.mutators[value]){
-					mutator = Mutator.mutators[value];
-				}else{
-					console.warn("Mutator Error - No such mutator found, ignoring: ", value);
-				}
-				break;
+    if (match) {
+      column.modules.mutate = config
+    }
+  }
 
-			case "function":
-				mutator = value;
-				break;
-		}
+  /**
+   * Resolve mutator definition to function.
+   * @param {string|Function} value Mutator identifier or function.
+   * @returns {Function|boolean}
+   */
+  lookupMutator(value) {
+    // set column mutator
+    switch (typeof value) {
+      case 'string':
+        if (Object.prototype.hasOwnProperty.call(Mutator.mutators, value)) {
+          return Mutator.mutators[value]
+        }
 
-		return mutator;
-	}
+        console.warn('Mutator Error - No such mutator found, ignoring: ', value)
+        return false
 
-	//apply mutator to row
-	transformRow(data, type, updatedData){
-		var key = "mutator" + (type.charAt(0).toUpperCase() + type.slice(1)),
-		value;
+      case 'function':
+        return value
 
-		// console.log("key", key)
+      default:
+        return false
+    }
+  }
 
-		if(this.enabled){
+  // apply mutator to row
+  /**
+   * Apply configured mutators to row data for a mutation type.
+   * @param {object} data Row data.
+   * @param {string} type Mutation type.
+   * @param {object} [updatedData] Source updated data.
+   * @returns {object}
+   */
+  transformRow(data, type, updatedData) {
+    const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
+    const sourceData = updatedData !== undefined ? updatedData : data
 
-			this.table.columnManager.traverse((column) => {
-				var mutator, params, component;
+    if (!this.enabled) {
+      return data
+    }
 
-				if(column.modules.mutate){
-					mutator = column.modules.mutate[key] || column.modules.mutate.mutator || false;
+    this.table.columnManager.traverse((column) => {
+      if (!column.modules.mutate) {
+        return
+      }
 
-					if(mutator){
-						value = column.getFieldValue(typeof updatedData !== "undefined" ? updatedData : data);
+      const mutator = column.modules.mutate[key] || column.modules.mutate.mutator || false
 
-						if((type == "data" && !updatedData)|| typeof value !== "undefined"){
-							component = column.getComponent();
-							params = typeof mutator.params === "function" ? mutator.params(value, data, type, component) : mutator.params;
-							column.setFieldValue(data, mutator.mutator(value, data, type, params, component));
-						}
-					}
-				}
-			});
-		}
+      if (!mutator) {
+        return
+      }
 
-		return data;
-	}
+      const value = column.getFieldValue(sourceData)
 
-	//apply mutator to new cell value
-	transformCell(cell, value){
-		if(cell.column.modules.mutate){
-			var mutator = cell.column.modules.mutate.mutatorEdit || cell.column.modules.mutate.mutator || false,
-			tempData = {};
+      if ((type === 'data' && !updatedData) || value !== undefined) {
+        const component = column.getComponent()
+        const params =
+          typeof mutator.params === 'function' ? mutator.params(value, data, type, component) : mutator.params
 
-			if(mutator){
-				tempData = Object.assign(tempData, cell.row.getData());
-				cell.column.setFieldValue(tempData, value);
-				return mutator.mutator(value, tempData, "edit", mutator.params, cell.getComponent());
-			}
-		}
+        column.setFieldValue(data, mutator.mutator(value, data, type, params, component))
+      }
+    })
 
-		return value;
-	}
+    return data
+  }
 
-	mutateLink(cell){
-		var links = cell.column.definition.mutateLink;
+  // apply mutator to new cell value
+  /**
+   * Apply edit mutator for a single cell value change.
+   * @param {object} cell Internal cell.
+   * @param {*} value Incoming cell value.
+   * @returns {*}
+   */
+  transformCell(cell, value) {
+    if (!cell.column.modules.mutate) {
+      return value
+    }
 
-		if(links){
-			if(!Array.isArray(links)){
-				links = [links];
-			}
+    const mutator = cell.column.modules.mutate.mutatorEdit || cell.column.modules.mutate.mutator || false
 
-			links.forEach((link) => {
-				var linkCell = cell.row.getCell(link);
+    if (mutator) {
+      const tempData = { ...cell.row.getData() }
 
-				if(linkCell){
-					linkCell.setValue(linkCell.getValue(), true, true);
-				}
-			});
-		}
-	}
+      cell.column.setFieldValue(tempData, value)
+      return mutator.mutator(value, tempData, 'edit', mutator.params, cell.getComponent())
+    }
 
-	enable(){
-		this.enabled = true;
-	}
+    return value
+  }
 
-	disable(){
-		this.enabled = false;
-	}
+  /**
+   * Re-trigger linked mutator cells when a source cell changes.
+   * @param {object} cell Internal cell.
+   */
+  mutateLink(cell) {
+    let links = cell.column.definition.mutateLink
+
+    if (links) {
+      if (!Array.isArray(links)) {
+        links = [links]
+      }
+
+      links.forEach((link) => {
+        const linkCell = cell.row.getCell(link)
+
+        if (linkCell) {
+          linkCell.setValue(linkCell.getValue(), true, true)
+        }
+      })
+    }
+  }
+
+  /**
+   * Enable mutator processing.
+   */
+  enable() {
+    this.enabled = true
+  }
+
+  /**
+   * Disable mutator processing.
+   */
+  disable() {
+    this.enabled = false
+  }
 }

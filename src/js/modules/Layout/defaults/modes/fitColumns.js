@@ -1,171 +1,175 @@
-//resize columns to fit
-export default function(columns, forced){
-	var totalWidth = this.table.rowManager.element.getBoundingClientRect().width; //table element width
-	var fixedWidth = 0; //total width of columns with a defined width
-	var flexWidth = 0; //total width available to flexible columns
-	var flexGrowUnits = 0; //total number of widthGrow blocks across all columns
-	var flexColWidth = 0; //desired width of flexible columns
-	var flexColumns = []; //array of flexible width columns
-	var fixedShrinkColumns = []; //array of fixed width columns that can shrink
-	var flexShrinkUnits = 0; //total number of widthShrink blocks across all columns
-	var overflowWidth = 0; //horizontal overflow width
-	var gapFill = 0; //number of pixels to be added to final column to close and half pixel gaps
+// resize columns to fit
+/**
+ * Resize columns to fit the available table width.
+ *
+ * @this {Object}
+ * @param {Array<Object>} columns Columns to resize.
+ */
+export default function (columns) {
+  const flexColumns = [] // array of flexible width columns
+  const fixedShrinkColumns = [] // array of fixed width columns that can shrink
 
-	function calcWidth(width){
-		var colWidth;
+  let totalWidth = this.table.rowManager.element.getBoundingClientRect().width // table element width
+  let fixedWidth = 0 // total width of columns with a defined width
+  let flexWidth = 0 // total width available to flexible columns
+  let flexGrowUnits = 0 // total number of widthGrow blocks across all columns
+  let flexColWidth // desired width of flexible columns
+  let flexShrinkUnits = 0 // total number of widthShrink blocks across all columns
+  let overflowWidth // horizontal overflow width
+  let gapFill // number of pixels to be added to final column to close and half pixel gaps
 
-		if(typeof(width) == "string"){
-			if(width.indexOf("%") > -1){
-				colWidth = (totalWidth / 100) * parseInt(width);
-			}else{
-				colWidth = parseInt(width);
-			}
-		}else{
-			colWidth = width;
-		}
+  function calcWidth(width) {
+    let colWidth
 
-		return colWidth;
-	}
+    if (typeof width === 'string') {
+      if (width.includes('%')) {
+        colWidth = (totalWidth / 100) * parseInt(width, 10)
+      } else {
+        colWidth = parseInt(width, 10)
+      }
+    } else {
+      colWidth = width
+    }
 
-	//ensure columns resize to take up the correct amount of space
-	function scaleColumns(columns, freeSpace, colWidth, shrinkCols){
-		var oversizeCols = [],
-		oversizeSpace = 0,
-		remainingSpace = 0,
-		nextColWidth = 0,
-		remainingFlexGrowUnits = flexGrowUnits,
-		gap = 0,
-		changeUnits = 0,
-		undersizeCols = [];
+    return colWidth
+  }
 
-		function calcGrow(col){
-			return (colWidth * (col.column.definition.widthGrow || 1));
-		}
+  // ensure columns resize to take up the correct amount of space
+  function scaleColumns(columns, freeSpace, colWidth, shrinkCols) {
+    const oversizeCols = []
+    const undersizeCols = []
 
-		function calcShrink(col){
-			return  (calcWidth(col.width) - (colWidth * (col.column.definition.widthShrink || 0)));
-		}
+    const getChangeUnit = (col) =>
+      shrinkCols ? col.column.definition.widthShrink || 1 : col.column.definition.widthGrow || 1
 
-		columns.forEach(function(col, i){
-			var width = shrinkCols ? calcShrink(col) : calcGrow(col);
-			if(col.column.minWidth >= width){
-				oversizeCols.push(col);
-			}else{
-				if(col.column.maxWidth && col.column.maxWidth < width){
-					col.width = col.column.maxWidth;
-					freeSpace -= col.column.maxWidth;
+    const calcGrow = (col) => colWidth * (col.column.definition.widthGrow || 1)
+    const calcShrink = (col) => calcWidth(col.width) - colWidth * (col.column.definition.widthShrink || 0)
 
-					remainingFlexGrowUnits -= shrinkCols ? (col.column.definition.widthShrink || 1) : (col.column.definition.widthGrow || 1);
+    let gap
+    let changeUnits = 0
+    let oversizeSpace = 0
+    let remainingSpace
+    let nextColWidth
+    let remainingFlexGrowUnits = flexGrowUnits
 
-					if(remainingFlexGrowUnits){
-						colWidth = Math.floor(freeSpace/remainingFlexGrowUnits);
-					}
-				}else{
-					undersizeCols.push(col);
-					changeUnits += shrinkCols ? (col.column.definition.widthShrink || 1) : (col.column.definition.widthGrow || 1);
-				}
-			}
-		});
+    columns.forEach((col) => {
+      const width = shrinkCols ? calcShrink(col) : calcGrow(col)
 
-		if(oversizeCols.length){
-			oversizeCols.forEach(function(col){
-				oversizeSpace += shrinkCols ?  col.width - col.column.minWidth : col.column.minWidth;
-				col.width = col.column.minWidth;
-			});
+      if (col.column.minWidth >= width) {
+        oversizeCols.push(col)
+      } else {
+        if (col.column.maxWidth && col.column.maxWidth < width) {
+          col.width = col.column.maxWidth
+          freeSpace -= col.column.maxWidth
 
-			remainingSpace = freeSpace - oversizeSpace;
+          remainingFlexGrowUnits -= getChangeUnit(col)
 
-			nextColWidth = changeUnits ? Math.floor(remainingSpace/changeUnits) : remainingSpace;
+          if (remainingFlexGrowUnits) {
+            colWidth = Math.floor(freeSpace / remainingFlexGrowUnits)
+          }
+        } else {
+          undersizeCols.push(col)
+          changeUnits += getChangeUnit(col)
+        }
+      }
+    })
 
-			gap = scaleColumns(undersizeCols, remainingSpace, nextColWidth, shrinkCols);
-		}else{
-			gap = changeUnits ? freeSpace - (Math.floor(freeSpace/changeUnits) * changeUnits) : freeSpace;
+    if (oversizeCols.length) {
+      oversizeCols.forEach((col) => {
+        oversizeSpace += shrinkCols ? col.width - col.column.minWidth : col.column.minWidth
+        col.width = col.column.minWidth
+      })
 
-			undersizeCols.forEach(function(column){
-				column.width = shrinkCols ? calcShrink(column) : calcGrow(column);
-			});
-		}
+      remainingSpace = freeSpace - oversizeSpace
 
-		return gap;
-	}
+      nextColWidth = changeUnits ? Math.floor(remainingSpace / changeUnits) : remainingSpace
 
-	if(this.table.options.responsiveLayout && this.table.modExists("responsiveLayout", true)){
-		this.table.modules.responsiveLayout.update();
-	}
+      gap = scaleColumns(undersizeCols, remainingSpace, nextColWidth, shrinkCols)
+    } else {
+      gap = changeUnits ? freeSpace - Math.floor(freeSpace / changeUnits) * changeUnits : freeSpace
 
-	//adjust for vertical scrollbar if present
-	if(this.table.rowManager.element.scrollHeight > this.table.rowManager.element.clientHeight){
-		totalWidth -= this.table.rowManager.element.offsetWidth - this.table.rowManager.element.clientWidth;
-	}
+      undersizeCols.forEach((column) => {
+        column.width = shrinkCols ? calcShrink(column) : calcGrow(column)
+      })
+    }
 
-	columns.forEach(function(column){
-		var width, minWidth, colWidth;
+    return gap
+  }
 
-		if(column.visible){
+  if (this.table.options.responsiveLayout && this.table.modExists('responsiveLayout', true)) {
+    this.table.modules.responsiveLayout.update()
+  }
 
-			width = column.definition.width;
-			minWidth =  parseInt(column.minWidth);
+  // adjust for vertical scrollbar if present
+  if (this.table.rowManager.element.scrollHeight > this.table.rowManager.element.clientHeight) {
+    totalWidth -= this.table.rowManager.element.offsetWidth - this.table.rowManager.element.clientWidth
+  }
 
-			if(width){
+  columns.forEach((column) => {
+    let width, minWidth, colWidth
 
-				colWidth = calcWidth(width);
+    if (column.visible) {
+      width = column.definition.width
+      minWidth = parseInt(column.minWidth, 10)
 
-				fixedWidth += colWidth > minWidth ? colWidth : minWidth;
+      if (width) {
+        colWidth = calcWidth(width)
 
-				if(column.definition.widthShrink){
-					fixedShrinkColumns.push({
-						column:column,
-						width:colWidth > minWidth ? colWidth : minWidth
-					});
-					flexShrinkUnits += column.definition.widthShrink;
-				}
+        fixedWidth += colWidth > minWidth ? colWidth : minWidth
 
-			}else{
-				flexColumns.push({
-					column:column,
-					width:0,
-				});
-				flexGrowUnits += column.definition.widthGrow || 1;
-			}
-		}
-	});
+        if (column.definition.widthShrink) {
+          fixedShrinkColumns.push({
+            column,
+            width: colWidth > minWidth ? colWidth : minWidth
+          })
+          flexShrinkUnits += column.definition.widthShrink
+        }
+      } else {
+        flexColumns.push({
+          column,
+          width: 0
+        })
+        flexGrowUnits += column.definition.widthGrow || 1
+      }
+    }
+  })
 
-	//calculate available space
-	flexWidth = totalWidth - fixedWidth;
+  // calculate available space
+  flexWidth = totalWidth - fixedWidth
 
-	//calculate correct column size
-	flexColWidth = Math.floor(flexWidth / flexGrowUnits);
+  // calculate correct column size
+  flexColWidth = flexGrowUnits ? Math.floor(flexWidth / flexGrowUnits) : 0
 
-	//generate column widths
-	gapFill = scaleColumns(flexColumns, flexWidth, flexColWidth, false);
+  // generate column widths
+  gapFill = scaleColumns(flexColumns, flexWidth, flexColWidth, false)
 
-	//increase width of last column to account for rounding errors
-	if(flexColumns.length && gapFill > 0){
-		flexColumns[flexColumns.length-1].width += gapFill;
-	}
+  // increase width of last column to account for rounding errors
+  if (flexColumns.length && gapFill > 0) {
+    flexColumns[flexColumns.length - 1].width += gapFill
+  }
 
-	//calculate space for columns to be shrunk into
-	flexColumns.forEach(function(col){
-		flexWidth -= col.width;
-	});
+  // calculate space for columns to be shrunk into
+  flexColumns.forEach((col) => {
+    flexWidth -= col.width
+  })
 
-	overflowWidth = Math.abs(gapFill) + flexWidth;
+  overflowWidth = Math.abs(gapFill) + flexWidth
 
-	//shrink oversize columns if there is no available space
-	if(overflowWidth > 0 && flexShrinkUnits){
-		gapFill = scaleColumns(fixedShrinkColumns, overflowWidth, Math.floor(overflowWidth / flexShrinkUnits), true);
-	}
+  // shrink oversize columns if there is no available space
+  if (overflowWidth > 0 && flexShrinkUnits) {
+    gapFill = scaleColumns(fixedShrinkColumns, overflowWidth, Math.floor(overflowWidth / flexShrinkUnits), true)
+  }
 
-	//decrease width of last column to account for rounding errors
-	if(gapFill && fixedShrinkColumns.length){
-		fixedShrinkColumns[fixedShrinkColumns.length-1].width -= gapFill;
-	}
+  // decrease width of last column to account for rounding errors
+  if (gapFill && fixedShrinkColumns.length) {
+    fixedShrinkColumns[fixedShrinkColumns.length - 1].width -= gapFill
+  }
 
-	flexColumns.forEach(function(col){
-		col.column.setWidth(col.width);
-	});
+  flexColumns.forEach((col) => {
+    col.column.setWidth(col.width)
+  })
 
-	fixedShrinkColumns.forEach(function(col){
-		col.column.setWidth(col.width);
-	});
+  fixedShrinkColumns.forEach((col) => {
+    col.column.setWidth(col.width)
+  })
 }

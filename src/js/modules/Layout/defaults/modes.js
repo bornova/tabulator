@@ -1,12 +1,23 @@
-import fitData from './modes/fitData.js';
-import fitDataGeneral from './modes/fitDataGeneral.js';
-import fitDataStretch from './modes/fitDataStretch.js';
-import fitColumns from './modes/fitColumns.js';
+import fitData from './modes/fitData'
+import fitDataGeneral from './modes/fitDataGeneral'
+import fitDataStretch from './modes/fitDataStretch'
+import fitColumns from './modes/fitColumns'
 
+/**
+ * Default layout mode handlers.
+ *
+ * @type {{
+ *   fitData: function(Array<Object>, boolean=): void,
+ *   fitDataFill: function(Array<Object>, boolean=): void,
+ *   fitDataTable: function(Array<Object>, boolean=): void,
+ *   fitDataStretch: function(Array<Object>, boolean=): void,
+ *   fitColumns: function(Array<Object>, boolean=): void
+ * }}
+ */
 export default {
-	fitData:fitData,
-	fitDataFill:fitDataGeneral,
-	fitDataTable:fitDataGeneral,
-	fitDataStretch:fitDataStretch,
-	fitColumns:fitColumns ,
-};
+  fitData,
+  fitDataFill: fitDataGeneral,
+  fitDataTable: fitDataGeneral,
+  fitDataStretch,
+  fitColumns
+}

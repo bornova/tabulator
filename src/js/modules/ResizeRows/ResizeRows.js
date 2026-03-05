@@ -1,145 +1,187 @@
-import Module from '../../core/Module.js';
+import Module from '../../core/Module'
 
-export default class ResizeRows extends Module{
+export default class ResizeRows extends Module {
+  static moduleName = 'resizeRows'
 
-	static moduleName = "resizeRows";
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
 
-	constructor(table){
-		super(table);
+    this.startColumn = false
+    this.startY = false
+    this.startHeight = false
+    this.handle = null
+    this.prevHandle = null
 
-		this.startColumn = false;
-		this.startY = false;
-		this.startHeight = false;
-		this.handle = null;
-		this.prevHandle = null;
+    this.registerTableOption('resizableRows', false) // resizable rows
+    this.registerTableOption('resizableRowGuide', false)
+  }
 
-		this.registerTableOption("resizableRows", false); //resizable rows
-		this.registerTableOption("resizableRowGuide", false);
-	}
+  /**
+   * Initialize row resize handlers.
+   */
+  initialize() {
+    if (this.table.options.resizableRows) {
+      this.subscribe('row-layout-after', this.initializeRow.bind(this))
+    }
+  }
 
-	initialize(){
-		if(this.table.options.resizableRows){
-			this.subscribe("row-layout-after", this.initializeRow.bind(this));
-		}
-	}
+  /**
+   * Get vertical screen coordinate from mouse or touch event.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @returns {number}
+   */
+  getScreenY(e) {
+    if (e.screenY !== undefined) {
+      return e.screenY
+    }
 
-	initializeRow(row){
-		var self = this,
-		rowEl = row.getElement();
+    if (e.touches && e.touches.length) {
+      return e.touches[0].screenY
+    }
 
-		var handle = document.createElement('div');
-		handle.className = "tabulator-row-resize-handle";
+    return e.changedTouches && e.changedTouches.length ? e.changedTouches[0].screenY : 0
+  }
 
-		var prevHandle = document.createElement('div');
-		prevHandle.className = "tabulator-row-resize-handle prev";
+  /**
+   * Attach row resize handles to a row element.
+   * @param {object} row Internal row.
+   */
+  initializeRow(row) {
+    const rowEl = row.getElement()
 
-		handle.addEventListener("click", function(e){
-			e.stopPropagation();
-		});
+    const handle = document.createElement('div')
+    handle.className = 'tabulator-row-resize-handle'
 
-		var handleDown = function(e){
-			self.startRow = row;
-			self._mouseDown(e, row, handle);
-		};
+    const prevHandle = document.createElement('div')
+    prevHandle.className = 'tabulator-row-resize-handle prev'
 
-		handle.addEventListener("mousedown", handleDown);
-		handle.addEventListener("touchstart", handleDown, {passive: true});
+    handle.addEventListener('click', (e) => {
+      e.stopPropagation()
+    })
 
-		prevHandle.addEventListener("click", function(e){
-			e.stopPropagation();
-		});
+    const handleDown = (e) => {
+      this.startRow = row
+      this._mouseDown(e, row, handle)
+    }
 
-		var prevHandleDown =  function(e){
-			var prevRow = self.table.rowManager.prevDisplayRow(row);
+    handle.addEventListener('mousedown', handleDown)
+    handle.addEventListener('touchstart', handleDown, { passive: true })
 
-			if(prevRow){
-				self.startRow = prevRow;
-				self._mouseDown(e, prevRow, prevHandle);
-			}
-		};
+    prevHandle.addEventListener('click', (e) => {
+      e.stopPropagation()
+    })
 
-		prevHandle.addEventListener("mousedown",prevHandleDown);
-		prevHandle.addEventListener("touchstart",prevHandleDown, {passive: true});
+    const prevHandleDown = (e) => {
+      const prevRow = this.table.rowManager.prevDisplayRow(row)
 
-		rowEl.appendChild(handle);
-		rowEl.appendChild(prevHandle);
-	}
+      if (prevRow) {
+        this.startRow = prevRow
+        this._mouseDown(e, prevRow, prevHandle)
+      }
+    }
 
-	resize(e, row) {
-		row.setHeight(this.startHeight + ((typeof e.screenY === "undefined" ? e.touches[0].screenY : e.screenY) - this.startY));
-	}
+    prevHandle.addEventListener('mousedown', prevHandleDown)
+    prevHandle.addEventListener('touchstart', prevHandleDown, { passive: true })
 
-	calcGuidePosition(e, row, handle) {
-		var mouseY = typeof e.screenY === "undefined" ? e.touches[0].screenY : e.screenY,
-		handleY = handle.getBoundingClientRect().y - this.table.element.getBoundingClientRect().y,
-		tableY = this.table.element.getBoundingClientRect().y,
-		rowY = row.element.getBoundingClientRect().top - tableY,
-		mouseDiff = mouseY - this.startY;
+    rowEl.appendChild(handle)
+    rowEl.appendChild(prevHandle)
+  }
 
-		return Math.max(handleY + mouseDiff, rowY);
-	}
+  /**
+   * Apply row height resize based on pointer movement.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} row Internal row.
+   */
+  resize(e, row) {
+    row.setHeight(this.startHeight + (this.getScreenY(e) - this.startY))
+  }
 
-	_mouseDown(e, row, handle){
-		var self = this,
-		guideEl;
+  /**
+   * Calculate guide position during row resize.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} row Internal row.
+   * @param {HTMLElement} handle Active handle.
+   * @returns {number}
+   */
+  calcGuidePosition(e, row, handle) {
+    const mouseY = this.getScreenY(e)
+    const handleY = handle.getBoundingClientRect().y - this.table.element.getBoundingClientRect().y
+    const tableY = this.table.element.getBoundingClientRect().y
+    const rowY = row.element.getBoundingClientRect().top - tableY
+    const mouseDiff = mouseY - this.startY
 
-		self.dispatchExternal("rowResizing", row.getComponent());
+    return Math.max(handleY + mouseDiff, rowY)
+  }
 
-		if(self.table.options.resizableRowGuide){
-			guideEl = document.createElement("span");
-			guideEl.classList.add('tabulator-row-resize-guide');
-			self.table.element.appendChild(guideEl);
-			setTimeout(() => {
-				guideEl.style.top = self.calcGuidePosition(e, row, handle) + "px";
-			});
-		}
+  /**
+   * Handle row resize drag start.
+   * @param {MouseEvent|TouchEvent} e Input event.
+   * @param {object} row Internal row.
+   * @param {HTMLElement} handle Active handle.
+   */
+  _mouseDown(e, row, handle) {
+    let guideEl
 
-		self.table.element.classList.add("tabulator-block-select");
+    this.dispatchExternal('rowResizing', row.getComponent())
 
-		function mouseMove(e){
-			if(self.table.options.resizableRowGuide){
-				guideEl.style.top = self.calcGuidePosition(e, row, handle) + "px";
-			}else{
-				self.resize(e, row);
-			}
-		}
+    if (this.table.options.resizableRowGuide) {
+      guideEl = document.createElement('span')
+      guideEl.classList.add('tabulator-row-resize-guide')
+      this.table.element.appendChild(guideEl)
+      setTimeout(() => {
+        guideEl.style.top = `${this.calcGuidePosition(e, row, handle)}px`
+      })
+    }
 
-		function mouseUp(e){
-			if(self.table.options.resizableRowGuide){
-				self.resize(e, row);
-				guideEl.remove();
-			}
+    this.table.element.classList.add('tabulator-block-select')
 
-			// //block editor from taking action while resizing is taking place
-			// if(self.startColumn.modules.edit){
-			// 	self.startColumn.modules.edit.blocked = false;
-			// }
+    const mouseMove = (e) => {
+      if (this.table.options.resizableRowGuide) {
+        guideEl.style.top = `${this.calcGuidePosition(e, row, handle)}px`
+      } else {
+        this.resize(e, row)
+      }
+    }
 
-			document.body.removeEventListener("mouseup", mouseMove);
-			document.body.removeEventListener("mousemove", mouseMove);
+    const mouseUp = (e) => {
+      if (this.table.options.resizableRowGuide) {
+        this.resize(e, row)
+        guideEl.remove()
+      }
 
-			handle.removeEventListener("touchmove", mouseMove);
-			handle.removeEventListener("touchend", mouseUp);
+      // //block editor from taking action while resizing is taking place
+      // if(self.startColumn.modules.edit){
+      // 	self.startColumn.modules.edit.blocked = false;
+      // }
 
-			self.table.element.classList.remove("tabulator-block-select");
+      document.body.removeEventListener('mouseup', mouseUp)
+      document.body.removeEventListener('mousemove', mouseMove)
 
-			self.dispatchExternal("rowResized", row.getComponent());
-		}
+      handle.removeEventListener('touchmove', mouseMove)
+      handle.removeEventListener('touchend', mouseUp)
 
-		e.stopPropagation(); //prevent resize from interfering with movable columns
+      this.table.element.classList.remove('tabulator-block-select')
 
-		//block editor from taking action while resizing is taking place
-		// if(self.startColumn.modules.edit){
-		// 	self.startColumn.modules.edit.blocked = true;
-		// }
+      this.dispatchExternal('rowResized', row.getComponent())
+    }
 
-		self.startY = typeof e.screenY === "undefined" ? e.touches[0].screenY : e.screenY;
-		self.startHeight = row.getHeight();
+    e.stopPropagation() // prevent resize from interfering with movable columns
 
-		document.body.addEventListener("mousemove", mouseMove);
-		document.body.addEventListener("mouseup", mouseUp);
+    // block editor from taking action while resizing is taking place
+    // if(self.startColumn.modules.edit){
+    // 	self.startColumn.modules.edit.blocked = true;
+    // }
 
-		handle.addEventListener("touchmove", mouseMove, {passive: true});
-		handle.addEventListener("touchend", mouseUp);
-	}
+    this.startY = this.getScreenY(e)
+    this.startHeight = row.getHeight()
+
+    document.body.addEventListener('mousemove', mouseMove)
+    document.body.addEventListener('mouseup', mouseUp)
+
+    handle.addEventListener('touchmove', mouseMove, { passive: true })
+    handle.addEventListener('touchend', mouseUp)
+  }
 }

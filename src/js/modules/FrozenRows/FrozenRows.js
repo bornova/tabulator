@@ -1,175 +1,224 @@
-import Module from '../../core/Module.js';
+import Module from '../../core/Module'
 
-export default class FrozenRows extends Module{
+export default class FrozenRows extends Module {
+  static moduleName = 'frozenRows'
 
-	static moduleName = "frozenRows";
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
 
-	constructor(table){
-		super(table);
+    this.topElement = document.createElement('div')
+    this.rows = []
+    this.resizeHolderWidthFrame = null
 
-		this.topElement = document.createElement("div");
-		this.rows = [];
+    // register component functions
+    this.registerComponentFunction('row', 'freeze', this.freezeRow.bind(this))
+    this.registerComponentFunction('row', 'unfreeze', this.unfreezeRow.bind(this))
+    this.registerComponentFunction('row', 'isFrozen', this.isRowFrozen.bind(this))
 
-		//register component functions
-		this.registerComponentFunction("row", "freeze", this.freezeRow.bind(this));
-		this.registerComponentFunction("row", "unfreeze", this.unfreezeRow.bind(this));
-		this.registerComponentFunction("row", "isFrozen", this.isRowFrozen.bind(this));
+    // register table options
+    this.registerTableOption('frozenRowsField', 'id') // field to choose frozen rows by
+    this.registerTableOption('frozenRows', false) // holder for frozen row identifiers
+  }
 
-		//register table options
-		this.registerTableOption("frozenRowsField", "id"); //field to choose frozen rows by
-		this.registerTableOption("frozenRows", false); //holder for frozen row identifiers
-	}
+  /**
+   * Initialize frozen row container, subscriptions, and handlers.
+   */
+  initialize() {
+    const fragment = document.createDocumentFragment()
 
-	initialize(){
-		var	fragment = document.createDocumentFragment();
-		
-		this.rows = [];
+    this.rows = []
 
-		this.topElement.classList.add("tabulator-frozen-rows-holder");
-		
-		// Replaced by adding padding-top to the tabulator-frozen-rows-holder
-		// See https://github.com/olifolkerd/tabulator/pull/4809
-		//fragment.appendChild(document.createElement("br"));
-		fragment.appendChild(this.topElement);
+    this.topElement.classList.add('tabulator-frozen-rows-holder')
 
-		// this.table.columnManager.element.append(this.topElement);
-		this.table.columnManager.getContentsElement().insertBefore(fragment, this.table.columnManager.headersElement.nextSibling);
+    fragment.appendChild(this.topElement)
 
-		this.subscribe("row-deleting", this.detachRow.bind(this));
-		this.subscribe("rows-visible", this.visibleRows.bind(this));
+    // this.table.columnManager.element.append(this.topElement);
+    this.table.columnManager
+      .getContentsElement()
+      .insertBefore(fragment, this.table.columnManager.headersElement.nextSibling)
 
-		this.registerDisplayHandler(this.getRows.bind(this), 10);
+    this.subscribe('row-deleting', this.detachRow.bind(this))
+    this.subscribe('rows-visible', this.visibleRows.bind(this))
 
-		if(this.table.options.frozenRows){
-			this.subscribe("data-processed", this.initializeRows.bind(this));
-			this.subscribe("row-added", this.initializeRow.bind(this));
-			this.subscribe("table-redrawing", this.resizeHolderWidth.bind(this));
-			this.subscribe("column-resized", this.resizeHolderWidth.bind(this));
-			this.subscribe("column-show", this.resizeHolderWidth.bind(this));
-			this.subscribe("column-hide", this.resizeHolderWidth.bind(this));
-		}
+    this.registerDisplayHandler(this.getRows.bind(this), 10)
 
-		this.resizeHolderWidth();
-	}
+    if (this.table.options.frozenRows) {
+      this.subscribe('data-processed', this.initializeRows.bind(this))
+      this.subscribe('row-added', this.initializeRow.bind(this))
+      this.subscribe('table-redraw', this.resizeHolderWidth.bind(this))
+      this.subscribe('column-resized', this.resizeHolderWidth.bind(this))
+      this.subscribe('column-show', this.resizeHolderWidth.bind(this))
+      this.subscribe('column-hide', this.resizeHolderWidth.bind(this))
+    }
 
-	resizeHolderWidth(){
-		this.topElement.style.minWidth = this.table.columnManager.headersElement.offsetWidth + "px";
-	}
+    this.resizeHolderWidth()
+  }
 
-	initializeRows(){
-		this.table.rowManager.getRows().forEach((row) => {
-			this.initializeRow(row);
-		});
-	}
+  /**
+   * Sync frozen-row holder width to headers.
+   */
+  resizeHolderWidth() {
+    if (this.resizeHolderWidthFrame) {
+      cancelAnimationFrame(this.resizeHolderWidthFrame)
+    }
 
-	initializeRow(row){
-		var frozenRows = this.table.options.frozenRows,
-		rowType = typeof frozenRows;
+    this.resizeHolderWidthFrame = requestAnimationFrame(() => {
+      this.resizeHolderWidthFrame = null
+      this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
+    })
+  }
 
-		if(rowType === "number"){
-			if(row.getPosition() && (row.getPosition() + this.rows.length) <= frozenRows){
-				this.freezeRow(row);
-			}
-		}else if(rowType === "function"){
-			if(frozenRows.call(this.table, row.getComponent())){
-				this.freezeRow(row);
-			}
-		}else if(Array.isArray(frozenRows)){
-			if(frozenRows.includes(row.data[this.options("frozenRowsField")])){
-				this.freezeRow(row);
-			}
-		}
-	}
+  /**
+   * Initialize configured frozen rows from existing rows.
+   */
+  initializeRows() {
+    this.table.rowManager.getRows().forEach((row) => {
+      this.initializeRow(row)
+    })
+  }
 
-	isRowFrozen(row){
-		var index = this.rows.indexOf(row);
-		return index > -1;
-	}
+  /**
+   * Check whether a row should be frozen from config.
+   * @param {object} row Internal row.
+   */
+  initializeRow(row) {
+    const frozenRows = this.table.options.frozenRows
 
-	isFrozen(){
-		return !!this.rows.length;
-	}
+    if (typeof frozenRows === 'number') {
+      if (row.getPosition() && row.getPosition() + this.rows.length <= frozenRows) {
+        this.freezeRow(row)
+      }
+    } else if (typeof frozenRows === 'function') {
+      if (frozenRows.call(this.table, row.getComponent())) {
+        this.freezeRow(row)
+      }
+    } else if (Array.isArray(frozenRows)) {
+      if (frozenRows.includes(row.data[this.options('frozenRowsField')])) {
+        this.freezeRow(row)
+      }
+    }
+  }
 
-	visibleRows(viewable, rows){
-		this.rows.forEach((row) => {
-			rows.push(row);
-		});
+  /**
+   * Check if a row is currently frozen.
+   * @param {object} row Internal row.
+   * @returns {boolean}
+   */
+  isRowFrozen(row) {
+    const index = this.rows.indexOf(row)
+    return index > -1
+  }
 
-		return rows;
-	}
+  /**
+   * Check if any rows are frozen.
+   * @returns {boolean}
+   */
+  isFrozen() {
+    return !!this.rows.length
+  }
 
-	//filter frozen rows out of display data
-	getRows(rows){
-		var output = rows.slice(0);
+  /**
+   * Append frozen rows to visible row list.
+   * @param {Array<object>} viewable Viewable rows.
+   * @param {Array<object>} rows Display rows.
+   * @returns {Array<object>}
+   */
+  visibleRows(viewable, rows) {
+    this.rows.forEach((row) => {
+      rows.push(row)
+    })
 
-		this.rows.forEach(function(row){
-			var index = output.indexOf(row);
+    return rows
+  }
 
-			if(index > -1){
-				output.splice(index, 1);
-			}
-		});
+  // filter frozen rows out of display data
+  /**
+   * Filter frozen rows from normal display rows.
+   * @param {Array<object>} rows Display rows.
+   * @returns {Array<object>}
+   */
+  getRows(rows) {
+    if (!this.rows.length) {
+      return rows.slice(0)
+    }
 
-		return output;
-	}
+    const frozenRows = new Set(this.rows)
 
-	freezeRow(row){
-		if(!row.modules.frozen){
-			row.modules.frozen = true;
-			this.topElement.appendChild(row.getElement());
-			row.initialize();
-			row.normalizeHeight();
-		
-			this.rows.push(row);
+    return rows.filter((row) => !frozenRows.has(row))
+  }
 
-			this.refreshData(false, "display");
+  /**
+   * Freeze a row at the top of the table.
+   * @param {object} row Internal row.
+   */
+  freezeRow(row) {
+    if (!row.modules.frozen) {
+      row.modules.frozen = true
+      this.topElement.appendChild(row.getElement())
+      row.initialize()
+      row.normalizeHeight()
 
-			this.table.rowManager.adjustTableSize();
+      this.rows.push(row)
 
-			this.styleRows();
+      this.refreshData(false, 'display')
 
-		}else{
-			console.warn("Freeze Error - Row is already frozen");
-		}
-	}
+      this.table.rowManager.adjustTableSize()
 
-	unfreezeRow(row){
-		if(row.modules.frozen){
+      this.styleRows()
+    } else {
+      console.warn('Freeze Error - Row is already frozen')
+    }
+  }
 
-			row.modules.frozen = false;
+  /**
+   * Unfreeze a previously frozen row.
+   * @param {object} row Internal row.
+   */
+  unfreezeRow(row) {
+    if (row.modules.frozen) {
+      row.modules.frozen = false
 
-			this.detachRow(row);
+      this.detachRow(row)
 
-			this.table.rowManager.adjustTableSize();
+      this.table.rowManager.adjustTableSize()
 
-			this.refreshData(false, "display");
+      this.refreshData(false, 'display')
 
-			if(this.rows.length){
-				this.styleRows();
-			}
+      if (this.rows.length) {
+        this.styleRows()
+      }
+    } else {
+      console.warn('Freeze Error - Row is already unfrozen')
+    }
+  }
 
-		}else{
-			console.warn("Freeze Error - Row is already unfrozen");
-		}
-	}
+  /**
+   * Detach a frozen row from internal list and DOM.
+   * @param {object} row Internal row.
+   */
+  detachRow(row) {
+    const index = this.rows.indexOf(row)
 
-	detachRow(row){
-		var index = this.rows.indexOf(row);
+    if (index > -1) {
+      const rowEl = row.getElement()
 
-		if(index > -1){
-			var rowEl = row.getElement();
+      if (rowEl.parentNode) {
+        rowEl.parentNode.removeChild(rowEl)
+      }
 
-			if(rowEl.parentNode){
-				rowEl.parentNode.removeChild(rowEl);
-			}
+      this.rows.splice(index, 1)
+    }
+  }
 
-			this.rows.splice(index, 1);
-		}
-	}
-
-	styleRows(row){
-		this.rows.forEach((row, i) => {
-			this.table.rowManager.styleRow(row, i);
-		});
-	}
+  /**
+   * Apply row striping/styles to frozen rows.
+   */
+  styleRows() {
+    this.rows.forEach((row, i) => {
+      this.table.rowManager.styleRow(row, i)
+    })
+  }
 }

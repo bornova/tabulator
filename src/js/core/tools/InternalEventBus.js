@@ -1,162 +1,208 @@
 export default class InternalEventBus {
+  /**
+   * @param {boolean|Array<string>} [debug] Debug mode or debug event list.
+   */
+  constructor(debug) {
+    this.events = {}
+    this.subscriptionNotifiers = {}
 
-	constructor(debug){
-		this.events = {};
-		this.subscriptionNotifiers = {};
+    this.dispatch = debug ? this._debugDispatch.bind(this) : this._dispatch.bind(this)
+    this.chain = debug ? this._debugChain.bind(this) : this._chain.bind(this)
+    this.confirm = debug ? this._debugConfirm.bind(this) : this._confirm.bind(this)
+    this.debug = debug
+  }
 
-		this.dispatch = debug ? this._debugDispatch.bind(this) : this._dispatch.bind(this);
-		this.chain = debug ? this._debugChain.bind(this) : this._chain.bind(this);
-		this.confirm = debug ? this._debugConfirm.bind(this) : this._confirm.bind(this);
-		this.debug = debug;
-	}
+  /**
+   * Register a subscription-state notifier for an event key.
+   * @param {string} key Event key.
+   * @param {Function} callback Notifier callback.
+   */
+  subscriptionChange(key, callback) {
+    if (!this.subscriptionNotifiers[key]) {
+      this.subscriptionNotifiers[key] = []
+    }
 
-	subscriptionChange(key, callback){
-		if(!this.subscriptionNotifiers[key]){
-			this.subscriptionNotifiers[key] = [];
-		}
+    this.subscriptionNotifiers[key].push(callback)
 
-		this.subscriptionNotifiers[key].push(callback);
+    if (this.subscribed(key)) {
+      this._notifySubscriptionChange(key, true)
+    }
+  }
 
-		if(this.subscribed(key)){
-			this._notifySubscriptionChange(key, true);
-		}
-	}
+  /**
+   * Subscribe to an internal event.
+   * @param {string} key Event key.
+   * @param {Function} callback Subscriber callback.
+   * @param {number} [priority=10000] Subscriber priority (lower runs first).
+   */
+  subscribe(key, callback, priority = 10000) {
+    if (!this.events[key]) {
+      this.events[key] = []
+    }
 
-	subscribe(key, callback, priority = 10000){
-		if(!this.events[key]){
-			this.events[key] = [];
-		}
+    this.events[key].push({ callback, priority })
 
-		this.events[key].push({callback, priority});
+    this.events[key].sort((a, b) => a.priority - b.priority)
 
-		this.events[key].sort((a, b) => {
-			return a.priority - b.priority;
-		});
+    this._notifySubscriptionChange(key, true)
+  }
 
-		this._notifySubscriptionChange(key, true);
-	}
+  /**
+   * Unsubscribe from an internal event.
+   * @param {string} key Event key.
+   * @param {Function} callback Subscriber callback.
+   */
+  unsubscribe(key, callback) {
+    let index
 
-	unsubscribe(key, callback){
-		var index;
+    if (this.events[key]) {
+      if (callback) {
+        index = this.events[key].findIndex((item) => item.callback === callback)
 
-		if(this.events[key]){
-			if(callback){
-				index = this.events[key].findIndex((item) => {
-					return item.callback === callback;
-				});
+        if (index > -1) {
+          this.events[key].splice(index, 1)
+        } else {
+          console.warn('Cannot remove event, no matching event found:', key, callback)
+          return
+        }
+      }
+    } else {
+      console.warn('Cannot remove event, no events set on:', key)
+      return
+    }
 
-				if(index > -1){
-					this.events[key].splice(index, 1);
-				}else{
-					console.warn("Cannot remove event, no matching event found:", key, callback);
-					return;
-				}
-			}
-		}else{
-			console.warn("Cannot remove event, no events set on:", key);
-			return;
-		}
+    this._notifySubscriptionChange(key, false)
+  }
 
-		this._notifySubscriptionChange(key, false);
-	}
+  /**
+   * Check whether an event key has active subscribers.
+   * @param {string} key Event key.
+   * @returns {number|boolean}
+   */
+  subscribed(key) {
+    return this.events[key] && this.events[key].length
+  }
 
-	subscribed(key){
-		return this.events[key] && this.events[key].length;
-	}
+  /**
+   * Run a chained event pipeline, passing previous value to each subscriber.
+   * @param {string} key Event key.
+   * @param {Array|*} args Subscriber arguments.
+   * @param {*} initialValue Initial chain value.
+   * @param {Function|*} fallback Fallback value/function when unsubscribed.
+   * @returns {*}
+   */
+  _chain(key, args, initialValue, fallback) {
+    let value = initialValue
 
-	_chain(key, args, initialValue, fallback){
-		var value = initialValue;
+    if (!Array.isArray(args)) {
+      args = [args]
+    }
 
-		if(!Array.isArray(args)){
-			args = [args];
-		}
+    if (this.subscribed(key)) {
+      this.events[key].forEach((subscriber) => {
+        value = subscriber.callback.call(this, ...args, value)
+      })
 
-		if(this.subscribed(key)){
-			this.events[key].forEach((subscriber, i) => {
-				value = subscriber.callback.apply(this, args.concat([value]));
-			});
+      return value
+    } else {
+      return typeof fallback === 'function' ? fallback() : fallback
+    }
+  }
 
-			return value;
-		}else{
-			return typeof fallback === "function" ? fallback() : fallback;
-		}
-	}
+  /**
+   * Check whether any subscriber confirms a condition.
+   * @param {string} key Event key.
+   * @param {Array|*} args Subscriber arguments.
+   * @returns {boolean}
+   */
+  _confirm(key, args) {
+    let confirmed = false
 
-	_confirm(key, args){
-		var confirmed = false;
+    if (!Array.isArray(args)) {
+      args = [args]
+    }
 
-		if(!Array.isArray(args)){
-			args = [args];
-		}
+    if (this.subscribed(key)) {
+      this.events[key].forEach((subscriber) => {
+        if (subscriber.callback.call(this, ...args)) {
+          confirmed = true
+        }
+      })
+    }
 
-		if(this.subscribed(key)){
-			this.events[key].forEach((subscriber, i) => {
-				if(subscriber.callback.apply(this, args)){
-					confirmed = true;
-				}
-			});
-		}
+    return confirmed
+  }
 
-		return confirmed;
-	}
+  /**
+   * Notify subscription change listeners for an event key.
+   * @param {string} key Event key.
+   * @param {boolean} subscribed Current subscription state.
+   */
+  _notifySubscriptionChange(key, subscribed) {
+    const notifiers = this.subscriptionNotifiers[key]
 
-	_notifySubscriptionChange(key, subscribed){
-		var notifiers = this.subscriptionNotifiers[key];
+    if (notifiers) {
+      notifiers.forEach((callback) => callback(subscribed))
+    }
+  }
 
-		if(notifiers){
-			notifiers.forEach((callback)=>{
-				callback(subscribed);
-			});
-		}
-	}
+  /**
+   * Dispatch an internal event to all subscribers.
+   * @param {string} key Event key.
+   * @param {...*} args Event payload arguments.
+   */
+  _dispatch(key, ...args) {
+    if (this.events[key]) {
+      this.events[key].forEach((subscriber) => {
+        subscriber.callback.call(this, ...args)
+      })
+    }
+  }
 
-	_dispatch(){
-		var args = Array.from(arguments),
-		key = args.shift();
+  /**
+   * Dispatch with optional debug logging.
+   * @param {...*} args Event key followed by payload arguments.
+   */
+  _debugDispatch(...args) {
+    const key = args[0]
+    const debugArgs = ['InternalEvent:' + key, ...args.slice(1)]
 
-		if(this.events[key]){
-			this.events[key].forEach((subscriber) => {
-				subscriber.callback.apply(this, args);
-			});
-		}
-	}
+    if (this.debug === true || (Array.isArray(this.debug) && this.debug.includes(key))) {
+      console.log(...debugArgs)
+    }
 
-	_debugDispatch(){
-		var args = Array.from(arguments),
-		key = args[0];
+    return this._dispatch(...args)
+  }
 
-		args[0] = "InternalEvent:" + key;
+  /**
+   * Chain-dispatch with optional debug logging.
+   * @param {...*} args Event key followed by chain arguments.
+   * @returns {*}
+   */
+  _debugChain(...args) {
+    const key = args[0]
+    const debugArgs = ['InternalEvent:' + key, ...args.slice(1)]
 
-		if(this.debug === true || this.debug.includes(key)){
-			console.log(...args);
-		}
+    if (this.debug === true || (Array.isArray(this.debug) && this.debug.includes(key))) {
+      console.log(...debugArgs)
+    }
 
-		return this._dispatch(...arguments);
-	}
+    return this._chain(...args)
+  }
 
-	_debugChain(){
-		var args = Array.from(arguments),
-		key = args[0];
+  /**
+   * Confirm-dispatch with optional debug logging.
+   * @param {...*} args Event key followed by confirmation arguments.
+   * @returns {boolean}
+   */
+  _debugConfirm(...args) {
+    const key = args[0]
+    const debugArgs = ['InternalEvent:' + key, ...args.slice(1)]
 
-		args[0] = "InternalEvent:" + key;
+    if (this.debug === true || (Array.isArray(this.debug) && this.debug.includes(key))) {
+      console.log(...debugArgs)
+    }
 
-		if(this.debug === true || this.debug.includes(key)){
-			console.log(...args);
-		}
-
-		return this._chain(...arguments);
-	}
-
-	_debugConfirm(){
-		var args = Array.from(arguments),
-		key = args[0];
-
-		args[0] = "InternalEvent:" + key;
-
-		if(this.debug === true || this.debug.includes(key)){
-			console.log(...args);
-		}
-
-		return this._confirm(...arguments);
-	}
+    return this._confirm(...args)
+  }
 }

@@ -1,33 +1,71 @@
+/**
+ * Default history undo action handlers.
+ *
+ * @type {{
+ *   cellEdit: function(Object): void,
+ *   rowAdd: function(Object): void,
+ *   rowDelete: function(Object): void,
+ *   rowMove: function(Object): void
+ * }}
+ */
 export default {
-	cellEdit: function(action){
-		action.component.setValueProcessData(action.data.oldValue);
-		action.component.cellRendered();
-	},
+  /**
+   * Revert an edited cell value.
+   *
+   * @param {Object} action History action.
+   */
+  cellEdit(action) {
+    action.component.setValueProcessData(action.data.oldValue)
+    action.component.cellRendered()
+  },
 
-	rowAdd: function(action){
-		action.component.deleteActual();
+  /**
+   * Revert a row add action.
+   *
+   * @this {Object}
+   * @param {Object} action History action.
+   */
+  rowAdd(action) {
+    const rowManager = this.table.rowManager
 
-		this.table.rowManager.checkPlaceholder();
-	},
+    action.component.deleteActual()
 
-	rowDelete: function(action){
-		var newRow = this.table.rowManager.addRowActual(action.data.data, action.data.pos, action.data.index);
+    rowManager.checkPlaceholder()
+  },
 
-		if(this.table.options.groupBy && this.table.modExists("groupRows")){
-			this.table.modules.groupRows.updateGroupRows(true);
-		}
+  /**
+   * Revert a row delete action.
+   *
+   * @this {Object}
+   * @param {Object} action History action.
+   */
+  rowDelete(action) {
+    const rowManager = this.table.rowManager
+    const { data, pos, index } = action.data
+    const newRow = rowManager.addRowActual(data, pos, index)
 
-		this._rebindRow(action.component, newRow);
+    if (this.table.options.groupBy && this.table.modExists('groupRows')) {
+      this.table.modules.groupRows.updateGroupRows(true)
+    }
 
-		this.table.rowManager.checkPlaceholder();
-	},
+    this._rebindRow(action.component, newRow)
 
-	rowMove: function(action){
-		var after = (action.data.posFrom  - action.data.posTo) > 0;
+    rowManager.checkPlaceholder()
+  },
 
-		this.table.rowManager.moveRowActual(action.component, this.table.rowManager.getRowFromPosition(action.data.posFrom), after);
+  /**
+   * Revert a row move action.
+   *
+   * @this {Object}
+   * @param {Object} action History action.
+   */
+  rowMove(action) {
+    const rowManager = this.table.rowManager
+    const after = action.data.posFrom - action.data.posTo > 0
 
-		this.table.rowManager.regenerateRowPositions();
-		this.table.rowManager.reRenderInPosition();
-	},
-};
+    rowManager.moveRowActual(action.component, rowManager.getRowFromPosition(action.data.posFrom), after)
+
+    rowManager.regenerateRowPositions()
+    rowManager.reRenderInPosition()
+  }
+}

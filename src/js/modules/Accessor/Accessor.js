@@ -1,115 +1,136 @@
-import Module from '../../core/Module.js';
-import Helpers from '../../core/tools/Helpers.js';
+import Module from '../../core/Module'
+import Helpers from '../../core/tools/Helpers'
 
-import defaultAccessors from './defaults/accessors.js';
+import defaultAccessors from './defaults/accessors'
 
-export default class Accessor extends Module{
-	
-	static moduleName = "accessor";
+export default class Accessor extends Module {
+  static moduleName = 'accessor'
 
-	//load defaults
-	static accessors = defaultAccessors;
+  // load defaults
+  static accessors = defaultAccessors
 
-	constructor(table){
-		super(table);
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
 
-		this.allowedTypes = ["", "data", "download", "clipboard", "print", "htmlOutput"]; //list of accessor types
+    this.allowedTypes = ['', 'data', 'download', 'clipboard', 'print', 'htmlOutput'] // list of accessor types
 
-		this.registerColumnOption("accessor");
-		this.registerColumnOption("accessorParams");
-		this.registerColumnOption("accessorData");
-		this.registerColumnOption("accessorDataParams");
-		this.registerColumnOption("accessorDownload");
-		this.registerColumnOption("accessorDownloadParams");
-		this.registerColumnOption("accessorClipboard");
-		this.registerColumnOption("accessorClipboardParams");
-		this.registerColumnOption("accessorPrint");
-		this.registerColumnOption("accessorPrintParams");
-		this.registerColumnOption("accessorHtmlOutput");
-		this.registerColumnOption("accessorHtmlOutputParams");
-	}
+    this.registerColumnOption('accessor')
+    this.registerColumnOption('accessorParams')
+    this.registerColumnOption('accessorData')
+    this.registerColumnOption('accessorDataParams')
+    this.registerColumnOption('accessorDownload')
+    this.registerColumnOption('accessorDownloadParams')
+    this.registerColumnOption('accessorClipboard')
+    this.registerColumnOption('accessorClipboardParams')
+    this.registerColumnOption('accessorPrint')
+    this.registerColumnOption('accessorPrintParams')
+    this.registerColumnOption('accessorHtmlOutput')
+    this.registerColumnOption('accessorHtmlOutputParams')
+  }
 
-	initialize(){
-		this.subscribe("column-layout", this.initializeColumn.bind(this));
-		this.subscribe("row-data-retrieve", this.transformRow.bind(this));
-	}
+  /**
+   * Initialize accessor subscriptions.
+   */
+  initialize() {
+    this.subscribe('column-layout', this.initializeColumn.bind(this))
+    this.subscribe('row-data-retrieve', this.transformRow.bind(this))
+  }
 
-	//initialize column accessor
-	initializeColumn(column){
-		var match = false,
-		config = {};
+  // initialize column accessor
+  /**
+   * Build per-column accessor config.
+   * @param {object} column Internal column.
+   */
+  initializeColumn(column) {
+    const config = {}
 
-		this.allowedTypes.forEach((type) => {
-			var key = "accessor" + (type.charAt(0).toUpperCase() + type.slice(1)),
-			accessor;
+    let match = false
 
-			if(column.definition[key]){
-				accessor = this.lookupAccessor(column.definition[key]);
+    this.allowedTypes.forEach((type) => {
+      const key = `accessor${type.charAt(0).toUpperCase() + type.slice(1)}`
 
-				if(accessor){
-					match = true;
+      let accessor
 
-					config[key] = {
-						accessor:accessor,
-						params: column.definition[key + "Params"] || {},
-					};
-				}
-			}
-		});
+      if (column.definition[key]) {
+        accessor = this.lookupAccessor(column.definition[key])
 
-		if(match){
-			column.modules.accessor = config;
-		}
-	}
+        if (accessor) {
+          match = true
 
-	lookupAccessor(value){
-		var accessor = false;
+          config[key] = {
+            accessor,
+            params: column.definition[key + 'Params'] || {}
+          }
+        }
+      }
+    })
 
-		//set column accessor
-		switch(typeof value){
-			case "string":
-				if(Accessor.accessors[value]){
-					accessor = Accessor.accessors[value];
-				}else{
-					console.warn("Accessor Error - No such accessor found, ignoring: ", value);
-				}
-				break;
+    if (match) {
+      column.modules.accessor = config
+    }
+  }
 
-			case "function":
-				accessor = value;
-				break;
-		}
+  /**
+   * Resolve accessor definition to function.
+   * @param {string|Function} value Accessor definition.
+   * @returns {Function|boolean}
+   */
+  lookupAccessor(value) {
+    if (typeof value === 'function') {
+      return value
+    }
 
-		return accessor;
-	}
+    if (typeof value === 'string') {
+      const accessor = Accessor.accessors[value]
 
-	//apply accessor to row
-	transformRow(row, type){
-		var key = "accessor" + (type.charAt(0).toUpperCase() + type.slice(1)),
-		rowComponent = row.getComponent();
+      if (accessor) {
+        return accessor
+      }
 
-		//clone data object with deep copy to isolate internal data from returned result
-		var data = Helpers.deepClone(row.data || {});
+      console.warn('Accessor Error - No such accessor found, ignoring: ', value)
+    }
 
-		this.table.columnManager.traverse(function(column){
-			var value, accessor, params, colComponent;
+    return false
+  }
 
-			if(column.modules.accessor){
+  // apply accessor to row
+  /**
+   * Apply accessors to row data for a given retrieval type.
+   * @param {object} row Internal row.
+   * @param {string} type Accessor type.
+   * @returns {object}
+   */
+  transformRow(row, type) {
+    const key = `accessor${type.charAt(0).toUpperCase() + type.slice(1)}`
+    const rowComponent = row.getComponent()
 
-				accessor = column.modules.accessor[key] || column.modules.accessor.accessor || false;
+    // clone data object with deep copy to isolate internal data from returned result
+    const data = Helpers.deepClone(row.data || {})
 
-				if(accessor){
-					value = column.getFieldValue(data);
+    this.table.columnManager.traverse((column) => {
+      let value, accessor, params, colComponent
 
-					if(value != "undefined"){
-						colComponent = column.getComponent();
-						params = typeof accessor.params === "function" ? accessor.params(value, data, type, colComponent, rowComponent) : accessor.params;
-						column.setFieldValue(data, accessor.accessor(value, data, type, params, colComponent, rowComponent));
-					}
-				}
-			}
-		});
+      if (column.modules.accessor) {
+        accessor = column.modules.accessor[key] || column.modules.accessor.accessor || false
 
-		return data;
-	}
+        if (accessor) {
+          value = column.getFieldValue(data)
+
+          if (value !== undefined) {
+            colComponent = column.getComponent()
+            params =
+              typeof accessor.params === 'function'
+                ? accessor.params(value, data, type, colComponent, rowComponent)
+                : accessor.params
+            column.setFieldValue(data, accessor.accessor(value, data, type, params, colComponent, rowComponent))
+          }
+        }
+      }
+    })
+
+    return data
+  }
 }

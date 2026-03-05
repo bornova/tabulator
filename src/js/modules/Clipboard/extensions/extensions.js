@@ -1,9 +1,19 @@
-import bindings from './keybindings/bindings.js';
-import actions from './keybindings/actions.js';
+import bindings from './keybindings/bindings'
+import actions from './keybindings/actions'
 
+/**
+ * Clipboard module extension configuration.
+ *
+ * @type {{
+ *   keybindings: {
+ *     bindings: object,
+ *     actions: object
+ *   }
+ * }}
+ */
 export default {
-	keybindings:{
-		bindings:bindings,
-		actions:actions
-	},
-};
+  keybindings: {
+    bindings,
+    actions
+  }
+}

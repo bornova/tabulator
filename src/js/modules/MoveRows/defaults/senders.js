@@ -1,5 +1,17 @@
+/**
+ * Default row move sender actions.
+ *
+ * @type {{delete: function(Object): void}}
+ */
 export default {
-	delete:function(fromRow, toRow, toTable){
-		fromRow.delete();
-	}
-};
+  /**
+   * Delete source row after move completes.
+   *
+   * @param {Object} fromRow Source row.
+   */
+  delete(fromRow) {
+    if (fromRow) {
+      fromRow.delete()
+    }
+  }
+}

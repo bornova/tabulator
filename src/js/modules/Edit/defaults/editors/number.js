@@ -1,110 +1,117 @@
-import maskInput from '../../inputMask.js';
+import maskInput from '../../inputMask'
 
-//input element with type of number
-export default function(cell, onRendered, success, cancel, editorParams){
-	var cellValue = cell.getValue(),
-	vertNav = editorParams.verticalNavigation || "editor",
-	input = document.createElement("input");
+// input element with type of number
+/**
+ * Number input editor.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} editorParams Editor params.
+ * @returns {HTMLInputElement}
+ */
+export default function (cell, onRendered, success, cancel, editorParams) {
+  const vertNav = editorParams.verticalNavigation || 'editor'
+  const input = document.createElement('input')
 
-	input.setAttribute("type", "number");
+  let cellValue = cell.getValue()
 
-	if(typeof editorParams.max != "undefined"){
-		input.setAttribute("max", editorParams.max);
-	}
+  input.setAttribute('type', 'number')
+  input.setAttribute('name', 'tabulator-editor-input')
 
-	if(typeof editorParams.min != "undefined"){
-		input.setAttribute("min", editorParams.min);
-	}
+  if (editorParams.max !== undefined) {
+    input.setAttribute('max', editorParams.max)
+  }
 
-	if(typeof editorParams.step != "undefined"){
-		input.setAttribute("step", editorParams.step);
-	}
+  if (editorParams.min !== undefined) {
+    input.setAttribute('min', editorParams.min)
+  }
 
-	//create and style input
-	input.style.padding = "4px";
-	input.style.width = "100%";
-	input.style.boxSizing = "border-box";
+  if (editorParams.step !== undefined) {
+    input.setAttribute('step', editorParams.step)
+  }
 
-	if(editorParams.elementAttributes && typeof editorParams.elementAttributes == "object"){
-		for (let key in editorParams.elementAttributes){
-			if(key.charAt(0) == "+"){
-				key = key.slice(1);
-				input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes["+" + key]);
-			}else{
-				input.setAttribute(key, editorParams.elementAttributes[key]);
-			}
-		}
-	}
+  // create and style input
+  input.classList.add('tabulator-editor-input')
 
-	input.value = cellValue;
+  if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
+    for (let key in editorParams.elementAttributes) {
+      if (key.charAt(0) === '+') {
+        key = key.slice(1)
+        input.setAttribute(key, (input.getAttribute(key) || '') + editorParams.elementAttributes[`+${key}`])
+      } else {
+        input.setAttribute(key, editorParams.elementAttributes[key])
+      }
+    }
+  }
 
-	var blurFunc = function(e){
-		onChange();
-	};
+  input.value = cellValue
 
-	onRendered(function () {
-		if(cell.getType() === "cell"){
-			//submit new value on blur
-			input.removeEventListener("blur", blurFunc);
+  const blurFunc = () => onChange()
 
-			input.focus({preventScroll: true});
-			input.style.height = "100%";
+  onRendered(() => {
+    if (cell.getType() === 'cell') {
+      // submit new value on blur
+      input.removeEventListener('blur', blurFunc)
 
-			//submit new value on blur
-			input.addEventListener("blur", blurFunc);
+      input.focus({ preventScroll: true })
+      input.classList.add('tabulator-editor-full-height')
 
-			if(editorParams.selectContents){
-				input.select();
-			}
-		}
-	});
+      // submit new value on blur
+      input.addEventListener('blur', blurFunc)
 
-	function onChange(){
-		var value = input.value;
+      if (editorParams.selectContents) {
+        input.select()
+      }
+    }
+  })
 
-		if(!isNaN(value) && value !==""){
-			value = Number(value);
-		}
+  function onChange() {
+    let value = input.value
 
-		if(value !== cellValue){
-			if(success(value)){
-				cellValue = value; //persist value if successfully validated incase editor is used as header filter
-			}
-		}else{
-			cancel();
-		}
-	}
+    if (!Number.isNaN(Number(value)) && value !== '') {
+      value = Number(value)
+    }
 
-	//submit new value on enter
-	input.addEventListener("keydown", function(e){
-		switch(e.keyCode){
-			case 13:
-			// case 9:
-				onChange();
-				break;
+    if (value !== cellValue) {
+      if (success(value)) {
+        cellValue = value // persist value if successfully validated incase editor is used as header filter
+      }
+    } else {
+      cancel()
+    }
+  }
 
-			case 27:
-				cancel();
-				break;
+  // submit new value on enter
+  input.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'Enter':
+        // case 9:
+        onChange()
+        break
 
-			case 38: //up arrow
-			case 40: //down arrow
-				if(vertNav == "editor"){
-					e.stopImmediatePropagation();
-					e.stopPropagation();
-				}
-				break;
+      case 'Escape':
+        cancel()
+        break
 
-			case 35:
-			case 36:
-				e.stopPropagation();
-				break;
-		}
-	});
+      case 'ArrowUp': // up arrow
+      case 'ArrowDown': // down arrow
+        if (vertNav === 'editor') {
+          e.stopImmediatePropagation()
+          e.stopPropagation()
+        }
+        break
 
-	if(editorParams.mask){
-		maskInput(input, editorParams);
-	}
+      case 'End':
+      case 'Home':
+        e.stopPropagation()
+        break
+    }
+  })
 
-	return input;
+  if (editorParams.mask) {
+    maskInput(input, editorParams)
+  }
+
+  return input
 }

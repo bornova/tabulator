@@ -1,44 +1,53 @@
-export default function(cell, formatterParams, onRendered){
-	var floatVal = parseFloat(cell.getValue()),
-	sign = "",
-	number, integer, decimal, rgx, value;
+/**
+ * Format a numeric value as currency.
+ *
+ * @this {Object}
+ * @param {Object} cell Cell component.
+ * @param {Object} formatterParams Formatter parameters.
+ * @returns {string} Formatted currency value.
+ */
+export default function (cell, formatterParams) {
+  formatterParams ??= {}
 
-	var decimalSym = formatterParams.decimal || ".";
-	var thousandSym = formatterParams.thousand || ",";
-	var negativeSign = formatterParams.negativeSign || "-";
-	var symbol = formatterParams.symbol || "";
-	var after = !!formatterParams.symbolAfter;
-	var precision = typeof formatterParams.precision !== "undefined" ? formatterParams.precision : 2;
+  const decimalSym = formatterParams.decimal || '.'
+  const thousandSym = formatterParams.thousand || ','
+  const negativeSign = formatterParams.negativeSign || '-'
+  const symbol = formatterParams.symbol || ''
+  const after = !!formatterParams.symbolAfter
+  const precision = formatterParams.precision !== undefined ? formatterParams.precision : 2
 
-	if(isNaN(floatVal)){
-		return this.emptyToSpace(this.sanitizeHTML(cell.getValue()));
-	}
+  let floatVal = parseFloat(cell.getValue())
+  let sign = ''
 
-	if(floatVal < 0){
-		floatVal = Math.abs(floatVal);
-		sign = negativeSign;
-	}
+  if (Number.isNaN(floatVal)) {
+    return this.emptyToSpace(this.sanitizeHTML(cell.getValue()))
+  }
 
-	number = precision !== false ? floatVal.toFixed(precision) : floatVal;
-	number = String(number).split(".");
+  if (floatVal < 0) {
+    floatVal = Math.abs(floatVal)
+    sign = negativeSign
+  }
 
-	integer = number[0];
-	decimal = number.length > 1 ? decimalSym + number[1] : "";
+  const number = String(precision !== false ? floatVal.toFixed(precision) : floatVal).split('.')
+  const decimal = number.length > 1 ? `${decimalSym}${number[1]}` : ''
 
-	if (formatterParams.thousand !== false) {
-		rgx = /(\d+)(\d{3})/;
+  let integer = number[0]
 
-		while (rgx.test(integer)){
-			integer = integer.replace(rgx, "$1" + thousandSym + "$2");
-		}
-	}
+  if (formatterParams.thousand !== false) {
+    const rgx = /(\d+)(\d{3})/
 
-	value = integer + decimal;
-	
-	if(sign === true){
-		value = "(" + value  + ")";
-		return after ? value + symbol : symbol + value;
-	}else{
-		return after ? sign + value + symbol : sign + symbol + value;
-	}
+    while (rgx.test(integer)) {
+      integer = integer.replace(rgx, `$1${thousandSym}$2`)
+    }
+  }
+
+  const value = `${integer}${decimal}`
+
+  if (sign === true) {
+    const wrappedValue = `(${value})`
+
+    return after ? `${wrappedValue}${symbol}` : `${symbol}${wrappedValue}`
+  } else {
+    return after ? `${sign}${value}${symbol}` : `${sign}${symbol}${value}`
+  }
 }

@@ -1,94 +1,170 @@
-//public row object
+// public row object
 export default class RowComponent {
+  /**
+   * @param {object} row Internal Row instance.
+   * @returns {RowComponent}
+   */
+  constructor(row) {
+    this._row = row
 
-	constructor (row){
-		this._row = row;
+    return new Proxy(this, {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
 
-		return new Proxy(this, {
-			get: function(target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
-				}else{
-					return target._row.table.componentFunctionBinder.handle("row", target._row, name);
-				}
-			}
-		});
-	}
+        if (name in target) {
+          return target[name]
+        }
 
-	getData(transform){
-		return this._row.getData(transform);
-	}
+        return target._row.table.componentFunctionBinder.handle('row', target._row, name)
+      }
+    })
+  }
 
-	getElement(){
-		return this._row.getElement();
-	}
+  /**
+   * Get row data.
+   * @param {string|boolean} [transform] Optional transform lookup key.
+   * @returns {object}
+   */
+  getData(transform) {
+    return this._row.getData(transform)
+  }
 
-	getCells(){
-		var cells = [];
+  /**
+   * Get the row DOM element.
+   * @returns {HTMLElement|boolean}
+   */
+  getElement() {
+    return this._row.getElement()
+  }
 
-		this._row.getCells().forEach(function(cell){
-			cells.push(cell.getComponent());
-		});
+  /**
+   * Get all cell components in this row.
+   * @returns {Array<object>}
+   */
+  getCells() {
+    return this._row.getCells().map((cell) => cell.getComponent())
+  }
 
-		return cells;
-	}
+  /**
+   * Get a cell component by column lookup.
+   * @param {*} column Column lookup accepted by column manager.
+   * @returns {object|boolean}
+   */
+  getCell(column) {
+    const cell = this._row.getCell(column)
 
-	getCell(column){
-		var cell = this._row.getCell(column);
-		return cell ? cell.getComponent() : false;
-	}
+    return cell ? cell.getComponent() : false
+  }
 
-	getIndex(){
-		return this._row.getData("data")[this._row.table.options.index];
-	}
+  /**
+   * Get the row index value.
+   * @returns {*}
+   */
+  getIndex() {
+    return this._row.getData('data')[this._row.table.options.index]
+  }
 
-	getPosition(){
-		return this._row.getPosition();
-	}
+  /**
+   * Get current row display position.
+   * @returns {number|boolean}
+   */
+  getPosition() {
+    return this._row.getPosition()
+  }
 
-	watchPosition(callback){
-		return this._row.watchPosition(callback);
-	}
+  /**
+   * Subscribe to row position changes.
+   * @param {Function} callback Position update callback.
+   */
+  watchPosition(callback) {
+    return this._row.watchPosition(callback)
+  }
 
-	delete(){
-		return this._row.delete();
-	}
+  /**
+   * Delete this row.
+   * @returns {Promise<void>}
+   */
+  delete() {
+    return this._row.delete()
+  }
 
-	scrollTo(position, ifVisible){
-		return this._row.table.rowManager.scrollToRow(this._row, position, ifVisible);
-	}
+  /**
+   * Scroll this row into view.
+   * @param {string} [position] Scroll alignment position.
+   * @param {boolean} [ifVisible] Only scroll if not visible when true.
+   * @returns {Promise<void>|boolean}
+   */
+  scrollTo(position, ifVisible) {
+    return this._row.table.rowManager.scrollToRow(this._row, position, ifVisible)
+  }
 
-	move(to, after){
-		this._row.moveToRow(to, after);
-	}
+  /**
+   * Move this row relative to another row.
+   * @param {*} to Target row lookup.
+   * @param {boolean} [after] Insert after target when true.
+   */
+  move(to, after) {
+    this._row.moveToRow(to, after)
+  }
 
-	update(data){
-		return this._row.updateData(data);
-	}
+  /**
+   * Update this row's data.
+   * @param {object|string} data Partial update object or serialized JSON.
+   * @returns {Promise<void>}
+   */
+  update(data) {
+    return this._row.updateData(data)
+  }
 
-	normalizeHeight(){
-		this._row.normalizeHeight(true);
-	}
+  /**
+   * Force row height normalization.
+   */
+  normalizeHeight() {
+    this._row.normalizeHeight(true)
+  }
 
-	_getSelf(){
-		return this._row;
-	}
+  /**
+   * Get internal row instance.
+   * @returns {object}
+   */
+  _getSelf() {
+    return this._row
+  }
 
-	reformat(){
-		return this._row.reinitialize();
-	}
+  /**
+   * Reinitialize row formatting and layout.
+   */
+  reformat() {
+    return this._row.reinitialize()
+  }
 
-	getTable(){
-		return this._row.table;
-	}
+  /**
+   * Get parent table instance.
+   * @returns {object}
+   */
+  getTable() {
+    return this._row.table
+  }
 
-	getNextRow(){
-		var row = this._row.nextRow();
-		return row ? row.getComponent() : row;
-	}
+  /**
+   * Get the next displayed row component.
+   * @returns {object|boolean}
+   */
+  getNextRow() {
+    const row = this._row.nextRow()
 
-	getPrevRow(){
-		var row = this._row.prevRow();
-		return row ? row.getComponent() : row;
-	}
+    return row ? row.getComponent() : row
+  }
+
+  /**
+   * Get the previous displayed row component.
+   * @returns {object|boolean}
+   */
+  getPrevRow() {
+    const row = this._row.prevRow()
+
+    return row ? row.getComponent() : row
+  }
 }

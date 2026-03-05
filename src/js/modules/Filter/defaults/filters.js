@@ -1,108 +1,200 @@
+/**
+ * Default filter comparison functions.
+ *
+ * @type {Object<string, function(*, *, Object, Object): boolean>}
+ */
 export default {
+  // equal to
+  /**
+   * Compare for equality.
+   *
+   * @param {*} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if values are equal.
+   */
+  '='(filterVal, rowVal) {
+    return rowVal == filterVal
+  },
 
-	//equal to
-	"=":function(filterVal, rowVal, rowData, filterParams){
-		return rowVal == filterVal ? true : false;
-	},
+  // less than
+  /**
+   * Compare for less than.
+   *
+   * @param {*} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value is less than filter value.
+   */
+  '<'(filterVal, rowVal) {
+    return rowVal < filterVal
+  },
 
-	//less than
-	"<":function(filterVal, rowVal, rowData, filterParams){
-		return rowVal < filterVal ? true : false;
-	},
+  // less than or equal to
+  /**
+   * Compare for less than or equal.
+   *
+   * @param {*} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value is less than or equal to filter value.
+   */
+  '<='(filterVal, rowVal) {
+    return rowVal <= filterVal
+  },
 
-	//less than or equal to
-	"<=":function(filterVal, rowVal, rowData, filterParams){
-		return rowVal <= filterVal ? true : false;
-	},
+  // greater than
+  /**
+   * Compare for greater than.
+   *
+   * @param {*} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value is greater than filter value.
+   */
+  '>'(filterVal, rowVal) {
+    return rowVal > filterVal
+  },
 
-	//greater than
-	">":function(filterVal, rowVal, rowData, filterParams){
-		return rowVal > filterVal ? true : false;
-	},
+  // greater than or equal to
+  /**
+   * Compare for greater than or equal.
+   *
+   * @param {*} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value is greater than or equal to filter value.
+   */
+  '>='(filterVal, rowVal) {
+    return rowVal >= filterVal
+  },
 
-	//greater than or equal to
-	">=":function(filterVal, rowVal, rowData, filterParams){
-		return rowVal >= filterVal ? true : false;
-	},
+  // not equal to
+  /**
+   * Compare for inequality.
+   *
+   * @param {*} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if values are not equal.
+   */
+  '!='(filterVal, rowVal) {
+    return rowVal != filterVal
+  },
 
-	//not equal to
-	"!=":function(filterVal, rowVal, rowData, filterParams){
-		return rowVal != filterVal ? true : false;
-	},
+  /**
+   * Test row value against a regex.
+   *
+   * @param {RegExp|string} filterVal Regex or regex string.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if regex matches row value.
+   */
+  regex(filterVal, rowVal) {
+    if (typeof filterVal === 'string') {
+      try {
+        filterVal = new RegExp(filterVal)
+      } catch (error) {
+        console.warn('Filter Error - invalid regex pattern:', filterVal, error)
+        return false
+      }
+    }
 
-	"regex":function(filterVal, rowVal, rowData, filterParams){
+    return filterVal.test(rowVal)
+  },
 
-		if(typeof filterVal == "string"){
-			filterVal = new RegExp(filterVal);
-		}
+  // contains the string
+  /**
+   * Test whether row value contains filter text.
+   *
+   * @param {string|null|undefined} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value contains filter text.
+   */
+  like(filterVal, rowVal) {
+    if (filterVal == null) {
+      return rowVal === filterVal
+    }
 
-		return filterVal.test(rowVal);
-	},
+    if (rowVal != null) {
+      return String(rowVal).toLowerCase().includes(filterVal.toLowerCase())
+    }
 
-	//contains the string
-	"like":function(filterVal, rowVal, rowData, filterParams){
-		if(filterVal === null || typeof filterVal === "undefined"){
-			return rowVal === filterVal ? true : false;
-		}else{
-			if(typeof rowVal !== 'undefined' && rowVal !== null){
-				return String(rowVal).toLowerCase().indexOf(filterVal.toLowerCase()) > -1;
-			}
-			else{
-				return false;
-			}
-		}
-	},
+    return false
+  },
 
-	//contains the keywords
-	"keywords":function(filterVal, rowVal, rowData, filterParams){
-		var keywords = filterVal.toLowerCase().split(typeof filterParams.separator === "undefined" ? " " : filterParams.separator),
-		value = String(rowVal === null || typeof rowVal === "undefined" ? "" : rowVal).toLowerCase(),
-		matches = [];
+  // contains the keywords
+  /**
+   * Test whether row value contains keywords.
+   *
+   * @param {string} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @param {Object} rowData Row data.
+   * @param {{separator?: string, matchAll?: boolean}} filterParams Filter parameters.
+   * @returns {boolean} True if keyword match rules are satisfied.
+   */
+  keywords(filterVal, rowVal, rowData, filterParams) {
+    const keywords = filterVal.toLowerCase().split(filterParams.separator ?? ' ')
+    const value = String(rowVal ?? '').toLowerCase()
 
-		keywords.forEach((keyword) =>{
-			if(value.includes(keyword)){
-				matches.push(true);
-			}
-		});
+    let matchCount = 0
 
-		return filterParams.matchAll ? matches.length === keywords.length : !!matches.length;
-	},
+    keywords.forEach((keyword) => {
+      if (value.includes(keyword)) {
+        matchCount++
+      }
+    })
 
-	//starts with the string
-	"starts":function(filterVal, rowVal, rowData, filterParams){
-		if(filterVal === null || typeof filterVal === "undefined"){
-			return rowVal === filterVal ? true : false;
-		}else{
-			if(typeof rowVal !== 'undefined' && rowVal !== null){
-				return String(rowVal).toLowerCase().startsWith(filterVal.toLowerCase());
-			}
-			else{
-				return false;
-			}
-		}
-	},
+    return filterParams.matchAll ? matchCount === keywords.length : matchCount > 0
+  },
 
-	//ends with the string
-	"ends":function(filterVal, rowVal, rowData, filterParams){
-		if(filterVal === null || typeof filterVal === "undefined"){
-			return rowVal === filterVal ? true : false;
-		}else{
-			if(typeof rowVal !== 'undefined' && rowVal !== null){
-				return String(rowVal).toLowerCase().endsWith(filterVal.toLowerCase());
-			}
-			else{
-				return false;
-			}
-		}
-	},
+  // starts with the string
+  /**
+   * Test whether row value starts with filter text.
+   *
+   * @param {string|null|undefined} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value starts with filter text.
+   */
+  starts(filterVal, rowVal) {
+    if (filterVal == null) {
+      return rowVal === filterVal
+    }
 
-	//in array
-	"in":function(filterVal, rowVal, rowData, filterParams){
-		if(Array.isArray(filterVal)){
-			return filterVal.length ? filterVal.indexOf(rowVal) > -1 : true;
-		}else{
-			console.warn("Filter Error - filter value is not an array:", filterVal);
-			return false;
-		}
-	},
-};
+    if (rowVal != null) {
+      return String(rowVal).toLowerCase().startsWith(filterVal.toLowerCase())
+    }
+
+    return false
+  },
+
+  // ends with the string
+  /**
+   * Test whether row value ends with filter text.
+   *
+   * @param {string|null|undefined} filterVal Filter value.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value ends with filter text.
+   */
+  ends(filterVal, rowVal) {
+    if (filterVal == null) {
+      return rowVal === filterVal
+    }
+
+    if (rowVal != null) {
+      return String(rowVal).toLowerCase().endsWith(filterVal.toLowerCase())
+    }
+
+    return false
+  },
+
+  // in array
+  /**
+   * Test whether row value exists in an allowed set.
+   *
+   * @param {Array<*>} filterVal Filter values.
+   * @param {*} rowVal Row value.
+   * @returns {boolean} True if row value is in filter array.
+   */
+  in(filterVal, rowVal) {
+    if (Array.isArray(filterVal)) {
+      return filterVal.length ? filterVal.includes(rowVal) : true
+    }
+
+    console.warn('Filter Error - filter value is not an array:', filterVal)
+    return false
+  }
+}

@@ -1,30 +1,78 @@
-export default{
-	insert:function(fromRow, toRow, fromTable){
-		this.table.addRow(fromRow.getData(), undefined, toRow);
-		return true;
-	},
+/**
+ * Default row move receiver actions.
+ *
+ * @type {{
+ *   insert: function(Object, Object): boolean,
+ *   add: function(Object): boolean,
+ *   update: function(Object, Object): boolean,
+ *   replace: function(Object, Object): boolean
+ * }}
+ */
+export default {
+  /**
+   * Insert incoming row before a target row.
+   *
+   * @this {Object}
+   * @param {Object} fromRow Source row.
+   * @param {Object} toRow Target row.
+   * @returns {boolean} True when action succeeds.
+   */
+  insert(fromRow, toRow) {
+    if (!toRow) {
+      return false
+    }
 
-	add:function(fromRow, toRow, fromTable){
-		this.table.addRow(fromRow.getData());
-		return true;
-	},
+    this.table.addRow(fromRow.getData(), undefined, toRow)
 
-	update:function(fromRow, toRow, fromTable){
-		if(toRow){
-			toRow.update(fromRow.getData());
-			return true;
-		}
+    return true
+  },
 
-		return false;
-	},
+  /**
+   * Add incoming row to receiving table.
+   *
+   * @this {Object}
+   * @param {Object} fromRow Source row.
+   * @returns {boolean} True when action succeeds.
+   */
+  add(fromRow) {
+    this.table.addRow(fromRow.getData())
 
-	replace:function(fromRow, toRow, fromTable){
-		if(toRow){
-			this.table.addRow(fromRow.getData(), undefined, toRow);
-			toRow.delete();
-			return true;
-		}
+    return true
+  },
 
-		return false;
-	},
-};
+  /**
+   * Update target row with incoming row data.
+   *
+   * @param {Object} fromRow Source row.
+   * @param {Object} toRow Target row.
+   * @returns {boolean} True when update succeeds.
+   */
+  update(fromRow, toRow) {
+    if (!toRow) {
+      return false
+    }
+
+    toRow.update(fromRow.getData())
+
+    return true
+  },
+
+  /**
+   * Replace target row with incoming row data.
+   *
+   * @this {Object}
+   * @param {Object} fromRow Source row.
+   * @param {Object} toRow Target row.
+   * @returns {boolean} True when replace succeeds.
+   */
+  replace(fromRow, toRow) {
+    if (!toRow) {
+      return false
+    }
+
+    this.table.addRow(fromRow.getData(), undefined, toRow)
+    toRow.delete()
+
+    return true
+  }
+}

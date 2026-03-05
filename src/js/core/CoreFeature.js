@@ -1,139 +1,258 @@
-export default class CoreFeature{
+export default class CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    this.table = table
+  }
 
-	constructor(table){
-		this.table = table;
-	}
+  /// ///////////////////////////////////////
+  /// //////////// DataLoad /////////////////
+  /// ///////////////////////////////////////
 
-	//////////////////////////////////////////
-	/////////////// DataLoad /////////////////
-	//////////////////////////////////////////
+  /**
+   * Reload table data through data loader.
+   * @param {*} data Data source.
+   * @param {boolean} silent Silent mode.
+   * @param {boolean} columnsChanged Columns changed flag.
+   * @returns {Promise<*>}
+   */
+  reloadData(data, silent, columnsChanged) {
+    return this.table.dataLoader.load(data, undefined, undefined, undefined, silent, columnsChanged)
+  }
 
-	reloadData(data, silent, columnsChanged){
-		return this.table.dataLoader.load(data, undefined, undefined, undefined, silent, columnsChanged);
-	}
+  /// ///////////////////////////////////////
+  /// ////////// Localization ///////////////
+  /// ///////////////////////////////////////
 
-	//////////////////////////////////////////
-	///////////// Localization ///////////////
-	//////////////////////////////////////////
+  /**
+   * Get localized text.
+   * @param {...*} args Localization args.
+   * @returns {string}
+   */
+  langText(...args) {
+    return this.table.modules.localize.getText(...args)
+  }
 
-	langText(){
-		return this.table.modules.localize.getText(...arguments);
-	}
+  /**
+   * Bind localized text updates.
+   * @param {...*} args Binding args.
+   */
+  langBind(...args) {
+    return this.table.modules.localize.bind(...args)
+  }
 
-	langBind(){
-		return this.table.modules.localize.bind(...arguments);
-	}
+  /**
+   * Get active locale.
+   * @param {...*} args Locale args.
+   * @returns {string}
+   */
+  langLocale(...args) {
+    return this.table.modules.localize.getLocale(...args)
+  }
 
-	langLocale(){
-		return this.table.modules.localize.getLocale(...arguments);
-	}
+  /// ///////////////////////////////////////
+  /// /////// Inter Table Comms /////////////
+  /// ///////////////////////////////////////
 
+  /**
+   * Resolve inter-table connections.
+   * @param {...*} args Connection selectors.
+   * @returns {Array<object>}
+   */
+  commsConnections(...args) {
+    return this.table.modules.comms.getConnections(...args)
+  }
 
-	//////////////////////////////////////////
-	////////// Inter Table Comms /////////////
-	//////////////////////////////////////////
+  /**
+   * Send inter-table message.
+   * @param {...*} args Message args.
+   */
+  commsSend(...args) {
+    return this.table.modules.comms.send(...args)
+  }
 
-	commsConnections(){
-		return this.table.modules.comms.getConnections(...arguments);
-	}
+  /// ///////////////////////////////////////
+  /// ///////////// Layout  /////////////////
+  /// ///////////////////////////////////////
 
-	commsSend(){
-		return this.table.modules.comms.send(...arguments);
-	}
+  /**
+   * Get active layout mode.
+   * @returns {string}
+   */
+  layoutMode() {
+    return this.table.modules.layout.getMode()
+  }
 
-	//////////////////////////////////////////
-	//////////////// Layout  /////////////////
-	//////////////////////////////////////////
+  /**
+   * Trigger layout refresh.
+   * @param {boolean} force Force layout.
+   */
+  layoutRefresh(force) {
+    return this.table.modules.layout.layout(force)
+  }
 
-	layoutMode(){
-		return this.table.modules.layout.getMode();
-	}
+  /// ///////////////////////////////////////
+  /// //////////// Event Bus ////////////////
+  /// ///////////////////////////////////////
 
-	layoutRefresh(force){
-		return this.table.modules.layout.layout(force);
-	}
+  /**
+   * Subscribe to internal event bus.
+   * @param {...*} args Subscription args.
+   * @returns {*}
+   */
+  subscribe(...args) {
+    return this.table.eventBus.subscribe(...args)
+  }
 
+  /**
+   * Unsubscribe from internal event bus.
+   * @param {...*} args Unsubscribe args.
+   * @returns {*}
+   */
+  unsubscribe(...args) {
+    return this.table.eventBus.unsubscribe(...args)
+  }
 
-	//////////////////////////////////////////
-	/////////////// Event Bus ////////////////
-	//////////////////////////////////////////
+  /**
+   * Check whether an internal event has subscribers.
+   * @param {string} key Event key.
+   * @returns {boolean}
+   */
+  subscribed(key) {
+    return this.table.eventBus.subscribed(key)
+  }
 
-	subscribe(){
-		return this.table.eventBus.subscribe(...arguments);
-	}
+  /**
+   * Register callback for subscription changes.
+   * @param {...*} args Subscription change args.
+   * @returns {*}
+   */
+  subscriptionChange(...args) {
+    return this.table.eventBus.subscriptionChange(...args)
+  }
 
-	unsubscribe(){
-		return this.table.eventBus.unsubscribe(...arguments);
-	}
+  /**
+   * Dispatch an internal event.
+   * @param {...*} args Dispatch args.
+   * @returns {*}
+   */
+  dispatch(...args) {
+    return this.table.eventBus.dispatch(...args)
+  }
 
-	subscribed(key){
-		return this.table.eventBus.subscribed(key);
-	}
+  /**
+   * Chain internal subscribers and return final value.
+   * @param {...*} args Chain args.
+   * @returns {*}
+   */
+  chain(...args) {
+    return this.table.eventBus.chain(...args)
+  }
 
-	subscriptionChange(){
-		return this.table.eventBus.subscriptionChange(...arguments);
-	}
+  /**
+   * Confirm an internal action via event subscribers.
+   * @param {...*} args Confirmation args.
+   * @returns {boolean}
+   */
+  confirm(...args) {
+    return this.table.eventBus.confirm(...args)
+  }
 
-	dispatch(){
-		return this.table.eventBus.dispatch(...arguments);
-	}
+  /**
+   * Dispatch an external/public event.
+   * @param {...*} args Dispatch args.
+   * @returns {*}
+   */
+  dispatchExternal(...args) {
+    return this.table.externalEvents.dispatch(...args)
+  }
 
-	chain(){
-		return this.table.eventBus.chain(...arguments);
-	}
+  /**
+   * Check whether an external event has subscribers.
+   * @param {string} key Event key.
+   * @returns {boolean}
+   */
+  subscribedExternal(key) {
+    return this.table.externalEvents.subscribed(key)
+  }
 
-	confirm(){
-		return this.table.eventBus.confirm(...arguments);
-	}
+  /**
+   * Register callback for external subscription changes.
+   * @param {...*} args Subscription change args.
+   * @returns {*}
+   */
+  subscriptionChangeExternal(...args) {
+    return this.table.externalEvents.subscriptionChange(...args)
+  }
 
-	dispatchExternal(){
-		return this.table.externalEvents.dispatch(...arguments);
-	}
+  /// ///////////////////////////////////////
+  /// ///////////// Options /////////////////
+  /// ///////////////////////////////////////
 
-	subscribedExternal(key){
-		return this.table.externalEvents.subscribed(key);
-	}
+  /**
+   * Read option value.
+   * @param {string} key Option key.
+   * @returns {*}
+   */
+  options(key) {
+    return this.table.options[key]
+  }
 
-	subscriptionChangeExternal(){
-		return this.table.externalEvents.subscriptionChange(...arguments);
-	}
+  /**
+   * Set/read option value.
+   * @param {string} key Option key.
+   * @param {*} value Option value.
+   * @returns {*}
+   */
+  setOption(key, value) {
+    if (value !== undefined) {
+      this.table.options[key] = value
+    }
 
-	//////////////////////////////////////////
-	//////////////// Options /////////////////
-	//////////////////////////////////////////
+    return this.table.options[key]
+  }
 
-	options(key){
-		return this.table.options[key];
-	}
+  /// ///////////////////////////////////////
+  /// //////// Deprecation Checks ///////////
+  /// ///////////////////////////////////////
 
-	setOption(key, value){
-		if(typeof value !== "undefined"){
-			this.table.options[key] = value;
-		}
+  /**
+   * Run standard deprecation option check.
+   * @param {string} oldOption Deprecated option name.
+   * @param {string} newOption Replacement option name.
+   * @param {boolean} [convert] Convert value when possible.
+   */
+  deprecationCheck(oldOption, newOption, convert) {
+    return this.table.deprecationAdvisor.check(oldOption, newOption, convert)
+  }
 
-		return this.table.options[key];
-	}
+  /**
+   * Report custom deprecation message for an option.
+   * @param {string} oldOption Deprecated option name.
+   * @param {string} msg Deprecation message.
+   */
+  deprecationCheckMsg(oldOption, msg) {
+    return this.table.deprecationAdvisor.checkMsg(oldOption, msg)
+  }
 
-	//////////////////////////////////////////
-	/////////// Deprecation Checks ///////////
-	//////////////////////////////////////////
+  /**
+   * Emit deprecation message without option lookup.
+   * @param {string} msg Deprecation message.
+   */
+  deprecationMsg(msg) {
+    return this.table.deprecationAdvisor.msg(msg)
+  }
+  /// ///////////////////////////////////////
+  /// ///////////// Modules /////////////////
+  /// ///////////////////////////////////////
 
-	deprecationCheck(oldOption, newOption,  convert){
-		return this.table.deprecationAdvisor.check(oldOption, newOption,  convert);
-	}
-
-	deprecationCheckMsg(oldOption, msg){
-		return this.table.deprecationAdvisor.checkMsg(oldOption, msg);
-	}
-
-	deprecationMsg(msg){
-		return this.table.deprecationAdvisor.msg(msg);
-	}
-	//////////////////////////////////////////
-	//////////////// Modules /////////////////
-	//////////////////////////////////////////
-
-	module(key){
-		return this.table.module(key);
-	}
+  /**
+   * Resolve module by key.
+   * @param {string} key Module key.
+   * @returns {*}
+   */
+  module(key) {
+    return this.table.module(key)
+  }
 }

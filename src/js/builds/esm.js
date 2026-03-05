@@ -1,16 +1,22 @@
-export * from '../core/modules/optional.js';
-export {default as Tabulator} from '../core/Tabulator.js';
-export {default as TabulatorFull} from '../core/TabulatorFull.js';
+// Optional module exports
+export * from '../core/modules/optional'
 
-export {default as CellComponent} from '../core/cell/CellComponent.js';
-export {default as ColumnComponent} from '../core/column/ColumnComponent.js';
-export {default as RowComponent} from '../core/row/RowComponent.js';
-export {default as GroupComponent} from '../modules/GroupRows/GroupComponent.js';
-export {default as CalcComponent} from '../modules/ColumnCalcs/CalcComponent.js';
-export {default as RangeComponent} from '../modules/SelectRange/RangeComponent.js';
-export {default as SheetComponent} from '../modules/Spreadsheet/SheetComponent.js';
+// Core Tabulator exports
+export { default as Tabulator } from '../core/Tabulator'
+export { default as TabulatorFull } from '../core/TabulatorFull'
 
-export {default as PseudoRow} from '../core/row/PseudoRow.js';
+// Component exports
+export { default as CellComponent } from '../core/cell/CellComponent'
+export { default as ColumnComponent } from '../core/column/ColumnComponent'
+export { default as RowComponent } from '../core/row/RowComponent'
+export { default as GroupComponent } from '../modules/GroupRows/GroupComponent'
+export { default as CalcComponent } from '../modules/ColumnCalcs/CalcComponent'
+export { default as RangeComponent } from '../modules/SelectRange/RangeComponent'
+export { default as SheetComponent } from '../modules/Spreadsheet/SheetComponent'
 
-export {default as Module} from '../core/Module.js';
-export {default as Renderer} from '../core/rendering/Renderer.js';
+// Row helper exports
+export { default as PseudoRow } from '../core/row/PseudoRow'
+
+// Base class exports
+export { default as Module } from '../core/Module'
+export { default as Renderer } from '../core/rendering/Renderer'

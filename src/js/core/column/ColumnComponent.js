@@ -1,151 +1,221 @@
-//public column object
+// public column object
 export default class ColumnComponent {
-	constructor (column){
-		this._column = column;
-		this.type = "ColumnComponent";
+  /**
+   * @param {object} column Internal Column instance.
+   * @returns {ColumnComponent}
+   */
+  constructor(column) {
+    this._column = column
+    this.type = 'ColumnComponent'
 
-		return new Proxy(this, {
-			get: function(target, name, receiver) {
-				if (typeof target[name] !== "undefined") {
-					return target[name];
-				}else{
-					return target._column.table.componentFunctionBinder.handle("column", target._column, name);
-				}
-			}
-		});
-	}
+    return new Proxy(this, {
+      get(target, name, receiver) {
+        if (typeof name === 'symbol') {
+          return Reflect.get(target, name, receiver)
+        }
 
-	getElement(){
-		return this._column.getElement();
-	}
+        if (target[name] !== undefined) {
+          return target[name]
+        }
 
-	getDefinition(){
-		return this._column.getDefinition();
-	}
+        return target._column.table.componentFunctionBinder.handle('column', target._column, name)
+      }
+    })
+  }
 
-	getField(){
-		return this._column.getField();
-	}
+  /**
+   * Get the column header element.
+   * @returns {HTMLElement|null}
+   */
+  getElement() {
+    return this._column.getElement()
+  }
 
-	getTitleDownload() {
-		return this._column.getTitleDownload();
-	}
+  /**
+   * Get the column definition object.
+   * @returns {object}
+   */
+  getDefinition() {
+    return this._column.getDefinition()
+  }
 
-	getCells(){
-		var cells = [];
+  /**
+   * Get the column field.
+   * @returns {string}
+   */
+  getField() {
+    return this._column.getField()
+  }
 
-		this._column.cells.forEach(function(cell){
-			cells.push(cell.getComponent());
-		});
+  /**
+   * Get the download title for the column.
+   * @returns {string|null}
+   */
+  getTitleDownload() {
+    return this._column.getTitleDownload()
+  }
 
-		return cells;
-	}
+  /**
+   * Get cell components belonging to this column.
+   * @returns {Array<object>}
+   */
+  getCells() {
+    return this._column.cells.map((cell) => cell.getComponent())
+  }
 
-	isVisible(){
-		return this._column.visible;
-	}
+  /**
+   * Check whether the column is visible.
+   * @returns {boolean}
+   */
+  isVisible() {
+    return this._column.visible
+  }
 
-	show(){
-		if(this._column.isGroup){
-			this._column.columns.forEach(function(column){
-				column.show();
-			});
-		}else{
-			this._column.show();
-		}
-	}
+  /**
+   * Show this column (or all child columns for groups).
+   */
+  show() {
+    if (this._column.isGroup) {
+      this._column.columns.forEach((column) => {
+        column.show()
+      })
+    } else {
+      this._column.show()
+    }
+  }
 
-	hide(){
-		if(this._column.isGroup){
-			this._column.columns.forEach(function(column){
-				column.hide();
-			});
-		}else{
-			this._column.hide();
-		}
-	}
+  /**
+   * Hide this column (or all child columns for groups).
+   */
+  hide() {
+    if (this._column.isGroup) {
+      this._column.columns.forEach((column) => {
+        column.hide()
+      })
+    } else {
+      this._column.hide()
+    }
+  }
 
-	toggle(){
-		if(this._column.visible){
-			this.hide();
-		}else{
-			this.show();
-		}
-	}
+  /**
+   * Toggle column visibility.
+   */
+  toggle() {
+    this._column.visible ? this.hide() : this.show()
+  }
 
-	delete(){
-		return this._column.delete();
-	}
+  /**
+   * Delete this column.
+   * @returns {Promise<void>}
+   */
+  delete() {
+    return this._column.delete()
+  }
 
-	getSubColumns(){
-		var output = [];
+  /**
+   * Get direct child column components.
+   * @returns {Array<object>}
+   */
+  getSubColumns() {
+    return this._column.columns.map((column) => column.getComponent())
+  }
 
-		if(this._column.columns.length){
-			this._column.columns.forEach(function(column){
-				output.push(column.getComponent());
-			});
-		}
+  /**
+   * Get parent column component if this column is grouped.
+   * @returns {object|boolean}
+   */
+  getParentColumn() {
+    return this._column.getParentComponent()
+  }
 
-		return output;
-	}
+  /**
+   * Get internal column instance.
+   * @returns {object}
+   */
+  _getSelf() {
+    return this._column
+  }
 
-	getParentColumn(){
-		return this._column.getParentComponent();
-	}
+  /**
+   * Scroll this column into view.
+   * @param {string} [position] Scroll alignment position.
+   * @param {boolean} [ifVisible] Only scroll if not visible when true.
+   * @returns {Promise<void>|boolean}
+   */
+  scrollTo(position, ifVisible) {
+    return this._column.table.columnManager.scrollToColumn(this._column, position, ifVisible)
+  }
 
-	_getSelf(){
-		return this._column;
-	}
+  /**
+   * Get parent table instance.
+   * @returns {object}
+   */
+  getTable() {
+    return this._column.table
+  }
 
-	scrollTo(position, ifVisible){
-		return this._column.table.columnManager.scrollToColumn(this._column, position, ifVisible);
-	}
+  /**
+   * Move this column relative to another column.
+   * @param {*} to Target column lookup.
+   * @param {boolean} [after] Insert after target when true.
+   */
+  move(to, after) {
+    const toColumn = this._column.table.columnManager.findColumn(to)
 
-	getTable(){
-		return this._column.table;
-	}
+    if (toColumn) {
+      this._column.table.columnManager.moveColumn(this._column, toColumn, after)
+    } else {
+      console.warn('Move Error - No matching column found:', to)
+    }
+  }
 
-	move(to, after){
-		var toColumn = this._column.table.columnManager.findColumn(to);
+  /**
+   * Get next visible column component.
+   * @returns {object|boolean}
+   */
+  getNextColumn() {
+    const nextCol = this._column.nextColumn()
 
-		if(toColumn){
-			this._column.table.columnManager.moveColumn(this._column, toColumn, after);
-		}else{
-			console.warn("Move Error - No matching column found:", toColumn);
-		}
-	}
+    return nextCol ? nextCol.getComponent() : false
+  }
 
-	getNextColumn(){
-		var nextCol = this._column.nextColumn();
+  /**
+   * Get previous visible column component.
+   * @returns {object|boolean}
+   */
+  getPrevColumn() {
+    const prevCol = this._column.prevColumn()
 
-		return nextCol ? nextCol.getComponent() : false;
-	}
+    return prevCol ? prevCol.getComponent() : false
+  }
 
-	getPrevColumn(){
-		var prevCol = this._column.prevColumn();
+  /**
+   * Update this column definition.
+   * @param {object} updates Partial definition updates.
+   * @returns {Promise<object>}
+   */
+  updateDefinition(updates) {
+    return this._column.updateDefinition(updates)
+  }
 
-		return prevCol ? prevCol.getComponent() : false;
-	}
+  /**
+   * Get the computed column width.
+   * @returns {number}
+   */
+  getWidth() {
+    return this._column.getWidth()
+  }
 
-	updateDefinition(updates){
-		return this._column.updateDefinition(updates);
-	}
+  /**
+   * Set column width or reset to fit-content width.
+   * @param {number|string|boolean} width Pixel/percent width, or true to refit width.
+   * @returns {*}
+   */
+  setWidth(width) {
+    const result = width === true ? this._column.reinitializeWidth(true) : this._column.setWidth(width)
 
-	getWidth(){
-		return this._column.getWidth();
-	}
+    this._column.table.columnManager.rerenderColumns(true)
 
-	setWidth(width){
-		var result;
-
-		if(width === true){
-			result =  this._column.reinitializeWidth(true);
-		}else{
-			result =  this._column.setWidth(width);
-		}
-
-		this._column.table.columnManager.rerenderColumns(true);
-
-		return result;
-	}
+    return result
+  }
 }
