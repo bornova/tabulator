@@ -182,6 +182,82 @@ test('Tabulator core functionality', async ({ page }) => {
   expect(result.rowNames).toEqual(['Alice Final', 'Cara'])
   expect(result.moduleKeys.length).toBeGreaterThan(0)
 
+  await test.step('scrollToColumn handles skipped and left-hidden columns correctly', async () => {
+    await page.goto(fixtureUrl)
+
+    const scrollResult = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+
+      holder.id = 'scroll-column-table'
+      holder.style.width = '320px'
+      holder.style.height = '220px'
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          height: 220,
+          layout: 'fitData',
+          data: [
+            { id: 1, name: 'Alice', age: 22, location: 'London' },
+            { id: 2, name: 'Bob', age: 31, location: 'Paris' }
+          ],
+          columns: [
+            { title: 'ID', field: 'id', width: 120 },
+            { title: 'Name', field: 'name', width: 180 },
+            { title: 'Age', field: 'age', width: 180 },
+            { title: 'Location', field: 'location', width: 220 }
+          ]
+        })
+
+        const timeout = setTimeout(() => resolve(instance), 1500)
+
+        instance.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve(instance)
+        })
+      })
+
+      const initialScrollLeft = table.rowManager.element.scrollLeft
+      const visibleScrollOutcome = await Promise.race([
+        table
+          .scrollToColumn('name', 'left', false)
+          .then(() => 'resolved')
+          .catch(() => 'rejected'),
+        new Promise((resolve) => setTimeout(() => resolve('timed-out'), 200))
+      ])
+      const scrollLeftAfterVisibleCall = table.rowManager.element.scrollLeft
+
+      await table.scrollToColumn('location', 'left', true)
+      const scrollLeftAfterHiddenCall = table.rowManager.element.scrollLeft
+      const leftHiddenScrollOutcome = await Promise.race([
+        table
+          .scrollToColumn('name', 'middle', false)
+          .then(() => 'resolved')
+          .catch(() => 'rejected'),
+        new Promise((resolve) => setTimeout(() => resolve('timed-out'), 200))
+      ])
+      const scrollLeftAfterLeftHiddenCall = table.rowManager.element.scrollLeft
+
+      table.destroy()
+
+      return {
+        initialScrollLeft,
+        visibleScrollOutcome,
+        scrollLeftAfterVisibleCall,
+        scrollLeftAfterHiddenCall,
+        leftHiddenScrollOutcome,
+        scrollLeftAfterLeftHiddenCall
+      }
+    })
+
+    expect(scrollResult.visibleScrollOutcome).toBe('resolved')
+    expect(scrollResult.scrollLeftAfterVisibleCall).toBe(scrollResult.initialScrollLeft)
+    expect(scrollResult.scrollLeftAfterHiddenCall).toBeGreaterThan(scrollResult.scrollLeftAfterVisibleCall)
+    expect(scrollResult.leftHiddenScrollOutcome).toBe('resolved')
+    expect(scrollResult.scrollLeftAfterLeftHiddenCall).toBeLessThan(scrollResult.scrollLeftAfterHiddenCall)
+  })
+
   // --- Full Tabulator build (with modules) ---
   // Reload to reset ModuleBinder static state (core-only init locks out optional modules)
   await page.goto(fixtureUrl)

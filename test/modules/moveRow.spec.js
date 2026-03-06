@@ -133,6 +133,82 @@ test('moveRow module', async ({ page }) => {
     expect(!!result.connectionEnabled).toBe(true)
   })
 
+  await test.step('connected table moves work with a single selector string and receiver add mode', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+
+      const senderHolder = document.createElement('div')
+      senderHolder.id = 'sender-table'
+      senderHolder.style.width = '900px'
+      root.appendChild(senderHolder)
+
+      const receiverHolder = document.createElement('div')
+      receiverHolder.id = 'receiver-table'
+      receiverHolder.style.width = '900px'
+      root.appendChild(receiverHolder)
+
+      const buildTable = (holder, options) => {
+        return new Promise((resolve) => {
+          const instance = new Tabulator(holder, {
+            data: [{ id: 1, name: 'Alice' }],
+            columns: [{ title: 'Name', field: 'name' }],
+            ...options
+          })
+
+          const timeout = setTimeout(() => resolve(instance), 1500)
+          instance.on('tableBuilt', () => {
+            clearTimeout(timeout)
+            resolve(instance)
+          })
+        })
+      }
+
+      const senderTable = await buildTable(senderHolder, {
+        movableRows: true,
+        movableRowsConnectedTables: '#receiver-table',
+        movableRowsSender: 'delete'
+      })
+
+      const receiverTable = await buildTable(receiverHolder, {
+        data: [],
+        movableRowsReceiver: 'add'
+      })
+
+      const senderModule = senderTable.modules.moveRow
+      const receiverModule = receiverTable.modules.moveRow
+      const senderRow = senderTable.rowManager.getRows()[0]
+
+      senderModule.endMove = () => {}
+      senderModule.moving = {
+        getComponent() {
+          return senderTable.getRows()[0]
+        }
+      }
+      senderModule.commsSend(senderModule.connectionSelectorsTables, 'moveRow', 'connect', {
+        row: senderRow
+      })
+
+      receiverModule.tableRowDrop(
+        {
+          stopImmediatePropagation() {}
+        },
+        null
+      )
+
+      return {
+        senderIds: senderTable.getData().map((row) => row.id),
+        receiverIds: receiverTable.getData().map((row) => row.id),
+        receiverConnectedTableId: receiverModule.connectedTable?.id ?? null
+      }
+    })
+
+    expect(result.senderIds).toEqual([])
+    expect(result.receiverIds).toEqual([1])
+    expect(result.receiverConnectedTableId).toBe('sender-table')
+  })
+
   await test.step('movableRowsSender supports custom function and built-in sender', async () => {
     await page.goto(fixtureUrl)
 
