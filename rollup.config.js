@@ -1,53 +1,44 @@
 import fs from 'fs-extra'
+import path from 'node:path'
+import { compile } from 'sass'
 import { globbySync } from 'globby'
 
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import postcss from 'rollup-plugin-postcss'
 import terser from '@rollup/plugin-terser'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 
 const pkg = JSON.parse(fs.readFileSync('./package.json'))
 const banner = `/* Tabulator v${pkg.version} (c) Oliver Folkerd ${new Date().getFullYear()} */`
 
 const minifyTerser = terser({ format: { preamble: banner } })
-const beautifyTerser = terser({
-  compress: false,
-  mangle: false,
-  format: { beautify: true, indent_level: 2, preamble: banner }
-})
+const beautifyTerser = terser({ compress: false, mangle: false, format: { beautify: true, preamble: banner } })
 
-console.log('Starting build process...')
+const inputFiles = globbySync(['src/scss/themes/*/{,*/}[!_]*.scss'])
 
-console.log('- Clearing "dist" folder')
+process.stdout.write('- Cleaning "dist" folder...')
+
 fs.rmSync('dist', { recursive: true, force: true })
 
-function cssBundle(minify) {
-  console.log(`- Generating ${minify ? 'minified' : 'full'} CSS bundles`)
+process.stdout.write('done.\n')
+process.stdout.write('- Generating CSS bundles...')
 
-  return globbySync(['src/scss/themes/*/{,*/}[!_]*.scss']).map((inputFile) => {
-    const file = inputFile.replace('src/scss/', '')
+for (const inputFile of inputFiles) {
+  const relativeFile = inputFile.replace('src/scss/', '')
+  const outputCss = `dist/css/${relativeFile.replace('.scss', '.css')}`
+  const outputMinCss = `dist/css/${relativeFile.replace('.scss', '.min.css')}`
 
-    return {
-      input: inputFile,
-      output: [{ file: './dist/css/' + file.replace('.scss', minify ? '.min.css' : '.css') }],
-      plugins: [
-        postcss({
-          modules: false,
-          extract: true,
-          minimize: minify,
-          use: { sass: { silenceDeprecations: ['legacy-js-api'] } }
-        })
-      ],
-      onwarn(warning, warn) {
-        if (warning.code === 'FILE_NAME_CONFLICT') return
-        warn(warning)
-      }
-    }
-  })
+  const fullResult = compile(inputFile, { style: 'expanded' })
+  const minResult = compile(inputFile, { style: 'compressed' })
+
+  fs.ensureDirSync(path.dirname(outputCss))
+  fs.writeFileSync(outputCss, fullResult.css)
+  fs.writeFileSync(outputMinCss, minResult.css)
 }
 
-function jsBundle() {
-  console.log('- Generating JS bundles')
+process.stdout.write(`done.\n`)
 
+console.log('- Generating JS bundles:')
+
+function jsBundle() {
   const browserConfig = {
     input: 'src/js/builds/browser.js',
     output: [
@@ -88,6 +79,6 @@ function jsBundle() {
   return [browserConfig, esmConfig]
 }
 
-const bundles = [...cssBundle(false), ...cssBundle(true), ...jsBundle()]
+const bundles = [...jsBundle()]
 
 export default bundles
