@@ -29,6 +29,7 @@ export default class ColumnCalcs extends Module {
     this.botRow = false
     this.topInitialized = false
     this.botInitialized = false
+    this.resizeHolderWidthFrame = null
 
     this.blocked = false
     this.recalcAfterBlock = false
@@ -91,7 +92,14 @@ export default class ColumnCalcs extends Module {
    * Resize calc holder to header width.
    */
   resizeHolderWidth() {
-    this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
+    if (this.resizeHolderWidthFrame) {
+      cancelAnimationFrame(this.resizeHolderWidthFrame)
+    }
+
+    this.resizeHolderWidthFrame = requestAnimationFrame(() => {
+      this.resizeHolderWidthFrame = null
+      this.topElement.style.minWidth = `${this.table.columnManager.headersElement.offsetWidth}px`
+    })
   }
 
   /**
