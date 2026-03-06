@@ -5,14 +5,5 @@ export default defineConfig({
   testMatch: '**/*.spec.js',
   fullyParallel: true,
   retries: 0,
-  reporter: 'list',
-  use: {
-    headless: true
-  },
-  projects: [
-    {
-      name: 'chromium',
-      use: { browserName: 'chromium', channel: 'msedge' }
-    }
-  ]
+  reporter: 'list'
 })
