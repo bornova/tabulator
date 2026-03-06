@@ -8,7 +8,7 @@ body {
 }
 
 body.with-test-nav {
-  padding-left: 210px;
+  padding-left: 213px;
 }
 
 #test-file-nav {
@@ -79,8 +79,8 @@ body.with-test-nav {
   background: light-dark(#fff, #1e1e1e);
   padding: 5px 8px;
   color: inherit;
-  font-family: inherit;
   font-size: 0.925em;
+  font-family: inherit;
 }
 
 .theme-toggle-button:last-child {

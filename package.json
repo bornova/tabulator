@@ -22,13 +22,16 @@
   ],
   "scripts": {
     "prebuild": "npm run prettier && npm run lint",
-    "build": "rollup -c",
+    "clean": "node ./scripts/clean-dist.js",
+    "build": "npm run clean && npm run build:css && npm run build:js",
+    "build:css": "node ./scripts/build-css.js",
+    "build:js": "rollup --config ./scripts/build-js.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prettier": "prettier . --check ",
     "prettier:fix": "prettier . --write",
     "test": "npm run build && playwright test",
-    "watch": "rollup -c -w"
+    "watch": "npm run build:css && rollup -c -w"
   },
   "repository": {
     "type": "git",

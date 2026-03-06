@@ -26,6 +26,7 @@
 
     .tabulator-placeholder-contents {
       display: inline-flex;
+      justify-content: center;
       padding: 10px;
       color: light-dark($color-gray-500, $color-ash-400);
       font-weight: 600;
