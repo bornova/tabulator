@@ -1,10 +1,9 @@
 import fs from 'fs-extra'
-import path from 'node:path'
+import path from 'path'
 import { compile } from 'sass'
 import { globbySync } from 'globby'
-
-import terser from '@rollup/plugin-terser'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
+import terser from '@rollup/plugin-terser'
 
 const pkg = JSON.parse(fs.readFileSync('./package.json'))
 const banner = `/* Tabulator v${pkg.version} (c) Oliver Folkerd ${new Date().getFullYear()} */`
@@ -14,13 +13,13 @@ const beautifyTerser = terser({ compress: false, mangle: false, format: { beauti
 
 const inputFiles = globbySync(['src/scss/themes/*/{,*/}[!_]*.scss'])
 
-process.stdout.write('- Cleaning "dist" folder...')
+console.log('Building Tabulator...')
 
+process.stdout.write('- Cleaning dist folder...')
 fs.rmSync('dist', { recursive: true, force: true })
+process.stdout.write(fs.existsSync('dist') ? ' failed.\n' : ' done.\n')
 
-process.stdout.write('done.\n')
-process.stdout.write('- Generating CSS bundles...')
-
+process.stdout.write('- Compiling SCSS files...')
 for (const inputFile of inputFiles) {
   const relativeFile = inputFile.replace('src/scss/', '')
   const outputCss = `dist/css/${relativeFile.replace('.scss', '.css')}`
@@ -33,10 +32,9 @@ for (const inputFile of inputFiles) {
   fs.writeFileSync(outputCss, fullResult.css)
   fs.writeFileSync(outputMinCss, minResult.css)
 }
+process.stdout.write(' done.\n')
 
-process.stdout.write(`done.\n`)
-
-console.log('- Generating JS bundles:')
+console.log('- Creating JS bundles...')
 
 function jsBundle() {
   const browserConfig = {
@@ -63,12 +61,10 @@ function jsBundle() {
     input: 'src/js/builds/esm.js',
     output: [
       {
-        format: 'esm',
         file: 'dist/js/esm/tabulator.js',
         plugins: [beautifyTerser]
       },
       {
-        format: 'esm',
         file: 'dist/js/esm/tabulator.min.js',
         plugins: [minifyTerser]
       }
