@@ -734,6 +734,8 @@ export default class ColumnManager extends CoreFeature {
   scrollToColumn(column, position, ifVisible) {
     const offset = column.getLeftOffset()
     const colEl = column.getElement()
+    const scrollLeft = this.table.rowManager.element.scrollLeft
+    const viewportRight = scrollLeft + this.element.clientWidth
 
     let left = 0
     let adjust = 0
@@ -757,8 +759,9 @@ export default class ColumnManager extends CoreFeature {
 
         // check column visibility
         if (!ifVisible) {
-          if (offset > 0 && offset + colEl.offsetWidth < this.element.clientWidth) {
-            return false
+          if (offset >= scrollLeft && offset + colEl.offsetWidth <= viewportRight) {
+            resolve()
+            return
           }
         }
 
