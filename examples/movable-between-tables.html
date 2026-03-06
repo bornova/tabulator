@@ -1,0 +1,59 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link rel="stylesheet" href="./_examples.css" />
+    <style>
+      .table-wrap {
+        display: flex;
+        gap: 10px;
+      }
+
+      .table-wrap > div {
+        flex-grow: 1;
+        width: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="table-wrap">
+      <div><div id="example-table-sender"></div></div>
+      <div><div id="example-table-receiver"></div></div>
+    </div>
+
+    <script type="module">
+      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { initializeTestPage } from './_exampleUtils.js'
+
+      // Generate and log the data
+      const tableData = initializeTestPage()
+
+      let table = new Tabulator('#example-table-sender', {
+        data: tableData, //assign data to table
+        height: 400,
+        layout: 'fitColumns',
+        movableRows: true,
+        movableRowsConnectedTables: '#example-table-receiver',
+        movableRowsSender: 'delete',
+        placeholder: 'All Rows Moved',
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name' }
+        ]
+      })
+
+      let table2 = new Tabulator('#example-table-receiver', {
+        data: [], //assign data to table
+        height: 400,
+        layout: 'fitColumns',
+        movableRowsReceiver: 'add',
+        placeholder: 'Drag Rows Here',
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name' }
+        ]
+      })
+    </script>
+  </body>
+</html>

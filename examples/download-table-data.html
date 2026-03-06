@@ -26,7 +26,7 @@
       // Generate and log the data
       const tableData = initializeTestPage()
 
-      const table = new Tabulator('#example-table', {
+      window.table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
         height: 600,
         columnDefaults: {

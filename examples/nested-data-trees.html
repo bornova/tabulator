@@ -15,15 +15,19 @@
       // Generate and log the data
       const tableData = generateNestedData(5, 4, 2)
 
-      const table = new Tabulator('#example-table', {
+      window.table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
         height: 600,
         columnDefaults: {
           headerSortTristate: true
         },
         dataTree: true,
+        dataTreeStartExpanded: true,
+        selectableRows: true,
+        selectableRowsRangeMode: 'click',
+        dataTreeSelectPropagate: true,
         columns: [
-          { title: 'Id', field: 'id' },
+          { title: 'Id', field: 'id', titleFormatter: 'rowSelection' },
           { title: 'Name', field: 'name', sorter: 'string' },
           { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
           { title: 'Gender', field: 'gender', sorter: 'string' },

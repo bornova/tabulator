@@ -15,7 +15,7 @@
       // Generate and log the data
       const tableData = initializeTestPage()
 
-      const table = new Tabulator('#example-table', {
+      window.table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
         height: 600,
         columnDefaults: {
@@ -23,7 +23,14 @@
         },
         columns: [
           { title: 'Id', field: 'id' },
-          { title: 'Name', field: 'name', editor: 'input', headerFilter: 'input', sorter: 'string' },
+          {
+            title: 'Name',
+            field: 'name',
+            editor: 'input',
+            headerFilter: 'input',
+            sorter: 'string',
+            validator: 'required'
+          },
           {
             title: 'Age',
             field: 'age',

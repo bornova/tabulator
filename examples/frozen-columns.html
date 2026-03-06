@@ -8,6 +8,8 @@
   <body>
     <div id="example-table"></div>
 
+    <button id="btn">Update</button>
+
     <script type="module">
       import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
       import { initializeTestPage } from './_exampleUtils.js'
@@ -15,7 +17,7 @@
       // Generate and log the data
       const tableData = initializeTestPage()
 
-      const table = new Tabulator('#example-table', {
+      window.table = new Tabulator('#example-table', {
         data: tableData, //assign data to table
         height: 600,
         columnDefaults: {
@@ -36,6 +38,11 @@
           { title: 'Progress', field: 'progress', formatter: 'progress' },
           { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
         ]
+      })
+
+      document.getElementById('btn').addEventListener('click', () => {
+        console.log('Updating name column definition to add maxLength validator')
+        table.updateColumnDefinition('name', { validator: 'maxLength:8' })
       })
     </script>
   </body>

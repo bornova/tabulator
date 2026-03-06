@@ -207,6 +207,7 @@ const testFiles = [
   'grouping-data.html',
   'layouts.html',
   'menus.html',
+  'movable-between-tables.html',
   'movable-rows.html',
   'multisheet-spreadsheet.html',
   'nested-data-trees.html',
