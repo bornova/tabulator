@@ -1,0 +1,64 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link rel="stylesheet" href="./_examples.css" />
+  </head>
+  <body>
+    <script type="module">
+      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { initializeTestPage } from './_exampleUtils.js'
+
+      // Generate and log the data
+      const tableData = initializeTestPage()
+
+      const table = new Tabulator('#example-table', {
+        data: tableData, //assign data to table
+        height: 600,
+        columnDefaults: {
+          headerSortTristate: true
+        },
+        frozenRows: 3,
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name', sorter: 'string' },
+          {
+            title: 'Age',
+            field: 'age',
+            sorter: 'number',
+            editor: 'input',
+            hozAlign: 'right',
+            bottomCalc: 'min',
+            topCalc: 'max'
+          },
+          { title: 'Gender', field: 'gender', sorter: 'string' },
+          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+          { title: 'Color', field: 'col', sorter: 'string' },
+          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+          {
+            title: 'Salary',
+            field: 'salary',
+            sorter: 'number',
+            hozAlign: 'right',
+            formatter: 'money',
+            formatterParams: { decimal: '.', thousand: ',', symbol: '$' },
+            bottomCalc: 'avg',
+            bottomCalcFormatter: 'money',
+            bottomCalcFormatterParams: { decimal: '.', thousand: ',', symbol: '$' }
+          },
+          { title: 'Address', field: 'address', sorter: 'string' },
+          { title: 'State', field: 'state', sorter: 'string' },
+          { title: 'Zip Code', field: 'zip', sorter: 'string' },
+          { title: 'Progress', field: 'progress', formatter: 'progress' },
+          { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
+        ],
+        pagination: 'local',
+        paginationSize: 25,
+        paginationSizeSelector: [10, 25, 50, 100],
+        movableColumns: true,
+        paginationCounter: 'rows'
+      })
+    </script>
+  </body>
+</html>

@@ -1,11 +1,10 @@
 import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
-  testDir: './test/smoke',
+  testDir: './test',
   testMatch: '**/*.spec.js',
-  fullyParallel: false,
+  fullyParallel: true,
   retries: 0,
-  workers: 1,
   reporter: 'list',
   use: {
     headless: true

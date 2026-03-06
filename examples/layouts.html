@@ -1,0 +1,73 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link rel="stylesheet" href="./_examples.css" />
+  </head>
+  <body>
+    fitData
+    <div id="example-table1"></div>
+    <br />
+    fitDataFill
+    <div id="example-table2"></div>
+    <br />
+    fitDataStretch
+    <div id="example-table3"></div>
+    <br />
+    fitColumns
+    <div id="example-table4"></div>
+
+    <script type="module">
+      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { initializeTestPage } from './_exampleUtils.js'
+
+      // Generate and log the data
+      const tableData = initializeTestPage()
+
+      const columns = [
+        { title: 'Id', field: 'id' },
+        { title: 'Name', field: 'name', sorter: 'string' },
+        { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+        { title: 'Gender', field: 'gender', sorter: 'string' },
+        { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+        { title: 'Color', field: 'col', sorter: 'string' },
+        { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+        { title: 'Salary', field: 'salary', sorter: 'number', hozAlign: 'right' },
+        { title: 'Address', field: 'address', sorter: 'string' },
+        { title: 'State', field: 'state', sorter: 'string' },
+        { title: 'Zip Code', field: 'zip', sorter: 'string' },
+        { title: 'Progress', field: 'progress', formatter: 'progress' },
+        { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
+      ]
+
+      const table1 = new Tabulator('#example-table1', {
+        data: tableData, //assign data to table
+        height: 200,
+        layout: 'fitData',
+        columns
+      })
+
+      const table2 = new Tabulator('#example-table2', {
+        data: tableData, //assign data to table
+        height: 200,
+        layout: 'fitDataFill',
+        columns
+      })
+
+      const table3 = new Tabulator('#example-table3', {
+        data: tableData, //assign data to table
+        height: 200,
+        layout: 'fitDataStretch',
+        columns
+      })
+
+      const table4 = new Tabulator('#example-table4', {
+        data: tableData, //assign data to table
+        height: 200,
+        layout: 'fitColumns',
+        columns
+      })
+    </script>
+  </body>
+</html>

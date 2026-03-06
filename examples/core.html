@@ -1,0 +1,40 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link rel="stylesheet" href="./_examples.css" />
+  </head>
+  <body>
+    <div id="example-table"></div>
+
+    <script type="module">
+      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { initializeTestPage } from './_exampleUtils.js'
+
+      // Generate and log the data
+      const tableData = initializeTestPage()
+
+      const table = new Tabulator('#example-table', {
+        data: tableData, //assign data to table
+        height: 600,
+        frozenRows: 3,
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name' },
+          { title: 'Age', field: 'age', hozAlign: 'right', headerHozAlign: 'right' },
+          { title: 'Gender', field: 'gender' },
+          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center', headerHozAlign: 'center' },
+          { title: 'Color', field: 'col' },
+          { title: 'DoB', field: 'dob', hozAlign: 'center', headerHozAlign: 'center' },
+          { title: 'Salary', field: 'salary', hozAlign: 'right', headerHozAlign: 'right' },
+          { title: 'Address', field: 'address' },
+          { title: 'State', field: 'state' },
+          { title: 'Zip Code', field: 'zip' },
+          { title: 'Progress', field: 'progress', formatter: 'progress' },
+          { title: 'Completed', field: 'completed', formatter: 'tickCross' }
+        ]
+      })
+    </script>
+  </body>
+</html>
