@@ -8,7 +8,7 @@ body {
 }
 
 body.with-test-nav {
-  padding-left: 213px;
+  padding-left: 223px;
 }
 
 #test-file-nav {
@@ -18,7 +18,7 @@ body.with-test-nav {
   border-radius: 4px;
   background: light-dark(#fff, #1e1e1e);
   padding: 10px;
-  width: 180px;
+  width: 190px;
   max-height: calc(100vh - 20px);
   overflow: auto;
 }

@@ -6,10 +6,11 @@ export default defineConfig({
   fullyParallel: true,
   retries: 0,
   reporter: 'list',
+  workers: 1,
   projects: [
     {
       name: 'chromium',
-      use: { browserName: 'chromium', channel: 'msedge' }
+      use: { browserName: 'chromium', channel: 'chromium', headless: true }
     }
   ]
 })

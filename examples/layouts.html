@@ -20,10 +20,13 @@
 
     <script type="module">
       import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { generateData } from './_exampleData.js'
       import { initializeTestPage } from './_exampleUtils.js'
 
+      initializeTestPage()
+
       // Generate and log the data
-      const tableData = initializeTestPage()
+      const tableData = generateData()
 
       const columns = [
         { title: 'Id', field: 'id' },

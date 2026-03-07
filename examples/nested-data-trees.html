@@ -10,22 +10,18 @@
 
     <script type="module">
       import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
-      import { initializeTestPage, generateNestedData } from './_exampleUtils.js'
+      import { generateNestedData } from './_exampleData.js'
+      import { initializeTestPage } from './_exampleUtils.js'
 
-      // Generate and log the data
-      const tableData = generateNestedData(5, 4, 2)
+      initializeTestPage()
 
       window.table = new Tabulator('#example-table', {
-        data: tableData, //assign data to table
+        data: generateNestedData(5, 4, 2), //assign data to table
         height: 600,
         columnDefaults: {
           headerSortTristate: true
         },
         dataTree: true,
-        dataTreeStartExpanded: true,
-        selectableRows: true,
-        selectableRowsRangeMode: 'click',
-        dataTreeSelectPropagate: true,
         columns: [
           { title: 'Id', field: 'id', titleFormatter: 'rowSelection' },
           { title: 'Name', field: 'name', sorter: 'string' },

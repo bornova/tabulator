@@ -10,13 +10,13 @@
 
     <script type="module">
       import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
+      import { generateData } from './_exampleData.js'
       import { initializeTestPage } from './_exampleUtils.js'
 
-      // Generate and log the data
-      const tableData = initializeTestPage()
+      initializeTestPage()
 
       window.table = new Tabulator('#example-table', {
-        data: tableData, //assign data to table
+        data: generateData(), //assign data to table
         height: 600,
         columnDefaults: {
           headerSortTristate: true,
