@@ -8,15 +8,14 @@ body {
 }
 
 body.with-test-nav {
-  padding-left: 223px;
+  padding-left: 225px;
 }
 
 #test-file-nav {
   position: fixed;
   left: 10px;
-  border: 1px solid light-dark(#ccc, #666);
+  border: 1px solid light-dark(rgb(202, 213, 226), rgb(63, 63, 63));
   border-radius: 4px;
-  background: light-dark(#fff, #1e1e1e);
   padding: 10px;
   width: 190px;
   max-height: calc(100vh - 20px);
@@ -94,4 +93,8 @@ body.with-test-nav {
 .theme-toggle-button.active {
   background: light-dark(#e8e8e8, #333);
   font-weight: 600;
+}
+
+.layout-table {
+  margin: 5px 0px 20px 0px;
 }
