@@ -1,11 +1,13 @@
-@import url('./../../dist/css/themes/default/tabulator.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 html,
 body {
-  height: 100vh;
   font-size: 0.875em;
   font-family: 'Google Sans', sans-serif;
+}
+
+.tabulator {
+  font-size: inherit !important;
 }
 
 body.with-test-nav {
@@ -21,6 +23,10 @@ body.with-test-nav {
   width: 190px;
   max-height: calc(100vh - 20px);
   overflow: auto;
+}
+
+#test-file-nav label {
+  width: 50px;
 }
 
 #test-file-nav-title {
@@ -55,7 +61,7 @@ body.with-test-nav {
   font-weight: 600;
 }
 
-#theme-select-wrapper {
+.example-control-wrapper {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -64,14 +70,16 @@ body.with-test-nav {
   padding-top: 8px;
 }
 
-#theme-toggle {
+#theme-toggle,
+#tabulator-source-toggle {
   display: inline-flex;
   border: 1px solid light-dark(#ccc, #666);
   border-radius: 4px;
   overflow: hidden;
 }
 
-.theme-toggle-button {
+.theme-toggle-button,
+.source-toggle-button {
   appearance: none;
   cursor: pointer;
   border: 0;
@@ -83,15 +91,18 @@ body.with-test-nav {
   font-family: inherit;
 }
 
-.theme-toggle-button:last-child {
+.theme-toggle-button:last-child,
+.source-toggle-button:last-child {
   border-right: 0;
 }
 
-.theme-toggle-button:hover {
+.theme-toggle-button:hover,
+.source-toggle-button:hover {
   background: light-dark(#f3f3f3, #2a2a2a);
 }
 
-.theme-toggle-button.active {
+.theme-toggle-button.active,
+.source-toggle-button.active {
   background: light-dark(#e8e8e8, #333);
   font-weight: 600;
 }

@@ -16,11 +16,11 @@
     <div class="layout-table" id="example-table4"></div>
 
     <script type="module">
-      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
       import { generateData } from './_exampleData.js'
-      import { initializeTestPage } from './_exampleUtils.js'
+      import { initializeTestPage, loadExampleTabulator } from './_exampleUtils.js'
 
-      initializeTestPage()
+      await initializeTestPage()
+      const Tabulator = await loadExampleTabulator()
 
       // Generate and log the data
       const tableData = generateData()

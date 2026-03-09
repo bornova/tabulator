@@ -1,3 +1,20 @@
+const TABULATOR_SOURCE_STORAGE_KEY = 'tabulator-example-source'
+const TABULATOR_SOURCE_QUERY_KEY = 'tabulator-source'
+const TABULATOR_STYLESHEET_ID = 'tabulator-example-stylesheet'
+const TABULATOR_CDN_SCRIPT_ID = 'tabulator-example-cdn-script'
+
+const tabulatorSources = {
+  local: {
+    label: 'Local',
+    stylesheetHref: './../../dist/css/themes/default/tabulator.min.css'
+  },
+  cdn: {
+    label: 'CDN',
+    scriptSrc: 'https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js',
+    stylesheetHref: 'https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css'
+  }
+}
+
 export const ensureExampleTable = (id = 'example-table') => {
   let tableElement = document.getElementById(id)
 
@@ -15,10 +32,28 @@ export const ensureExampleTable = (id = 'example-table') => {
   return tableElement
 }
 
-export const initializeTestPage = () => {
+export const initializeTestPage = async () => {
+  const source = getSelectedTabulatorSource()
+
+  await ensureTabulatorStylesheet(source)
   ensureExampleTable()
   initializeTestFileNavigator()
   initializeThemeSelector()
+  initializeTabulatorSourceSelector(source)
+}
+
+export const loadExampleTabulator = async () => {
+  const source = getSelectedTabulatorSource()
+
+  if (source === 'cdn') {
+    await ensureCdnTabulatorScript()
+
+    return window.Tabulator
+  }
+
+  const { TabulatorFull } = await import('./../../dist/js/esm/tabulator.js')
+
+  return TabulatorFull
 }
 
 export const initializeThemeSelector = () => {
@@ -30,6 +65,7 @@ export const initializeThemeSelector = () => {
     themeToggle = document.createElement('div')
 
     wrapper.id = 'theme-select-wrapper'
+    wrapper.className = 'example-control-wrapper'
     label.htmlFor = 'theme-toggle'
     label.textContent = 'Theme: '
 
@@ -108,6 +144,137 @@ export const initializeThemeSelector = () => {
   })
 }
 
+export const initializeTabulatorSourceSelector = (initialSource = getSelectedTabulatorSource()) => {
+  let sourceToggle = document.getElementById('tabulator-source-toggle')
+
+  if (!sourceToggle) {
+    const wrapper = document.createElement('div')
+    const label = document.createElement('label')
+    sourceToggle = document.createElement('div')
+
+    wrapper.id = 'tabulator-source-wrapper'
+    wrapper.className = 'example-control-wrapper'
+    label.htmlFor = 'tabulator-source-toggle'
+    label.textContent = 'Source: '
+
+    sourceToggle.id = 'tabulator-source-toggle'
+    sourceToggle.setAttribute('role', 'group')
+    sourceToggle.setAttribute('aria-label', 'Tabulator source')
+
+    Object.entries(tabulatorSources).forEach(([value, option]) => {
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.className = 'source-toggle-button'
+      button.dataset.source = value
+      button.textContent = option.label
+      sourceToggle.appendChild(button)
+    })
+
+    wrapper.appendChild(label)
+    wrapper.appendChild(sourceToggle)
+
+    const navigatorWrapper = document.getElementById('test-file-nav')
+
+    if (navigatorWrapper) {
+      navigatorWrapper.appendChild(wrapper)
+    } else {
+      const firstTable = document.querySelector('[id^="example-table"]')
+      if (firstTable) {
+        firstTable.parentNode.insertBefore(wrapper, firstTable)
+      } else {
+        document.body.insertBefore(wrapper, document.body.firstChild)
+      }
+    }
+  }
+
+  applySourceSelection(sourceToggle, initialSource)
+
+  sourceToggle.addEventListener('click', (event) => {
+    const button = event.target.closest('.source-toggle-button')
+
+    if (!button) {
+      return
+    }
+
+    const nextSource = button.dataset.source
+
+    if (nextSource && nextSource !== getSelectedTabulatorSource()) {
+      localStorage.setItem(TABULATOR_SOURCE_STORAGE_KEY, nextSource)
+
+      const url = new URL(window.location.href)
+      url.searchParams.set(TABULATOR_SOURCE_QUERY_KEY, nextSource)
+      window.location.href = url.toString()
+    }
+  })
+}
+
+const applySourceSelection = (sourceToggle, selectedSource) => {
+  sourceToggle.querySelectorAll('.source-toggle-button').forEach((button) => {
+    const isActive = button.dataset.source === selectedSource
+    button.classList.toggle('active', isActive)
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false')
+  })
+}
+
+const getSelectedTabulatorSource = () => {
+  const params = new URLSearchParams(window.location.search)
+  const sourceFromQuery = params.get(TABULATOR_SOURCE_QUERY_KEY)
+
+  if (sourceFromQuery && tabulatorSources[sourceFromQuery]) {
+    localStorage.setItem(TABULATOR_SOURCE_STORAGE_KEY, sourceFromQuery)
+    return sourceFromQuery
+  }
+
+  const storedSource = localStorage.getItem(TABULATOR_SOURCE_STORAGE_KEY)
+
+  return storedSource && tabulatorSources[storedSource] ? storedSource : 'local'
+}
+
+const ensureTabulatorStylesheet = (source) => {
+  const stylesheetHref = tabulatorSources[source].stylesheetHref
+
+  return new Promise((resolve) => {
+    let stylesheet = document.getElementById(TABULATOR_STYLESHEET_ID)
+
+    if (!stylesheet) {
+      stylesheet = document.createElement('link')
+      stylesheet.id = TABULATOR_STYLESHEET_ID
+      stylesheet.rel = 'stylesheet'
+      document.head.insertBefore(stylesheet, document.head.firstChild)
+    }
+
+    if (stylesheet.getAttribute('href') === stylesheetHref) {
+      resolve()
+      return
+    }
+
+    stylesheet.addEventListener('load', () => resolve(), { once: true })
+    stylesheet.addEventListener('error', () => resolve(), { once: true })
+    stylesheet.setAttribute('href', stylesheetHref)
+  })
+}
+
+const ensureCdnTabulatorScript = () => {
+  if (window.Tabulator) {
+    return Promise.resolve(window.Tabulator)
+  }
+
+  return new Promise((resolve, reject) => {
+    let script = document.getElementById(TABULATOR_CDN_SCRIPT_ID)
+
+    if (!script) {
+      script = document.createElement('script')
+      script.id = TABULATOR_CDN_SCRIPT_ID
+      script.src = tabulatorSources.cdn.scriptSrc
+      script.async = true
+      document.head.appendChild(script)
+    }
+
+    script.addEventListener('load', () => resolve(window.Tabulator), { once: true })
+    script.addEventListener('error', () => reject(new Error('Failed to load Tabulator CDN bundle')), { once: true })
+  })
+}
+
 const testFiles = [
   'clipboard.html',
   'column-calculations.html',
@@ -158,12 +325,13 @@ export const initializeTestFileNavigator = () => {
   list.id = 'test-file-nav-list'
 
   const currentFile = window.location.pathname.split('/').pop() || ''
+  const currentSearch = window.location.search
 
   testFiles.forEach((file) => {
     const listItem = document.createElement('li')
     const link = document.createElement('a')
 
-    link.href = file
+    link.href = currentSearch ? `${file}${currentSearch}` : file
     link.textContent = file
       .replace('.html', '')
       .replaceAll('-', ' ')

@@ -9,11 +9,11 @@
     <div id="example-table"></div>
 
     <script type="module">
-      import { TabulatorFull as Tabulator } from './../../dist/js/esm/tabulator.js'
       import { generateData } from './_exampleData.js'
-      import { initializeTestPage } from './_exampleUtils.js'
+      import { initializeTestPage, loadExampleTabulator } from './_exampleUtils.js'
 
-      initializeTestPage()
+      await initializeTestPage()
+      const Tabulator = await loadExampleTabulator()
 
       window.table = new Tabulator('#example-table', {
         data: generateData(), //assign data to table
@@ -62,12 +62,22 @@
             editorParams: { valuesLookup: 'active' }
           },
           { title: 'Address', field: 'address', sorter: 'string', editor: 'textarea' },
-          { title: 'State', field: 'state', sorter: 'string' },
+          {
+            title: 'State',
+            field: 'state',
+            sorter: 'string',
+            editor: 'list',
+            editorParams: { valuesLookup: 'active', sort: 'asc' }
+          },
           {
             title: 'Zip Code',
             field: 'zip',
-            editor: 'list',
-            editorParams: { valuesLookup: 'active' }
+            editor: 'input',
+            editorParams: {
+              elementAttributes: {
+                maxlength: '5'
+              }
+            }
           },
           {
             title: 'Progress',
