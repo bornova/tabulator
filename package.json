@@ -2,30 +2,22 @@
   "name": "tabulator-tables",
   "version": "6.3.1",
   "description": "Interactive table generation JavaScript library",
-  "style": "dist/css/tabulator.css",
+  "style": "dist/css/default/tabulator.css",
   "type": "module",
   "main": "dist/js/tabulator.js",
-  "module": "dist/js/tabulator_esm.mjs",
+  "module": "dist/js/esm/tabulator.js",
   "exports": {
     ".": {
       "require": "./dist/js/browser/tabulator.js",
       "import": "./dist/js/esm/tabulator.js"
-    },
-    "./dist/css/*.css": "./dist/css/*.css",
-    "./dist/js/*.js": "./dist/js/*.js",
-    "./src/scss/*.scss": "./src/scss/*.scss",
-    "./src/js/*.js": "./src/js/*.js"
+    }
   },
-  "sideEffects": [
-    "**/*.css",
-    "**/*.scss"
-  ],
   "scripts": {
     "prebuild": "npm run prettier && npm run lint",
     "clean": "node ./scripts/clean-dist.js",
     "build": "npm run clean && npm run build:css && npm run build:js",
-    "build:css": "node ./scripts/build-css.js",
-    "build:js": "rollup --config ./scripts/build-js.js",
+    "build:css": "node ./scripts/compile-css.js",
+    "build:js": "rollup -c",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prettier": "prettier . --check ",
@@ -37,25 +29,6 @@
     "type": "git",
     "url": "https://github.com/olifolkerd/tabulator.git"
   },
-  "keywords": [
-    "table",
-    "grid",
-    "datagrid",
-    "tabulator",
-    "editable",
-    "sort",
-    "format",
-    "resizable",
-    "list",
-    "scrollable",
-    "ajax",
-    "json",
-    "widget",
-    "jquery",
-    "react",
-    "angular",
-    "vue"
-  ],
   "author": "Oli Folkerd",
   "license": "MIT",
   "bugs": {
@@ -73,7 +46,6 @@
     "globby": "^16.1.1",
     "prettier": "^3.8.1",
     "rollup": "^4.59.0",
-    "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.97.3"
   }
 }
