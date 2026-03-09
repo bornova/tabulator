@@ -19,6 +19,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   let scrollHeight = 0
 
   // create and style input
+  input.setAttribute('name', 'tabulator-editor-textarea')
   input.classList.add('tabulator-editor-textarea')
 
   if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
