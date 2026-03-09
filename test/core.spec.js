@@ -182,6 +182,113 @@ test('Tabulator core functionality', async ({ page }) => {
   expect(result.rowNames).toEqual(['Alice Final', 'Cara'])
   expect(result.moduleKeys.length).toBeGreaterThan(0)
 
+  await test.step('constructor waits for load and fonts before initializing', async () => {
+    await page.goto(fixtureUrl)
+
+    const delayedInit = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+
+      holder.id = 'delayed-init-table'
+      holder.style.width = '900px'
+      root.appendChild(holder)
+
+      let readyState = 'loading'
+      let resolveFonts
+      const fontsReady = new Promise((resolve) => {
+        resolveFonts = resolve
+      })
+
+      Object.defineProperty(document, 'readyState', {
+        configurable: true,
+        get: () => readyState
+      })
+
+      Object.defineProperty(document, 'fonts', {
+        configurable: true,
+        value: {
+          ready: fontsReady
+        }
+      })
+
+      let tableBuildingCount = 0
+      let tableBuiltCount = 0
+
+      const table = new Tabulator(holder, {
+        data: [{ id: 1, name: 'Alice' }],
+        columns: [{ title: 'Name', field: 'name' }]
+      })
+
+      table.on('tableBuilding', () => {
+        tableBuildingCount += 1
+      })
+
+      table.on('tableBuilt', () => {
+        tableBuiltCount += 1
+      })
+
+      await new Promise((resolve) => setTimeout(resolve, 20))
+
+      const beforeLoad = {
+        initialized: table.initialized,
+        tableBuildingCount,
+        tableBuiltCount
+      }
+
+      readyState = 'complete'
+      window.dispatchEvent(new Event('load'))
+
+      await new Promise((resolve) => setTimeout(resolve, 20))
+
+      const afterLoadBeforeFonts = {
+        initialized: table.initialized,
+        tableBuildingCount,
+        tableBuiltCount
+      }
+
+      const built = new Promise((resolve) => {
+        const timeout = setTimeout(() => resolve(false), 1500)
+
+        table.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve(true)
+        })
+      })
+
+      resolveFonts()
+
+      const builtAfterFonts = await built
+
+      const afterFonts = {
+        initialized: table.initialized,
+        tableBuildingCount,
+        tableBuiltCount,
+        builtAfterFonts
+      }
+
+      table.destroy()
+      delete document.readyState
+      delete document.fonts
+
+      return {
+        beforeLoad,
+        afterLoadBeforeFonts,
+        afterFonts
+      }
+    })
+
+    expect(delayedInit.beforeLoad.initialized).toBe(false)
+    expect(delayedInit.beforeLoad.tableBuildingCount).toBe(0)
+    expect(delayedInit.beforeLoad.tableBuiltCount).toBe(0)
+    expect(delayedInit.afterLoadBeforeFonts.initialized).toBe(false)
+    expect(delayedInit.afterLoadBeforeFonts.tableBuildingCount).toBe(0)
+    expect(delayedInit.afterLoadBeforeFonts.tableBuiltCount).toBe(0)
+    expect(delayedInit.afterFonts.builtAfterFonts).toBe(true)
+    expect(delayedInit.afterFonts.initialized).toBe(true)
+    expect(delayedInit.afterFonts.tableBuildingCount).toBe(1)
+    expect(delayedInit.afterFonts.tableBuiltCount).toBe(1)
+  })
+
   await test.step('scrollToColumn handles skipped and left-hidden columns correctly', async () => {
     await page.goto(fixtureUrl)
 

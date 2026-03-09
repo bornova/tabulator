@@ -82,12 +82,14 @@ class Tabulator extends ModuleBinder {
 
     this.initialized = false
     this.destroyed = false
+    this.createTimeout = null
+    this.windowLoadHandler = null
 
     if (this.initializeElement(element)) {
       this.initializeCoreSystems(options)
 
       // delay table creation to allow event bindings immediately after the constructor
-      setTimeout(() => this._create())
+      this._queueTableCreation()
     }
 
     this.constructor.registry.register(this) // register table for inter-device communication
@@ -152,6 +154,66 @@ class Tabulator extends ModuleBinder {
     this.footerManager.initialize()
 
     this.dependencyRegistry.initialize()
+  }
+
+  /**
+   * Defer table creation until the page and fonts are ready.
+   */
+  _queueTableCreation() {
+    this._waitForPageResources().then(() => {
+      if (this.destroyed || this.initialized) {
+        return
+      }
+
+      this.createTimeout = setTimeout(() => {
+        this.createTimeout = null
+
+        if (!this.destroyed && !this.initialized) {
+          this._create()
+        }
+      })
+    })
+  }
+
+  /**
+   * Wait for the document load event and any pending web fonts.
+   * @returns {Promise<void>}
+   */
+  _waitForPageResources() {
+    return this._waitForWindowLoad().then(() => this._waitForFonts())
+  }
+
+  /**
+   * Wait for the browser load event when the document is still loading.
+   * @returns {Promise<void>}
+   */
+  _waitForWindowLoad() {
+    if (typeof document === 'undefined' || document.readyState === 'complete') {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve) => {
+      this.windowLoadHandler = () => {
+        this.windowLoadHandler = null
+        resolve()
+      }
+
+      window.addEventListener('load', this.windowLoadHandler, { once: true })
+    })
+  }
+
+  /**
+   * Wait for web fonts to finish loading when supported.
+   * @returns {Promise<void>}
+   */
+  _waitForFonts() {
+    const fontSet = typeof document !== 'undefined' ? document.fonts : null
+
+    if (!fontSet?.ready) {
+      return Promise.resolve()
+    }
+
+    return fontSet.ready.catch(() => {})
   }
 
   // convert deprecated functionality to new functions
@@ -372,6 +434,16 @@ class Tabulator extends ModuleBinder {
     const element = this.element
 
     this.destroyed = true
+
+    if (this.createTimeout) {
+      clearTimeout(this.createTimeout)
+      this.createTimeout = null
+    }
+
+    if (this.windowLoadHandler) {
+      window.removeEventListener('load', this.windowLoadHandler)
+      this.windowLoadHandler = null
+    }
 
     this.constructor.registry.deregister(this) // deregister table from inter-device communication
 
