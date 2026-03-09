@@ -23,11 +23,11 @@
         min-width: 100%;
       }
     }
+  }
 
-    .tabulator-frozen-rows-holder {
-      .tabulator-row {
-        min-width: 100%;
-      }
+  &[tabulator-layout='fitDataStretch'] {
+    .tabulator-tableholder {
+      scrollbar-gutter: stable;
     }
   }
 
