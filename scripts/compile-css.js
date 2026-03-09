@@ -20,4 +20,4 @@ for (const inputFile of inputFiles) {
   fs.writeFileSync(outputMinCss, minResult.css)
 }
 
-process.stdout.write('done.\n')
+process.stdout.write(' done.\n')

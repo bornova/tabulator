@@ -93,7 +93,7 @@
 
 .tabulator-editor-input {
   box-sizing: border-box;
-  padding: 4px;
+  padding: 4px 9px;
   width: 100%;
 }
 
@@ -107,13 +107,12 @@
 }
 
 .tabulator-editor-textarea {
-  display: block;
+  display: flex;
   box-sizing: border-box;
   outline: none;
   border: none;
-  padding: 2px;
+  padding: 0;
   width: 100%;
-  height: 100%;
   resize: none;
   white-space: pre-wrap;
 }
@@ -140,10 +139,6 @@
 
 .tabulator-star-icon {
   padding: 0 1px;
-}
-
-.tabulator-progress-editor-cell {
-  padding: 10px !important;
 }
 
 .tabulator-progress-editor-bar {
@@ -173,6 +168,10 @@
 .tabulator-progress-formatter {
   position: relative;
   min-width: 30px;
+
+  &.tabulator-editing {
+    padding: 7px 9px !important;
+  }
 }
 
 .tabulator-progress-formatter-container {

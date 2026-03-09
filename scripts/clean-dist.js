@@ -8,4 +8,4 @@ if (fs.existsSync('dist')) {
   throw new Error('Failed to clean dist folder')
 }
 
-process.stdout.write('done.\n')
+process.stdout.write(' done.\n')
