@@ -1,11 +1,17 @@
 const TABULATOR_SOURCE_STORAGE_KEY = 'tabulator-example-source'
 const TABULATOR_SOURCE_QUERY_KEY = 'tabulator-source'
 const TABULATOR_STYLESHEET_ID = 'tabulator-example-stylesheet'
+const TABULATOR_BROWSER_SCRIPT_ID = 'tabulator-example-browser-script'
 const TABULATOR_CDN_SCRIPT_ID = 'tabulator-example-cdn-script'
 
 const tabulatorSources = {
-  local: {
-    label: 'Local',
+  esm: {
+    label: 'ESM',
+    stylesheetHref: './../../dist/css/themes/default/tabulator.min.css'
+  },
+  browser: {
+    label: 'BRO',
+    scriptSrc: './../../dist/js/browser/tabulator.min.js',
     stylesheetHref: './../../dist/css/themes/default/tabulator.min.css'
   },
   cdn: {
@@ -45,13 +51,19 @@ export const initializeTestPage = async () => {
 export const loadExampleTabulator = async () => {
   const source = getSelectedTabulatorSource()
 
+  if (source === 'browser') {
+    await ensureBrowserTabulatorScript()
+
+    return window.Tabulator
+  }
+
   if (source === 'cdn') {
     await ensureCdnTabulatorScript()
 
     return window.Tabulator
   }
 
-  const { TabulatorFull } = await import('./../../dist/js/esm/tabulator.js')
+  const { TabulatorFull } = await import('./../../dist/js/esm/tabulator.min.js')
 
   return TabulatorFull
 }
@@ -227,7 +239,7 @@ const getSelectedTabulatorSource = () => {
 
   const storedSource = localStorage.getItem(TABULATOR_SOURCE_STORAGE_KEY)
 
-  return storedSource && tabulatorSources[storedSource] ? storedSource : 'local'
+  return storedSource && tabulatorSources[storedSource] ? storedSource : 'esm'
 }
 
 const ensureTabulatorStylesheet = (source) => {
@@ -254,24 +266,44 @@ const ensureTabulatorStylesheet = (source) => {
   })
 }
 
+const ensureBrowserTabulatorScript = () => {
+  if (window.Tabulator) {
+    return Promise.resolve(window.Tabulator)
+  }
+
+  return ensureTabulatorScript({
+    id: TABULATOR_BROWSER_SCRIPT_ID,
+    src: tabulatorSources.browser.scriptSrc,
+    errorMessage: 'Failed to load Tabulator browser bundle'
+  })
+}
+
 const ensureCdnTabulatorScript = () => {
   if (window.Tabulator) {
     return Promise.resolve(window.Tabulator)
   }
 
+  return ensureTabulatorScript({
+    id: TABULATOR_CDN_SCRIPT_ID,
+    src: tabulatorSources.cdn.scriptSrc,
+    errorMessage: 'Failed to load Tabulator CDN bundle'
+  })
+}
+
+const ensureTabulatorScript = ({ id, src, errorMessage }) => {
   return new Promise((resolve, reject) => {
-    let script = document.getElementById(TABULATOR_CDN_SCRIPT_ID)
+    let script = document.getElementById(id)
 
     if (!script) {
       script = document.createElement('script')
-      script.id = TABULATOR_CDN_SCRIPT_ID
-      script.src = tabulatorSources.cdn.scriptSrc
+      script.id = id
+      script.src = src
       script.async = true
       document.head.appendChild(script)
     }
 
     script.addEventListener('load', () => resolve(window.Tabulator), { once: true })
-    script.addEventListener('error', () => reject(new Error('Failed to load Tabulator CDN bundle')), { once: true })
+    script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true })
   })
 }
 

@@ -1,2 +1,4 @@
-// Browser bundle entrypoint exports the full Tabulator build.
-export { default } from '../core/TabulatorFull'
+// Browser bundle entrypoint publishes the full Tabulator build as a global.
+import Tabulator from '../core/TabulatorFull'
+
+globalThis.Tabulator = Tabulator

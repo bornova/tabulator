@@ -2,9 +2,9 @@
   "name": "tabulator-tables",
   "version": "6.3.1",
   "description": "Interactive table generation JavaScript library",
-  "style": "dist/css/default/tabulator.css",
+  "style": "dist/css/themes/default/tabulator.css",
   "type": "module",
-  "main": "dist/js/tabulator.js",
+  "main": "dist/js/browser/tabulator.js",
   "module": "dist/js/esm/tabulator.js",
   "exports": {
     ".": {
@@ -16,7 +16,7 @@
     "prebuild": "npm run prettier && npm run lint",
     "build": "npm run build:css && npm run build:js",
     "build:css": "node ./scripts/compile-css.js",
-    "build:js": "rollup -c",
+    "build:js": "node ./scripts/compile-js.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prettier": "prettier . --check ",
@@ -36,14 +36,12 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.58.2",
-    "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-terser": "^1.0.0",
+    "esbuild": "^0.25.9",
     "eslint": "^10.0.3",
     "fs-extra": "^11.3.4",
     "globals": "^17.4.0",
     "globby": "^16.1.1",
     "prettier": "^3.8.1",
-    "rollup": "^4.59.0",
     "sass": "^1.97.3"
   }
 }
