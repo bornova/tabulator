@@ -297,9 +297,9 @@
       justify-content: center;
       align-items: center;
       margin-right: 5px;
-      border: 1px solid light-dark($color-gray-900, $color-ash-400);
+      border: 1px solid light-dark($color-gray-800, $color-ash-400);
       border-radius: 2px;
-      background: light-dark($color-black-alpha-100, $color-white-alpha-100);
+      background: light-dark($color-black-alpha-50, $color-white-alpha-100);
       width: 11px;
       height: 11px;
       overflow: hidden;
@@ -307,7 +307,7 @@
       @media (hover: hover) and (pointer: fine) {
         &:hover {
           cursor: pointer;
-          background: light-dark($color-black-alpha-200, $color-white-alpha-200);
+          background: light-dark($color-black-alpha-100, $color-white-alpha-200);
         }
       }
 
@@ -351,10 +351,10 @@
     .tabulator-responsive-collapse-toggle {
       display: inline-flex;
       justify-content: center;
-      border-radius: 20px;
-      background: light-dark($color-gray-500, $color-ash-500);
-      width: 15px;
-      height: 15px;
+      border-radius: 2px;
+      background: light-dark($color-gray-400, $color-ash-500);
+      width: 12px;
+      height: 12px;
       color: $color-white;
       user-select: none;
 

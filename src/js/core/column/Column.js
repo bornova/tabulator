@@ -1,6 +1,7 @@
 import CoreFeature from '../CoreFeature'
 import ColumnComponent from './ColumnComponent'
 import defaultOptions from './defaults/options'
+import Helpers from '../tools/Helpers'
 
 import Cell from '../cell/Cell'
 
@@ -91,17 +92,7 @@ export default class Column extends CoreFeature {
       el.classList.add('tabulator-row-header')
     }
 
-    switch (this.table.options.columnHeaderVertAlign) {
-      case 'top':
-        el.style.justifyContent = 'flex-start'
-        break
-      case 'middle':
-        el.style.justifyContent = 'center'
-        break
-      case 'bottom':
-        el.style.justifyContent = 'flex-end'
-        break
-    }
+    el.style.justifyContent = Helpers.mapFlexAlignment(this.table.options.columnHeaderVertAlign)
 
     return el
   }
@@ -268,7 +259,7 @@ export default class Column extends CoreFeature {
     this.hozAlign = this.definition.hozAlign
     this.vertAlign = this.definition.vertAlign
 
-    this.titleElement.style.textAlign = this.definition.headerHozAlign
+    this.titleElement.style.justifyContent = Helpers.mapFlexAlignment(this.definition.headerHozAlign)
   }
 
   /**
@@ -393,7 +384,7 @@ export default class Column extends CoreFeature {
       })
     }
 
-    this.titleElement.style.textAlign = this.definition.headerHozAlign
+    this.titleElement.style.justifyContent = Helpers.mapFlexAlignment(this.definition.headerHozAlign)
 
     this.element.appendChild(this.groupElement)
   }

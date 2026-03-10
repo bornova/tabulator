@@ -68,10 +68,20 @@ export default class Edit {
       initialValue = this.params.defaultValue
     }
 
-    this.initialValues = this.params.multiselect ? initialValue : [initialValue]
+    if (this.params.multiselect) {
+      if (Array.isArray(initialValue)) {
+        this.initialValues = initialValue
+      } else if (this._emptyValueCheck(initialValue)) {
+        this.initialValues = []
+      } else {
+        this.initialValues = [initialValue]
+      }
+    } else {
+      this.initialValues = [initialValue]
+    }
 
     if (this.isFilter) {
-      this.input.value = this.initialValues ? this.initialValues.join(',') : ''
+      this.input.value = this.initialValues ? this.initialValues.join(' ,') : ''
       this.headerFilterInitialListGen()
     }
   }

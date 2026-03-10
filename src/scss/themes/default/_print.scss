@@ -124,7 +124,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         cursor: pointer;
-        background: light-dark($color-black-alpha-200, $color-white-alpha-200);
+        background: light-dark($color-black-alpha-100, $color-white-alpha-200);
       }
     }
 

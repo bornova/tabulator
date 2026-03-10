@@ -1,17 +1,6 @@
 import CoreFeature from '../CoreFeature'
 import CellComponent from './CellComponent'
-
-const VERTICAL_ALIGN_TO_FLEX = {
-  top: 'flex-start',
-  bottom: 'flex-end',
-  middle: 'center'
-}
-
-const HORIZONTAL_ALIGN_TO_FLEX = {
-  left: 'flex-start',
-  right: 'flex-end',
-  center: 'center'
-}
+import Helpers from '../tools/Helpers'
 
 export default class Cell extends CoreFeature {
   /**
@@ -80,16 +69,16 @@ export default class Cell extends CoreFeature {
 
     // set text alignment
     if (this.column.hozAlign) {
-      element.style.justifyContent = HORIZONTAL_ALIGN_TO_FLEX[this.column.hozAlign] || ''
+      element.style.justifyContent = Helpers.mapFlexAlignment(this.column.hozAlign)
     }
 
     if (this.column.vertAlign) {
       element.classList.add('tabulator-cell-inline-flex')
 
-      element.style.alignItems = VERTICAL_ALIGN_TO_FLEX[this.column.vertAlign] || ''
+      element.style.alignItems = Helpers.mapFlexAlignment(this.column.vertAlign)
 
       if (this.column.hozAlign) {
-        element.style.justifyContent = HORIZONTAL_ALIGN_TO_FLEX[this.column.hozAlign] || ''
+        element.style.justifyContent = Helpers.mapFlexAlignment(this.column.hozAlign)
       }
     }
 

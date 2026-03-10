@@ -6,7 +6,7 @@
   box-sizing: border-box;
   outline: none;
   border-bottom: 1px solid light-dark($color-slate-200, $color-ash-700);
-  background-color: light-dark($color-slate-50, $color-ash-900);
+  background-color: light-dark($color-slate-50, $color-ash-800);
   width: 100%;
   overflow: hidden;
   color: light-dark($color-gray-600, $color-ash-300);
@@ -35,7 +35,7 @@
     justify-content: center;
     box-sizing: border-box;
     border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
-    background-color: light-dark($color-slate-50, $color-ash-900);
+    background-color: light-dark($color-slate-50, $color-ash-800);
     overflow: hidden;
 
     &.tabulator-moving {
@@ -88,7 +88,8 @@
 
       //hold title of column header
       .tabulator-col-title {
-        vertical-align: bottom;
+        display: flex;
+        align-items: center;
         box-sizing: border-box;
         width: 100%;
         overflow: hidden;
@@ -166,6 +167,7 @@
       input {
         border: 1px solid light-dark($color-slate-200, $color-ash-600);
         background: light-dark($color-white, $color-ash-900);
+        padding: 4px;
         color: light-dark($color-gray-500, $color-ash-100);
       }
 
@@ -294,12 +296,12 @@
 
     &.tabulator-frozen-left {
       border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
-      background-color: light-dark($color-slate-50, $color-ash-900);
+      background-color: light-dark($color-slate-50, $color-ash-800);
     }
 
     &.tabulator-frozen-right {
       border-left: 1px solid light-dark($color-slate-200, $color-ash-700);
-      background-color: light-dark($color-slate-50, $color-ash-900);
+      background-color: light-dark($color-slate-50, $color-ash-800);
     }
   }
 
@@ -321,7 +323,7 @@
     display: flex;
     flex-wrap: wrap;
     border-top: 1px solid light-dark($color-slate-200, $color-ash-700);
-    background: light-dark($color-white, $color-ash-900);
+    background: light-dark($color-white, $color-ash-800);
 
     &:empty {
       display: none;
@@ -331,9 +333,5 @@
     .tabulator-row:last-of-type {
       border-bottom: none;
     }
-  }
-
-  input[type='checkbox'] {
-    margin: 0;
   }
 }

@@ -70,6 +70,7 @@ test('edit module', async ({ page }) => {
           datetimeField: '2024-01-02T10:30',
           listField: 'A',
           zipLookupField: 10001,
+          multiLookupField: 10001,
           starField: 3,
           progressField: 40,
           tickCrossField: true,
@@ -87,6 +88,7 @@ test('edit module', async ({ page }) => {
           datetimeField: '2024-01-03T12:30',
           listField: 'B',
           zipLookupField: 20002,
+          multiLookupField: 20002,
           starField: 2,
           progressField: 80,
           tickCrossField: false,
@@ -158,6 +160,16 @@ test('edit module', async ({ page }) => {
           field: 'zipLookupField',
           editor: 'list',
           editorParams: { valuesLookup: 'active', elementAttributes: { 'data-editor': 'list-lookup' } }
+        },
+        {
+          title: 'MultiLookup',
+          field: 'multiLookupField',
+          editor: 'list',
+          editorParams: {
+            valuesLookup: 'active',
+            multiselect: true,
+            elementAttributes: { 'data-editor': 'list-multi-lookup' }
+          }
         },
         {
           title: 'Star',
@@ -232,6 +244,7 @@ test('edit module', async ({ page }) => {
       { field: 'datetimeField', selector: 'input[type="datetime-local"][data-editor="datetime"]' },
       { field: 'listField', selector: 'input[data-editor="list"]' },
       { field: 'zipLookupField', selector: 'input[data-editor="list-lookup"]' },
+      { field: 'multiLookupField', selector: 'input[data-editor="list-multi-lookup"]' },
       { field: 'starField', selector: '[data-editor="star"]' },
       { field: 'progressField', selector: '[data-editor="progress"]' },
       { field: 'tickCrossField', selector: 'input[type="checkbox"][data-editor="tickCross"]' },
@@ -265,6 +278,14 @@ test('edit module', async ({ page }) => {
 
     const zipLookupAfter = zipLookupCell.getValue()
     const zipLookupType = typeof zipLookupAfter
+
+    const multiLookupCell = row2.getCell('multiLookupField')
+    multiLookupCell.edit()
+    await new Promise((resolve) => setTimeout(resolve, 25))
+    const multiLookupInput = multiLookupCell.getElement().querySelector('input[data-editor="list-multi-lookup"]')
+    const multiLookupInputValue = multiLookupInput?.value
+    const multiLookupActiveCount = document.querySelectorAll('.tabulator-edit-list-item.active').length
+    multiLookupCell.cancelEdit()
 
     row.getCell('inputField').edit()
     row.getCell('inputField').cancelEdit()
@@ -346,7 +367,9 @@ test('edit module', async ({ page }) => {
       row2Field: row2.getCell('inputField').getField(),
       zipLookupBefore,
       zipLookupAfter,
-      zipLookupType
+      zipLookupType,
+      multiLookupInputValue,
+      multiLookupActiveCount
     }
   })
 
@@ -400,4 +423,6 @@ test('edit module', async ({ page }) => {
   expect(result.zipLookupBefore).toBe(20002)
   expect(result.zipLookupAfter).toBe(20002)
   expect(result.zipLookupType).toBe('number')
+  expect(result.multiLookupInputValue).toBe('20002')
+  expect(result.multiLookupActiveCount).toBe(1)
 })

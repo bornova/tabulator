@@ -1,5 +1,26 @@
 export default class Helpers {
   /**
+   * Map an alignment keyword to a flex alignment value.
+   * @param {string} alignment Alignment keyword.
+   * @returns {string}
+   */
+  static mapFlexAlignment(alignment) {
+    switch (alignment) {
+      case 'left':
+      case 'top':
+        return 'flex-start'
+      case 'right':
+      case 'bottom':
+        return 'flex-end'
+      case 'center':
+      case 'middle':
+        return 'center'
+      default:
+        return alignment || ''
+    }
+  }
+
+  /**
    * Check whether an element has a visible box.
    * @param {HTMLElement} el Target element.
    * @returns {boolean}

@@ -6,7 +6,7 @@
   transform: translateZ(0);
   border: 1px solid light-dark($color-slate-300, $color-ash-700);
   border-radius: 5px;
-  background-color: light-dark($color-white, $color-ash-900);
+  background-color: light-dark($color-slate-50, $color-ash-900);
   overflow: hidden;
   color: light-dark($color-gray-900, $color-ash-100);
   color-scheme: inherit;
@@ -34,5 +34,9 @@
   &[tabulator-layout='fitDataTable'] {
     display: inline-flex;
     flex-direction: column;
+  }
+
+  input[type='checkbox'] {
+    margin: 0;
   }
 }

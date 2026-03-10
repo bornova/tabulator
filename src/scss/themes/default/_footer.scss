@@ -4,7 +4,7 @@
 .tabulator-footer {
   border-top: 1px solid light-dark($color-slate-200, $color-ash-700);
   background-color: light-dark($color-slate-50, $color-ash-800);
-  color: light-dark($color-gray-500, $color-ash-300);
+  color: light-dark($color-gray-800, $color-ash-300);
   font-weight: 600;
   user-select: none;
   white-space: nowrap;
@@ -80,7 +80,7 @@
 
   .tabulator-paginator {
     flex: 1;
-    color: light-dark($color-gray-500, $color-ash-300);
+    color: light-dark($color-gray-700, $color-ash-300);
     font-weight: inherit;
     font-size: inherit;
     font-family: inherit;
@@ -144,7 +144,7 @@
     align-items: center;
     background: light-dark($color-white, $color-ash-800);
     padding: 6px 10px;
-    color: light-dark($color-gray-500, $color-ash-200);
+    color: light-dark($color-gray-800, $color-ash-300);
 
     &.active {
       background-color: light-dark($color-slate-100, $color-ash-700);
