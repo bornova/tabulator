@@ -363,7 +363,7 @@ export default class Column extends CoreFeature {
         el.innerHTML = ''
         break
       default:
-        el.innerHTML = contents
+        el.innerHTML = `<span>${contents}</span>`
     }
   }
 

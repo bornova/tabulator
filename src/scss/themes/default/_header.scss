@@ -101,14 +101,27 @@
           white-space: normal;
         }
 
+        &:has(input[type='checkbox']) {
+          margin-top: 2px;
+        }
+
+        span {
+          display: inline-block;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
         //element to hold title editor
         .tabulator-title-editor {
-          box-sizing: border-box;
           border: 1px solid light-dark($color-slate-200, $color-ash-600);
           background: light-dark($color-white, $color-ash-900);
-          padding: 1px;
-          width: 100%;
+          padding: 4px;
           color: light-dark($color-gray-500, $color-ash-100);
+
+          &:focus {
+            outline: 0px;
+          }
         }
 
         .tabulator-header-popup-button + .tabulator-title-editor {

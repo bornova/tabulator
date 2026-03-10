@@ -31,7 +31,14 @@
               {
                 title: 'Demographics',
                 columns: [
-                  { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+                  {
+                    title: 'Age should wrap',
+                    field: 'age',
+                    width: 80,
+                    sorter: 'number',
+                    hozAlign: 'right',
+                    headerWordWrap: true
+                  },
                   { title: 'Gender', field: 'gender', sorter: 'string' },
                   { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
                   { title: 'Color', field: 'col', sorter: 'string' },

@@ -18,7 +18,6 @@
       window.table = new Tabulator('#example-table', {
         data: generateData(), //assign data to table
         height: 600,
-        rowHeight: 60,
         columnDefaults: {
           headerSortTristate: true
         },
@@ -36,8 +35,15 @@
               return 'Mr. ' + cell.getValue() //return the contents of the cell;
             }
           },
-          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
-          { title: 'Gender', field: 'gender', sorter: 'string' },
+          {
+            title: 'Age should be wrapped',
+            width: 100,
+            field: 'age',
+            sorter: 'number',
+            hozAlign: 'right',
+            headerWordWrap: true
+          },
+          { title: 'Gender', field: 'gender', sorter: 'string', editableTitle: true },
           { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
           { title: 'Color', field: 'col', sorter: 'string' },
           { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },

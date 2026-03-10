@@ -219,6 +219,12 @@ export default class ResizeColumns extends Module {
         nearestColumn.reinitializeWidth(true)
 
         if (oldWidth !== nearestColumn.getWidth()) {
+          this.table.columnManager.verticalAlignHeaders()
+
+          if (nearestColumn.modules.resize && nearestColumn.modules.resize.variableHeight) {
+            nearestColumn.checkCellHeights()
+          }
+
           this.dispatch('column-resized', nearestColumn)
           this.dispatchExternal('columnResized', nearestColumn.getComponent())
         }

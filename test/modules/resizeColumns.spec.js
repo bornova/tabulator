@@ -229,6 +229,70 @@ test('resizeColumns module', async ({ page }) => {
     expect(result.withGuide.guideStillPresent).toBe(false)
   })
 
+  await test.step('double-click auto-fit recalculates variable-height rows', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      holder.style.width = '900px'
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          data: [
+            {
+              id: 1,
+              notes:
+                'This is a long sentence that wraps at a narrow width and should collapse back to one line after auto fit.'
+            }
+          ],
+          columns: [
+            { title: 'ID', field: 'id', width: 80 },
+            {
+              title: 'Notes',
+              field: 'notes',
+              width: 110,
+              variableHeight: true,
+              formatter(cell) {
+                const el = document.createElement('div')
+                el.style.whiteSpace = 'normal'
+                el.textContent = cell.getValue()
+                return el
+              }
+            }
+          ]
+        })
+
+        const timeout = setTimeout(() => resolve(instance), 1500)
+        instance.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve(instance)
+        })
+      })
+
+      const column = table.columnManager.columnsByIndex[1]
+      const row = table.rowManager.activeRows[0]
+      const handle = column.modules.resize.handleEl
+      const beforeHeight = row.getHeight()
+      const beforeWidth = column.getWidth()
+
+      handle.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))
+
+      await new Promise((resolve) => requestAnimationFrame(() => resolve()))
+
+      return {
+        beforeHeight,
+        afterHeight: row.getHeight(),
+        beforeWidth,
+        afterWidth: column.getWidth()
+      }
+    })
+
+    expect(result.afterWidth).toBeGreaterThan(result.beforeWidth)
+    expect(result.afterHeight).toBeLessThan(result.beforeHeight)
+  })
+
   await test.step('_checkResizability and calcGuidePosition enforce resize constraints', async () => {
     await page.goto(fixtureUrl)
 
