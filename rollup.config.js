@@ -10,6 +10,8 @@ const beautifyTerser = terser({ compress: false, mangle: false, format: { beauti
 
 process.stdout.write('Creating JS bundles...')
 
+fs.rmSync('dist/js', { recursive: true, force: true })
+
 function jsBundle() {
   const browserConfig = {
     input: 'src/js/builds/browser.js',

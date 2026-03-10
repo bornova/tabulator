@@ -7,6 +7,8 @@ const inputFiles = globbySync(['src/scss/themes/*/{,*/}[!_]*.scss'])
 
 process.stdout.write('Compiling SCSS files...')
 
+fs.rmSync('dist/css', { recursive: true, force: true })
+
 for (const inputFile of inputFiles) {
   const relativeFile = inputFile.replace('src/scss/', '')
   const outputCss = `dist/css/${relativeFile.replace('.scss', '.css')}`

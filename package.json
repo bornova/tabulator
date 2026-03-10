@@ -14,8 +14,7 @@
   },
   "scripts": {
     "prebuild": "npm run prettier && npm run lint",
-    "clean": "node ./scripts/clean-dist.js",
-    "build": "npm run clean && npm run build:css && npm run build:js",
+    "build": "npm run build:css && npm run build:js",
     "build:css": "node ./scripts/compile-css.js",
     "build:js": "rollup -c",
     "lint": "eslint .",

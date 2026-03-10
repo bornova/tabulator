@@ -65,7 +65,7 @@ export const initializeThemeSelector = () => {
     themeToggle = document.createElement('div')
 
     wrapper.id = 'theme-select-wrapper'
-    wrapper.className = 'example-control-wrapper'
+    wrapper.className = 'example-theme-control-wrapper'
     label.htmlFor = 'theme-toggle'
     label.textContent = 'Theme: '
 
@@ -153,7 +153,7 @@ export const initializeTabulatorSourceSelector = (initialSource = getSelectedTab
     sourceToggle = document.createElement('div')
 
     wrapper.id = 'tabulator-source-wrapper'
-    wrapper.className = 'example-control-wrapper'
+    wrapper.className = 'example-source-control-wrapper'
     label.htmlFor = 'tabulator-source-toggle'
     label.textContent = 'Source: '
 
@@ -297,6 +297,7 @@ const testFiles = [
   'pagination.html',
   'resizable-columns.html',
   'responsive-layout.html',
+  'responsive-layout-collapsed.html',
   'row-header.html',
   'RTL-text-direction.html',
   'selectable-cell-range.html',

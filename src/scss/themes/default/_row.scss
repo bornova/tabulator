@@ -5,17 +5,17 @@
   display: flex;
   position: relative;
   box-sizing: border-box;
-  border-bottom: 1px solid light-dark($color-slate-100, $color-ash-800);
-  background-color: light-dark($color-white, $color-ash-900);
+  border-bottom: 1px solid light-dark($color-slate-100, $color-ash-900);
+  background-color: light-dark($color-white, $color-ash-950);
 
   &.tabulator-row-even {
-    background-color: light-dark($color-white, $color-ash-900);
+    background-color: light-dark($color-white, $color-ash-950);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &.tabulator-selectable:hover {
       cursor: pointer;
-      background-color: light-dark($color-slate-50, $color-ash-950);
+      background-color: light-dark($color-slate-50, $color-ash-900);
     }
   }
 
@@ -135,26 +135,45 @@
   }
 
   .tabulator-responsive-collapse {
+    flex: 1 1 100%;
     box-sizing: border-box;
     border-top: 1px solid light-dark($color-slate-100, $color-ash-700);
-    border-bottom: 1px solid light-dark($color-slate-100, $color-ash-700);
     padding: 5px;
 
     &:empty {
       display: none;
     }
 
-    table {
-      tr {
-        td {
-          position: relative;
-
-          &:first-of-type {
-            padding-right: 10px;
-          }
-        }
-      }
+    .tabulator-responsive-collapse-title {
+      color: light-dark($color-gray-600, $color-ash-300);
+      font-weight: 600;
     }
+
+    .tabulator-responsive-collapse-table {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      column-gap: 10px;
+      row-gap: 5px;
+      margin-left: 5px;
+      width: 100%;
+    }
+
+    .tabulator-responsive-collapse-row {
+      display: contents;
+    }
+
+    .tabulator-responsive-collapse-row-title {
+      grid-column: 1;
+    }
+
+    .tabulator-responsive-collapse-row-value {
+      grid-column: 2;
+      min-width: 0;
+    }
+  }
+
+  &:has(.tabulator-responsive-collapse) {
+    flex-wrap: wrap;
   }
 
   //cell element
@@ -171,7 +190,7 @@
     white-space: nowrap;
 
     &.tabulator-row-header {
-      background: light-dark($color-gray-50, $color-ash-800);
+      background: light-dark($color-white, $color-ash-950);
     }
 
     &.tabulator-frozen {
@@ -182,11 +201,11 @@
       background-color: inherit;
 
       &.tabulator-frozen-left {
-        border-right: 1px solid light-dark($color-slate-300, $color-ash-600);
+        border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
       }
 
       &.tabulator-frozen-right {
-        border-left: 1px solid light-dark($color-slate-300, $color-ash-600);
+        border-left: 1px solid light-dark($color-slate-200, $color-ash-700);
       }
     }
 
@@ -332,14 +351,11 @@
     .tabulator-responsive-collapse-toggle {
       display: inline-flex;
       justify-content: center;
-      align-items: center;
       border-radius: 20px;
-      background: light-dark($color-gray-800, $color-ash-500);
+      background: light-dark($color-gray-500, $color-ash-500);
       width: 15px;
       height: 15px;
       color: $color-white;
-      font-weight: 600;
-      font-size: 1.1em;
       user-select: none;
 
       @media (hover: hover) and (pointer: fine) {

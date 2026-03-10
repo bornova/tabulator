@@ -6,10 +6,10 @@
   box-sizing: border-box;
   outline: none;
   border-bottom: 1px solid light-dark($color-slate-200, $color-ash-700);
-  background-color: light-dark($color-slate-50, $color-ash-800);
+  background-color: light-dark($color-slate-50, $color-ash-900);
   width: 100%;
   overflow: hidden;
-  color: light-dark($color-gray-500, $color-ash-300);
+  color: light-dark($color-gray-600, $color-ash-300);
   font-weight: 600;
   user-select: none;
   white-space: nowrap;
@@ -35,7 +35,7 @@
     justify-content: center;
     box-sizing: border-box;
     border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
-    background-color: light-dark($color-slate-50, $color-ash-800);
+    background-color: light-dark($color-slate-50, $color-ash-900);
     overflow: hidden;
 
     &.tabulator-moving {
@@ -293,13 +293,13 @@
     z-index: 11;
 
     &.tabulator-frozen-left {
-      border-right: 1px solid light-dark($color-slate-300, $color-ash-700);
-      background-color: light-dark($color-slate-50, $color-ash-800);
+      border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
+      background-color: light-dark($color-slate-50, $color-ash-900);
     }
 
     &.tabulator-frozen-right {
-      border-left: 1px solid light-dark($color-slate-300, $color-ash-700);
-      background-color: light-dark($color-slate-50, $color-ash-800);
+      border-left: 1px solid light-dark($color-slate-200, $color-ash-700);
+      background-color: light-dark($color-slate-50, $color-ash-900);
     }
   }
 

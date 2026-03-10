@@ -387,15 +387,22 @@ export default class ResponsiveLayout extends Module {
    * @returns {HTMLElement|string}
    */
   formatCollapsedData(data) {
-    const list = document.createElement('table')
+    const list = document.createElement('div')
+
+    list.classList.add('tabulator-responsive-collapse-table')
 
     data.forEach((item) => {
-      const row = document.createElement('tr')
-      const titleData = document.createElement('td')
-      const valueData = document.createElement('td')
-      const titleHighlight = document.createElement('strong')
+      const row = document.createElement('div')
+      const titleData = document.createElement('div')
+      const valueData = document.createElement('div')
+      const titleHighlight = document.createElement('span')
 
       let node_content
+
+      row.classList.add('tabulator-responsive-collapse-row')
+      titleData.classList.add('tabulator-responsive-collapse-row-title')
+      valueData.classList.add('tabulator-responsive-collapse-row-value')
+      titleHighlight.classList.add('tabulator-responsive-collapse-title')
 
       titleData.appendChild(titleHighlight)
 
