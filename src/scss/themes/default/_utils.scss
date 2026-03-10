@@ -111,7 +111,7 @@
   box-sizing: border-box;
   outline: none;
   border: none;
-  padding: 7px 9px;
+  padding: 6px 9px 5px 9px;
   width: 100%;
   resize: none;
   white-space: pre-wrap;
@@ -170,7 +170,7 @@
   min-width: 30px;
 
   &.tabulator-editing {
-    padding: 7px 9px !important;
+    padding: 5px 9px !important;
   }
 }
 
