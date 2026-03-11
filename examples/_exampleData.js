@@ -7,30 +7,6 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`
 }
 
-export const generateData = (rowCount = 100) => {
-  const data = []
-
-  for (let i = 1; i <= rowCount; i++) {
-    data.push({
-      id: i,
-      name: faker.person.fullName(),
-      age: faker.number.int({ min: 18, max: 100 }),
-      gender: faker.person.sex(), // Generates 'male' or 'female'
-      rating: faker.number.int({ min: 1, max: 5 }),
-      col: faker.color.human(), // Generates human-readable colors like 'red', 'blue'
-      dob: formatDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' })),
-      salary: faker.number.int({ min: 30000, max: 150000 }), // Generates a random salary
-      address: faker.location.streetAddress(), // Generates a random street address
-      state: faker.location.state(), // Generates a random state
-      zip: parseInt(faker.location.zipCode(), 10), // Generates a random zip code
-      progress: faker.number.int({ min: 0, max: 100 }), // Generates a random progress percentage
-      completed: faker.datatype.boolean()
-    })
-  }
-
-  return data
-}
-
 const createRow = (id) => {
   return {
     id,
@@ -65,6 +41,30 @@ const createRowWithChildren = (counter, depth, maxDepth, maxChildren) => {
   }
 
   return row
+}
+
+export const generateData = (rowCount = 100) => {
+  const data = []
+
+  for (let i = 1; i <= rowCount; i++) {
+    data.push({
+      id: i,
+      name: faker.person.fullName(),
+      age: faker.number.int({ min: 18, max: 100 }),
+      gender: faker.person.sex(), // Generates 'male' or 'female'
+      rating: faker.number.int({ min: 1, max: 5 }),
+      col: faker.color.human(), // Generates human-readable colors like 'red', 'blue'
+      dob: formatDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' })),
+      salary: faker.number.int({ min: 30000, max: 150000 }), // Generates a random salary
+      address: faker.location.streetAddress(), // Generates a random street address
+      state: faker.location.state(), // Generates a random state
+      zip: parseInt(faker.location.zipCode(), 10), // Generates a random zip code
+      progress: faker.number.int({ min: 0, max: 100 }), // Generates a random progress percentage
+      completed: faker.datatype.boolean()
+    })
+  }
+
+  return data
 }
 
 export const generateNestedData = (rowCount = 1, maxChildren = 4, maxDepth = 1) => {
