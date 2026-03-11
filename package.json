@@ -6,17 +6,23 @@
   "type": "module",
   "main": "dist/js/browser/tabulator.js",
   "module": "dist/js/esm/tabulator.js",
+  "types": "dist/types/builds/esm.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/builds/esm.d.ts",
       "require": "./dist/js/browser/tabulator.js",
       "import": "./dist/js/esm/tabulator.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prebuild": "npm run prettier && npm run lint",
-    "build": "npm run build:css && npm run build:js",
+    "build": "npm run build:css && npm run build:js && npm run build:types",
     "build:css": "node ./scripts/build-css.js",
     "build:js": "node ./scripts/build-js.js",
+    "build:types": "tsc -p ./tsconfig.types.json",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prettier": "prettier . --check ",
@@ -42,6 +48,7 @@
     "globals": "^17.4.0",
     "globby": "^16.1.1",
     "prettier": "^3.8.1",
-    "sass": "^1.98.0"
+    "sass": "^1.98.0",
+    "typescript": "^5.9.2"
   }
 }
