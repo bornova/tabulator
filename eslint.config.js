@@ -7,7 +7,7 @@ export default [
   {
     languageOptions: {
       ecmaVersion: 'latest',
-      globals: { ...globals.browser, ...globals.node, luxon: 'readonly', Tabulator: 'readonly' },
+      globals: { ...globals.browser, ...globals.node, Tabulator: 'readonly' },
       sourceType: 'module'
     }
   }

@@ -318,8 +318,14 @@ test('keybindings module', async ({ page }) => {
 
       rowManager.scrollTop = 100
       rowManager.element.scrollTop = 100
-      rowManager.element.clientHeight = 200
-      rowManager.element.scrollHeight = 600
+      Object.defineProperty(rowManager.element, 'clientHeight', {
+        value: 200,
+        configurable: true
+      })
+      Object.defineProperty(rowManager.element, 'scrollHeight', {
+        value: 600,
+        configurable: true
+      })
 
       const scrollToRowCalls = []
       const originalScrollToRow = rowManager.scrollToRow

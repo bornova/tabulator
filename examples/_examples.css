@@ -95,6 +95,7 @@ body.with-test-nav {
   border-right: 1px solid light-dark(#ccc, #666);
   background: light-dark(#fff, #1e1e1e);
   padding: 5px 8px;
+  width: 50px;
   color: inherit;
   font-size: inherit;
   font-family: inherit;

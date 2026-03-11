@@ -10,7 +10,7 @@ const tabulatorSources = {
     stylesheetHref: './../../dist/css/themes/default/tabulator.min.css'
   },
   browser: {
-    label: 'BRO',
+    label: 'IIFE',
     scriptSrc: './../../dist/js/browser/tabulator.min.js',
     stylesheetHref: './../../dist/css/themes/default/tabulator.min.css'
   },

@@ -17,13 +17,11 @@ await Promise.all([
   build({
     ...sharedConfig,
     entryPoints: ['src/js/builds/browser.js'],
-    format: 'iife',
     outfile: 'dist/js/browser/tabulator.js'
   }),
   build({
     ...sharedConfig,
     entryPoints: ['src/js/builds/browser.js'],
-    format: 'iife',
     minify: true,
     outfile: 'dist/js/browser/tabulator.min.js',
     sourcemap: true
