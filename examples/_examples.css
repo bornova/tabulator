@@ -23,7 +23,6 @@ body.with-test-nav {
   width: 190px;
   max-height: calc(100vh - 20px);
   overflow: auto;
-  font-size: 0.95em;
 }
 
 #test-file-nav label {
