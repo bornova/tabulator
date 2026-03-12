@@ -9,6 +9,7 @@ export { default as TabulatorFull } from '../core/TabulatorFull'
 export { default as CellComponent } from '../core/cell/CellComponent'
 export { default as ColumnComponent } from '../core/column/ColumnComponent'
 export { default as RowComponent } from '../core/row/RowComponent'
+
 export { default as GroupComponent } from '../modules/GroupRows/GroupComponent'
 export { default as CalcComponent } from '../modules/ColumnCalcs/CalcComponent'
 export { default as RangeComponent } from '../modules/SelectRange/RangeComponent'
