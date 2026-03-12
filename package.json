@@ -27,7 +27,7 @@
     "lint:fix": "eslint --fix .",
     "prettier": "prettier . --check ",
     "pretest": "playwright install chromium --with-deps",
-    "test": "npm run build && npx playwright test"
+    "test": "npm run build && playwright test"
   },
   "repository": {
     "type": "git",
