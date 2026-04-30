@@ -1,0 +1,91 @@
+@use 'colors' as *;
+
+//scrolling element to hold table
+.tabulator-tableholder {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  //default placeholder element
+  .tabulator-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 100%;
+
+    &[tabulator-render-mode='virtual'] {
+      min-height: 100%;
+    }
+
+    .tabulator-placeholder-contents {
+      display: inline-flex;
+      justify-content: center;
+      padding: 10px;
+      color: light-dark($color-gray-500, $color-ash-400);
+      font-weight: 600;
+      font-size: 20px;
+      text-align: center;
+      white-space: normal;
+    }
+  }
+
+  //element to hold table rows
+  .tabulator-table {
+    display: inline-flex;
+    position: relative;
+    flex-direction: column;
+    background-color: light-dark($color-white, $color-ash-900);
+    overflow: visible;
+    color: light-dark($color-gray-900, $color-ash-100);
+    white-space: nowrap;
+
+    //row element
+    .tabulator-row {
+      &.tabulator-calcs {
+        background: light-dark($color-gray-50, $color-ash-800);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .tabulator-range-overlay {
+    position: absolute;
+    z-index: 10;
+    inset: 0;
+    pointer-events: none;
+
+    &.tabulator-range-overlay-hidden {
+      visibility: hidden;
+    }
+
+    .tabulator-range {
+      position: absolute;
+      box-sizing: border-box;
+      border: 1px solid light-dark($color-blue-600, $color-blue-400);
+
+      &.tabulator-range-active::after {
+        position: absolute;
+        right: -3px;
+        bottom: -3px;
+        border-radius: 999px;
+        background-color: light-dark($color-blue-600, $color-blue-400);
+        width: 6px;
+        height: 6px;
+        content: '';
+      }
+    }
+
+    .tabulator-range-cell-active {
+      position: absolute;
+      box-sizing: border-box;
+      border: 2px solid light-dark($color-blue-600, $color-blue-400);
+    }
+  }
+}

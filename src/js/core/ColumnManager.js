@@ -1,0 +1,960 @@
+import CoreFeature from './CoreFeature'
+import Column from './column/Column'
+import ColumnComponent from './column/ColumnComponent'
+import Helpers from './tools/Helpers'
+import OptionsList from './tools/OptionsList'
+
+import RendererBasicHorizontal from './rendering/renderers/BasicHorizontal'
+import RendererVirtualDomHorizontal from './rendering/renderers/VirtualDomHorizontal'
+
+import defaultColumnOptions from './column/defaults/options'
+
+export default class ColumnManager extends CoreFeature {
+  /**
+   * @param {object} table Tabulator table instance.
+   */
+  constructor(table) {
+    super(table)
+
+    this.blockHozScrollEvent = false
+    this.headersElement = null
+    this.contentsElement = null
+    this.rowHeader = null
+    this.element = null // containing element
+    this.columns = [] // column definition object
+    this.columnsByIndex = [] // columns by index
+    this.columnsByField = {} // columns by field
+    this.scrollLeft = 0
+    this.optionsList = new OptionsList(this.table, 'column definition', defaultColumnOptions)
+
+    this.redrawBlock = false // prevent redraws to allow multiple data manipulations before continuing
+    this.redrawBlockUpdate = null // store latest redraw update only status
+
+    this.renderer = null
+  }
+
+  /// /////////// Setup Functions /////////////////
+
+  /**
+   * Initialize column manager renderer and DOM.
+   */
+  initialize() {
+    this.initializeRenderer()
+
+    this.headersElement = this.createHeadersElement()
+    this.contentsElement = this.createHeaderContentsElement()
+    this.element = this.createHeaderElement()
+
+    this.contentsElement.insertBefore(this.headersElement, this.contentsElement.firstChild)
+    this.element.insertBefore(this.contentsElement, this.element.firstChild)
+
+    this.initializeScrollWheelWatcher()
+
+    this.subscribe('scroll-horizontal', this.scrollHorizontal.bind(this))
+    this.subscribe('scrollbar-vertical', this.padVerticalScrollbar.bind(this))
+  }
+
+  /**
+   * Pad header for vertical scrollbar width.
+   * @param {number} width Scrollbar width.
+   */
+  padVerticalScrollbar(width) {
+    if (this.table.rtl) {
+      this.headersElement.style.marginLeft = `${width}px`
+    } else {
+      this.headersElement.style.marginRight = `${width}px`
+    }
+  }
+
+  /**
+   * Initialize horizontal renderer.
+   */
+  initializeRenderer() {
+    const renderers = {
+      virtual: RendererVirtualDomHorizontal,
+      basic: RendererBasicHorizontal
+    }
+
+    let renderClass
+
+    if (typeof this.table.options.renderHorizontal === 'string') {
+      renderClass = renderers[this.table.options.renderHorizontal]
+    } else {
+      renderClass = this.table.options.renderHorizontal
+    }
+
+    if (renderClass) {
+      this.renderer = new renderClass(this.table, this.element, this.tableElement)
+      this.renderer.initialize()
+    } else {
+      console.error('Unable to find matching renderer:', this.table.options.renderHorizontal)
+    }
+  }
+
+  /**
+   * Create headers element.
+   * @returns {HTMLDivElement}
+   */
+  createHeadersElement() {
+    const element = document.createElement('div')
+
+    element.classList.add('tabulator-headers')
+    element.setAttribute('role', 'row')
+
+    return element
+  }
+
+  /**
+   * Create header contents element.
+   * @returns {HTMLDivElement}
+   */
+  createHeaderContentsElement() {
+    const element = document.createElement('div')
+
+    element.classList.add('tabulator-header-contents')
+    element.setAttribute('role', 'rowgroup')
+
+    return element
+  }
+
+  /**
+   * Create header root element.
+   * @returns {HTMLDivElement}
+   */
+  createHeaderElement() {
+    const element = document.createElement('div')
+
+    element.classList.add('tabulator-header')
+    element.setAttribute('role', 'rowgroup')
+
+    if (!this.table.options.headerVisible) {
+      element.classList.add('tabulator-header-hidden')
+    }
+
+    return element
+  }
+
+  // return containing element
+  /**
+   * Get header root element.
+   * @returns {HTMLElement}
+   */
+  getElement() {
+    return this.element
+  }
+
+  // return containing contents element
+  /**
+   * Get header contents element.
+   * @returns {HTMLElement}
+   */
+  getContentsElement() {
+    return this.contentsElement
+  }
+
+  // return header containing element
+  /**
+   * Get headers element.
+   * @returns {HTMLElement}
+   */
+  getHeadersElement() {
+    return this.headersElement
+  }
+
+  // scroll horizontally to match table body
+  /**
+   * Sync horizontal scroll position.
+   * @param {number} left Horizontal scroll offset.
+   */
+  scrollHorizontal(left) {
+    this.contentsElement.scrollLeft = left
+
+    this.scrollLeft = left
+
+    this.renderer.scrollColumns(left)
+  }
+
+  /**
+   * Bind wheel scrolling for horizontal sync.
+   */
+  initializeScrollWheelWatcher() {
+    this.contentsElement.addEventListener('wheel', (e) => {
+      const deltaX = e.deltaX || (e.shiftKey ? e.deltaY : 0)
+
+      let left
+
+      if (deltaX) {
+        left = this.contentsElement.scrollLeft + deltaX
+
+        this.table.rowManager.scrollHorizontal(left)
+        this.table.columnManager.scrollHorizontal(left)
+      }
+    })
+  }
+
+  /// ////////// Column Setup Functions /////////////
+  /**
+   * Auto-generate columns from row data.
+   * @param {Array<object>} data Source data.
+   */
+  generateColumnsFromRowData(data) {
+    const cols = []
+    const collProgress = {}
+    const rowSample = this.table.options.autoColumns === 'full' ? data : [data[0]]
+    const definitions = this.table.options.autoColumnsDefinitions
+
+    if (data && data.length) {
+      rowSample.forEach((row) => {
+        Object.keys(row).forEach((key) => {
+          const value = row[key]
+
+          let col
+
+          if (!collProgress[key]) {
+            col = {
+              field: key,
+              title: key,
+              sorter: this.calculateSorterFromValue(value)
+            }
+
+            cols.push(col)
+            collProgress[key] = value === undefined ? col : true
+          } else if (collProgress[key] !== true) {
+            if (value !== undefined) {
+              collProgress[key].sorter = this.calculateSorterFromValue(value)
+              collProgress[key] = true
+            }
+          }
+        })
+      })
+
+      if (definitions) {
+        switch (typeof definitions) {
+          case 'function':
+            this.table.options.columns = definitions.call(this.table, cols)
+            break
+
+          case 'object':
+            if (Array.isArray(definitions)) {
+              cols.forEach((col) => {
+                const match = definitions.find((def) => def.field === col.field)
+
+                if (match) {
+                  Object.assign(col, match)
+                }
+              })
+            } else {
+              cols.forEach((col) => {
+                if (definitions[col.field]) {
+                  Object.assign(col, definitions[col.field])
+                }
+              })
+            }
+
+            this.table.options.columns = cols
+            break
+        }
+      } else {
+        this.table.options.columns = cols
+      }
+
+      this.setColumns(this.table.options.columns)
+    }
+  }
+
+  /**
+   * Infer default sorter type from a value.
+   * @param {*} value Source value.
+   * @returns {string}
+   */
+  calculateSorterFromValue(value) {
+    let sorter
+
+    switch (typeof value) {
+      case 'undefined':
+        sorter = 'string'
+        break
+
+      case 'boolean':
+        sorter = 'boolean'
+        break
+
+      case 'number':
+        sorter = 'number'
+        break
+
+      case 'object':
+        if (Array.isArray(value)) {
+          sorter = 'array'
+        } else {
+          sorter = 'string'
+        }
+        break
+
+      default:
+        if (!Number.isNaN(Number(value)) && value !== '') {
+          sorter = 'number'
+        } else {
+          if (value.match(/((^[0-9]+[a-z]+)|(^[a-z]+[0-9]+))+$/i)) {
+            sorter = 'alphanum'
+          } else {
+            sorter = 'string'
+          }
+        }
+        break
+    }
+
+    return sorter
+  }
+
+  /**
+   * Set columns.
+   * @param {Array<object>} cols Column definitions.
+   */
+  setColumns(cols) {
+    this.headersElement.replaceChildren()
+
+    this.columns = []
+    this.columnsByIndex = []
+    this.columnsByField = {}
+
+    this.dispatch('columns-loading')
+    this.dispatchExternal('columnsLoading')
+
+    if (this.table.options.rowHeader) {
+      this.rowHeader = new Column(this.table.options.rowHeader === true ? {} : this.table.options.rowHeader, this, true)
+      this.columns.push(this.rowHeader)
+      this.headersElement.appendChild(this.rowHeader.getElement())
+      this.rowHeader.columnRendered()
+    }
+
+    cols.forEach((def) => {
+      this._addColumn(def)
+    })
+
+    this._reIndexColumns()
+
+    this.dispatch('columns-loaded')
+
+    if (this.subscribedExternal('columnsLoaded')) {
+      this.dispatchExternal('columnsLoaded', this.getComponents())
+    }
+
+    this.rerenderColumns(false, true)
+
+    this.redraw(true)
+  }
+
+  /**
+   * Add a column.
+   * @param {object} definition Column definition.
+   * @param {boolean} [before] Insert before the reference column when true.
+   * @param {Column} [nextToColumn] Reference column to insert next to.
+   * @returns {Column}
+   */
+  _addColumn(definition, before, nextToColumn) {
+    const column = new Column(definition, this)
+    const colEl = column.getElement()
+
+    let index = nextToColumn ? this.findColumnIndex(nextToColumn) : nextToColumn
+
+    // prevent adding of rows in front of row header
+    if (before && this.rowHeader && (!nextToColumn || nextToColumn === this.rowHeader)) {
+      before = false
+      nextToColumn = this.rowHeader
+      index = 0
+    }
+
+    if (nextToColumn && index > -1) {
+      const topColumn = nextToColumn.getTopColumn()
+      const parentIndex = this.columns.indexOf(topColumn)
+      const nextEl = topColumn.getElement()
+
+      if (before) {
+        this.columns.splice(parentIndex, 0, column)
+        nextEl.parentNode.insertBefore(colEl, nextEl)
+      } else {
+        this.columns.splice(parentIndex + 1, 0, column)
+        nextEl.parentNode.insertBefore(colEl, nextEl.nextSibling)
+      }
+    } else {
+      if (before) {
+        this.columns.unshift(column)
+        this.headersElement.insertBefore(column.getElement(), this.headersElement.firstChild)
+      } else {
+        this.columns.push(column)
+        this.headersElement.appendChild(column.getElement())
+      }
+    }
+
+    column.columnRendered()
+
+    return column
+  }
+
+  /**
+   * Register a column field.
+   * @param {Column} col Column instance.
+   */
+  registerColumnField(col) {
+    if (col.definition.field) {
+      this.columnsByField[col.definition.field] = col
+    }
+  }
+
+  /**
+   * Register a column position.
+   * @param {Column} col Column instance.
+   */
+  registerColumnPosition(col) {
+    this.columnsByIndex.push(col)
+  }
+
+  /**
+   * Reindex columns.
+   */
+  _reIndexColumns() {
+    this.columnsByIndex = []
+
+    this.columns.forEach((column) => {
+      column.reRegisterPosition()
+    })
+  }
+
+  // ensure column headers take up the correct amount of space in column groups
+  /**
+   * Align header rows vertically.
+   */
+  verticalAlignHeaders() {
+    let minHeight = 0
+
+    if (!this.redrawBlock) {
+      this.headersElement.style.height = ''
+
+      this.columns.forEach((column) => {
+        column.clearVerticalAlign()
+      })
+
+      this.columns.forEach((column) => {
+        const height = column.getHeight()
+
+        if (height > minHeight) {
+          minHeight = height
+        }
+      })
+
+      this.headersElement.style.height = `${minHeight}px`
+
+      this.columns.forEach((column) => {
+        column.verticalAlign(this.table.options.columnHeaderVertAlign, minHeight)
+      })
+
+      this.table.rowManager.adjustTableSize()
+    }
+  }
+
+  /// ///////////// Column Details /////////////////
+  /**
+   * Find a column from a lookup subject.
+   * @param {Column|ColumnComponent|HTMLElement|string} subject Column lookup target.
+   * @returns {Column|false}
+   */
+  findColumn(subject) {
+    let columns
+
+    if (typeof subject === 'object') {
+      if (subject instanceof Column) {
+        // subject is column element
+        return subject
+      } else if (subject instanceof ColumnComponent) {
+        // subject is public column component
+        return subject._getSelf() || false
+      } else if (typeof HTMLElement !== 'undefined' && subject instanceof HTMLElement) {
+        columns = []
+
+        this.columns.forEach((column) => {
+          columns.push(column)
+          columns.push(...column.getColumns(true))
+        })
+
+        // subject is a HTML element of the column header
+        const match = columns.find((column) => column.element === subject)
+
+        return match || false
+      }
+    } else {
+      // subject should be treated as the field name of the column
+      return this.columnsByField[subject] || false
+    }
+
+    // catch all for any other type of input
+    return false
+  }
+
+  /**
+   * Get a column by field.
+   * @param {string} field Column field name.
+   * @returns {Column|undefined}
+   */
+  getColumnByField(field) {
+    return this.columnsByField[field]
+  }
+
+  /**
+   * Get columns by field root.
+   * @param {string} root Root field name prefix.
+   * @returns {Array<Column>}
+   */
+  getColumnsByFieldRoot(root) {
+    const matches = []
+
+    Object.keys(this.columnsByField).forEach((field) => {
+      const fieldRoot = this.table.options.nestedFieldSeparator
+        ? field.split(this.table.options.nestedFieldSeparator)[0]
+        : field
+      if (fieldRoot === root) {
+        matches.push(this.columnsByField[field])
+      }
+    })
+
+    return matches
+  }
+
+  /**
+   * Get a column by index.
+   * @param {number} index Column index.
+   * @returns {Column|undefined}
+   */
+  getColumnByIndex(index) {
+    return this.columnsByIndex[index]
+  }
+
+  /**
+   * Get the first visible column.
+   * @returns {Column|false}
+   */
+  getFirstVisibleColumn() {
+    const index = this.columnsByIndex.findIndex((col) => col.visible)
+
+    return index > -1 ? this.columnsByIndex[index] : false
+  }
+
+  /**
+   * Get visible columns by index.
+   * @returns {Array<Column>}
+   */
+  getVisibleColumnsByIndex() {
+    return this.columnsByIndex.filter((col) => col.visible)
+  }
+
+  /**
+   * Get top-level columns.
+   * @returns {Array<Column>}
+   */
+  getColumns() {
+    return this.columns
+  }
+
+  /**
+   * Find a column index.
+   * @param {Column} column Column instance.
+   * @returns {number}
+   */
+  findColumnIndex(column) {
+    return this.columnsByIndex.findIndex((col) => column === col)
+  }
+
+  // return all columns that are not groups
+  /**
+   * Get real columns.
+   * @returns {Array<Column>}
+   */
+  getRealColumns() {
+    return this.columnsByIndex
+  }
+
+  // traverse across columns and call action
+  /**
+   * Traverse all columns.
+   * @param {Function} callback Callback invoked for each column.
+   */
+  traverse(callback) {
+    this.columnsByIndex.forEach(callback)
+  }
+
+  // get definitions of actual columns
+  /**
+   * Get column definitions.
+   * @param {boolean} [active] When true, restrict to visible columns only.
+   * @returns {Array<object>}
+   */
+  getDefinitions(active) {
+    const output = []
+
+    this.columnsByIndex.forEach((column) => {
+      if (!active || (active && column.visible)) {
+        output.push(column.getDefinition())
+      }
+    })
+
+    return output
+  }
+
+  // get full nested definition tree
+  /**
+   * Get the column definition tree.
+   * @returns {Array<object>}
+   */
+  getDefinitionTree() {
+    return this.columns.map((column) => column.getDefinition(true))
+  }
+
+  /**
+   * Get column components.
+   * @param {boolean} [structured] When true, return components in nested group order.
+   * @returns {Array<ColumnComponent>}
+   */
+  getComponents(structured) {
+    const columns = structured ? this.columns : this.columnsByIndex
+
+    return columns.map((column) => column.getComponent())
+  }
+
+  /**
+   * Get combined column width.
+   * @returns {number}
+   */
+  getWidth() {
+    let width = 0
+
+    this.columnsByIndex.forEach((column) => {
+      if (column.visible) {
+        width += column.getWidth()
+      }
+    })
+
+    return width
+  }
+
+  /**
+   * Move a column and trigger layout updates.
+   * @param {Column} from Column to move.
+   * @param {Column} to Target column.
+   * @param {boolean} after Insert after the target column when true.
+   */
+  moveColumn(from, to, after) {
+    to.element.parentNode.insertBefore(from.element, to.element)
+
+    if (after) {
+      to.element.parentNode.insertBefore(to.element, from.element)
+    }
+
+    this.moveColumnActual(from, to, after)
+
+    this.verticalAlignHeaders()
+
+    this.table.rowManager.reinitialize()
+  }
+
+  /**
+   * Move a column without external side effects.
+   * @param {Column} from Column to move.
+   * @param {Column} to Target column.
+   * @param {boolean} after Insert after the target column when true.
+   */
+  moveColumnActual(from, to, after) {
+    if (from.parent.isGroup) {
+      this._moveColumnInArray(from.parent.columns, from, to, after)
+    } else {
+      this._moveColumnInArray(this.columns, from, to, after)
+    }
+
+    this._moveColumnInArray(this.columnsByIndex, from, to, after, true)
+
+    this.rerenderColumns(true)
+
+    this.dispatch('column-moved', from, to, after)
+
+    if (this.subscribedExternal('columnMoved')) {
+      this.dispatchExternal('columnMoved', from.getComponent(), this.table.columnManager.getComponents())
+    }
+  }
+
+  /**
+   * Move a column entry inside a column array.
+   * @param {Array<Column>} columns Column array to modify.
+   * @param {Column} from Column to move.
+   * @param {Column} to Target column.
+   * @param {boolean} after Insert after target column when true.
+   * @param {boolean} [updateRows] Update row cell order when true.
+   */
+  _moveColumnInArray(columns, from, to, after, updateRows) {
+    const fromIndex = columns.indexOf(from)
+
+    let toIndex
+    let rows
+
+    if (fromIndex > -1) {
+      columns.splice(fromIndex, 1)
+
+      toIndex = columns.indexOf(to)
+
+      if (toIndex > -1) {
+        if (after) {
+          toIndex = toIndex + 1
+        }
+      } else {
+        toIndex = fromIndex
+      }
+
+      columns.splice(toIndex, 0, from)
+
+      if (updateRows) {
+        rows = this.chain('column-moving-rows', [from, to, after], null, []) || []
+
+        rows.push(...this.table.rowManager.rows)
+
+        rows.forEach((row) => {
+          if (row.cells.length) {
+            const cell = row.cells.splice(fromIndex, 1)[0]
+            row.cells.splice(toIndex, 0, cell)
+          }
+        })
+      }
+    }
+  }
+
+  /**
+   * Scroll to a specific column.
+   * @param {Column} column Column to scroll to.
+   * @param {string} [position] Scroll alignment mode ('left', 'middle', 'center', or 'right').
+   * @param {boolean} [ifVisible] Skip scroll when column is already fully visible.
+   * @returns {Promise<void>}
+   */
+  scrollToColumn(column, position, ifVisible) {
+    const offset = column.getLeftOffset()
+    const colEl = column.getElement()
+    const scrollLeft = this.table.rowManager.element.scrollLeft
+    const viewportRight = scrollLeft + this.element.clientWidth
+
+    let left = 0
+    let adjust = 0
+
+    return new Promise((resolve, reject) => {
+      position ??= this.table.options.scrollToColumnPosition
+      ifVisible ??= this.table.options.scrollToColumnIfVisible
+
+      if (column.visible) {
+        // align to correct position
+        switch (position) {
+          case 'middle':
+          case 'center':
+            adjust = -this.element.clientWidth / 2
+            break
+
+          case 'right':
+            adjust = colEl.clientWidth - this.headersElement.clientWidth
+            break
+        }
+
+        // check column visibility
+        if (!ifVisible) {
+          if (offset >= scrollLeft && offset + colEl.offsetWidth <= viewportRight) {
+            resolve()
+            return
+          }
+        }
+
+        // calculate scroll position
+        left = offset + adjust
+
+        left = Math.max(
+          Math.min(left, this.table.rowManager.element.scrollWidth - this.table.rowManager.element.clientWidth),
+          0
+        )
+
+        this.table.rowManager.scrollHorizontal(left)
+        this.scrollHorizontal(left)
+
+        resolve()
+      } else {
+        console.warn('Scroll Error - Column not visible')
+        reject('Scroll Error - Column not visible')
+      }
+    })
+  }
+
+  /// ///////////// Cell Management /////////////////
+  /**
+   * Generate cells for a row.
+   * @param {Row} row Row instance.
+   * @returns {Array<Cell>}
+   */
+  generateCells(row) {
+    const cells = []
+
+    this.columnsByIndex.forEach((column) => {
+      cells.push(column.generateCell(row))
+    })
+
+    return cells
+  }
+
+  /// ///////////// Column Management /////////////////
+  /**
+   * Get flex base width.
+   * @returns {number}
+   */
+  getFlexBaseWidth() {
+    let totalWidth = this.table.element.clientWidth // table element width
+    let fixedWidth = 0
+
+    // adjust for vertical scrollbar if present
+    if (this.table.rowManager.element.scrollHeight > this.table.rowManager.element.clientHeight) {
+      totalWidth -= this.table.rowManager.element.offsetWidth - this.table.rowManager.element.clientWidth
+    }
+
+    this.columnsByIndex.forEach((column) => {
+      let width, minWidth, colWidth
+
+      if (column.visible) {
+        width = column.definition.width || 0
+
+        minWidth = Number.parseInt(column.minWidth, 10)
+
+        if (typeof width === 'string') {
+          if (width.includes('%')) {
+            colWidth = (totalWidth / 100) * Number.parseInt(width, 10)
+          } else {
+            colWidth = Number.parseInt(width, 10)
+          }
+        } else {
+          colWidth = width
+        }
+
+        fixedWidth += colWidth > minWidth ? colWidth : minWidth
+      }
+    })
+
+    return fixedWidth
+  }
+
+  /**
+   * Add a column.
+   * @param {object} definition Column definition.
+   * @param {boolean} [before] Insert before the reference column when true.
+   * @param {Column} [nextToColumn] Reference column to insert next to.
+   * @returns {Promise<Column>}
+   */
+  addColumn(definition, before, nextToColumn) {
+    return new Promise((resolve) => {
+      const column = this._addColumn(definition, before, nextToColumn)
+
+      this._reIndexColumns()
+
+      this.dispatch('column-add', definition, before, nextToColumn)
+
+      if (this.layoutMode() !== 'fitColumns') {
+        column.reinitializeWidth()
+      }
+
+      this.redraw(true)
+
+      this.table.rowManager.reinitialize()
+
+      this.rerenderColumns()
+
+      resolve(column)
+    })
+  }
+
+  // remove column from system
+  /**
+   * Deregister a column.
+   * @param {Column} column Column instance to remove.
+   */
+  deregisterColumn(column) {
+    const field = column.getField()
+
+    let index
+
+    // remove from field list
+    if (field) {
+      delete this.columnsByField[field]
+    }
+
+    // remove from index list
+    index = this.columnsByIndex.indexOf(column)
+
+    if (index > -1) {
+      this.columnsByIndex.splice(index, 1)
+    }
+
+    // remove from column list
+    index = this.columns.indexOf(column)
+
+    if (index > -1) {
+      this.columns.splice(index, 1)
+    }
+
+    this.verticalAlignHeaders()
+
+    this.redraw()
+  }
+
+  /**
+   * Rerender columns.
+   * @param {boolean|null} [update] Update flag passed to renderer.
+   * @param {boolean} [silent] Skip render when true.
+   */
+  rerenderColumns(update, silent) {
+    if (!this.redrawBlock) {
+      this.renderer.rerenderColumns(update, silent)
+    } else {
+      if (update === false || (update === true && this.redrawBlockUpdate === null)) {
+        this.redrawBlockUpdate = update
+      }
+    }
+  }
+
+  /**
+   * Block redraw actions.
+   */
+  blockRedraw() {
+    this.redrawBlock = true
+    this.redrawBlockUpdate = null
+  }
+
+  /**
+   * Restore redraw actions.
+   */
+  restoreRedraw() {
+    this.redrawBlock = false
+    this.verticalAlignHeaders()
+    this.renderer.rerenderColumns(this.redrawBlockUpdate)
+  }
+
+  // redraw columns
+  /**
+   * Redraw columns.
+   * @param {boolean} [force] Force scroll reset and row reinitialize.
+   */
+  redraw(force) {
+    if (Helpers.elVisible(this.element)) {
+      this.verticalAlignHeaders()
+    }
+
+    if (force) {
+      this.table.rowManager.resetScroll()
+      this.table.rowManager.reinitialize()
+    }
+
+    if (!this.confirm('table-redrawing', force)) {
+      this.layoutRefresh(force)
+    }
+
+    this.dispatch('table-redraw', force)
+
+    this.table.footerManager.redraw()
+  }
+}

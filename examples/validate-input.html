@@ -1,0 +1,81 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link rel="stylesheet" href="./_examples.css" />
+  </head>
+  <body>
+    <div id="example-table"></div>
+
+    <script type="module">
+      import { generateData } from './_exampleData.js'
+      import { initializeTestPage, loadExampleTabulator } from './_exampleUtils.js'
+
+      await initializeTestPage()
+      const Tabulator = await loadExampleTabulator()
+
+      window.table = new Tabulator('#example-table', {
+        data: generateData(), //assign data to table
+        height: 600,
+        columnDefaults: {
+          headerSortTristate: true
+        },
+        columns: [
+          { title: 'Id', field: 'id' },
+          {
+            title: 'Name',
+            field: 'name',
+            editor: 'input',
+            sorter: 'string',
+            validator: 'required'
+          },
+          {
+            title: 'Age',
+            field: 'age',
+            hozAlign: 'right',
+            headerHozAlign: 'right',
+            editor: 'input',
+            validator: ['min:0', 'max:100', 'numeric']
+          },
+          {
+            title: 'Gender',
+            field: 'gender',
+            sorter: 'string',
+            editor: 'list',
+            editorParams: { valuesLookup: 'active' }
+          },
+          {
+            title: 'Rating',
+            field: 'rating',
+            formatter: 'star',
+            editor: true,
+            validator: ['min:0', 'max:5', 'integer']
+          },
+          { title: 'Color', field: 'col', sorter: 'string', editor: 'input', hozAlign: 'center' },
+          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+          { title: 'Salary', field: 'salary', sorter: 'number', hozAlign: 'right' },
+          { title: 'Address', field: 'address', sorter: 'string', editor: 'textarea' },
+          { title: 'State', field: 'state', sorter: 'string' },
+          {
+            title: 'Zip Code',
+            field: 'zip',
+            editor: 'list',
+            editorParams: { valuesLookup: 'active', multiselect: true },
+            sorter: 'string'
+          },
+          {
+            title: 'Progress',
+            field: 'progress',
+            formatter: 'progress',
+            editor: true,
+            formatterParams: {
+              legend: true
+            }
+          },
+          { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center', editor: true }
+        ]
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Tabulator Test</title>
+    <link rel="stylesheet" href="./_examples.css" />
+  </head>
+  <body>
+    <div id="example-table"></div>
+
+    <script type="module">
+      import { generateData } from './_exampleData.js'
+      import { initializeTestPage, loadExampleTabulator } from './_exampleUtils.js'
+
+      await initializeTestPage()
+      const Tabulator = await loadExampleTabulator()
+
+      window.table = new Tabulator('#example-table', {
+        data: generateData(), //assign data to table
+        height: 600,
+        headerVisible: false, //hide header
+        columns: [
+          { title: 'Id', field: 'id' },
+          { title: 'Name', field: 'name', sorter: 'string' },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
+          { title: 'Gender', field: 'gender', sorter: 'string' },
+          { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
+          { title: 'Color', field: 'col', sorter: 'string' },
+          { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center' },
+          { title: 'Salary', field: 'salary', sorter: 'number', hozAlign: 'right' },
+          { title: 'Address', field: 'address', sorter: 'string' },
+          { title: 'State', field: 'state', sorter: 'string' },
+          { title: 'Zip Code', field: 'zip', sorter: 'string' },
+          { title: 'Progress', field: 'progress', formatter: 'progress' },
+          { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
+        ]
+      })
+    </script>
+  </body>
+</html>

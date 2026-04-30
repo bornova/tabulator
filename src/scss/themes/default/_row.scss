@@ -1,0 +1,412 @@
+@use 'colors' as *;
+
+//row element
+.tabulator-row {
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+  border-bottom: 1px solid light-dark($color-slate-100, $color-ash-900);
+  background-color: light-dark($color-white, $color-ash-950);
+
+  &.tabulator-row-even {
+    background-color: light-dark($color-white, $color-ash-950);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &.tabulator-selectable:hover {
+      cursor: pointer;
+      background-color: light-dark($color-slate-50, $color-ash-900);
+    }
+  }
+
+  &.tabulator-selected {
+    background-color: light-dark($color-slate-200, $color-slate-800);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &.tabulator-selected:hover {
+      cursor: pointer;
+      background-color: light-dark($color-slate-300, $color-slate-900);
+    }
+  }
+
+  &.tabulator-row-moving {
+    border: 1px solid light-dark($color-black, $color-ash-500);
+    background: light-dark($color-white, $color-ash-800);
+  }
+
+  &.tabulator-moving {
+    position: absolute;
+    z-index: 15;
+    border-top: 1px solid light-dark($color-slate-100, $color-ash-700);
+    border-bottom: 1px solid light-dark($color-slate-100, $color-ash-700);
+    background: light-dark($color-orange-50, $color-ash-700);
+    pointer-events: none;
+
+    .tabulator-moving-count {
+      display: flex;
+      position: absolute;
+      top: -0.5em;
+      justify-content: center;
+      align-items: center;
+      border-radius: 1em;
+      background: light-dark($color-blue-700, $color-blue-500);
+      padding: 0.2em;
+      min-width: 1.4em;
+      height: 1.4em;
+      pointer-events: none;
+      color: $color-white;
+      font-size: 0.825em;
+    }
+  }
+
+  &.tabulator-range-highlight {
+    .tabulator-cell.tabulator-range-row-header {
+      background-color: light-dark($color-slate-200, $color-ash-700);
+      color: light-dark($color-black, $color-ash-100);
+    }
+
+    &.tabulator-range-selected {
+      .tabulator-cell.tabulator-range-row-header {
+        background-color: light-dark($color-blue-700, $color-blue-600);
+        color: $color-white;
+      }
+    }
+  }
+
+  &.tabulator-range-selected {
+    .tabulator-cell.tabulator-range-row-header {
+      background-color: light-dark($color-blue-700, $color-blue-600);
+      color: $color-white;
+    }
+  }
+
+  &.tabulator-group {
+    box-sizing: border-box;
+    background: light-dark($color-gray-50, $color-ash-800);
+    padding: 5px;
+    padding-left: 10px;
+    min-width: 100%;
+    font-weight: 600;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        cursor: pointer;
+        background-color: light-dark($color-gray-100, $color-ash-700);
+      }
+    }
+
+    &.tabulator-group-visible {
+      .tabulator-arrow {
+        margin-right: 10px;
+        border-top: 5px solid light-dark($color-gray-800, $color-ash-200);
+        border-right: 5px solid transparent;
+        border-bottom: 0;
+        border-left: 5px solid transparent;
+      }
+    }
+
+    &.tabulator-group-level-1 {
+      padding-left: 30px;
+    }
+
+    &.tabulator-group-level-2 {
+      padding-left: 50px;
+    }
+
+    &.tabulator-group-level-3 {
+      padding-left: 70px;
+    }
+
+    &.tabulator-group-level-4 {
+      padding-left: 90px;
+    }
+
+    &.tabulator-group-level-5 {
+      padding-left: 110px;
+    }
+
+    .tabulator-group-toggle {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    //sorting arrow
+    .tabulator-arrow {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 16px;
+      border-top: 5px solid transparent;
+      border-right: 0;
+      border-bottom: 5px solid transparent;
+      border-left: 5px solid light-dark($color-gray-800, $color-ash-200);
+      width: 0;
+      height: 0;
+    }
+
+    span {
+      margin-left: 10px;
+      color: light-dark($color-gray-900, $color-ash-100);
+    }
+  }
+
+  .tabulator-responsive-collapse {
+    flex: 1 1 100%;
+    box-sizing: border-box;
+    border-top: 1px solid light-dark($color-slate-100, $color-ash-700);
+    padding: 5px;
+
+    &:empty {
+      display: none;
+    }
+
+    .tabulator-responsive-collapse-title {
+      color: light-dark($color-gray-600, $color-ash-300);
+      font-weight: 600;
+    }
+
+    .tabulator-responsive-collapse-table {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      column-gap: 10px;
+      row-gap: 5px;
+      margin-left: 5px;
+      width: 100%;
+    }
+
+    .tabulator-responsive-collapse-row {
+      display: contents;
+    }
+
+    .tabulator-responsive-collapse-row-title {
+      grid-column: 1;
+    }
+
+    .tabulator-responsive-collapse-row-value {
+      grid-column: 2;
+      min-width: 0;
+    }
+  }
+
+  &:has(.tabulator-responsive-collapse) {
+    flex-wrap: wrap;
+  }
+
+  //cell element
+  .tabulator-cell {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    box-sizing: border-box;
+    outline: none;
+    border-right: 1px solid light-dark($color-slate-100, $color-ash-800);
+    padding: 6px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.tabulator-row-header {
+      background: light-dark($color-white, $color-ash-950);
+    }
+
+    &.tabulator-frozen {
+      display: inline-flex;
+      position: sticky;
+      left: 0;
+      z-index: 11;
+      background-color: inherit;
+
+      &.tabulator-frozen-left {
+        border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
+      }
+
+      &.tabulator-frozen-right {
+        border-left: 1px solid light-dark($color-slate-200, $color-ash-700);
+      }
+    }
+
+    &.tabulator-editing {
+      display: inline-flex;
+      align-items: center;
+      outline: none;
+      outline: 1px solid light-dark($color-blue-700, $color-blue-500);
+      outline-offset: -1px;
+      border: none;
+      padding: 0 0 0 1px;
+
+      input,
+      select {
+        outline: none;
+        border: 1px;
+        background: transparent;
+        color: light-dark($color-gray-900, $color-ash-100);
+      }
+
+      .tabulator-stars-holder {
+        padding: 2px 9px 0 9px;
+      }
+    }
+
+    &.tabulator-validation-fail {
+      border: 1px solid $color-red-600;
+
+      input,
+      select {
+        border: 1px;
+        background: transparent;
+        color: light-dark($color-red-600, $color-red-400);
+      }
+    }
+
+    //movable row handle
+    &.tabulator-row-handle {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+
+      //handle holder
+      .tabulator-row-handle-box {
+        width: 80%;
+
+        //Hamburger element
+        .tabulator-row-handle-bar {
+          margin-top: 2px;
+          background: light-dark($color-gray-600, $color-ash-400);
+          width: 12px;
+          height: 1px;
+        }
+      }
+    }
+
+    &.tabulator-range-selected:not(.tabulator-range-only-cell-selected):not(.tabulator-range-row-header) {
+      background-color: light-dark($color-blue-200, $color-blue-900);
+    }
+
+    &[tabulator-field='completed'] svg {
+      vertical-align: middle;
+    }
+
+    .tabulator-cell-content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tabulator-data-tree-branch-empty {
+      display: inline-flex;
+      width: 7px;
+    }
+
+    .tabulator-data-tree-branch {
+      display: inline-flex;
+      align-items: center;
+      margin-top: -9px;
+      margin-right: 5px;
+      border-bottom: 2px solid light-dark($color-slate-100, $color-ash-700);
+      border-left: 2px solid light-dark($color-slate-100, $color-ash-700);
+      border-bottom-left-radius: 1px;
+      width: 7px;
+      height: 9px;
+    }
+
+    .tabulator-data-tree-control {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 5px;
+      border: 1px solid light-dark($color-gray-800, $color-ash-400);
+      border-radius: 2px;
+      background: light-dark($color-black-alpha-50, $color-white-alpha-100);
+      width: 11px;
+      height: 11px;
+      overflow: hidden;
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          cursor: pointer;
+          background: light-dark($color-black-alpha-100, $color-white-alpha-200);
+        }
+      }
+
+      .tabulator-data-tree-control-collapse {
+        display: inline-flex;
+        position: relative;
+        background: transparent;
+        width: 1px;
+        height: 7px;
+
+        &::after {
+          position: absolute;
+          top: 3px;
+          left: -3px;
+          background: light-dark($color-gray-900, $color-ash-200);
+          width: 7px;
+          height: 1px;
+          content: '';
+        }
+      }
+
+      .tabulator-data-tree-control-expand {
+        display: inline-flex;
+        position: relative;
+        background: light-dark($color-gray-900, $color-ash-200);
+        width: 1px;
+        height: 7px;
+
+        &::after {
+          position: absolute;
+          top: 3px;
+          left: -3px;
+          background: light-dark($color-gray-900, $color-ash-200);
+          width: 7px;
+          height: 1px;
+          content: '';
+        }
+      }
+    }
+
+    .tabulator-responsive-collapse-toggle {
+      display: inline-flex;
+      justify-content: center;
+      border-radius: 2px;
+      background: light-dark($color-gray-400, $color-ash-500);
+      width: 12px;
+      height: 12px;
+      color: $color-white;
+      user-select: none;
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          opacity: 0.7;
+          cursor: pointer;
+        }
+      }
+
+      &.open {
+        .tabulator-responsive-collapse-toggle-close {
+          display: initial;
+        }
+
+        .tabulator-responsive-collapse-toggle-open {
+          display: none;
+        }
+      }
+
+      svg {
+        stroke: $color-white;
+      }
+
+      .tabulator-responsive-collapse-toggle-close {
+        display: none;
+      }
+    }
+
+    .tabulator-traffic-light {
+      display: inline-flex;
+      border-radius: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

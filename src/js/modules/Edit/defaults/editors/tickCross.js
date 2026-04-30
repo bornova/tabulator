@@ -1,0 +1,106 @@
+// checkbox
+/**
+ * Checkbox/tick-cross editor with optional tristate mode.
+ * @param {object} cell Cell component wrapper.
+ * @param {Function} onRendered Render callback registrar.
+ * @param {Function} success Success callback.
+ * @param {Function} cancel Cancel callback.
+ * @param {object} editorParams Editor params.
+ * @returns {HTMLInputElement}
+ */
+export default function (cell, onRendered, success, cancel, editorParams) {
+  const value = cell.getValue()
+  const input = document.createElement('input')
+  const tristate = editorParams.tristate
+  const indetermValue = editorParams.indeterminateValue ?? null
+  const trueValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'trueValue')
+  const falseValueSet = Object.prototype.hasOwnProperty.call(editorParams, 'falseValue')
+
+  let indetermState = false
+
+  input.setAttribute('type', 'checkbox')
+  input.setAttribute('name', 'tabulator-editor-checkbox')
+
+  input.classList.add('tabulator-editor-checkbox')
+
+  if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
+    for (let key in editorParams.elementAttributes) {
+      if (key.charAt(0) === '+') {
+        key = key.slice(1)
+        input.setAttribute(key, input.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
+      } else {
+        input.setAttribute(key, editorParams.elementAttributes[key])
+      }
+    }
+  }
+
+  input.value = value
+
+  if (tristate && (value === undefined || value === indetermValue || value === '')) {
+    indetermState = true
+    input.indeterminate = true
+  }
+
+  if (this.table.browser !== 'firefox' && this.table.browser !== 'safari') {
+    // prevent blur issue on mac firefox
+    onRendered(() => {
+      if (cell.getType() === 'cell') {
+        input.focus({ preventScroll: true })
+      }
+    })
+  }
+
+  input.checked = trueValueSet
+    ? value === editorParams.trueValue
+    : value === true || value === 'true' || value === 'True' || value === 1
+
+  function setValue(blur) {
+    let checkedValue = input.checked
+
+    if (trueValueSet && checkedValue) {
+      checkedValue = editorParams.trueValue
+    } else if (falseValueSet && !checkedValue) {
+      checkedValue = editorParams.falseValue
+    }
+
+    if (tristate) {
+      if (!blur) {
+        if (input.checked && !indetermState) {
+          input.checked = false
+          input.indeterminate = true
+          indetermState = true
+          return indetermValue
+        } else {
+          indetermState = false
+          return checkedValue
+        }
+      } else {
+        return indetermState ? indetermValue : checkedValue
+      }
+    } else {
+      return checkedValue
+    }
+  }
+
+  // submit new value on blur
+  input.addEventListener('change', () => {
+    success(setValue())
+  })
+
+  input.addEventListener('blur', () => {
+    success(setValue(true))
+  })
+
+  // submit new value on enter
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      success(setValue())
+    }
+
+    if (e.key === 'Escape') {
+      cancel()
+    }
+  })
+
+  return input
+}
