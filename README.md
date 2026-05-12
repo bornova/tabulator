@@ -1,6 +1,8 @@
 ## @bornova/tabulator-tables
 
-This is a fork of [original tabulator-tables library](https://github.com/olifolkerd/tabulator). For more information, please visit https://github.com/olifolkerd/tabulator.
+This is a fork of [original tabulator-tables library](https://github.com/olifolkerd/tabulator).
+
+For more information, please visit https://github.com/olifolkerd/tabulator.
 
 ## Setup
 
