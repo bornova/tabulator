@@ -14,7 +14,7 @@
     "pagination",
     "editable"
   ],
-  "style": "./dist/css/themes/default/tabulator.css",
+  "style": "./dist/css/themes/default/tabulator.min.css",
   "type": "module",
   "module": "./dist/js/esm/tabulator.js",
   "exports": {
@@ -22,6 +22,8 @@
       "import": "./dist/js/esm/tabulator.js"
     }
   },
+  "jsdelivr": "./dist/js/browser/tabulator.min.js",
+  "unpkg": "./dist/js/browser/tabulator.min.js",
   "files": [
     "dist"
   ],
