@@ -1,7 +1,8 @@
 {
   "name": "@bornova/tabulator-tables",
-  "version": "1.0.0",
   "description": "Feature-rich interactive data tables with zero dependencies",
+  "version": "1.0.0",
+  "license": "MIT",
   "keywords": [
     "table",
     "datagrid",
@@ -24,6 +25,10 @@
   },
   "jsdelivr": "./dist/js/browser/tabulator.min.js",
   "unpkg": "./dist/js/browser/tabulator.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bornova/tabulator.git"
+  },
   "files": [
     "dist"
   ],
@@ -35,15 +40,6 @@
     "prettier": "prettier . --check ",
     "pretest": "playwright install chromium --with-deps",
     "test": "npm run build && playwright test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bornova/tabulator.git"
-  },
-  "author": "Oli Folkerd",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bornova/tabulator/issues"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
