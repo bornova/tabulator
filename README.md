@@ -29,7 +29,7 @@ let table = new Tabulator('#example-table', {})
 
 To get Tabulator via the NPM package manager, open a terminal in your project directory and run the following command:
 
-```
+```bash
 npm install @bornova/tabulator-tables
 ```
 
