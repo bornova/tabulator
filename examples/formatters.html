@@ -21,6 +21,7 @@
         columnDefaults: {
           headerSortTristate: true
         },
+        columnHeaderVertAlign: 'center',
         columns: [
           { title: 'Id', field: 'id' },
           {
@@ -32,17 +33,10 @@
               //formatterParams - parameters set for the column
               //onRendered - function to call when the formatter has been rendered
 
-              return 'Mr. ' + cell.getValue() //return the contents of the cell;
+              return 'Dr. ' + cell.getValue() //return the contents of the cell;
             }
           },
-          {
-            title: 'Age should be wrapped',
-            width: 100,
-            field: 'age',
-            sorter: 'number',
-            hozAlign: 'right',
-            headerWordWrap: true
-          },
+          { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right' },
           { title: 'Gender', field: 'gender', sorter: 'string', editableTitle: true },
           { title: 'Rating', field: 'rating', formatter: 'star', hozAlign: 'center' },
           { title: 'Color', field: 'col', sorter: 'string' },

@@ -8,8 +8,6 @@
   <body>
     <div id="example-table"></div>
 
-    <button id="btn">Update</button>
-
     <script type="module">
       import { generateData } from './_exampleData.js'
       import { initializeTestPage, loadExampleTabulator } from './_exampleUtils.js'
@@ -38,11 +36,6 @@
           { title: 'Progress', field: 'progress', formatter: 'progress' },
           { title: 'Completed', field: 'completed', formatter: 'tickCross', hozAlign: 'center' }
         ]
-      })
-
-      document.getElementById('btn').addEventListener('click', () => {
-        console.log('Updating name column definition to add maxLength validator')
-        table.updateColumnDefinition('name', { validator: 'maxLength:8' })
       })
     </script>
   </body>
