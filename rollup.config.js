@@ -6,7 +6,7 @@ import terser from '@rollup/plugin-terser'
 
 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 const banner = `
-/* @bornova/tabulator v${pkg.version}
+/* @bornova/tabulator-tables v${pkg.version}
  * Copyright (c) 2015-2026 Oli Folkerd, ${new Date().getFullYear()} Timur Atalay 
  */`
 
