@@ -7,8 +7,8 @@ This is a fork of [original tabulator library](https://github.com/olifolkerd/tab
 Include the library and the css:
 
 ```html
-<link href="dist/css/tabulator.min.css" rel="stylesheet" />
-<script type="text/javascript" src="dist/js/tabulator.min.js"></script>
+<link href="dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
+<script type="text/javascript" src="dist/js/browser/tabulator.min.js"></script>
 ```
 
 Create an element to hold the table:
