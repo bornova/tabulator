@@ -380,5 +380,43 @@ test('selectRow module', async ({ page }) => {
     expect(result.selectedAfterSecondToggle).toEqual([3])
   })
 
+  await test.step('selectRow API abides by selectableRows limit and handles rolling selection', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          selectableRows: 1,
+          selectableRowsRollingSelection: true,
+          data: [
+            { id: 1, name: 'alice' },
+            { id: 2, name: 'bob' }
+          ],
+          columns: [
+            { title: 'ID', field: 'id' },
+            { title: 'Name', field: 'name' }
+          ]
+        })
+
+        const timeout = setTimeout(() => resolve(instance), 1500)
+        instance.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve(instance)
+        })
+      })
+
+      table.selectRow(1)
+      table.selectRow(2)
+
+      return table.getSelectedRows().map((row) => row.getData().id)
+    })
+
+    expect(result).toEqual([2])
+  })
+
   expectNoBrowserErrors(pageErrors, consoleErrors)
 })
