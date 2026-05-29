@@ -268,8 +268,9 @@ export default class SelectRow extends Module {
   /**
    * Select one or more rows.
    * @param {*} rows Row lookup(s).
+   * @param {boolean} [force=false] Ignore max selection limits.
    */
-  selectRows(rows) {
+  selectRows(rows, force = false) {
     const changes = []
 
     let rowMatch
@@ -300,7 +301,7 @@ export default class SelectRow extends Module {
     if (Array.isArray(rowMatch)) {
       if (rowMatch.length) {
         rowMatch.forEach((row) => {
-          change = this._selectRow(row, true, true)
+          change = this._selectRow(row, true, force)
 
           if (change) {
             changes.push(change)
@@ -313,7 +314,7 @@ export default class SelectRow extends Module {
     }
 
     if (rowMatch) {
-      this._selectRow(rowMatch, false, true)
+      this._selectRow(rowMatch, false, force)
     }
   }
 
@@ -329,6 +330,7 @@ export default class SelectRow extends Module {
     if (
       !Number.isNaN(Number(this.table.options.selectableRows)) &&
       this.table.options.selectableRows !== true &&
+      this.table.options.selectableRows !== false &&
       !force
     ) {
       if (this.selectedRows.length >= this.table.options.selectableRows) {
