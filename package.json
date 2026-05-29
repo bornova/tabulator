@@ -1,7 +1,7 @@
 {
   "name": "@bornova/tabulator-tables",
   "description": "Feature-rich interactive data tables with zero dependencies",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "keywords": [
     "table",
@@ -45,11 +45,12 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.60.0",
     "@rollup/plugin-terser": "^1.0.0",
-    "eslint": "^10.3.0",
+    "@types/tabulator-tables": "^6.3.3",
+    "eslint": "^10.4.1",
     "globals": "^17.6.0",
     "globby": "^16.2.0",
     "prettier": "^3.8.3",
-    "rollup": "^4.60.3",
-    "sass": "^1.99.0"
+    "rollup": "^4.60.4",
+    "sass": "^1.100.0"
   }
 }
