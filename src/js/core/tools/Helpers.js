@@ -89,9 +89,7 @@ export default class Helpers {
       clone = Object.assign(Array.isArray(obj) ? [] : {}, obj)
     }
 
-    for (const i in obj) {
-      const subject = obj[i]
-
+    Object.entries(obj).forEach(([i, subject]) => {
       let match
       let copy
 
@@ -112,7 +110,7 @@ export default class Helpers {
           clone[i] = this.deepClone(subject, copy, list)
         }
       }
-    }
+    })
 
     return clone
   }
