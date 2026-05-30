@@ -18,6 +18,13 @@ export default class Module extends CoreFeature {
     // setup module when table is initialized, to be overridden in module
   }
 
+  /**
+   * Deinitialize module lifecycle hook.
+   */
+  destroy() {
+    // deinitialize module when table is destroyed, to be overridden in module
+  }
+
   /// ////////////////////////////////
   /// /// Options Registration ///////
   /// ////////////////////////////////
