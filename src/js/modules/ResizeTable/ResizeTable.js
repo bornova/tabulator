@@ -185,4 +185,11 @@ export default class ResizeTable extends Module {
     this.visibilityObserver = false
     this.containerObserver = false
   }
+
+  /**
+   * Deinitialize module lifecycle hook.
+   */
+  destroy() {
+    this.clearBindings()
+  }
 }
