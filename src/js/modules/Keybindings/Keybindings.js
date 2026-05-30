@@ -224,7 +224,9 @@ export default class Keybindings extends Module {
       const bindings = this.watchKeys[key]
 
       if (bindings) {
-        this.pressedKeys.push(key)
+        if (!this.pressedKeys.includes(key)) {
+          this.pressedKeys.push(key)
+        }
 
         bindings.forEach((binding) => {
           this.checkBinding(e, binding)

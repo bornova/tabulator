@@ -363,7 +363,8 @@ export default class MoveColumns extends Module {
     if (scrollLeft + columnHolder.clientWidth - xPos < this.autoScrollMargin) {
       if (!this.autoScrollTimeout) {
         this.autoScrollTimeout = setTimeout(() => {
-          scrollPos = Math.min(columnHolder.clientWidth, scrollLeft + this.autoScrollStep)
+          const maxScroll = columnHolder.scrollWidth - columnHolder.clientWidth
+          scrollPos = Math.min(maxScroll, scrollLeft + this.autoScrollStep)
           this.table.rowManager.getElement().scrollLeft = scrollPos
           this.autoScrollTimeout = false
         }, 1)

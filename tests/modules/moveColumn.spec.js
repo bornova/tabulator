@@ -404,5 +404,62 @@ test('moveColumn module', async ({ page }) => {
     expect(result.rightAutoScrollScheduled).toBe(true)
   })
 
+  await test.step('auto-scroll right limit is based on scrollWidth - clientWidth', async () => {
+    await page.goto(fixtureUrl)
+
+    const scrollResult = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      holder.style.width = '300px' // viewport width
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          movableColumns: true,
+          data: [{ id: 1, name: 'Alice', age: 30, location: 'London', gender: 'Female' }],
+          columns: [
+            { title: 'ID', field: 'id', width: 200 },
+            { title: 'Name', field: 'name', width: 200 },
+            { title: 'Age', field: 'age', width: 200 },
+            { title: 'Location', field: 'location', width: 200 },
+            { title: 'Gender', field: 'gender', width: 200 }
+          ]
+        })
+        instance.on('tableBuilt', () => resolve(instance))
+      })
+
+      const mod = table.modules.moveColumn
+      const columnHolder = table.columnManager.getContentsElement()
+      const rowHolder = table.rowManager.getElement()
+
+      // Set scrollLeft to something greater than clientWidth (300) but less than maxScroll (1000 - 300 = 700)
+      rowHolder.scrollLeft = 350
+      columnHolder.scrollLeft = 350
+
+      mod.hoverElement = { style: {} }
+      mod.startX = 0
+      mod.touchMove = false
+
+      // Trigger right autoScroll (xPos near right edge)
+      const columnHolderOffsetLeft = columnHolder.getBoundingClientRect().left
+
+      mod.moveHover({ pageX: columnHolderOffsetLeft + 280 })
+
+      // Wait for autoScroll setTimeout (1ms)
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      const scrollLeftAfter = rowHolder.scrollLeft
+
+      return {
+        scrollWidth: columnHolder.scrollWidth,
+        clientWidth: columnHolder.clientWidth,
+        scrollLeftBefore: 350,
+        scrollLeftAfter
+      }
+    })
+
+    expect(scrollResult.scrollLeftAfter).toBeGreaterThan(scrollResult.scrollLeftBefore)
+  })
+
   expectNoBrowserErrors(pageErrors, consoleErrors)
 })

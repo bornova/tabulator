@@ -438,5 +438,49 @@ test('keybindings module', async ({ page }) => {
     ])
   })
 
+  await test.step('pressedKeys does not collect duplicates on key repeat and clears properly on keyup', async () => {
+    await page.goto(fixtureUrl)
+
+    const repeatResult = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      holder.style.width = '900px'
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          data: [{ id: 1, name: 'Alice' }],
+          columns: [{ title: 'Name', field: 'name' }]
+        })
+
+        const timeout = setTimeout(() => resolve(instance), 1500)
+        instance.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve(instance)
+        })
+      })
+
+      const mod = table.modules.keybindings
+
+      // Simulate keydown on "ArrowUp" multiple times (repeat)
+      const mockEvent = { key: 'ArrowUp', preventDefault() {} }
+      mod.keyupBinding(mockEvent)
+      mod.keyupBinding(mockEvent)
+      const keysAfterRepeat = [...mod.pressedKeys]
+
+      // Simulate keyup on "ArrowUp" once
+      mod.keydownBinding(mockEvent)
+      const keysAfterRelease = [...mod.pressedKeys]
+
+      return {
+        keysAfterRepeat,
+        keysAfterRelease
+      }
+    })
+
+    expect(repeatResult.keysAfterRepeat).toEqual(['arrowup'])
+    expect(repeatResult.keysAfterRelease).toEqual([])
+  })
+
   expectNoBrowserErrors(pageErrors, consoleErrors)
 })

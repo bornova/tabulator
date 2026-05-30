@@ -59,6 +59,7 @@ export default class SelectRow extends Module {
       this.subscribe('row-deleting', this.rowDeleted.bind(this))
       this.subscribe('rows-wipe', this.clearSelectionData.bind(this))
       this.subscribe('rows-retrieve', this.rowRetrieve.bind(this))
+      this.subscribe('row-data-changed', this.rowUpdated.bind(this))
 
       if (this.table.options.selectableRows && !this.table.options.selectableRowsPersistence) {
         this.subscribe('data-refreshing', this.deselectRows.bind(this))
@@ -90,19 +91,33 @@ export default class SelectRow extends Module {
   }
 
   /**
+   * Update row selection classes when row data changes.
+   * @param {object} row Internal row.
+   */
+  rowUpdated(row) {
+    const selectable = this.checkRowSelectability(row)
+    const element = row.getElement()
+
+    if (element) {
+      element.classList.toggle('tabulator-selectable', selectable)
+      element.classList.toggle('tabulator-unselectable', !selectable)
+    }
+  }
+
+  /**
    * Clear all selection state.
    * @param {boolean} [silent] Suppress selection changed event.
    */
   clearSelectionData(silent) {
-    const prevSelected = this.selectedRows.length
+    const prevSelected = this.selectedRows.slice()
 
     this.selecting = false
     this.lastClickedRow = false
     this.selectPrev = []
     this.selectedRows = []
 
-    if (prevSelected && silent !== true) {
-      this._rowSelectionChanged()
+    if (prevSelected.length && silent !== true) {
+      this._rowSelectionChanged(false, [], prevSelected)
     }
   }
 
@@ -121,6 +136,7 @@ export default class SelectRow extends Module {
       }, 50)
 
       document.body.removeEventListener('mouseup', endSelect)
+      document.body.removeEventListener('keyup', endSelect)
     }
 
     row.modules.select = { selected: false }
@@ -129,12 +145,16 @@ export default class SelectRow extends Module {
     element.classList.toggle('tabulator-unselectable', !selectable)
 
     // set row selection class
-    if (selectable) {
-      if (this.table.options.selectableRows && this.table.options.selectableRows !== 'highlight') {
-        if (this.table.options.selectableRowsRangeMode === 'click') {
-          element.addEventListener('click', this.handleComplexRowClick.bind(this, row))
-        } else {
-          element.addEventListener('click', () => {
+    if (this.table.options.selectableRows && this.table.options.selectableRows !== 'highlight') {
+      if (this.table.options.selectableRowsRangeMode === 'click') {
+        element.addEventListener('click', (e) => {
+          if (this.checkRowSelectability(row)) {
+            this.handleComplexRowClick(row, e)
+          }
+        })
+      } else {
+        element.addEventListener('click', () => {
+          if (this.checkRowSelectability(row)) {
             if (!this.table.modExists('edit') || !this.table.modules.edit.getCurrentCell()) {
               this.table._clearSelection()
             }
@@ -142,43 +162,43 @@ export default class SelectRow extends Module {
             if (!this.selecting) {
               this.toggleRow(row)
             }
-          })
+          }
+        })
 
-          element.addEventListener('mousedown', (e) => {
-            if (e.shiftKey) {
-              this.table._clearSelection()
+        element.addEventListener('mousedown', (e) => {
+          if (this.checkRowSelectability(row) && e.shiftKey) {
+            this.table._clearSelection()
 
-              this.selecting = true
+            this.selecting = true
 
-              this.selectPrev = []
+            this.selectPrev = []
 
-              document.body.addEventListener('mouseup', endSelect)
-              document.body.addEventListener('keyup', endSelect)
+            document.body.addEventListener('mouseup', endSelect)
+            document.body.addEventListener('keyup', endSelect)
 
-              this.toggleRow(row)
+            this.toggleRow(row)
 
-              return false
+            return false
+          }
+        })
+
+        element.addEventListener('mouseenter', () => {
+          if (this.checkRowSelectability(row) && this.selecting) {
+            this.table._clearSelection()
+            this.toggleRow(row)
+
+            if (this.selectPrev[1] === row) {
+              this.toggleRow(this.selectPrev[0])
             }
-          })
+          }
+        })
 
-          element.addEventListener('mouseenter', () => {
-            if (this.selecting) {
-              this.table._clearSelection()
-              this.toggleRow(row)
-
-              if (this.selectPrev[1] === row) {
-                this.toggleRow(this.selectPrev[0])
-              }
-            }
-          })
-
-          element.addEventListener('mouseout', () => {
-            if (this.selecting) {
-              this.table._clearSelection()
-              this.selectPrev.unshift(row)
-            }
-          })
-        }
+        element.addEventListener('mouseout', () => {
+          if (this.checkRowSelectability(row) && this.selecting) {
+            this.table._clearSelection()
+            this.selectPrev.unshift(row)
+          }
+        })
       }
     }
   }
