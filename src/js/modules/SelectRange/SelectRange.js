@@ -1278,4 +1278,11 @@ export default class SelectRange extends Module {
   isEmpty(value) {
     return value == null || value === ''
   }
+
+  /**
+   * Deinitialize module lifecycle hook.
+   */
+  destroy() {
+    this.tableDestroyed()
+  }
 }
