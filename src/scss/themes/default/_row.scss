@@ -5,28 +5,28 @@
   display: flex;
   position: relative;
   box-sizing: border-box;
-  border-bottom: 1px solid light-dark($color-slate-100, $color-ash-900);
-  background-color: light-dark($color-white, $color-ash-950);
+  border-bottom: 1px solid var(--tabulator-row-border-color);
+  background-color: var(--tabulator-row-bg);
 
   &.tabulator-row-even {
-    background-color: light-dark($color-white, $color-ash-950);
+    background-color: var(--tabulator-row-even-bg);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &.tabulator-selectable:hover {
       cursor: pointer;
-      background-color: light-dark($color-slate-50, $color-ash-900);
+      background-color: var(--tabulator-row-hover-bg);
     }
   }
 
   &.tabulator-selected {
-    background-color: light-dark($color-slate-200, $color-slate-800);
+    background-color: var(--tabulator-row-selected-bg);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &.tabulator-selected:hover {
       cursor: pointer;
-      background-color: light-dark($color-slate-300, $color-slate-900);
+      background-color: var(--tabulator-row-selected-hover-bg);
     }
   }
 
@@ -199,14 +199,14 @@
     align-items: center;
     box-sizing: border-box;
     outline: none;
-    border-right: 1px solid light-dark($color-slate-100, $color-ash-800);
+    border-right: 1px solid var(--tabulator-cell-border-color);
     padding: 6px 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 
     &.tabulator-row-header {
-      background: light-dark($color-white, $color-ash-950);
+      background: var(--tabulator-row-bg);
     }
 
     &.tabulator-frozen {
@@ -217,11 +217,11 @@
       background-color: inherit;
 
       &.tabulator-frozen-left {
-        border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
+        border-right: 1px solid var(--tabulator-header-border-color);
       }
 
       &.tabulator-frozen-right {
-        border-left: 1px solid light-dark($color-slate-200, $color-ash-700);
+        border-left: 1px solid var(--tabulator-header-border-color);
       }
     }
 
@@ -280,7 +280,7 @@
     }
 
     &.tabulator-range-selected:not(.tabulator-range-only-cell-selected):not(.tabulator-range-row-header) {
-      background-color: light-dark($color-blue-200, $color-blue-900);
+      background-color: var(--tabulator-cell-selected-bg);
     }
 
     &[tabulator-field='completed'] svg {
