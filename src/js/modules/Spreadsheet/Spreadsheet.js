@@ -51,7 +51,9 @@ export default class Spreadsheet extends Module {
       this.table.options.index = '_id'
 
       if (this.options('spreadsheetData') && this.options('spreadsheetSheets')) {
-        console.warn('You cannot use spreadsheetData and spreadsheetSheets at the same time, ignoring spreadsheetData')
+        this.table.logger.warn(
+          'You cannot use spreadsheetData and spreadsheetSheets at the same time, ignoring spreadsheetData'
+        )
 
         this.table.options.spreadsheetData = false
       }
@@ -69,21 +71,21 @@ export default class Spreadsheet extends Module {
    */
   compatibilityCheck() {
     if (this.options('data')) {
-      console.warn(
+      this.table.logger.warn(
         'Do not use the data option when working with spreadsheets, use either spreadsheetData or spreadsheetSheets to pass data into the table'
       )
     }
 
     if (this.options('pagination')) {
-      console.warn('The spreadsheet module is not compatible with the pagination module')
+      this.table.logger.warn('The spreadsheet module is not compatible with the pagination module')
     }
 
     if (this.options('groupBy')) {
-      console.warn('The spreadsheet module is not compatible with the row grouping module')
+      this.table.logger.warn('The spreadsheet module is not compatible with the row grouping module')
     }
 
     if (this.options('responsiveCollapse')) {
-      console.warn('The spreadsheet module is not compatible with the responsive collapse module')
+      this.table.logger.warn('The spreadsheet module is not compatible with the responsive collapse module')
     }
   }
 
@@ -149,7 +151,7 @@ export default class Spreadsheet extends Module {
         this.loadSheets(data)
       }
     } else {
-      console.error(
+      this.table.logger.error(
         'Spreadsheet Loading Error - Unable to process remote data due to invalid data type \nExpecting: array \nReceived: ',
         typeof data,
         '\nData:     ',
@@ -262,7 +264,7 @@ export default class Spreadsheet extends Module {
     const index = this.sheets.indexOf(sheet)
 
     if (this.sheets.length <= 1) {
-      console.warn('Unable to remove sheet, at least one sheet must be active')
+      this.table.logger.warn('Unable to remove sheet, at least one sheet must be active')
       return
     }
 
