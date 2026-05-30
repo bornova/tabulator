@@ -239,10 +239,10 @@
   flex-direction: column;
   box-sizing: border-box;
   box-shadow: 0 0 8px 0 light-dark($color-black-alpha-300, $color-black-alpha-900);
-  border: 1px solid light-dark($color-slate-300, $color-ash-700);
-  background: light-dark($color-white, $color-ash-800);
+  border: 1px solid var(--tabulator-menu-border-color);
+  background: var(--tabulator-menu-bg);
   overflow-y: auto;
-  color: light-dark($color-gray-900, $color-ash-100);
+  color: var(--tabulator-menu-text-color);
   -webkit-overflow-scrolling: touch;
   z-index: 10000;
 }
@@ -277,7 +277,7 @@
     @media (hover: hover) and (pointer: fine) {
       &:not(.tabulator-menu-item-disabled):hover {
         cursor: pointer;
-        background: light-dark($color-white, $color-ash-700);
+        background: var(--tabulator-menu-item-hover-bg);
       }
     }
 
