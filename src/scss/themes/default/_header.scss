@@ -5,11 +5,11 @@
   position: relative;
   box-sizing: border-box;
   outline: none;
-  border-bottom: 1px solid light-dark($color-slate-200, $color-ash-700);
-  background-color: light-dark($color-slate-50, $color-ash-800);
+  border-bottom: 1px solid var(--tabulator-header-border-color);
+  background-color: var(--tabulator-header-bg);
   width: 100%;
   overflow: hidden;
-  color: light-dark($color-gray-600, $color-ash-300);
+  color: var(--tabulator-header-text-color);
   font-weight: 600;
   user-select: none;
   white-space: nowrap;
@@ -34,13 +34,13 @@
     flex-direction: column;
     justify-content: center;
     box-sizing: border-box;
-    border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
-    background-color: light-dark($color-slate-50, $color-ash-800);
+    border-right: 1px solid var(--tabulator-header-border-color);
+    background-color: var(--tabulator-header-bg);
     overflow: hidden;
 
     &.tabulator-moving {
       position: absolute;
-      border: 1px solid light-dark($color-slate-200, $color-ash-700);
+      border: 1px solid var(--tabulator-header-border-color);
       border-top: none;
       border-bottom: none;
       background: light-dark($color-orange-50, $color-ash-700);
@@ -307,13 +307,13 @@
     z-index: 11;
 
     &.tabulator-frozen-left {
-      border-right: 1px solid light-dark($color-slate-200, $color-ash-700);
-      background-color: light-dark($color-slate-50, $color-ash-800);
+      border-right: 1px solid var(--tabulator-header-border-color);
+      background-color: var(--tabulator-header-bg);
     }
 
     &.tabulator-frozen-right {
-      border-left: 1px solid light-dark($color-slate-200, $color-ash-700);
-      background-color: light-dark($color-slate-50, $color-ash-800);
+      border-left: 1px solid var(--tabulator-header-border-color);
+      background-color: var(--tabulator-header-bg);
     }
   }
 
