@@ -19,6 +19,8 @@ import ModuleBinder from './tools/ModuleBinder'
 import OptionsList from './tools/OptionsList'
 
 import Alert from './tools/Alert'
+import Logger from './tools/Logger'
+import AutoScroller from './tools/AutoScroller'
 
 class Tabulator extends ModuleBinder {
   // default setup options
@@ -75,6 +77,7 @@ class Tabulator extends ModuleBinder {
     this.modulesCore = [] // hold core modules bound to this table (for initialization purposes)
     this.modulesRegular = [] // hold regular modules bound to this table (for initialization purposes)
 
+    this.logger = null // hold logger
     this.deprecationAdvisor = new DeprecationAdvisor(this)
     this.optionsList = new OptionsList(this, 'table constructor')
 
@@ -131,6 +134,8 @@ class Tabulator extends ModuleBinder {
    * @param {object} options Table options.
    */
   initializeCoreSystems(options) {
+    this.logger = new Logger(this)
+    this.autoScroller = new AutoScroller(this)
     this.columnManager = new ColumnManager(this)
     this.rowManager = new RowManager(this)
     this.footerManager = new FooterManager(this)
@@ -449,12 +454,17 @@ class Tabulator extends ModuleBinder {
 
     this.eventBus.dispatch('table-destroy')
 
-    // unbind module event subscriptions to avoid leaks on re-create
+    // unbind module event subscriptions and trigger cleanups to avoid leaks on re-create
     if (this.modules) {
       for (const key in this.modules) {
         const mod = this.modules[key]
-        if (mod && typeof mod.unsubscribeAll === 'function') {
-          mod.unsubscribeAll()
+        if (mod) {
+          if (typeof mod.destroy === 'function') {
+            mod.destroy()
+          }
+          if (typeof mod.unsubscribeAll === 'function') {
+            mod.unsubscribeAll()
+          }
         }
       }
     }
