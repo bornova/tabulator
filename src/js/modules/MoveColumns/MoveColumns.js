@@ -310,6 +310,7 @@ export default class MoveColumns extends Module {
   endMove(e) {
     if (e.button === 0 || this.touchMove) {
       this._unbindMouseMove()
+      this.table.autoScroller.stop()
 
       if (this.placeholderElement.parentNode) {
         this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling)
@@ -346,29 +347,14 @@ export default class MoveColumns extends Module {
     const scrollLeft = columnHolder.scrollLeft
     const xPos = (this.touchMove ? e.touches[0].pageX : e.pageX) - Helpers.elOffset(columnHolder).left + scrollLeft
 
-    let scrollPos
-
     this.hoverElement.style.left = `${xPos - this.startX}px`
 
     if (xPos - scrollLeft < this.autoScrollMargin) {
-      if (!this.autoScrollTimeout) {
-        this.autoScrollTimeout = setTimeout(() => {
-          scrollPos = Math.max(0, scrollLeft - this.autoScrollStep)
-          this.table.rowManager.getElement().scrollLeft = scrollPos
-          this.autoScrollTimeout = false
-        }, 1)
-      }
-    }
-
-    if (scrollLeft + columnHolder.clientWidth - xPos < this.autoScrollMargin) {
-      if (!this.autoScrollTimeout) {
-        this.autoScrollTimeout = setTimeout(() => {
-          const maxScroll = columnHolder.scrollWidth - columnHolder.clientWidth
-          scrollPos = Math.min(maxScroll, scrollLeft + this.autoScrollStep)
-          this.table.rowManager.getElement().scrollLeft = scrollPos
-          this.autoScrollTimeout = false
-        }, 1)
-      }
+      this.table.autoScroller.start(this.table.rowManager.getElement(), 'left', this.autoScrollStep)
+    } else if (scrollLeft + columnHolder.clientWidth - xPos < this.autoScrollMargin) {
+      this.table.autoScroller.start(this.table.rowManager.getElement(), 'right', this.autoScrollStep)
+    } else {
+      this.table.autoScroller.stop()
     }
   }
 }
