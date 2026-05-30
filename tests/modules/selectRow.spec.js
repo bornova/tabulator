@@ -418,5 +418,148 @@ test('selectRow module', async ({ page }) => {
     expect(result).toEqual([2])
   })
 
+  await test.step('clearing selection triggers rowSelectionChanged with deselected items', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          selectableRows: true,
+          data: [
+            { id: 1, name: 'alice' },
+            { id: 2, name: 'bob' }
+          ],
+          columns: [{ title: 'ID', field: 'id' }]
+        })
+        instance.on('tableBuilt', () => resolve(instance))
+      })
+
+      table.selectRow([1, 2])
+
+      const events = []
+      table.on('rowSelectionChanged', (data, rows, selected, deselected) => {
+        events.push({
+          deselectedIds: deselected.map((r) => r.getData().id)
+        })
+      })
+
+      table.deselectRow()
+
+      return events
+    })
+
+    expect(result.length).toBe(1)
+    expect(result[0].deselectedIds).toEqual(expect.arrayContaining([1, 2]))
+  })
+
+  await test.step('drag select event listeners on body are fully cleaned up', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          selectableRows: true,
+          data: [{ id: 1, name: 'alice' }],
+          columns: [{ title: 'ID', field: 'id' }]
+        })
+        instance.on('tableBuilt', () => resolve(instance))
+      })
+
+      let keyupAdded = 0
+      let keyupRemoved = 0
+
+      const originalAdd = document.body.addEventListener
+      document.body.addEventListener = (type, handler, options) => {
+        if (type === 'keyup') keyupAdded++
+        return originalAdd.call(document.body, type, handler, options)
+      }
+
+      const originalRemove = document.body.removeEventListener
+      document.body.removeEventListener = (type, handler, options) => {
+        if (type === 'keyup') keyupRemoved++
+        return originalRemove.call(document.body, type, handler, options)
+      }
+
+      const rowElement = table.getRow(1).getElement()
+
+      // Simulate mousedown with shift key
+      const mousedownEvent = new MouseEvent('mousedown', { shiftKey: true })
+      rowElement.dispatchEvent(mousedownEvent)
+
+      // Simulate mouseup
+      const mouseupEvent = new MouseEvent('mouseup')
+      document.body.dispatchEvent(mouseupEvent)
+
+      // Allow setTimeout(..., 50) to run
+      await new Promise((resolve) => setTimeout(resolve, 60))
+
+      // Clean up body mocks
+      document.body.addEventListener = originalAdd
+      document.body.removeEventListener = originalRemove
+
+      return {
+        keyupAdded,
+        keyupRemoved
+      }
+    })
+
+    expect(result.keyupAdded).toBe(1)
+    expect(result.keyupRemoved).toBe(1)
+  })
+
+  await test.step('row selectability updates dynamically when data changes', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      root.appendChild(holder)
+
+      const table = await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          selectableRows: true,
+          selectableRowsCheck: (row) => row.getData().allowed,
+          data: [{ id: 1, name: 'alice', allowed: true }],
+          columns: [{ title: 'ID', field: 'id' }]
+        })
+        instance.on('tableBuilt', () => resolve(instance))
+      })
+
+      const row = table.getRow(1)
+      const element = row.getElement()
+
+      const classBefore = element.className
+      const selectableBefore = element.classList.contains('tabulator-selectable')
+
+      await table.updateData([{ id: 1, allowed: false }])
+
+      const classAfter = element.className
+      const selectableAfter = element.classList.contains('tabulator-selectable')
+
+      // Attempt click
+      element.click()
+
+      return {
+        classBefore,
+        selectableBefore,
+        classAfter,
+        selectableAfter,
+        selectedAfterClick: row.isSelected()
+      }
+    })
+
+    expect(result.selectableBefore).toBe(true)
+    expect(result.selectableAfter).toBe(false)
+    expect(result.selectedAfterClick).toBe(false)
+  })
+
   expectNoBrowserErrors(pageErrors, consoleErrors)
 })
