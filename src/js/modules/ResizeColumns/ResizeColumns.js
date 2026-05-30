@@ -444,4 +444,13 @@ export default class ResizeColumns extends Module {
     handle.addEventListener('touchmove', mouseMove, { passive: true })
     handle.addEventListener('touchend', mouseUp)
   }
+
+  /**
+   * Deinitialize module lifecycle hook.
+   */
+  destroy() {
+    this.table.columnManager.columnsByIndex.forEach((col) => {
+      this.deInitializeColumn(col)
+    })
+  }
 }
