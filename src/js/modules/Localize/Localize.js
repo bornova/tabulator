@@ -35,9 +35,9 @@ export default class Localize extends Module {
       this.setHeaderFilterPlaceholder(this.table.options.columnDefaults.headerFilterPlaceholder)
     }
 
-    for (const locale in this.table.options.langs) {
-      this.installLang(locale, this.table.options.langs[locale])
-    }
+    Object.entries(this.table.options.langs).forEach(([locale, lang]) => {
+      this.installLang(locale, lang)
+    })
 
     this.setLocale(this.table.options.locale)
 
@@ -75,13 +75,13 @@ export default class Localize extends Module {
    * @param {object} values Source values.
    */
   _setLangProp(lang, values) {
-    for (const key in values) {
-      if (lang[key] && typeof lang[key] === 'object' && values[key] && typeof values[key] === 'object') {
-        this._setLangProp(lang[key], values[key])
+    Object.entries(values).forEach(([key, val]) => {
+      if (lang[key] && typeof lang[key] === 'object' && val && typeof val === 'object') {
+        this._setLangProp(lang[key], val)
       } else {
-        lang[key] = values[key]
+        lang[key] = val
       }
-    }
+    })
   }
 
   // set current locale
@@ -92,16 +92,16 @@ export default class Localize extends Module {
   setLocale(desiredLocale) {
     // fill in any matching language values
     const traverseLang = (trans, path) => {
-      for (const prop in trans) {
-        if (typeof trans[prop] === 'object') {
+      Object.entries(trans).forEach(([prop, val]) => {
+        if (typeof val === 'object') {
           if (!path[prop]) {
             path[prop] = {}
           }
-          traverseLang(trans[prop], path[prop])
+          traverseLang(val, path[prop])
         } else {
-          path[prop] = trans[prop]
+          path[prop] = val
         }
-      }
+      })
     }
 
     let locale = desiredLocale || 'default'
@@ -222,10 +222,10 @@ export default class Localize extends Module {
    * Execute all registered localization bindings.
    */
   _executeBindings() {
-    for (const path in this.bindings) {
-      this.bindings[path].forEach((binding) => {
+    Object.entries(this.bindings).forEach(([path, bindings]) => {
+      bindings.forEach((binding) => {
         binding(this.getText(path), this.lang)
       })
-    }
+    })
   }
 }
