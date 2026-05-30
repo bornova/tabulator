@@ -384,9 +384,18 @@ test('moveColumn module', async ({ page }) => {
         }
         return originalSetTimeout(handler, timeout, ...args)
       }
+      const originalRAF = window.requestAnimationFrame
+      window.requestAnimationFrame = (handler) => {
+        rightAutoScrollScheduled = true
+        return originalRAF(handler)
+      }
       mod.moveHover({ pageX: 950 })
       await new Promise((resolve) => setTimeout(resolve, 10))
+      if (mod.table.autoScroller) {
+        mod.table.autoScroller.stop()
+      }
       window.setTimeout = originalSetTimeout
+      window.requestAnimationFrame = originalRAF
 
       return {
         bindCounts: addCounts,
