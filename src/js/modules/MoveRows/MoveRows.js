@@ -472,6 +472,7 @@ export default class MoveRows extends Module {
   endMove(e) {
     if (!e || e.button === 0 || this.touchMove) {
       this._unbindMouseMove()
+      this.table.autoScroller.stop()
 
       if (!this.connection) {
         if (this.placeholderElement.parentNode) {
@@ -581,6 +582,18 @@ export default class MoveRows extends Module {
       yPos - this.startY,
       this.table.rowManager.element.scrollHeight - this.hoverElement.offsetHeight
     )}px`
+
+    const relativeY = (this.touchMove ? e.touches[0].pageY : e.pageY) - rowHolder.getBoundingClientRect().top
+    const autoScrollMargin = 40
+    const autoScrollStep = 5
+
+    if (relativeY < autoScrollMargin) {
+      this.table.autoScroller.start(rowHolder, 'up', autoScrollStep)
+    } else if (rowHolder.clientHeight - relativeY < autoScrollMargin) {
+      this.table.autoScroller.start(rowHolder, 'down', autoScrollStep)
+    } else {
+      this.table.autoScroller.stop()
+    }
   }
 
   /**
@@ -845,6 +858,23 @@ export default class MoveRows extends Module {
 
       case 'dropcomplete':
         return this.dropComplete(table, data.row, data.success)
+    }
+  }
+
+  /**
+   * Deinitialize module lifecycle hook.
+   */
+  destroy() {
+    if (this.checkTimeout) {
+      clearTimeout(this.checkTimeout)
+    }
+
+    if (this.moving) {
+      this.endMove()
+    }
+
+    if (this.connectedTable) {
+      this.disconnect(this.connectedTable)
     }
   }
 }
