@@ -13,6 +13,7 @@ export default {
   dataReceiveParams: {},
   dataSendParams: {},
   debugDeprecation: true, // allow toggling of deprecation warnings
+  debugLogging: true, // enable table diagnostic logging
   debugEventsExternal: false, // flag to console log events
   debugEventsInternal: false, // flag to console log events
   debugInitialization: true, // allow toggling of pre initialization function call warnings
