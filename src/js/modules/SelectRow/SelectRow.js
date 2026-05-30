@@ -60,6 +60,7 @@ export default class SelectRow extends Module {
       this.subscribe('rows-wipe', this.clearSelectionData.bind(this))
       this.subscribe('rows-retrieve', this.rowRetrieve.bind(this))
       this.subscribe('row-data-changed', this.rowUpdated.bind(this))
+      this.subscribe('table-built', this.bindDelegatedEvents.bind(this))
 
       if (this.table.options.selectableRows && !this.table.options.selectableRowsPersistence) {
         this.subscribe('data-refreshing', this.deselectRows.bind(this))
@@ -129,6 +130,26 @@ export default class SelectRow extends Module {
     const selectable = this.checkRowSelectability(row)
     const element = row.getElement()
 
+    row.modules.select = { selected: false }
+
+    element.classList.toggle('tabulator-selectable', selectable)
+    element.classList.toggle('tabulator-unselectable', !selectable)
+  }
+
+  /**
+   * Bind delegated selection mouse events to row container.
+   */
+  bindDelegatedEvents() {
+    const rowHolder = this.table.rowManager.getElement()
+
+    const getRowFromEvent = (e) => {
+      const rowEl = e.target.closest('.tabulator-row')
+      if (rowEl) {
+        return this.table.rowManager.findRow(rowEl)
+      }
+      return null
+    }
+
     // trigger end of row selection
     const endSelect = () => {
       setTimeout(() => {
@@ -139,22 +160,13 @@ export default class SelectRow extends Module {
       document.body.removeEventListener('keyup', endSelect)
     }
 
-    row.modules.select = { selected: false }
-
-    element.classList.toggle('tabulator-selectable', selectable)
-    element.classList.toggle('tabulator-unselectable', !selectable)
-
-    // set row selection class
-    if (this.table.options.selectableRows && this.table.options.selectableRows !== 'highlight') {
-      if (this.table.options.selectableRowsRangeMode === 'click') {
-        element.addEventListener('click', (e) => {
-          if (this.checkRowSelectability(row)) {
+    rowHolder.addEventListener('click', (e) => {
+      if (this.table.options.selectableRows && this.table.options.selectableRows !== 'highlight') {
+        const row = getRowFromEvent(e)
+        if (row && this.checkRowSelectability(row)) {
+          if (this.table.options.selectableRowsRangeMode === 'click') {
             this.handleComplexRowClick(row, e)
-          }
-        })
-      } else {
-        element.addEventListener('click', () => {
-          if (this.checkRowSelectability(row)) {
+          } else {
             if (!this.table.modExists('edit') || !this.table.modules.edit.getCurrentCell()) {
               this.table._clearSelection()
             }
@@ -163,10 +175,19 @@ export default class SelectRow extends Module {
               this.toggleRow(row)
             }
           }
-        })
+        }
+      }
+    })
 
-        element.addEventListener('mousedown', (e) => {
-          if (this.checkRowSelectability(row) && e.shiftKey) {
+    rowHolder.addEventListener('mousedown', (e) => {
+      if (
+        this.table.options.selectableRows &&
+        this.table.options.selectableRows !== 'highlight' &&
+        this.table.options.selectableRowsRangeMode !== 'click'
+      ) {
+        if (e.shiftKey) {
+          const row = getRowFromEvent(e)
+          if (row && this.checkRowSelectability(row)) {
             this.table._clearSelection()
 
             this.selecting = true
@@ -178,29 +199,35 @@ export default class SelectRow extends Module {
 
             this.toggleRow(row)
 
-            return false
+            e.preventDefault()
           }
-        })
-
-        element.addEventListener('mouseenter', () => {
-          if (this.checkRowSelectability(row) && this.selecting) {
-            this.table._clearSelection()
-            this.toggleRow(row)
-
-            if (this.selectPrev[1] === row) {
-              this.toggleRow(this.selectPrev[0])
-            }
-          }
-        })
-
-        element.addEventListener('mouseout', () => {
-          if (this.checkRowSelectability(row) && this.selecting) {
-            this.table._clearSelection()
-            this.selectPrev.unshift(row)
-          }
-        })
+        }
       }
-    }
+    })
+
+    rowHolder.addEventListener('mouseover', (e) => {
+      if (this.selecting) {
+        const row = getRowFromEvent(e)
+        if (row && this.checkRowSelectability(row)) {
+          this.table._clearSelection()
+          this.toggleRow(row)
+
+          if (this.selectPrev[1] === row) {
+            this.toggleRow(this.selectPrev[0])
+          }
+        }
+      }
+    })
+
+    rowHolder.addEventListener('mouseout', (e) => {
+      if (this.selecting) {
+        const row = getRowFromEvent(e)
+        if (row && this.checkRowSelectability(row)) {
+          this.table._clearSelection()
+          this.selectPrev.unshift(row)
+        }
+      }
+    })
   }
 
   /**
@@ -603,5 +630,12 @@ export default class SelectRow extends Module {
         this._deselectRow(child, true)
       }
     }
+  }
+
+  /**
+   * Deinitialize module lifecycle hook.
+   */
+  destroy() {
+    this.clearSelectionData(true)
   }
 }
