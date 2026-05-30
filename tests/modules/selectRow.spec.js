@@ -491,7 +491,7 @@ test('selectRow module', async ({ page }) => {
       const rowElement = table.getRow(1).getElement()
 
       // Simulate mousedown with shift key
-      const mousedownEvent = new MouseEvent('mousedown', { shiftKey: true })
+      const mousedownEvent = new MouseEvent('mousedown', { bubbles: true, shiftKey: true })
       rowElement.dispatchEvent(mousedownEvent)
 
       // Simulate mouseup
