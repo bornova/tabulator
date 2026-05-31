@@ -4,6 +4,10 @@
 /** @typedef {import('../../modules/GroupRows/GroupComponent').default} GroupComponent */
 /** @typedef {import('../../modules/SelectRange/RangeComponent').default} RangeComponent */
 
+/**
+ * @typedef {"visible" | "active" | "selected" | "all" | "range"} RowRangeLookup
+ */
+
 export default class RowComponent {
   /**
    * @param {object} row Internal Row instance.

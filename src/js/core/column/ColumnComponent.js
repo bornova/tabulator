@@ -3,6 +3,57 @@
 /** @typedef {import('../cell/CellComponent').default} CellComponent */
 /** @typedef {import('../../modules/SelectRange/RangeComponent').default} RangeComponent */
 
+/** @typedef {import('../../modules/ColumnCalcs/ColumnCalcs').ColumnCalc} ColumnCalc */
+/** @typedef {import('../../modules/ColumnCalcs/ColumnCalcs').ColumnCalcParams} ColumnCalcParams */
+/** @typedef {import('../../modules/Format/Format').Formatter} Formatter */
+/** @typedef {import('../../modules/Edit/Edit').Editor} Editor */
+/** @typedef {import('../../modules/Validate/Validate').Validator} Validator */
+/** @typedef {import('../../modules/Sort/Sort').Sorter} Sorter */
+
+/**
+ * @typedef {object} ColumnDefinition
+ * @property {string} [title] - Column title
+ * @property {string} [field] - Column field binding
+ * @property {ColumnDefinition[]} [columns] - Sub columns (grouped columns)
+ * @property {boolean} [visible] - Column visibility
+ * @property {string|number} [width] - Column width
+ * @property {number} [minWidth] - Column min width
+ * @property {number} [maxWidth] - Column max width
+ * @property {number} [widthGrow] - Width grow factor
+ * @property {number} [widthShrink] - Width shrink factor
+ * @property {boolean} [resizable] - Column resizable
+ * @property {boolean|"top"|"bottom"} [frozen] - Freeze column
+ * @property {boolean|number} [responsive] - Responsive layout priority
+ * @property {"left"|"center"|"right"|"justify"} [hozAlign] - Horizontal alignment
+ * @property {"top"|"middle"|"bottom"} [vertAlign] - Vertical alignment
+ * @property {ColumnCalc} [bottomCalc] - Bottom calculation type
+ * @property {ColumnCalcParams|Function} [bottomCalcParams] - Bottom calculation params
+ * @property {Formatter} [bottomCalcFormatter] - Bottom calculation formatter
+ * @property {object|Function} [bottomCalcFormatterParams] - Bottom calculation formatter params
+ * @property {ColumnCalc} [topCalc] - Top calculation type
+ * @property {ColumnCalcParams|Function} [topCalcParams] - Top calculation params
+ * @property {Formatter} [topCalcFormatter] - Top calculation formatter
+ * @property {object|Function} [topCalcFormatterParams] - Top calculation formatter params
+ * @property {boolean} [headerSort] - Enable sorting by clicking header
+ * @property {"asc"|"desc"} [headerSortStartingDir] - Starting sort direction
+ * @property {boolean} [headerSortTristate] - Enable tristate sorting
+ * @property {Editor} [editor] - Cell editor
+ * @property {object|Function} [editorParams] - Cell editor params
+ * @property {string} [editorPlaceholder] - Editor placeholder
+ * @property {Formatter} [formatter] - Cell formatter
+ * @property {object|Function} [formatterParams] - Cell formatter params
+ * @property {Validator} [validator] - Cell validator
+ * @property {Function} [click] - Column header click event
+ * @property {Function} [dblclick] - Column header double click event
+ * @property {Function} [contextMenu] - Column header context menu event
+ * @property {boolean} [rowHandle] - Display row handle
+ * @property {boolean} [hideInHtml] - Hide in HTML output
+ * @property {boolean} [rowHeader] - Use as row header
+ * @property {boolean} [searchable] - Searchable column
+ * @property {Sorter} [sorter] - Column sorter
+ * @property {object|Function} [sorterParams] - Column sorter params
+ */
+
 export default class ColumnComponent {
   /**
    * @param {object} column Internal Column instance.
@@ -36,7 +87,7 @@ export default class ColumnComponent {
 
   /**
    * Get the column definition object.
-   * @returns {import('../types').ColumnDefinition}
+   * @returns {ColumnDefinition}
    */
   getDefinition() {
     return this._column.getDefinition()
@@ -194,7 +245,7 @@ export default class ColumnComponent {
 
   /**
    * Update this column definition.
-   * @param {import('../types').ColumnDefinition} updates Partial definition updates.
+   * @param {ColumnDefinition} updates Partial definition updates.
    * @returns {Promise<ColumnComponent>}
    */
   updateDefinition(updates) {

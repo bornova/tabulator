@@ -2,6 +2,10 @@ import Module from '../../core/Module'
 
 import defaultFilters from './defaults/filters'
 
+/**
+ * @typedef {string | ((data: any, filterParams: object) => boolean)} Filter
+ */
+
 export default class Filter extends Module {
   static moduleName = 'filter'
 

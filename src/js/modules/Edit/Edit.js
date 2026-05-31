@@ -3,6 +3,10 @@ import Helpers from '../../core/tools/Helpers'
 
 import defaultEditors from './defaults/editors'
 
+/**
+ * @typedef {string | boolean | ((cell: import('../../core/cell/CellComponent').default, onRendered: Function, success: Function, cancel: Function, editorParams: object) => HTMLElement | false)} Editor
+ */
+
 export default class Edit extends Module {
   static moduleName = 'edit'
 

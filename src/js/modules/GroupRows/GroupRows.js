@@ -2,6 +2,10 @@ import Module from '../../core/Module'
 
 import Group from './Group'
 
+/**
+ * @typedef {string | ((values: any[], data: any[]) => any)} GroupArg
+ */
+
 export default class GroupRows extends Module {
   static moduleName = 'groupRows'
 

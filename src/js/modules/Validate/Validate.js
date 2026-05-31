@@ -2,6 +2,10 @@ import Module from '../../core/Module'
 
 import defaultValidators from './defaults/validators'
 
+/**
+ * @typedef {string | ((cell: import('../../core/cell/CellComponent').default, value: any, parameters: object) => boolean)} Validator
+ */
+
 export default class Validate extends Module {
   static moduleName = 'validate'
 

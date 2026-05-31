@@ -8,6 +8,15 @@ import Row from '../../core/row/Row'
 
 import defaultCalculations from './defaults/calculations'
 
+/**
+ * @typedef {string | ((values: any[], data: any[], calcParams: object) => any)} ColumnCalc
+ */
+
+/**
+ * @typedef {object} ColumnCalcParams
+ * @property {number} [precision]
+ */
+
 export default class ColumnCalcs extends Module {
   static moduleName = 'columnCalcs'
 

@@ -2,6 +2,10 @@ import Module from '../../core/Module'
 
 import defaultSorters from './defaults/sorters'
 
+/**
+ * @typedef {string | ((a: any, b: any, aRow: import('../../core/row/RowComponent').default, bRow: import('../../core/row/RowComponent').default, column: import('../../core/column/ColumnComponent').default, dir: string, sorterParams: object) => number)} Sorter
+ */
+
 export default class Sort extends Module {
   static moduleName = 'sort'
 

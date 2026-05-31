@@ -13,6 +13,10 @@ const entityMap = {
   '=': '&#x3D;'
 }
 
+/**
+ * @typedef {string | ((cell: import('../../core/cell/CellComponent').default, formatterParams: object, onRendered: Function) => any)} Formatter
+ */
+
 export default class Format extends Module {
   static moduleName = 'format'
 
