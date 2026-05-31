@@ -34,7 +34,7 @@ process.stdout.write('done.\n')
 const browserInput = 'src/js/builds/browser.js'
 const browserOutput = { format: 'iife', name: 'Tabulator', exports: 'default', banner }
 
-const esmInput = 'src/js/builds/esm.js'
+const esmInput = 'src/js/index.js'
 const esmOutput = { format: 'esm', banner }
 
 export default [

@@ -1944,15 +1944,21 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Comms messaging handler.
+   * @param {HTMLElement} table Source table element.
+   * @param {string} module Target module name.
+   * @param {string} action Target action name.
+   * @param {*} data Message payload.
    */
-  tableComms(table, message) {
+  tableComms(table, module, action, data) {
     this.initGuard()
-    this._noop(table, message)
+    this._noop(table, module, action, data)
     throw new Error('Comms module is not installed.')
   }
 
   /**
    * Set active spreadsheet sheets.
+   * @param {Array<object>} sheets Sheet definitions.
+   * @returns {Array<object>}
    */
   setSheets(sheets) {
     this.initGuard()
@@ -1962,6 +1968,8 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Add active spreadsheet sheet.
+   * @param {object} sheet Sheet definition.
+   * @returns {object}
    */
   addSheet(sheet) {
     this.initGuard()

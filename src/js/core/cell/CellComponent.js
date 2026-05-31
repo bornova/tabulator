@@ -238,6 +238,7 @@ export default class CellComponent {
    * Open popup menu.
    * @param {string} contents Popup content.
    * @param {"click" | "right" | "bottom" | "left" | "top" | "center"} [position] Popup position.
+   * @returns {*}
    */
   popup(contents, position) {
     return this._callBinder('popup', contents, position)
