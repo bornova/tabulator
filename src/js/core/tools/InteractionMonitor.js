@@ -1,6 +1,10 @@
 import CoreFeature from '../CoreFeature'
 import Row from '../row/Row'
 
+/**
+ * Monitor user interactions and coordinate events.
+ * Note: The class is named InteractionManager, but is exported by the file InteractionMonitor.js.
+ */
 export default class InteractionManager extends CoreFeature {
   /**
    * @param {object} table Tabulator table instance.

@@ -332,7 +332,6 @@ export default class Clipboard extends Module {
   /**
    * Apply clipboard mutators to parsed row data.
    * @param {*} data Parsed clipboard data.
-   * @returns {*}
    */
   mutateData(data) {
     if (Array.isArray(data)) {

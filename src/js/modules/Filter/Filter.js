@@ -181,7 +181,6 @@ export default class Filter extends Module {
   /**
    * Get a column header filter value by field.
    * @param {string} field Column field.
-   * @returns {*}
    */
   userGetHeaderFilterValue(field) {
     const column = this.table.columnManager.findColumn(field)
@@ -653,7 +652,6 @@ export default class Filter extends Module {
   /**
    * Read a column header filter value.
    * @param {object} column Internal column.
-   * @returns {*}
    */
   getHeaderFilterValue(column) {
     if (column.modules.filter && column.modules.filter.headerElement) {

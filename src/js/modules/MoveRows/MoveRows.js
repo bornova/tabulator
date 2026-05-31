@@ -846,7 +846,6 @@ export default class MoveRows extends Module {
    * @param {object} table Remote table.
    * @param {string} action Action key.
    * @param {object} data Action payload.
-   * @returns {*}
    */
   commsReceived(table, action, data) {
     switch (action) {

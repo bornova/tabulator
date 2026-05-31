@@ -158,7 +158,6 @@ export default class Mutator extends Module {
    * Apply edit mutator for a single cell value change.
    * @param {object} cell Internal cell.
    * @param {*} value Incoming cell value.
-   * @returns {*}
    */
   transformCell(cell, value) {
     if (!cell.column.modules.mutate) {

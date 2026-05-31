@@ -4,7 +4,7 @@
  * @this {Object}
  * @param {Object} cell Cell component.
  * @param {{inputFormat?: string, outputFormat?: string, invalidPlaceholder?: *|function(*): *, timezone?: string}} formatterParams Formatter parameters.
- * @returns {*} Formatted datetime value.
+ * @returns Formatted datetime value.
  */
 export default function (cell, formatterParams) {
   formatterParams ??= {}

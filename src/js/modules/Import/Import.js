@@ -222,7 +222,6 @@ export default class Import extends Module {
   /**
    * Normalize parsed import data shape for table consumption.
    * @param {*} parsedData Parsed input data.
-   * @returns {*}
    */
   structureData(parsedData) {
     if (Array.isArray(parsedData) && parsedData.length && Array.isArray(parsedData[0])) {
@@ -237,7 +236,6 @@ export default class Import extends Module {
   /**
    * Run import mutators on imported row data.
    * @param {*} data Data to mutate.
-   * @returns {*}
    */
   mutateData(data) {
     if (Array.isArray(data)) {
@@ -334,7 +332,6 @@ export default class Import extends Module {
   /**
    * Validate selected file before import.
    * @param {File} file Selected file.
-   * @returns {*}
    */
   validateFile(file) {
     if (this.table.options.importFileValidator) {

@@ -4,7 +4,7 @@
  * @this {Object}
  * @param {Object} cell Cell component.
  * @param {{inputFormat?: string, invalidPlaceholder?: *|function(*): *, suffix?: string|boolean, unit?: string, humanize?: boolean, date?: *}} formatterParams Formatter parameters.
- * @returns {*} Formatted datetime difference.
+ * @returns Formatted datetime difference.
  */
 export default function (cell, formatterParams) {
   formatterParams ??= {}

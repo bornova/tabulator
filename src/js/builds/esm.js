@@ -18,3 +18,6 @@ export { default as Renderer } from '../core/rendering/Renderer'
 
 // Optional module exports
 export * from '../core/modules/optional'
+
+// Type exports
+export * from '../core/types'

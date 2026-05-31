@@ -80,6 +80,10 @@ export default class RowManager extends CoreFeature {
     return idx === undefined ? -1 : idx
   }
 
+  /**
+   * Invalidate both lazy row-index caches.
+   * Must be called after any structural change to this.rows or this.activeRows.
+   */
   _invalidateRowIndexCaches() {
     this._rowIndexCache = null
     this._activeRowIndexCache = null
@@ -271,8 +275,8 @@ export default class RowManager extends CoreFeature {
   /**
    * Scroll to a row position.
    * @param {object} row Internal row.
-   * @param {string} position Scroll position mode.
-   * @param {boolean} ifVisible Skip if visible.
+   * @param {string} [position] Scroll position mode.
+   * @param {boolean} [ifVisible] Skip if visible.
    * @returns {Promise<void>}
    */
   scrollToRow(row, position, ifVisible) {
@@ -428,7 +432,7 @@ export default class RowManager extends CoreFeature {
   /**
    * Add a single row.
    * @param {object|Row} data Row data object or row instance.
-   * @param {boolean|string} [pos] Insert position preference.
+   * @param {boolean|'top'|'bottom'} [pos] Insert position preference.
    * @param {*} [index] Target row/index reference.
    * @param {boolean} [blockRedraw] Prevent redraw after insertion.
    * @returns {Row}
@@ -441,7 +445,7 @@ export default class RowManager extends CoreFeature {
   /**
    * Add multiple rows.
    * @param {Array<object>|object} data Row data array or single row object.
-   * @param {boolean|string} [pos] Insert position preference.
+   * @param {boolean|'top'|'bottom'} [pos] Insert position preference.
    * @param {*} [index] Target row/index reference.
    * @param {boolean} [refreshDisplayOnly] Refresh only display pipeline when possible.
    * @returns {Promise<Array<Row>>}
@@ -948,7 +952,7 @@ export default class RowManager extends CoreFeature {
 
   /**
    * Execute data and display refresh pipelines.
-   * @param {Function|string|false} [handler] Handler or stage to start from.
+   * @param {Function|string|false} handler Handler or stage to start from.
    * @param {string} stage Refresh stage.
    * @param {number} index Pipeline index.
    * @param {boolean} renderInPosition Preserve viewport position.
@@ -1071,7 +1075,7 @@ export default class RowManager extends CoreFeature {
   /**
    * Get currently visible rows from renderer.
    * @param {boolean} chain Apply rows-visible extension chain.
-   * @param {boolean} viewable Request only viewable rows.
+   * @param {boolean} viewable When true, restrict to rows in the visible viewport.
    * @returns {Array<object>}
    */
   getVisibleRows(chain, viewable) {

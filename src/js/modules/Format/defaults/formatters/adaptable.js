@@ -5,7 +5,7 @@
  * @param {Object} cell Cell component.
  * @param {Object} params Formatter parameters.
  * @param {function(function): void} onRendered Render callback registrar.
- * @returns {*} Formatter result.
+ * @returns Formatter result.
  */
 export default function (cell, params, onRendered) {
   params ??= {}

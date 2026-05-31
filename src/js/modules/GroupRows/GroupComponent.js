@@ -25,7 +25,6 @@ export default class GroupComponent {
 
   /**
    * Get the group key value.
-   * @returns {*}
    */
   getKey() {
     return this._group.key

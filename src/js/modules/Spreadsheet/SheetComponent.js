@@ -31,7 +31,6 @@ export default class SheetComponent {
 
   /**
    * Get sheet key.
-   * @returns {*}
    */
   getKey() {
     return this._sheet.key
@@ -47,7 +46,6 @@ export default class SheetComponent {
 
   /**
    * Get sheet data.
-   * @returns {*}
    */
   getData() {
     return this._sheet.getData()

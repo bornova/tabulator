@@ -138,7 +138,6 @@ export default class Format extends Module {
    * @param {object} column Internal column.
    * @param {string} title Header title.
    * @param {HTMLElement} el Header element.
-   * @returns {*}
    */
   formatHeader(column, title, el) {
     if (!column.definition.titleFormatter) {
@@ -176,7 +175,6 @@ export default class Format extends Module {
   /**
    * Format a cell value.
    * @param {object} cell Internal cell.
-   * @returns {*}
    */
   formatValue(cell) {
     const component = cell.getComponent()
@@ -193,7 +191,6 @@ export default class Format extends Module {
    * Format a cell value for export context.
    * @param {object} cell Internal cell.
    * @param {string} type Export format key.
-   * @returns {*}
    */
   formatExportValue(cell, type) {
     const formatter = cell.column.modules.format[type]
@@ -212,7 +209,6 @@ export default class Format extends Module {
   /**
    * Escape HTML entities in a value.
    * @param {*} value Input value.
-   * @returns {*}
    */
   sanitizeHTML(value) {
     if (value) {
@@ -225,7 +221,6 @@ export default class Format extends Module {
   /**
    * Convert empty values to a non-breaking space.
    * @param {*} value Input value.
-   * @returns {*}
    */
   emptyToSpace(value) {
     return value == null || value === '' ? '&nbsp;' : value

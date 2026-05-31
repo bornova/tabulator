@@ -183,7 +183,6 @@ export default class Localize extends Module {
   /**
    * Traverse active language object and return a nested value.
    * @param {Array<string>} path Path segments.
-   * @returns {*}
    */
   _getLangElement(path) {
     let root = this.lang

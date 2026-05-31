@@ -30,7 +30,7 @@ class TabulatorFull extends Tabulator {
 
   /**
    * @param {HTMLElement|string} element Target element or selector.
-   * @param {object} options Table options.
+   * @param {import('./types').Options} options Table options.
    */
   constructor(element, options) {
     super(element, options, allModules)

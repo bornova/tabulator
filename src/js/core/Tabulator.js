@@ -22,6 +22,9 @@ import Alert from './tools/Alert'
 import Logger from './tools/Logger'
 import AutoScroller from './tools/AutoScroller'
 
+/** @typedef {import('./row/RowComponent').default} RowComponent */
+/** @typedef {import('./column/ColumnComponent').default} ColumnComponent */
+
 class Tabulator extends ModuleBinder {
   // default setup options
   static defaultOptions = defaultOptions
@@ -46,7 +49,7 @@ class Tabulator extends ModuleBinder {
 
   /**
    * @param {HTMLElement|string} element Target element or selector.
-   * @param {object} options Table options.
+   * @param {import('./types').Options} options Table options.
    * @param {Array<Function>} [modules] Module overrides.
    */
   constructor(element, options, modules) {
@@ -514,7 +517,7 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Warn when APIs are called before initialization.
-   * @param {string|boolean} [func] Function name.
+   * @param {string|false} [func] Function name, or false to auto-detect from stack.
    * @param {string} [msg] Additional warning text.
    * @returns {boolean}
    */
@@ -686,7 +689,7 @@ class Tabulator extends ModuleBinder {
   /**
    * Add multiple rows.
    * @param {Array<object>|string} data Rows to add.
-   * @param {boolean} [pos] Insert position.
+   * @param {boolean|'top'|'bottom'} [pos] Insert position.
    * @param {*} [index] Index reference.
    * @returns {Promise<Array<RowComponent>>}
    */
@@ -844,7 +847,7 @@ class Tabulator extends ModuleBinder {
   /**
    * Add a single row.
    * @param {object|string} data Row data.
-   * @param {boolean} [pos] Insert position.
+   * @param {boolean|'top'|'bottom'} [pos] Insert position.
    * @param {*} [index] Index reference.
    * @returns {Promise<RowComponent>}
    */
@@ -936,6 +939,7 @@ class Tabulator extends ModuleBinder {
    * @param {*} from Source row identifier.
    * @param {*} to Target row identifier.
    * @param {boolean} [after] Insert after target.
+   * @returns {Promise<void>}
    */
   moveRow(from, to, after) {
     const fromRow = this.rowManager.findRow(from)
@@ -1014,7 +1018,7 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Get column definition tree.
-   * @returns {Array<object>}
+   * @returns {import('./types').ColumnDefinition[]}
    */
   getColumnDefinitions() {
     return this.columnManager.getDefinitionTree()
@@ -1111,7 +1115,7 @@ class Tabulator extends ModuleBinder {
   /**
    * Update a column definition.
    * @param {string} field Column field.
-   * @param {object} definition New definition.
+   * @param {import('./types').ColumnDefinition} definition New definition.
    * @returns {Promise<ColumnComponent>}
    */
   updateColumnDefinition(field, definition) {
@@ -1215,7 +1219,8 @@ class Tabulator extends ModuleBinder {
 
   /**
    * Dispatch external event.
-   * @param {...*} args Event args.
+   * @param {string} key Event key.
+   * @param {...*} args Callback arguments passed to event subscribers.
    */
   dispatchEvent(...args) {
     this.externalEvents.dispatch(...args)
@@ -1275,6 +1280,460 @@ class Tabulator extends ModuleBinder {
     }
 
     return mod
+  }
+
+  _noop() {
+    // no-op to consume stub arguments for ESLint
+  }
+
+  /**
+   * Copy table data to clipboard.
+   * @param {string} [rowRangeLookup] Range of rows to copy.
+   */
+  copyToClipboard(rowRangeLookup) {
+    this.initGuard()
+    this._noop(rowRangeLookup)
+    throw new Error('Clipboard module is not installed.')
+  }
+
+  /**
+   * Get the current AJAX URL of the table.
+   * @returns {string} The AJAX URL.
+   */
+  getAjaxUrl() {
+    this.initGuard()
+    throw new Error('Ajax module is not installed.')
+  }
+
+  /**
+   * Retrieve an array of row components that match the filters.
+   * @param {string} field Filter field.
+   * @param {string} type Filter type.
+   * @param {*} value Filter value.
+   * @returns {RowComponent[]} Matching row components.
+   */
+  searchRows(field, type, value) {
+    this.initGuard()
+    this._noop(field, type, value)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Retrieve an array of table row data that match the filters.
+   * @param {string} field Filter field.
+   * @param {string} type Filter type.
+   * @param {*} value Filter value.
+   * @returns {any[]} Matching row data.
+   */
+  searchData(field, type, value) {
+    this.initGuard()
+    this._noop(field, type, value)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Set filters on the table.
+   * @param {string|Function} field Filter field or function.
+   * @param {string} [type] Filter operator.
+   * @param {*} [value] Filter value.
+   * @param {object} [filterParams] Filter parameters.
+   */
+  setFilter(field, type, value, filterParams) {
+    this.initGuard()
+    this._noop(field, type, value, filterParams)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Refresh active filters.
+   */
+  refreshFilter() {
+    this.initGuard()
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Add a filter.
+   * @param {string|Function} field Filter field or function.
+   * @param {string} [type] Filter operator.
+   * @param {*} [value] Filter value.
+   * @param {object} [filterParams] Filter parameters.
+   */
+  addFilter(field, type, value, filterParams) {
+    this.initGuard()
+    this._noop(field, type, value, filterParams)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Get all active filters.
+   * @param {boolean} [allFilters] Include header filters.
+   * @returns {any[]} Active filters.
+   */
+  getFilters(allFilters) {
+    this.initGuard()
+    this._noop(allFilters)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Focus header filter on target column.
+   * @param {string} field Column field.
+   */
+  setHeaderFilterFocus(field) {
+    this.initGuard()
+    this._noop(field)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Get value of header filter.
+   * @param {string} field Column field.
+   * @returns {*}
+   */
+  getHeaderFilterValue(field) {
+    this.initGuard()
+    this._noop(field)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Set value of header filter.
+   * @param {string} field Column field.
+   * @param {*} value Filter value.
+   */
+  setHeaderFilterValue(field, value) {
+    this.initGuard()
+    this._noop(field, value)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Get all header filters.
+   * @returns {any[]} Header filters.
+   */
+  getHeaderFilters() {
+    this.initGuard()
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Remove a filter.
+   * @param {string|Function} field Filter field or function.
+   * @param {string} [type] Filter operator.
+   * @param {*} [value] Filter value.
+   * @param {object} [filterParams] Filter parameters.
+   */
+  removeFilter(field, type, value, filterParams) {
+    this.initGuard()
+    this._noop(field, type, value, filterParams)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Clear all filters.
+   * @param {boolean} [all] Clear header filters as well.
+   */
+  clearFilter(all) {
+    this.initGuard()
+    this._noop(all)
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Clear all header filters.
+   */
+  clearHeaderFilter() {
+    this.initGuard()
+    throw new Error('Filter module is not installed.')
+  }
+
+  /**
+   * Change group by option.
+   * @param {string|string[]|Function} groupBy Grouping fields or function.
+   */
+  setGroupBy(groupBy) {
+    this.initGuard()
+    this._noop(groupBy)
+    throw new Error('GroupRows module is not installed.')
+  }
+
+  /**
+   * Explicitly define group values.
+   * @param {any[]} groupValues Acceptable group values.
+   */
+  setGroupValues(groupValues) {
+    this.initGuard()
+    this._noop(groupValues)
+    throw new Error('GroupRows module is not installed.')
+  }
+
+  /**
+   * Change group start open option.
+   * @param {boolean|boolean[]|Function} groupStartOpen Initial open state or handler.
+   */
+  setGroupStartOpen(groupStartOpen) {
+    this.initGuard()
+    this._noop(groupStartOpen)
+    throw new Error('GroupRows module is not installed.')
+  }
+
+  /**
+   * Change group header formatter.
+   * @param {Function|Function[]} groupHeader Header formatter or handler.
+   */
+  setGroupHeader(groupHeader) {
+    this.initGuard()
+    this._noop(groupHeader)
+    throw new Error('GroupRows module is not installed.')
+  }
+
+  /**
+   * Get group components.
+   * @returns {any[]} Group components.
+   */
+  getGroups() {
+    this.initGuard()
+    throw new Error('GroupRows module is not installed.')
+  }
+
+  /**
+   * Get grouped data.
+   * @returns {any[]} Grouped data.
+   */
+  getGroupedData() {
+    this.initGuard()
+    throw new Error('GroupRows module is not installed.')
+  }
+
+  /**
+   * Undo last action.
+   * @returns {boolean} True if successful.
+   */
+  undo() {
+    this.initGuard()
+    throw new Error('History module is not installed.')
+  }
+
+  /**
+   * Redo last action.
+   * @returns {boolean} True if successful.
+   */
+  redo() {
+    this.initGuard()
+    throw new Error('History module is not installed.')
+  }
+
+  /**
+   * Get number of undo actions.
+   * @returns {number|false} Count or false.
+   */
+  getHistoryUndoSize() {
+    this.initGuard()
+    throw new Error('History module is not installed.')
+  }
+
+  /**
+   * Get number of redo actions.
+   * @returns {number|false} Count or false.
+   */
+  getHistoryRedoSize() {
+    this.initGuard()
+    throw new Error('History module is not installed.')
+  }
+
+  /**
+   * Clear history log.
+   */
+  clearHistory() {
+    this.initGuard()
+    throw new Error('History module is not installed.')
+  }
+
+  /**
+   * Get range data.
+   * @returns {any[]} Range data.
+   */
+  getRangesData() {
+    this.initGuard()
+    throw new Error('SelectRange module is not installed.')
+  }
+
+  /**
+   * Get range components.
+   * @returns {any[]} Range components.
+   */
+  getRanges() {
+    this.initGuard()
+    throw new Error('SelectRange module is not installed.')
+  }
+
+  /**
+   * Add a range.
+   * @param {any} range Range bounds.
+   */
+  addRange(range) {
+    this.initGuard()
+    this._noop(range)
+    throw new Error('SelectRange module is not installed.')
+  }
+
+  /**
+   * Get simple HTML representation of the table.
+   * @param {string} [rowRangeLookup] Range of rows.
+   * @param {boolean} [style] Include styling.
+   * @param {object} [config] Configuration.
+   * @returns {string} HTML string.
+   */
+  getHtml(rowRangeLookup, style, config) {
+    this.initGuard()
+    this._noop(rowRangeLookup, style, config)
+    throw new Error('Export module is not installed.')
+  }
+
+  /**
+   * Get persistent layout config.
+   * @returns {any[]} Layout configuration.
+   */
+  getColumnLayout() {
+    this.initGuard()
+    throw new Error('Persistence module is not installed.')
+  }
+
+  /**
+   * Load persistent layout config.
+   * @param {any[]} layout Layout configuration.
+   */
+  setColumnLayout(layout) {
+    this.initGuard()
+    this._noop(layout)
+    throw new Error('Persistence module is not installed.')
+  }
+
+  /**
+   * Load data from a file.
+   * @param {*} data File data/source.
+   * @param {string|string[]} extension Extensions allowed.
+   * @param {"buffer" | "binary" | "url" | "text"} [format] Input format.
+   * @returns {Promise<void>}
+   */
+  import(data, extension, format) {
+    this.initGuard()
+    this._noop(data, extension, format)
+    throw new Error('Import module is not installed.')
+  }
+
+  /**
+   * Print fullscreen view of the table.
+   * @param {string} [rowRangeLookup] Range of rows.
+   * @param {boolean} [style] Include styling.
+   * @param {object} [config] Configuration.
+   */
+  print(rowRangeLookup, style, config) {
+    this.initGuard()
+    this._noop(rowRangeLookup, style, config)
+    throw new Error('Print module is not installed.')
+  }
+
+  /**
+   * Set active locale.
+   * @param {string} locale Locale key.
+   */
+  setLocale(locale) {
+    this.initGuard()
+    this._noop(locale)
+    throw new Error('Localize module is not installed.')
+  }
+
+  /**
+   * Get active locale.
+   * @returns {string} Active locale key.
+   */
+  getLocale() {
+    this.initGuard()
+    throw new Error('Localize module is not installed.')
+  }
+
+  /**
+   * Get translation dictionary for locale.
+   * @param {string} [locale] Locale key.
+   * @returns {object} Language dictionary.
+   */
+  getLang(locale) {
+    this.initGuard()
+    this._noop(locale)
+    throw new Error('Localize module is not installed.')
+  }
+
+  /**
+   * Get all edited cell components.
+   * @returns {import('./cell/CellComponent').default[]} Edited cells.
+   */
+  getEditedCells() {
+    this.initGuard()
+    throw new Error('Edit module is not installed.')
+  }
+
+  /**
+   * Clear edited flags.
+   * @param {import('./cell/CellComponent').default|import('./cell/CellComponent').default[]} [clear] Cell(s) to clear.
+   */
+  clearCellEdited(clear) {
+    this.initGuard()
+    this._noop(clear)
+    throw new Error('Edit module is not installed.')
+  }
+
+  /**
+   * Trigger download of table data.
+   * @param {string|Function} downloadType File type or custom download function.
+   * @param {string} fileName File name.
+   * @param {object} [params] Additional parameters.
+   * @param {string} [filter] Row range lookup.
+   */
+  download(downloadType, fileName, params, filter) {
+    this.initGuard()
+    this._noop(downloadType, fileName, params, filter)
+    throw new Error('Download module is not installed.')
+  }
+
+  /**
+   * Open downloaded file in new browser tab.
+   * @param {string} downloadType File type.
+   * @param {string} fileName File name.
+   * @param {object} [params] Additional parameters.
+   */
+  downloadToTab(downloadType, fileName, params) {
+    this.initGuard()
+    this._noop(downloadType, fileName, params)
+    throw new Error('Download module is not installed.')
+  }
+
+  /**
+   * Comms messaging handler.
+   */
+  tableComms(table, message) {
+    this.initGuard()
+    this._noop(table, message)
+    throw new Error('Comms module is not installed.')
+  }
+
+  /**
+   * Set active spreadsheet sheets.
+   */
+  setSheets(sheets) {
+    this.initGuard()
+    this._noop(sheets)
+    throw new Error('Spreadsheet module is not installed.')
+  }
+
+  /**
+   * Add active spreadsheet sheet.
+   */
+  addSheet(sheet) {
+    this.initGuard()
+    this._noop(sheet)
+    throw new Error('Spreadsheet module is not installed.')
   }
 }
 

@@ -20,7 +20,6 @@ export default class RangeComponent {
   /**
    * Resolve public cell component or internal cell to internal cell instance.
    * @param {*} cell Cell-like value.
-   * @returns {*}
    */
   _resolveCell(cell) {
     return cell ? cell._cell || cell : cell

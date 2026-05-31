@@ -159,7 +159,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Get the current cell value.
-   * @returns {*}
    */
   getValue() {
     return this.value
@@ -167,7 +166,6 @@ export default class Cell extends CoreFeature {
 
   /**
    * Get the previous cell value.
-   * @returns {*}
    */
   getOldValue() {
     return this.oldValue
@@ -282,7 +280,7 @@ export default class Cell extends CoreFeature {
 
   /**
    * Get the computed cell width.
-   * @returns {number|string}
+   * @returns {number}
    */
   getWidth() {
     if (this.width) {

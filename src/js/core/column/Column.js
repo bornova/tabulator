@@ -392,7 +392,6 @@ export default class Column extends CoreFeature {
   /**
    * Get a value from a flat data object using this column field.
    * @param {object} data Row data object.
-   * @returns {*}
    */
   _getFlatData(data) {
     return data[this.field]
@@ -401,7 +400,6 @@ export default class Column extends CoreFeature {
   /**
    * Get a value from nested row data using the field structure.
    * @param {object} data Row data object.
-   * @returns {*}
    */
   _getNestedData(data) {
     const structure = this.fieldStructure

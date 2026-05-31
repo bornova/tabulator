@@ -6,7 +6,7 @@ import Helpers from '../../../../core/tools/Helpers'
  * @this {Object}
  * @param {Object} cell Cell component.
  * @param {{delimiter?: string, valueMap?: string|function(Array<*>): Array<*>}} formatterParams Formatter parameters.
- * @returns {*} Formatted value.
+ * @returns Formatted value.
  */
 export default function (cell, formatterParams) {
   formatterParams ??= {}

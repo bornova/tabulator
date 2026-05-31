@@ -77,7 +77,7 @@ export default class InternalEventBus {
   /**
    * Check whether an event key has active subscribers.
    * @param {string} key Event key.
-   * @returns {number|boolean}
+   * @returns {number|undefined}
    */
   subscribed(key) {
     return this.events[key] && this.events[key].length
@@ -89,7 +89,6 @@ export default class InternalEventBus {
    * @param {Array|*} args Subscriber arguments.
    * @param {*} initialValue Initial chain value.
    * @param {Function|*} fallback Fallback value/function when unsubscribed.
-   * @returns {*}
    */
   _chain(key, args, initialValue, fallback) {
     let value = initialValue
@@ -177,7 +176,6 @@ export default class InternalEventBus {
   /**
    * Chain-dispatch with optional debug logging.
    * @param {...*} args Event key followed by chain arguments.
-   * @returns {*}
    */
   _debugChain(...args) {
     const key = args[0]

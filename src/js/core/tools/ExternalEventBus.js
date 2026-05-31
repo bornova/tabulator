@@ -78,7 +78,7 @@ export default class ExternalEventBus {
   /**
    * Check if an event has subscribers.
    * @param {string} key Event key.
-   * @returns {number|boolean}
+   * @returns {number|undefined}
    */
   subscribed(key) {
     return this.events[key] && this.events[key].length
@@ -102,7 +102,6 @@ export default class ExternalEventBus {
   /**
    * Dispatch an external event.
    * @param {...*} args Event key followed by callback arguments.
-   * @returns {*}
    */
   _dispatch(...args) {
     const key = args.shift()
@@ -125,7 +124,6 @@ export default class ExternalEventBus {
   /**
    * Dispatch with optional debug logging.
    * @param {...*} args Event key followed by callback arguments.
-   * @returns {*}
    */
   _debugDispatch(...args) {
     const key = args[0]

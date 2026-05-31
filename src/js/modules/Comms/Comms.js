@@ -44,7 +44,6 @@ export default class Comms extends Module {
    * @param {string} module Target module name.
    * @param {string} action Target action name.
    * @param {*} data Message payload.
-   * @returns {*}
    */
   receive(table, module, action, data) {
     if (this.table.modExists(module)) {

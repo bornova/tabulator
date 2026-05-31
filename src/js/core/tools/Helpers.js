@@ -48,7 +48,6 @@ export default class Helpers {
    * @param {string} separator Nested field separator.
    * @param {string} field Field path.
    * @param {object} data Source object.
-   * @returns {*}
    */
   static retrieveNestedData(separator, field, data) {
     const structure = separator ? field.split(separator) : [field]

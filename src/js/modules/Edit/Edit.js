@@ -924,7 +924,6 @@ export default class Edit extends Module {
    * Convert configured empty editor values.
    * @param {*} value Editor value.
    * @param {object} cell Internal cell.
-   * @returns {*}
    */
   transformEmptyValues(value, cell) {
     const mod = cell.column.modules.edit

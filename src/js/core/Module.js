@@ -57,7 +57,7 @@ export default class Module extends CoreFeature {
    * @param {Function} func Function handler.
    */
   registerTableFunction(name, func) {
-    if (this.table[name] === undefined) {
+    if (!Object.prototype.hasOwnProperty.call(this.table, name)) {
       this.table[name] = (...args) => {
         this.table.initGuard(name)
 
@@ -73,7 +73,6 @@ export default class Module extends CoreFeature {
    * @param {string} component Component type.
    * @param {string} func Function name.
    * @param {Function} handler Function handler.
-   * @returns {*}
    */
   registerComponentFunction(component, func, handler) {
     return this.table.componentFunctionBinder.bind(component, func, handler)
@@ -158,7 +157,6 @@ export default class Module extends CoreFeature {
   /**
    * Append element to footer.
    * @param {HTMLElement} element Element to append.
-   * @returns {*}
    */
   footerAppend(element) {
     return this.table.footerManager.append(element)
@@ -167,7 +165,6 @@ export default class Module extends CoreFeature {
   /**
    * Prepend element to footer.
    * @param {HTMLElement} element Element to prepend.
-   * @returns {*}
    */
   footerPrepend(element) {
     return this.table.footerManager.prepend(element)
@@ -176,7 +173,6 @@ export default class Module extends CoreFeature {
   /**
    * Remove element from footer.
    * @param {HTMLElement} element Element to remove.
-   * @returns {*}
    */
   footerRemove(element) {
     return this.table.footerManager.remove(element)
@@ -204,7 +200,6 @@ export default class Module extends CoreFeature {
    * Show alert content.
    * @param {*} content Alert content.
    * @param {string} type Alert type.
-   * @returns {*}
    */
   alert(content, type) {
     return this.table.alertManager.alert(content, type)
@@ -212,7 +207,6 @@ export default class Module extends CoreFeature {
 
   /**
    * Clear active alert.
-   * @returns {*}
    */
   clearAlert() {
     return this.table.alertManager.clear()

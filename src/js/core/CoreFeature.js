@@ -133,7 +133,7 @@ export default class CoreFeature {
   /**
    * Check whether an internal event has subscribers.
    * @param {string} key Event key.
-   * @returns {number|boolean}
+   * @returns {number|undefined}
    */
   subscribed(key) {
     return this.table.eventBus.subscribed(key)
@@ -158,6 +158,7 @@ export default class CoreFeature {
   /**
    * Chain internal subscribers and return final value.
    * @param {...*} args Chain args.
+   * @returns The last value returned by the chain subscribers, or the fallback.
    */
   chain(...args) {
     return this.table.eventBus.chain(...args)
@@ -183,7 +184,7 @@ export default class CoreFeature {
   /**
    * Check whether an external event has subscribers.
    * @param {string} key Event key.
-   * @returns {number|boolean}
+   * @returns {number|undefined}
    */
   subscribedExternal(key) {
     return this.table.externalEvents.subscribed(key)
@@ -212,7 +213,7 @@ export default class CoreFeature {
   /**
    * Set/read option value.
    * @param {string} key Option key.
-   * @param {*} value Option value.
+   * @param {*} [value] Option value.
    */
   setOption(key, value) {
     if (value !== undefined) {
@@ -261,6 +262,7 @@ export default class CoreFeature {
   /**
    * Resolve module by key.
    * @param {string} key Module key.
+   * @returns {object|undefined}
    */
   module(key) {
     return this.table.module(key)

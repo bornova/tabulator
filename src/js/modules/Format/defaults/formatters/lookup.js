@@ -3,7 +3,7 @@
  *
  * @param {Object} cell Cell component.
  * @param {Object<string, *>} formatterParams Lookup map.
- * @returns {*} Lookup result.
+ * @returns Lookup result.
  */
 export default function (cell, formatterParams) {
   formatterParams ??= {}

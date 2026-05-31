@@ -24,7 +24,6 @@ export default class DependencyRegistry extends CoreFeature {
    * @param {string|Array<string>} key Dependency key or list of fallback keys.
    * @param {string} [prop] Property name to resolve from the dependency.
    * @param {boolean} [silent] Suppress missing dependency error.
-   * @returns {*}
    */
   lookup(key, prop, silent) {
     if (Array.isArray(key)) {
@@ -57,7 +56,6 @@ export default class DependencyRegistry extends CoreFeature {
    * @param {string} key Dependency key.
    * @param {string} prop Property name.
    * @param {boolean} [silent] Suppress missing dependency error.
-   * @returns {*}
    */
   lookupProp(key, prop, silent) {
     let dependency
@@ -82,7 +80,6 @@ export default class DependencyRegistry extends CoreFeature {
    * Lookup a dependency by key.
    * @param {string} key Dependency key.
    * @param {boolean} [silent] Suppress missing dependency error.
-   * @returns {*}
    */
   lookupKey(key, silent) {
     let dependency

@@ -77,7 +77,6 @@ export default class SelectRow extends Module {
    * Expose selected rows to row retrieval pipeline.
    * @param {string} type Retrieval type.
    * @param {*} prevValue Previous value.
-   * @returns {*}
    */
   rowRetrieve(type, prevValue) {
     return type === 'selected' ? this.selectedRows : prevValue

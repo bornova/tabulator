@@ -306,7 +306,6 @@ export default class Persistence extends Module {
    * Load persisted data and optionally merge with current values.
    * @param {string} type Persistence type.
    * @param {*} [current] Current value.
-   * @returns {*}
    */
   load(type, current) {
     let data = this.retrieveData(type)
@@ -322,7 +321,6 @@ export default class Persistence extends Module {
   /**
    * Retrieve persisted data for a type.
    * @param {string} type Persistence type.
-   * @returns {*}
    */
   retrieveData(type) {
     return this.readFunc ? this.readFunc(this.id, type) : false
