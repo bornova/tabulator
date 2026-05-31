@@ -26,16 +26,9 @@ export default class Tooltip extends Module {
    * Initialize tooltip subscriptions.
    */
   initialize() {
-    this.deprecatedOptionsCheck()
-
     this.subscribe('column-init', this.initializeColumn.bind(this))
     this.subscribe('table-destroy', this.clearPopup.bind(this))
   }
-
-  /**
-   * Check deprecated tooltip options.
-   */
-  deprecatedOptionsCheck() {}
 
   /**
    * Initialize tooltip listeners for a column.

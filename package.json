@@ -1,7 +1,7 @@
 {
   "name": "@bornova/tabulator-tables",
   "description": "Feature-rich interactive data tables with zero dependencies",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "license": "MIT",
   "keywords": [
     "table",

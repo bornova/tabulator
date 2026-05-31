@@ -47,16 +47,10 @@ export default class Edit {
       cancel
     }
 
-    this._deprecatedOptionsCheck()
     this._initializeValue()
 
     onRendered(this._onRendered.bind(this))
   }
-
-  /**
-   * Check deprecated editor options.
-   */
-  _deprecatedOptionsCheck() {}
 
   /**
    * Initialize current editor value state.

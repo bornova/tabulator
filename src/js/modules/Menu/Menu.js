@@ -38,17 +38,11 @@ export default class Menu extends Module {
    * Initialize menu watchers for rows, groups, and columns.
    */
   initialize() {
-    this.deprecatedOptionsCheck()
     this.initializeRowWatchers()
     this.initializeGroupWatchers()
 
     this.subscribe('column-init', this.initializeColumn.bind(this))
   }
-
-  /**
-   * Check deprecated menu options.
-   */
-  deprecatedOptionsCheck() {}
 
   /**
    * Initialize row-level menu subscriptions.

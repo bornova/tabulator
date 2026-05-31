@@ -28,16 +28,9 @@ export default class Download extends Module {
    * Register table download functions.
    */
   initialize() {
-    this.deprecatedOptionsCheck()
-
     this.registerTableFunction('download', this.download.bind(this))
     this.registerTableFunction('downloadToTab', this.downloadToTab.bind(this))
   }
-
-  /**
-   * Check deprecated download options.
-   */
-  deprecatedOptionsCheck() {}
 
   /// ////////////////////////////////
   /// ////// Table Functions /////////

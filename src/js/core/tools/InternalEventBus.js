@@ -84,6 +84,19 @@ export default class InternalEventBus {
   }
 
   /**
+   * Notify subscription change listeners for an event key.
+   * @param {string} key Event key.
+   * @param {boolean} subscribed Current subscription state.
+   */
+  _notifySubscriptionChange(key, subscribed) {
+    const notifiers = this.subscriptionNotifiers[key]
+
+    if (notifiers) {
+      notifiers.forEach((callback) => callback(subscribed))
+    }
+  }
+
+  /**
    * Run a chained event pipeline, passing previous value to each subscriber.
    * @param {string} key Event key.
    * @param {Array|*} args Subscriber arguments.
@@ -130,19 +143,6 @@ export default class InternalEventBus {
     }
 
     return confirmed
-  }
-
-  /**
-   * Notify subscription change listeners for an event key.
-   * @param {string} key Event key.
-   * @param {boolean} subscribed Current subscription state.
-   */
-  _notifySubscriptionChange(key, subscribed) {
-    const notifiers = this.subscriptionNotifiers[key]
-
-    if (notifiers) {
-      notifiers.forEach((callback) => callback(subscribed))
-    }
   }
 
   /**

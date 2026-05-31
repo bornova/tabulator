@@ -48,8 +48,6 @@ export default class SelectRow extends Module {
    * Initialize row selection behavior and subscriptions.
    */
   initialize() {
-    this.deprecatedOptionsCheck()
-
     if (this.table.options.selectableRows === 'highlight' && this.table.options.selectableRange) {
       this.table.options.selectableRows = false
     }
@@ -67,11 +65,6 @@ export default class SelectRow extends Module {
       }
     }
   }
-
-  /**
-   * Check deprecated selection options.
-   */
-  deprecatedOptionsCheck() {}
 
   /**
    * Expose selected rows to row retrieval pipeline.
