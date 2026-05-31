@@ -1,3 +1,5 @@
+import applyElementAttributes from '../applyElementAttributes'
+
 // draggable progress bar
 /**
  * Draggable progress-bar editor.
@@ -46,16 +48,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   // style bar
   bar.classList.add('tabulator-progress-editor-bar')
 
-  if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
-    for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) === '+') {
-        key = key.slice(1)
-        bar.setAttribute(key, bar.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
-      } else {
-        bar.setAttribute(key, editorParams.elementAttributes[key])
-      }
-    }
-  }
+  applyElementAttributes(bar, editorParams.elementAttributes)
 
   // style cell
   element.classList.add('tabulator-progress-editor-cell')
