@@ -63,7 +63,7 @@ export const loadExampleTabulator = async () => {
     return window.Tabulator
   }
 
-  const { TabulatorFull } = await import('./../../dist/js/esm/tabulator.js')
+  const { TabulatorFull } = await import('./../../dist/js/esm/index.js')
 
   return TabulatorFull
 }
