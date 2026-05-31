@@ -1,4 +1,5 @@
 import maskInput from '../../inputMask'
+import applyElementAttributes from '../applyElementAttributes'
 
 // resizable text area element
 /**
@@ -22,16 +23,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   input.setAttribute('name', 'tabulator-editor-textarea')
   input.classList.add('tabulator-editor-textarea')
 
-  if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
-    for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) === '+') {
-        key = key.slice(1)
-        input.setAttribute(key, (input.getAttribute(key) || '') + editorParams.elementAttributes[`+${key}`])
-      } else {
-        input.setAttribute(key, editorParams.elementAttributes[key])
-      }
-    }
-  }
+  applyElementAttributes(input, editorParams.elementAttributes)
 
   input.value = value
 
