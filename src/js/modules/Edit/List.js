@@ -1,4 +1,5 @@
 import maskInput from './inputMask'
+import applyElementAttributes from './defaults/applyElementAttributes'
 import urlBuilder from '../Ajax/defaults/urlGenerator'
 
 export default class Edit {
@@ -142,7 +143,6 @@ export default class Edit {
    * @returns {HTMLInputElement}
    */
   _createInputElement() {
-    const attribs = this.params.elementAttributes
     const input = document.createElement('input')
 
     input.setAttribute('type', this.params.clearable ? 'search' : 'text')
@@ -155,16 +155,7 @@ export default class Edit {
       // input.readOnly = (this.edit.currentCell != false);
     }
 
-    if (attribs && typeof attribs === 'object') {
-      for (let key in attribs) {
-        if (key.charAt(0) === '+') {
-          key = key.slice(1)
-          input.setAttribute(key, input.getAttribute(key) + attribs[`+${key}`])
-        } else {
-          input.setAttribute(key, attribs[key])
-        }
-      }
-    }
+    applyElementAttributes(input, this.params.elementAttributes)
 
     if (this.params.mask) {
       maskInput(input, this.params)
@@ -1089,16 +1080,7 @@ export default class Edit {
 
         el.classList.add(`tabulator-edit-list-group-level-${item.level}`)
 
-        if (item.elementAttributes && typeof item.elementAttributes === 'object') {
-          for (let key in item.elementAttributes) {
-            if (key.charAt(0) === '+') {
-              key = key.slice(1)
-              el.setAttribute(key, (el.getAttribute(key) || '') + item.elementAttributes[`+${key}`])
-            } else {
-              el.setAttribute(key, item.elementAttributes[key])
-            }
-          }
-        }
+        applyElementAttributes(el, item.elementAttributes)
 
         if (item.group) {
           el.addEventListener('click', this._groupClick.bind(this, item))
