@@ -1,3 +1,5 @@
+import applyElementAttributes from '../applyElementAttributes'
+
 // star rating
 /**
  * Star-rating editor.
@@ -92,16 +94,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   star.setAttribute('xml:space', 'preserve')
   star.classList.add('tabulator-star-icon')
 
-  if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
-    for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) === '+') {
-        key = key.slice(1)
-        starsHolder.setAttribute(key, starsHolder.getAttribute(key) + editorParams.elementAttributes[`+${key}`])
-      } else {
-        starsHolder.setAttribute(key, editorParams.elementAttributes[key])
-      }
-    }
-  }
+  applyElementAttributes(starsHolder, editorParams.elementAttributes)
 
   // create correct number of stars
   for (let i = 1; i <= maxStars; i++) {
