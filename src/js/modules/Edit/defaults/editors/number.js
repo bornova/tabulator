@@ -1,4 +1,5 @@
 import maskInput from '../../inputMask'
+import applyElementAttributes from '../applyElementAttributes'
 
 // input element with type of number
 /**
@@ -34,16 +35,7 @@ export default function (cell, onRendered, success, cancel, editorParams) {
   // create and style input
   input.classList.add('tabulator-editor-input')
 
-  if (editorParams.elementAttributes && typeof editorParams.elementAttributes === 'object') {
-    for (let key in editorParams.elementAttributes) {
-      if (key.charAt(0) === '+') {
-        key = key.slice(1)
-        input.setAttribute(key, (input.getAttribute(key) || '') + editorParams.elementAttributes[`+${key}`])
-      } else {
-        input.setAttribute(key, editorParams.elementAttributes[key])
-      }
-    }
-  }
+  applyElementAttributes(input, editorParams.elementAttributes)
 
   input.value = cellValue
 
