@@ -1,8 +1,8 @@
 import defaultOptions from './defaults/options'
 
-import ColumnManager from './ColumnManager'
-import RowManager from './RowManager'
-import FooterManager from './FooterManager'
+import ColumnManager from './column/ColumnManager'
+import RowManager from './row/RowManager'
+import FooterManager from './footer/FooterManager'
 
 import InteractionMonitor from './tools/InteractionMonitor'
 import ComponentFunctionBinder from './tools/ComponentFunctionBinder'
