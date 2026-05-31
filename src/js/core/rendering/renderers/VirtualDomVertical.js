@@ -3,10 +3,10 @@ import Helpers from '../../tools/Helpers'
 
 export default class VirtualDomVertical extends Renderer {
   /**
-   * @param {object} table Tabulator table instance.
+   * @param {import('../RenderContext').default} context Render context.
    */
-  constructor(table) {
-    super(table)
+  constructor(context) {
+    super(context)
 
     this.verticalFillMode = 'fill'
     this.scrollTop = 0

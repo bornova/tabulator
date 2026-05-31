@@ -5,6 +5,7 @@ import Helpers from './tools/Helpers'
 
 import RendererBasicVertical from './rendering/renderers/BasicVertical'
 import RendererVirtualDomVertical from './rendering/renderers/VirtualDomVertical'
+import RenderContext from './rendering/RenderContext'
 
 export default class RowManager extends CoreFeature {
   /**
@@ -1194,7 +1195,8 @@ export default class RowManager extends CoreFeature {
     if (renderClass) {
       this.renderMode = this.table.options.renderVertical
 
-      this.renderer = new renderClass(this.table, this.element, this.tableElement)
+      const context = new RenderContext(this.table, this.element, this.tableElement)
+      this.renderer = new renderClass(context)
       this.renderer.initialize()
 
       if (

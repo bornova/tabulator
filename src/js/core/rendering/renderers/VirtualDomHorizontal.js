@@ -2,10 +2,10 @@ import Renderer from '../Renderer'
 
 export default class VirtualDomHorizontal extends Renderer {
   /**
-   * @param {object} table Tabulator table instance.
+   * @param {import('../RenderContext').default} context Render context.
    */
-  constructor(table) {
-    super(table)
+  constructor(context) {
+    super(context)
 
     this.leftCol = 0
     this.rightCol = 0

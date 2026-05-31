@@ -3,14 +3,15 @@ import Helpers from '../tools/Helpers'
 
 export default class Renderer extends CoreFeature {
   /**
-   * @param {object} table Tabulator table instance.
+   * @param {import('./RenderContext').default} context Render context.
    */
-  constructor(table) {
-    super(table)
+  constructor(context) {
+    super(context.table)
 
-    this.elementVertical = table.rowManager.element
-    this.elementHorizontal = table.columnManager.element
-    this.tableElement = table.rowManager.tableElement
+    this.context = context
+    this.elementVertical = context.element
+    this.elementHorizontal = context.element
+    this.tableElement = context.tableElement
 
     this.verticalFillMode = 'fit' // used by row manager to determine how to size the render area ("fit" - fits container to the contents, "fill" - fills the container without resizing it)
   }

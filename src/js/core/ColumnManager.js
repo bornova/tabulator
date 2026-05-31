@@ -6,6 +6,7 @@ import OptionsList from './tools/OptionsList'
 
 import RendererBasicHorizontal from './rendering/renderers/BasicHorizontal'
 import RendererVirtualDomHorizontal from './rendering/renderers/VirtualDomHorizontal'
+import RenderContext from './rendering/RenderContext'
 
 import defaultColumnOptions from './column/defaults/options'
 
@@ -84,7 +85,8 @@ export default class ColumnManager extends CoreFeature {
     }
 
     if (renderClass) {
-      this.renderer = new renderClass(this.table, this.element, this.tableElement)
+      const context = new RenderContext(this.table, this.table.rowManager.element, this.table.rowManager.tableElement)
+      this.renderer = new renderClass(context)
       this.renderer.initialize()
     } else {
       console.error('Unable to find matching renderer:', this.table.options.renderHorizontal)
