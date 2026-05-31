@@ -37,17 +37,20 @@ const browserOutput = { format: 'iife', name: 'Tabulator', exports: 'default', b
 const esmInput = 'src/js/index.js'
 const esmOutput = { format: 'esm', banner }
 
+const stripComments = terser({ compress: false, mangle: false, format: { comments: false } })
+
 export default [
   // Browser IIFE — unminified
   {
     input: browserInput,
-    output: { ...browserOutput, file: 'dist/js/browser/tabulator.js' }
+    output: { ...browserOutput, file: 'dist/js/browser/tabulator.js' },
+    plugins: [stripComments]
   },
   // Browser IIFE — minified with source map
   {
     input: browserInput,
     output: { ...browserOutput, file: 'dist/js/browser/tabulator.min.js', sourcemap: true },
-    plugins: [terser({ format: { comments: /^!/ } })]
+    plugins: [terser({ format: { comments: false } })]
   },
   // ESM — tree-shakable (one file per module)
   {
@@ -57,6 +60,7 @@ export default [
       dir: 'dist/js/esm',
       preserveModules: true,
       preserveModulesRoot: 'src/js'
-    }
+    },
+    plugins: [stripComments]
   }
 ]
