@@ -28,129 +28,234 @@ import AutoScroller from './tools/AutoScroller'
 
 /**
  * @typedef {object} Options
- * @property {any[]} [data] - Array of data objects
- * @property {boolean|"full"} [autoColumns] - Auto generate columns
- * @property {Function|object} [autoColumnsDefinitions] - Auto column definitions
- * @property {ColumnDefinition[]} [columns] - Column definitions
- * @property {string|number} [height] - Table height
- * @property {string|number} [minHeight] - Table min height
- * @property {string|number} [maxHeight] - Table max height
- * @property {"fitData"|"fitColumns"|"fitDataFill"|"fitDataStretch"|"fitDataTable"} [layout] - Layout mode
- * @property {boolean} [layoutColumnsOnNewData] - Adjust column widths on new data
- * @property {"hide"|"collapse"|boolean} [responsiveLayout] - Responsive layout mode
- * @property {boolean} [responsiveLayoutCollapseStartOpen] - Expand collapsed rows by default
- * @property {Function} [responsiveLayoutCollapseFormatter] - Collapsed row formatter
- * @property {object} [columnDefaults] - Default column properties
- * @property {boolean} [headerVisible] - Toggle header visibility
- * @property {boolean|Function|string} [rowHeader] - Toggle row header
- * @property {"auto"|"ltr"|"rtl"} [textDirection] - Text direction
- * @property {"top"|"center"|"bottom"|"nearest"} [scrollToRowPosition] - Scroll to row position
- * @property {boolean} [scrollToRowIfVisible] - Scroll to row if visible
- * @property {"left"|"center"|"middle"|"right"} [scrollToColumnPosition] - Scroll to column position
- * @property {boolean} [scrollToColumnIfVisible] - Scroll to column if visible
- * @property {Function} [rowFormatter] - Custom row formatter
- * @property {Function} [rowFormatterPrint] - Custom print row formatter
- * @property {Function} [rowFormatterClipboard] - Custom clipboard row formatter
- * @property {Function} [rowFormatterHtmlOutput] - Custom HTML output row formatter
- * @property {string|HTMLElement|Function} [placeholder] - Placeholder element or text
- * @property {boolean|string|HTMLElement} [footerElement] - Footer element or selector
- * @property {string|number} [index] - Primary key field name
- * @property {object} [keybindings] - Keybindings map
- * @property {boolean|"copy"|"paste"|string} [clipboard] - Clipboard mode
- * @property {boolean} [clipboardCopyStyled] - Copy styled text to clipboard
- * @property {object} [clipboardCopyConfig] - Clipboard copy configuration
- * @property {string|Function} [clipboardCopyFormatter] - Clipboard copy formatter
- * @property {boolean} [clipboardCopyHeader] - Include headers in clipboard copy
- * @property {string|Function} [clipboardPasteParser] - Clipboard paste parser
- * @property {string|Function} [clipboardPasteAction] - Clipboard paste action
- * @property {boolean} [dataTree] - Enable data tree
- * @property {string} [dataTreeChildField] - Data tree child field
- * @property {number} [dataTreeChildIndent] - Data tree child indent
- * @property {boolean|string|HTMLElement} [dataTreeBranchElement] - Data tree branch element
- * @property {boolean|string|HTMLElement} [dataTreeCollapseElement] - Data tree collapse element
- * @property {boolean|string|HTMLElement} [dataTreeExpandElement] - Data tree expand element
- * @property {boolean} [dataTreeStartExpanded] - Expand data tree by default
- * @property {boolean} [dataTreeChildColumnCalcs] - Child column calculations
- * @property {boolean} [dataTreeSelectPropagate] - Propagate select events
- * @property {string|number|boolean} [dataTreeElementColumn] - Data tree element column
- * @property {boolean} [dataTreeFilter] - Filter data tree
- * @property {boolean} [dataTreeSort] - Sort data tree
- * @property {boolean|"reorder"} [movableRows] - Enable movable rows
- * @property {string|HTMLElement|any[]} [movableRowsConnectedTables] - Connected tables for row movement
- * @property {string|Function} [movableRowsSender] - Movable rows sender
- * @property {string|Function} [movableRowsReceiver] - Movable rows receiver
- * @property {string} [movableRowsElement] - Movable rows element selector
- * @property {boolean} [movableRowsSourceShowHeaders] - Show headers on source
- * @property {boolean} [movableRowsTargetShowHeaders] - Show headers on target
- * @property {string} [movableRowsSourceTitle] - Source table title
- * @property {string} [movableRowsTargetTitle] - Target table title
- * @property {object} [movableRowsConnectedTablesOptions] - Connected tables options
- * @property {object} [movableRowsConnectedTablesParams] - Connected tables params
- * @property {boolean} [movableColumns] - Enable movable columns
- * @property {boolean} [movableColumnsElement] - Movable columns element
- * @property {string} [columnHeaderVertAlign] - Column header vertical alignment
- * @property {string|boolean} [nestedFieldSeparator] - Nested field separator
- * @property {Function} [validationFailed] - Validation failed callback
- * @property {object} [validationFailedParams] - Validation failed params
- * @property {boolean} [history] - Enable history
- * @property {boolean|number|"highlight"} [selectable] - Enable selectable rows
- * @property {"click"|"checkbox"} [selectableRangeMode] - Selectable range mode
- * @property {boolean|number} [selectableRows] - Enable selectable rows
- * @property {"click"|"checkbox"} [selectableRowsRangeMode] - Selectable rows range mode
- * @property {boolean} [selectableRowsRollingSelection] - Rolling selection
- * @property {boolean} [selectableRowsPersistence] - Persist selections
- * @property {Function} [selectableRowsCheck] - Row selectable check callback
- * @property {object} [selectableRowsCheckParams] - Check parameters
- * @property {boolean} [selectRowHighlight] - Highlight selected rows
- * @property {boolean|"remote"|"local"} [pagination] - Pagination mode
- * @property {number} [paginationSize] - Pagination size
- * @property {boolean|any[]} [paginationSizeSelector] - Pagination size selector
- * @property {string|HTMLElement} [paginationElement] - Pagination element
- * @property {number} [paginationButtonCount] - Pagination button count
- * @property {string|Function} [paginationCounter] - Pagination counter
- * @property {string|HTMLElement|Function} [paginationCounterElement] - Pagination counter element
- * @property {boolean|object} [persistence] - Enable persistence
- * @property {Function|string} [persistenceReader] - Persistence reader
- * @property {Function|string} [persistenceWriter] - Persistence writer
- * @property {object} [persistenceConfig] - Persistence configuration
- * @property {string} [persistenceID] - Persistence ID
- * @property {"local"|"cookie"|"server"} [persistenceMode] - Persistence mode
- * @property {string} [ajaxURL] - Ajax URL
- * @property {object} [ajaxParams] - Ajax params
- * @property {object} [ajaxConfig] - Ajax config
- * @property {string|object} [ajaxContentType] - Ajax content type
- * @property {Function} [ajaxURLGenerator] - Ajax URL generator
- * @property {Function} [ajaxRequestFunc] - Ajax request function
- * @property {Function} [ajaxResponse] - Ajax response handler
- * @property {Function} [ajaxError] - Ajax error handler
- * @property {boolean} [ajaxFiltering] - Enable ajax filtering
- * @property {boolean} [ajaxSorting] - Enable ajax sorting
- * @property {"default"|"load"|"scroll"} [ajaxProgressive] - Ajax progressive mode
- * @property {number} [ajaxProgressiveDelay] - Ajax progressive delay
- * @property {Function} [ajaxProgressiveLoad] - Ajax progressive load handler
- * @property {number} [ajaxProgressiveLoadDelay] - Ajax progressive load delay
- * @property {boolean|Function} [ajaxLoader] - Show ajax loader
- * @property {string|HTMLElement|Function} [ajaxLoaderLoading] - Loading element or text
- * @property {string|HTMLElement|Function} [ajaxLoaderError] - Error element or text
- * @property {number} [ajaxLoaderErrorTimeout] - Error timeout
- * @property {any[]} [initialSort] - Initial sort configuration
- * @property {any[]} [initialFilter] - Initial filter configuration
- * @property {any[]} [initialHeaderFilter] - Initial header filter configuration
- * @property {boolean} [sortOrderReverse] - Reverse sort order
- * @property {number} [headerFilterLiveFilterDelay] - Header filter live filter delay
- * @property {object} [langs] - Languages object
- * @property {string} [locale] - Active locale
- * @property {object} [downloadConfig] - Download configuration
- * @property {Function} [downloadEncoder] - Download encoder
- * @property {Function} [downloadReady] - Download ready callback
- * @property {Function} [downloadComplete] - Download complete callback
- * @property {boolean} [debugEventsExternal] - Debug external events
- * @property {boolean} [debugEventsInternal] - Debug internal events
- * @property {boolean} [debugInitialization] - Debug initialization
- * @property {boolean} [debugInvalidOptions] - Debug invalid options
- * @property {boolean} [debugInvalidComponentFuncs] - Debug invalid component functions
- * @property {boolean} [debugLogging] - Enable debug logging
- * @property {boolean} [debugDeprecation] - Enable deprecation warnings
+ *
+ * --- General Table Configuration ---
+ * @property {string|number} [height] Sets the height of the containing element; any valid CSS height value. Defaults to false (auto-size).
+ * @property {string|number} [minHeight] Sets the minimum height for the table; any valid CSS height value.
+ * @property {string|number} [maxHeight] Sets the maximum height for the table; any valid CSS height value.
+ * @property {object} [dependencies] Register external library dependencies (e.g. jsPDF, XLSX) for use by modules.
+ * @property {"virtual"|"basic"} [renderVertical] Set the vertical renderer. "virtual" (default) uses a virtual DOM for performance.
+ * @property {number} [renderVerticalBuffer] Manually set the size of the virtual vertical renderer buffer in pixels.
+ * @property {"basic"|"virtual"} [renderHorizontal] Set the horizontal renderer. "virtual" enables horizontal virtual DOM.
+ * @property {string|HTMLElement} [placeholder] Placeholder element or text to display on an empty table.
+ * @property {string|HTMLElement|boolean} [footerElement] Footer element or HTML string to append to the table footer.
+ * @property {boolean|Function} [history] Enable user interaction history so changes can be undone/redone.
+ * @property {boolean|object} [keybindings] Keybinding configuration object or false to disable.
+ * @property {string|boolean} [locale] Set the current localisation language; false uses the default.
+ * @property {object} [langs] Localisation templates keyed by locale string.
+ * @property {object} [downloadConfig] Choose which parts of the table are included in downloaded files.
+ * @property {string} [downloadRowRange] Set the range of rows included in downloads ("active", "visible", "selected", or "all").
+ * @property {Function} [downloadEncoder] Override the default file encoder for downloads.
+ * @property {object} [htmlOutputConfig] Choose which parts of the table are included in getHtml output.
+ * @property {boolean} [reactiveData] Enable reactive data so the table automatically updates when the data array is mutated.
+ * @property {boolean|object|Function} [tabEndNewRow] Add a new row when the user tabs off the end of the table.
+ * @property {"blocking"|"highlight"} [validationMode] Set the validation mode; "blocking" (default) prevents invalid input, "highlight" marks it.
+ * @property {"auto"|"ltr"|"rtl"} [textDirection] Set text direction for the table.
+ * @property {boolean} [debugInvalidOptions] Show console warnings for invalid table options. Defaults to true.
+ * @property {boolean} [debugEventsExternal] Log all external events to the console.
+ * @property {boolean} [debugEventsInternal] Log all internal events to the console.
+ * @property {boolean} [debugInitialization] Warn when functions are called before the table is initialised.
+ * @property {boolean} [debugInvalidComponentFuncs] Warn when invalid component functions are called.
+ * @property {boolean} [debugLogging] Enable diagnostic logging output.
+ * @property {boolean} [debugDeprecation] Warn when deprecated options or functions are used.
+ * @property {boolean|string|HTMLElement} [popupContainer] Containing element for popups; false appends to document body.
+ * @property {boolean} [autoResize] Automatically resize the table when its containing element changes size. Defaults to true.
+ * @property {number} [tooltipDelay] Delay in milliseconds before a tooltip is displayed.
+ *
+ * --- Columns ---
+ * @property {ColumnDefinition[]} [columns] Column definition array.
+ * @property {object} [columnDefaults] Default properties to apply to every column definition.
+ * @property {boolean} [autoColumns] Automatically generate column definitions from the structure of the first data row.
+ * @property {Function|any[]|object} [autoColumnsDefinitions] Manipulate auto-generated column definitions.
+ * @property {"fitData"|"fitColumns"|"fitDataFill"|"fitDataStretch"|"fitDataTable"} [layout] Layout mode for table columns. Defaults to "fitData".
+ * @property {boolean} [layoutColumnsOnNewData] Recalculate column widths when new data is loaded.
+ * @property {"hide"|"collapse"|boolean} [responsiveLayout] Automatically hide/show columns to fit the table width.
+ * @property {boolean} [responsiveLayoutCollapseStartOpen] Show the collapsed column list when a row is first rendered. Defaults to true.
+ * @property {boolean} [responsiveLayoutCollapseUseFormatters] Use column formatters when rendering the collapsed column list. Defaults to true.
+ * @property {Function} [responsiveLayoutCollapseFormatter] Custom formatter for the collapsed column list.
+ * @property {boolean} [movableColumns] Allow users to drag and reorder columns.
+ * @property {"top"|"middle"|"bottom"} [columnHeaderVertAlign] Vertical alignment of column header content (used with column groups). Defaults to "top".
+ * @property {"left"|"center"|"middle"|"right"} [scrollToColumnPosition] Default scroll-to-column alignment. Defaults to "left".
+ * @property {boolean} [scrollToColumnIfVisible] Allow scrolling to a column that is already visible. Defaults to true.
+ * @property {boolean|"true"|"above"|"below"} [columnCalcs] Where to show column calculation rows. Defaults to true.
+ * @property {string|boolean} [nestedFieldSeparator] Character used to separate nested field names. Defaults to ".".
+ * @property {boolean} [headerVisible] Show or hide the column header bar. Defaults to true.
+ * @property {boolean} [resizableColumnGuide] Show a guide line when resizing columns.
+ * @property {boolean} [resizableColumnFit] Maintain total table width when a column is resized.
+ * @property {boolean} [columnHeaderSortMulti] Allow sorting by multiple columns simultaneously. Defaults to true.
+ *
+ * --- Rows ---
+ * @property {boolean|object} [rowHeader] Column definition object for a fixed row header column; false to disable.
+ * @property {number} [rowHeight] Set a fixed pixel height for all rows.
+ * @property {Function|boolean} [rowFormatter] Function to customise row layout after rendering.
+ * @property {Function|boolean|null} [rowFormatterPrint] Row formatter used when printing.
+ * @property {Function|boolean|null} [rowFormatterClipboard] Row formatter used when copying to clipboard.
+ * @property {Function|boolean|null} [rowFormatterHtmlOutput] Row formatter used by getHtml.
+ * @property {"top"|"bottom"} [addRowPos] Position in the table where new rows are inserted. Defaults to "bottom".
+ * @property {boolean} [movableRows] Allow users to drag and reorder rows.
+ * @property {string|HTMLElement|Array} [movableRowsConnectedTables] Selector or reference to tables that can receive moved rows.
+ * @property {string|Function|boolean} [movableRowsSender] Callback executed on the source table when a row is sent.
+ * @property {string|Function} [movableRowsReceiver] Callback executed on the receiving table when a row arrives. Defaults to "insert".
+ * @property {string|HTMLElement|boolean} [movableRowsConnectedElements] Selector or reference to non-table DOM elements that can receive moved rows.
+ * @property {Function|boolean} [movableRowsElementDrop] Callback executed when a row is dropped onto a connected DOM element.
+ * @property {boolean} [resizableRows] Allow users to resize row height by dragging the row edges.
+ * @property {boolean} [resizableRowGuide] Show a guide line when resizing rows.
+ * @property {"top"|"center"|"bottom"|"nearest"} [scrollToRowPosition] Default scroll-to-row alignment. Defaults to "top".
+ * @property {boolean} [scrollToRowIfVisible] Allow scrolling to a row that is already visible. Defaults to true.
+ * @property {boolean|number|Function|Array} [frozenRows] Freeze rows at the top of the table; accepts a count, field values, or a check function.
+ * @property {string} [frozenRowsField] Field used to identify frozen rows when frozenRows is an array of values. Defaults to "id".
+ *
+ * --- Data ---
+ * @property {string} [index] Field name used as the unique row index. Defaults to "id".
+ * @property {any[]} [data] Initial data array to load into the table.
+ * @property {string|boolean} [ajaxURL] URL for remote Ajax data loading.
+ * @property {object} [ajaxParams] Parameters sent with every Ajax request.
+ * @property {string|object} [ajaxConfig] HTTP method or config object for Ajax requests. Defaults to "get".
+ * @property {string|object} [ajaxContentType] Content-type encoding for Ajax POST requests. Defaults to "form".
+ * @property {Function|boolean} [ajaxURLGenerator] Callback to dynamically generate the Ajax request URL.
+ * @property {Function|boolean} [ajaxRequestFunc] Callback that replaces the built-in Ajax request handler.
+ * @property {Function} [ajaxRequesting] Callback executed immediately before each Ajax request.
+ * @property {Function|boolean} [ajaxResponse] Callback to pre-process the Ajax response data.
+ * @property {object} [dataSendParams] Map of field names sent to the server (page, size, sorters, filters).
+ * @property {object} [dataReceiveParams] Map of field names expected from the server (current_page, last_page, data).
+ * @property {"local"|"remote"} [filterMode] Process filters locally or send them to the server. Defaults to "local".
+ * @property {"local"|"remote"} [sortMode] Process sorters locally or send them to the server. Defaults to "local".
+ * @property {boolean|"load"|"scroll"} [progressiveLoad] Progressively load data in chunks ("load" on render, "scroll" on scroll).
+ * @property {number} [progressiveLoadDelay] Milliseconds to wait between progressive load requests. Defaults to 0.
+ * @property {number} [progressiveLoadScrollMargin] Distance in pixels from the bottom of the table that triggers the next progressive load.
+ * @property {string|Function} [importFormat] Format parser to use when importing data from a file.
+ * @property {"text"|"buffer"|"binary"|"url"} [importReader] FileReader method to use when reading an import file. Defaults to "text".
+ * @property {Function} [importFileValidator] Validate a file before it is imported.
+ * @property {Function} [importDataValidator] Validate parsed data before it is imported.
+ * @property {Function} [importHeaderTransform] Transform imported column header titles.
+ * @property {Function} [importValueTransform] Transform imported cell values.
+ * @property {boolean|Function} [dataLoader] Show a loading overlay while data loads; pass a function returning a boolean for dynamic control. Defaults to true.
+ * @property {string} [dataLoaderLoading] HTML string for the loader element shown while data is loading.
+ * @property {string} [dataLoaderError] HTML string for the loader element shown when a load error occurs.
+ * @property {number} [dataLoaderErrorTimeout] Milliseconds to display the error loader before hiding it. Defaults to 3000.
+ *
+ * --- Sorting ---
+ * @property {any[]} [initialSort] Array of sorter objects to apply when data is first loaded.
+ * @property {boolean} [sortOrderReverse] Reverse the order in which multiple sorters are applied.
+ * @property {string} [headerSortElement] HTML string for the sort indicator icon in column headers.
+ * @property {"header"|"icon"} [headerSortClickElement] Part of the header that triggers sorting when clicked. Defaults to "header".
+ *
+ * --- Filtering ---
+ * @property {any[]} [initialFilter] Array of filter objects to apply when data is first loaded.
+ * @property {any[]} [initialHeaderFilter] Array of initial values for header filters.
+ * @property {number} [headerFilterLiveFilterDelay] Milliseconds to wait after a keystroke before applying a header filter. Defaults to 300.
+ * @property {string|boolean} [placeholderHeaderFilter] Placeholder text shown in empty header filter inputs.
+ *
+ * --- Row Grouping ---
+ * @property {string|Function|Array} [groupBy] Field name, function, or array of field names to group rows by.
+ * @property {any[]|boolean} [groupValues] Array of group values; restricts which groups are displayed.
+ * @property {Function|Array|boolean} [groupHeader] Function or array of functions to generate group header content.
+ * @property {Function|Array|null} [groupHeaderPrint] Group header formatter used when printing.
+ * @property {Function|Array|null} [groupHeaderClipboard] Group header formatter used when copying to clipboard.
+ * @property {Function|Array|null} [groupHeaderDownload] Group header formatter used in downloads.
+ * @property {Function|Array|null} [groupHeaderHtmlOutput] Group header formatter used by getHtml.
+ * @property {boolean|Function|Array} [groupStartOpen] Default open/closed state for groups. Defaults to true.
+ * @property {string|boolean} [groupToggleElement] Element that triggers group visibility toggle. Defaults to "arrow".
+ * @property {boolean} [groupClosedShowCalcs] Show column calculations when a group is collapsed.
+ * @property {boolean} [groupUpdateOnCellEdit] Recalculate group membership when a cell is edited.
+ *
+ * --- Pagination ---
+ * @property {boolean|string} [pagination] Enable pagination; set to true or "local"/"remote".
+ * @property {"local"|"remote"} [paginationMode] Process pagination locally or on the server. Defaults to "local".
+ * @property {number|boolean} [paginationSize] Number of rows per page. Defaults to false (uses default).
+ * @property {boolean|any[]} [paginationSizeSelector] Add a page-size selector to the footer; pass an array of sizes.
+ * @property {HTMLElement|boolean} [paginationElement] DOM element to render pagination controls into.
+ * @property {"table"|"page"} [paginationAddRow] Whether new rows are appended to the table or the current page. Defaults to "page".
+ * @property {number} [paginationButtonCount] Number of page buttons shown in the footer. Defaults to 5.
+ * @property {number|string|Function} [paginationOutOfRange] Behaviour when the requested page exceeds the last page.
+ * @property {string|Function|boolean} [paginationCounter] Content of the pagination counter element.
+ * @property {HTMLElement|string|Function|boolean} [paginationCounterElement] Element to render the pagination counter into.
+ * @property {number} [paginationInitialPage] Page number to display on initial load. Defaults to 1.
+ *
+ * --- Spreadsheet ---
+ * @property {boolean} [spreadsheet] Enable spreadsheet mode.
+ * @property {number} [spreadsheetRows] Number of rows in a blank spreadsheet. Defaults to 50.
+ * @property {number} [spreadsheetColumns] Number of columns in a blank spreadsheet. Defaults to 50.
+ * @property {object} [spreadsheetColumnDefinition] Column definition applied to all spreadsheet columns.
+ * @property {boolean} [spreadsheetOutputFull] Include all rows and columns (even empty ones) in export output.
+ * @property {any[]|boolean} [spreadsheetData] Initial data array for the spreadsheet.
+ * @property {any[]|boolean} [spreadsheetSheets] Array of sheet definition objects for multi-sheet mode.
+ * @property {boolean} [spreadsheetSheetTabs] Show sheet tabs in the table footer.
+ * @property {string|HTMLElement|boolean} [spreadsheetSheetTabsElement] Alternate container element for the sheet tabs.
+ *
+ * --- Persistent Configuration ---
+ * @property {boolean|object} [persistence] Define which table state should be persisted across page loads.
+ * @property {string} [persistenceID] Unique ID used to identify this table's persisted data.
+ * @property {boolean|"local"|"cookie"} [persistenceMode] Storage mechanism for persistence. Defaults to true (localStorage).
+ * @property {Function|boolean} [persistenceReaderFunc] Custom function to read persisted data.
+ * @property {Function|boolean} [persistenceWriterFunc] Custom function to write persisted data.
+ *
+ * --- Editing ---
+ * @property {"focus"|"click"|"dblclick"} [editTriggerEvent] Event that activates a cell editor. Defaults to "focus".
+ * @property {any} [editorEmptyValue] Value assigned to a cell when its editor is cleared.
+ * @property {Function} [editorEmptyValueFunc] Function that determines whether an edited value is considered empty.
+ *
+ * --- Row Selection ---
+ * @property {boolean|number|"highlight"} [selectableRows] Enable row selection; "highlight" adds hover highlight only. Defaults to "highlight".
+ * @property {boolean} [selectableRowsRollingSelection] Roll the selection window once the max selectable count is reached. Defaults to true.
+ * @property {"drag"|"click"} [selectableRowsRangeMode] Method used to select a range of rows. Defaults to "drag".
+ * @property {boolean} [selectableRowsPersistence] Maintain row selection when data is filtered or sorted. Defaults to true.
+ * @property {Function} [selectableRowsCheck] Callback that determines whether a row can be selected.
+ *
+ * --- Range Selection ---
+ * @property {boolean|number} [selectableRange] Enable cell range selection.
+ * @property {boolean} [selectableRangeColumns] Allow clicking a column header to select the entire column.
+ * @property {boolean} [selectableRangeRows] Allow clicking a row header to select the entire row.
+ * @property {boolean} [selectableRangeClearCells] Allow clearing all values in the selected range.
+ * @property {any} [selectableRangeClearCellsValue] Value that cleared range cells are set to. Defaults to undefined.
+ * @property {boolean} [selectableRangeAutoFocus] Auto-focus the cell when a single-cell range is selected. Defaults to true.
+ *
+ * --- Clipboard ---
+ * @property {boolean} [clipboard] Enable clipboard copy/paste functionality.
+ * @property {boolean} [clipboardCopyStyled] Include cell formatting when copying to the clipboard. Defaults to true.
+ * @property {object|boolean} [clipboardCopyConfig] Configuration for what is included in clipboard copies.
+ * @property {string|Function|boolean} [clipboardCopyRowRange] Range of rows included in clipboard copies. Defaults to "active".
+ * @property {string|Function|boolean} [clipboardPasteParser] Parser used to convert pasted clipboard text into row data. Defaults to "table".
+ * @property {string|Function|boolean} [clipboardPasteAction] Action to perform after parsing pasted data. Defaults to "insert".
+ *
+ * --- Data Tree ---
+ * @property {boolean} [dataTree] Enable tree layout for hierarchical data.
+ * @property {boolean} [dataTreeFilter] Apply column filters to child rows. Defaults to true.
+ * @property {boolean} [dataTreeSort] Apply column sorters to child rows. Defaults to true.
+ * @property {string|boolean} [dataTreeElementColumn] Column field in which to show the expand/collapse toggle.
+ * @property {boolean|string|HTMLElement} [dataTreeBranchElement] Element shown as the branch connector. Defaults to true.
+ * @property {number} [dataTreeChildIndent] Pixel indent applied to each child level. Defaults to 9.
+ * @property {string} [dataTreeChildField] Data field that holds child row arrays. Defaults to "_children".
+ * @property {boolean|string|HTMLElement} [dataTreeCollapseElement] Element used as the collapse button.
+ * @property {boolean|string|HTMLElement} [dataTreeExpandElement] Element used as the expand button.
+ * @property {boolean|Array|Function} [dataTreeStartExpanded] Default expansion state for tree nodes.
+ * @property {boolean} [dataTreeSelectPropagate] Propagate row selection to child rows. Defaults to false.
+ * @property {boolean} [dataTreeChildColumnCalcs] Include child row values in column calculations. Defaults to false.
+ *
+ * --- Printing ---
+ * @property {boolean} [printAsHtml] Render the table as an HTML table when printing.
+ * @property {boolean} [printStyled] Copy table styles to the printed HTML table. Defaults to true.
+ * @property {string} [printRowRange] Range of rows included in the printed output. Defaults to "visible".
+ * @property {object} [printConfig] Choose which parts of the table are included when printing.
+ * @property {boolean|string|HTMLElement|Function} [printHeader] Content to add as a header above the printed table.
+ * @property {boolean|string|HTMLElement|Function} [printFooter] Content to add as a footer below the printed table.
+ * @property {Function|boolean} [printFormatter] Callback to customise the print layout before printing.
+ *
+ * --- Menus ---
+ * @property {any[]|boolean} [rowContextMenu] Context-menu items to show when right-clicking a row.
+ * @property {any[]|boolean} [rowClickMenu] Menu items to show when left-clicking a row.
+ * @property {any[]|boolean} [rowDblClickMenu] Menu items to show when double-clicking a row.
+ * @property {any[]|boolean} [groupContextMenu] Context-menu items to show when right-clicking a group header.
+ * @property {any[]|boolean} [groupClickMenu] Menu items to show when left-clicking a group header.
+ * @property {any[]|boolean} [groupDblClickMenu] Menu items to show when double-clicking a group header.
+ *
+ * --- Popups ---
+ * @property {string|HTMLElement|boolean} [rowContextPopup] Popup content shown when right-clicking a row.
+ * @property {string|HTMLElement|boolean} [rowClickPopup] Popup content shown when left-clicking a row.
+ * @property {string|HTMLElement|boolean} [rowDblClickPopup] Popup content shown when double-clicking a row.
+ * @property {string|HTMLElement|boolean} [groupContextPopup] Popup content shown when right-clicking a group header.
+ * @property {string|HTMLElement|boolean} [groupClickPopup] Popup content shown when left-clicking a group header.
+ * @property {string|HTMLElement|boolean} [groupDblClickPopup] Popup content shown when double-clicking a group header.
  */
 
 class Tabulator extends ModuleBinder {

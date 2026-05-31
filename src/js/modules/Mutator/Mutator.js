@@ -2,6 +2,10 @@ import Module from '../../core/Module'
 
 import defaultMutators from './defaults/mutators'
 
+/**
+ * @typedef {string | ((value: any, data: any, type: string, params: object, component: import('../../core/cell/CellComponent').default | import('../../core/column/ColumnComponent').default) => any)} Mutator
+ */
+
 export default class Mutator extends Module {
   static moduleName = 'mutator'
 

@@ -13,6 +13,8 @@
  * @typedef {import('../modules/Sort/Sort').Sorter} Sorter
  * @typedef {import('../modules/Filter/Filter').Filter} Filter
  * @typedef {import('../modules/GroupRows/GroupRows').GroupArg} GroupArg
+ * @typedef {import('../modules/Mutator/Mutator').Mutator} Mutator
+ * @typedef {import('../modules/Accessor/Accessor').Accessor} Accessor
  * @typedef {import('./row/RowComponent').RowRangeLookup} RowRangeLookup
  * @typedef {import('./column/ColumnComponent').ColumnDefinition} ColumnDefinition
  * @typedef {import('./Tabulator').Options} Options

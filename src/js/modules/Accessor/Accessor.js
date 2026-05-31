@@ -3,6 +3,10 @@ import Helpers from '../../core/tools/Helpers'
 
 import defaultAccessors from './defaults/accessors'
 
+/**
+ * @typedef {string | ((value: any, data: any, type: string, params: object, column: import('../../core/column/ColumnComponent').default, row: import('../../core/row/RowComponent').default) => any)} Accessor
+ */
+
 export default class Accessor extends Module {
   static moduleName = 'accessor'
 
