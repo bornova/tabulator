@@ -17,12 +17,13 @@
   ],
   "style": "./dist/css/themes/default/tabulator.min.css",
   "type": "module",
-  "module": "./dist/js/esm/tabulator.js",
+  "module": "./dist/js/esm/builds/esm.js",
   "types": "./dist/types/builds/esm.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/types/builds/esm.d.ts",
-      "import": "./dist/js/esm/tabulator.js"
+      "import": "./dist/js/esm/builds/esm.js"
     }
   },
   "jsdelivr": "./dist/js/browser/tabulator.min.js",

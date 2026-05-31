@@ -49,9 +49,14 @@ export default [
     output: { ...browserOutput, file: 'dist/js/browser/tabulator.min.js', sourcemap: true },
     plugins: [terser({ format: { comments: /^!/ } })]
   },
-  // ESM — unminified
+  // ESM — tree-shakable (one file per module)
   {
     input: esmInput,
-    output: { ...esmOutput, file: 'dist/js/esm/tabulator.js' }
+    output: {
+      ...esmOutput,
+      dir: 'dist/js/esm',
+      preserveModules: true,
+      preserveModulesRoot: 'src/js'
+    }
   }
 ]
