@@ -346,6 +346,8 @@ export default class Page extends Module {
     if (this.table.options.paginationSizeSelector) {
       this.pageSizeSelect = document.createElement('select')
       this.pageSizeSelect.classList.add('tabulator-page-size')
+      this.pageSizeSelect.setAttribute('id', 'tabulator-page-size-' + this.table.element.id)
+      this.pageSizeSelect.setAttribute('aria-label', 'Page Size')
     }
   }
 
@@ -491,6 +493,7 @@ export default class Page extends Module {
 
       if (this.pageSizeSelect) {
         pageSelectLabel = document.createElement('label')
+        pageSelectLabel.setAttribute('for', this.pageSizeSelect.getAttribute('id'))
 
         this.langBind('pagination|page_size', (value) => {
           this.pageSizeSelect.setAttribute('aria-label', value)
