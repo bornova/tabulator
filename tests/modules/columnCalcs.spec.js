@@ -223,3 +223,164 @@ test('columnCalcs module', async ({ page }) => {
   expect(result.cellValueChangedCalledWithCalc).toBe(true)
   expect(result.cellValueChangedCalledWithoutCalc).toBe(false)
 })
+
+test('columnCalcs module - group-level calcs, columnCalcs option modes', async ({ page }) => {
+  const pageErrors = []
+  const consoleErrors = []
+
+  page.on('pageerror', (error) => pageErrors.push(error.message))
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text())
+    }
+  })
+
+  await page.goto(fixtureUrl)
+
+  const result = await page.evaluate(async () => {
+    const root = document.getElementById('smoke-root')
+
+    const buildTable = (id, options) =>
+      new Promise((resolve) => {
+        const holder = document.createElement('div')
+        holder.id = id
+        holder.style.width = '800px'
+        root.appendChild(holder)
+        const instance = new Tabulator(holder, options)
+        const timeout = setTimeout(() => resolve({ table: instance, holder }), 1500)
+        instance.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve({ table: instance, holder })
+        })
+      })
+
+    const groupData = [
+      { id: 1, category: 'A', value: 10 },
+      { id: 2, category: 'A', value: 20 },
+      { id: 3, category: 'B', value: 30 },
+      { id: 4, category: 'B', value: 40 }
+    ]
+
+    // columnCalcs: 'group' → calcs only inside each group (no table-level rows)
+    const { table: groupTable } = await buildTable('calcs-group-table', {
+      height: 300,
+      data: groupData,
+      groupBy: 'category',
+      columnCalcs: 'group',
+      columns: [
+        { title: 'ID', field: 'id' },
+        { title: 'Category', field: 'category' },
+        { title: 'Value', field: 'value', topCalc: 'sum', bottomCalc: 'sum' }
+      ]
+    })
+
+    const groupCalcResults = groupTable.getCalcResults()
+
+    // columnCalcs: 'table' → calcs only at table level (not per-group)
+    const { table: tableTable } = await buildTable('calcs-table-table', {
+      height: 300,
+      data: groupData,
+      groupBy: 'category',
+      columnCalcs: 'table',
+      columns: [
+        { title: 'ID', field: 'id' },
+        { title: 'Category', field: 'category' },
+        { title: 'Value', field: 'value', topCalc: 'sum', bottomCalc: 'sum' }
+      ]
+    })
+
+    const tableCalcResults = tableTable.getCalcResults()
+
+    // columnCalcs: 'both' → calcs at group AND table level
+    const { table: bothTable } = await buildTable('calcs-both-table', {
+      height: 300,
+      data: groupData,
+      groupBy: 'category',
+      columnCalcs: 'both',
+      columns: [
+        { title: 'ID', field: 'id' },
+        { title: 'Category', field: 'category' },
+        { title: 'Value', field: 'value', topCalc: 'sum', bottomCalc: 'sum' }
+      ]
+    })
+
+    const bothCalcResults = bothTable.getCalcResults()
+
+    // columnCalcs: false → no calcs at all
+    const { table: noneTable } = await buildTable('calcs-none-table', {
+      height: 300,
+      data: groupData,
+      groupBy: 'category',
+      columnCalcs: false,
+      columns: [
+        { title: 'ID', field: 'id' },
+        { title: 'Category', field: 'category' },
+        { title: 'Value', field: 'value', topCalc: 'sum', bottomCalc: 'sum' }
+      ]
+    })
+
+    const noneCalcResults = noneTable.getCalcResults()
+
+    // recalc() updates after row add/delete — use a plain (non-grouped) table
+    const { table: recalcTable } = await buildTable('calcs-recalc-table', {
+      height: 300,
+      data: [...groupData],
+      columnCalcs: 'table',
+      columns: [
+        { title: 'ID', field: 'id' },
+        { title: 'Category', field: 'category' },
+        { title: 'Value', field: 'value', topCalc: 'sum', bottomCalc: 'sum' }
+      ]
+    })
+
+    const sumBefore = recalcTable.getCalcResults().bottom?.value
+    await recalcTable.addRow({ id: 5, category: 'B', value: 50 })
+    const recalcResults = recalcTable.getCalcResults()
+    const sumAfterAdd = recalcResults.bottom?.value
+
+    await recalcTable.deleteRow(5)
+    const sumAfterDelete = recalcTable.getCalcResults().bottom?.value
+
+    return {
+      groupCalcKeys: Object.keys(groupCalcResults),
+      groupCalcHasGroupA: 'A' in groupCalcResults,
+      groupCalcHasGroupB: 'B' in groupCalcResults,
+      groupCalcGroupABottomSum: groupCalcResults['A']?.bottom?.value,
+      groupCalcGroupBBottomSum: groupCalcResults['B']?.bottom?.value,
+      tableCalcHasGroupKeys: Object.keys(tableCalcResults).some((k) => k !== 'top' && k !== 'bottom'),
+      tableCalcTopSum: tableCalcResults.top?.value,
+      tableCalcBottomSum: tableCalcResults.bottom?.value,
+      bothCalcHasGroupA: 'A' in bothCalcResults,
+      bothCalcGroupABottomSum: bothCalcResults['A']?.bottom?.value,
+      noneCalcHasGroupA: 'A' in noneCalcResults,
+      sumBefore,
+      sumAfterAdd,
+      sumAfterDelete
+    }
+  })
+
+  expect(pageErrors).toEqual([])
+  expect(consoleErrors).toEqual([])
+
+  // 'group' mode: keys are group keys ('A', 'B'), each has top/bottom calcs
+  expect(result.groupCalcHasGroupA).toBe(true)
+  expect(result.groupCalcHasGroupB).toBe(true)
+  expect(result.groupCalcGroupABottomSum).toBe(30) // 10+20
+  expect(result.groupCalcGroupBBottomSum).toBe(70) // 30+40
+
+  // 'table' mode: still returns group-keyed results (getCalcResults always uses groups when groupBy active)
+  // but group-level calcs are empty (calcs are rendered at table level, not per-group)
+  expect(result.tableCalcHasGroupKeys).toBe(true)
+
+  // 'both' mode: groups AND table level — group A should have calcs
+  expect(result.bothCalcHasGroupA).toBe(true)
+  expect(result.bothCalcGroupABottomSum).toBe(30)
+
+  // 'false' mode: getCalcResults still returns group-keyed structure when groupBy is active
+  expect(result.noneCalcHasGroupA).toBe(true)
+
+  // recalc updates after row add/delete
+  expect(result.sumBefore).toBe(100)
+  expect(result.sumAfterAdd).toBe(150) // 100+50
+  expect(result.sumAfterDelete).toBe(100) // back to original
+})

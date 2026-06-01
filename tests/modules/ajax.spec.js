@@ -230,3 +230,49 @@ test('ajax module', async ({ page }) => {
   expect(pageErrors).toEqual([])
   expect(consoleErrors).toEqual([])
 })
+
+test('ajax module - failed request propagates rejection', async ({ page }) => {
+  await page.goto(fixtureUrl)
+
+  const result = await page.evaluate(async () => {
+    const root = document.getElementById('smoke-root')
+    const holder = document.createElement('div')
+    holder.id = 'ajax-fail-table'
+    holder.style.width = '600px'
+    root.appendChild(holder)
+
+    const table = await new Promise((resolve) => {
+      const instance = new Tabulator(holder, {
+        columns: [
+          { title: 'ID', field: 'id' },
+          { title: 'Name', field: 'name' }
+        ]
+      })
+      const timeout = setTimeout(() => resolve(instance), 1500)
+      instance.on('tableBuilt', () => {
+        clearTimeout(timeout)
+        resolve(instance)
+      })
+    })
+
+    // Directly call sendRequest with a failing loaderPromise
+    let caught = false
+    let errorMessage = null
+
+    const originalLoaderPromise = table.modules.ajax.loaderPromise
+    table.modules.ajax.loaderPromise = () => Promise.reject(new Error('network failure'))
+    table.modules.ajax.setUrl('/mock-fail')
+
+    await table.modules.ajax.sendRequest('/mock-fail', {}, {}).catch((err) => {
+      caught = true
+      errorMessage = err.message
+    })
+
+    table.modules.ajax.loaderPromise = originalLoaderPromise
+
+    return { caught, errorMessage }
+  })
+
+  expect(result.caught).toBe(true)
+  expect(result.errorMessage).toBe('network failure')
+})

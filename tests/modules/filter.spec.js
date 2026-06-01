@@ -294,3 +294,114 @@ test('filter module', async ({ page }) => {
   expect(result.optionResults.afterRemoveFilterIds).toEqual([102, 103, 104])
   expect(result.optionResults.afterClearAllIds).toEqual([101, 102, 103, 104])
 })
+
+test('filter module - AND, OR, and function filters', async ({ page }) => {
+  const pageErrors = []
+  const consoleErrors = []
+
+  page.on('pageerror', (error) => pageErrors.push(error.message))
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text())
+    }
+  })
+
+  await page.goto(fixtureUrl)
+
+  const result = await page.evaluate(async () => {
+    const root = document.getElementById('smoke-root')
+    const holder = document.createElement('div')
+    holder.id = 'filter-combo-table'
+    holder.style.width = '900px'
+    root.appendChild(holder)
+
+    const data = [
+      { id: 1, num: 10, name: 'Alpha' },
+      { id: 2, num: 5, name: 'Beta' },
+      { id: 3, num: 20, name: 'Gamma' },
+      { id: 4, num: 15, name: 'Delta' }
+    ]
+
+    const table = await new Promise((resolve) => {
+      const instance = new Tabulator(holder, {
+        data,
+        columns: [
+          { title: 'ID', field: 'id' },
+          { title: 'Num', field: 'num' },
+          { title: 'Name', field: 'name' }
+        ]
+      })
+      const timeout = setTimeout(() => resolve(instance), 1500)
+      instance.on('tableBuilt', () => {
+        clearTimeout(timeout)
+        resolve(instance)
+      })
+    })
+
+    const getIds = () =>
+      table
+        .getData('active')
+        .map((r) => r.id)
+        .sort((a, b) => a - b)
+
+    // AND combination: num > 5 AND num < 20 → IDs 1 (10) and 4 (15)
+    table.setFilter([
+      { field: 'num', type: '>', value: 5 },
+      { field: 'num', type: '<', value: 20 }
+    ])
+    const andIds = getIds()
+    table.clearFilter()
+
+    // OR combination (nested array): num < 8 OR num > 15 → IDs 2 (5) and 3 (20)
+    table.setFilter([
+      [
+        { field: 'num', type: '<', value: 8 },
+        { field: 'num', type: '>', value: 15 }
+      ]
+    ])
+    const orIds = getIds()
+    table.clearFilter()
+
+    // AND + OR combined: (num < 8 OR num > 15) AND name != 'Gamma' → ID 2 (5, Beta)
+    table.setFilter([
+      [
+        { field: 'num', type: '<', value: 8 },
+        { field: 'num', type: '>', value: 15 }
+      ],
+      { field: 'name', type: '!=', value: 'Gamma' }
+    ])
+    const andOrIds = getIds()
+    table.clearFilter()
+
+    // Function filter: rows where num > threshold param → IDs 3 (20) and 4 (15)
+    table.setFilter((rowData, params) => rowData.num > params.threshold, { threshold: 12 })
+    const funcIds = getIds()
+    table.clearFilter()
+
+    // Warn on invalid filter type
+    const originalWarn = console.warn
+    let warnedOnBadType = false
+    console.warn = (...args) => {
+      if (args.some((a) => String(a).includes('No such filter type found'))) {
+        warnedOnBadType = true
+      }
+      originalWarn(...args)
+    }
+    table.setFilter('num', 'nonExistentOperator', 10)
+    console.warn = originalWarn
+    const allAfterBadFilter = getIds()
+    table.clearFilter()
+
+    return { andIds, orIds, andOrIds, funcIds, warnedOnBadType, allAfterBadFilter }
+  })
+
+  expect(pageErrors).toEqual([])
+  expect(consoleErrors).toEqual([])
+
+  expect(result.andIds).toEqual([1, 4])
+  expect(result.orIds).toEqual([2, 3])
+  expect(result.andOrIds).toEqual([2])
+  expect(result.funcIds).toEqual([3, 4])
+  expect(result.warnedOnBadType).toBe(true)
+  expect(result.allAfterBadFilter).toEqual([1, 2, 3, 4])
+})

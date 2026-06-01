@@ -367,3 +367,226 @@ test('format module', async ({ page }) => {
   expect(result.printTypeFormatterHasFormatter).toBe(true)
   expect(result.printTypeFormatterParams).toEqual({ prefix: 'Print-' })
 })
+
+test('format module - money/link/image/tickCross/traffic formatter params', async ({ page }) => {
+  const pageErrors = []
+  const consoleErrors = []
+
+  page.on('pageerror', (error) => pageErrors.push(error.message))
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text())
+    }
+  })
+
+  await page.goto(fixtureUrl)
+
+  const result = await page.evaluate(async () => {
+    const root = document.getElementById('smoke-root')
+    const holder = document.createElement('div')
+    holder.id = 'format-params-table'
+    holder.style.width = '1400px'
+    root.appendChild(holder)
+
+    await new Promise((resolve) => {
+      const instance = new Tabulator(holder, {
+        data: [
+          {
+            id: 1,
+            // money: negative, custom decimal/thousand, symbolAfter, precision:false
+            negMoney: -1234.5,
+            // link: labelField, label (function), urlField, url (function), target, download
+            linkVal: 'visible-text',
+            linkUrl: 'https://linked.example.com',
+            // image: urlPrefix, urlSuffix, string height/width
+            imgBase: 'icon.png',
+            // tickCross: allowEmpty=null, allowTruthy=truthy, trueValue='yes'
+            emptyTick: null,
+            truthyTick: 1,
+            trueValTick: 'yes',
+            falseTick: 0,
+            // traffic: custom colors (string, function, array)
+            trafficStr: 40,
+            trafficFn: 80,
+            trafficArr: 75
+          }
+        ],
+        columns: [
+          { title: 'ID', field: 'id' },
+          {
+            title: 'NegMoney',
+            field: 'negMoney',
+            formatter: 'money',
+            formatterParams: {
+              decimal: ',',
+              thousand: '.',
+              symbol: '€',
+              symbolAfter: true,
+              negativeSign: '(',
+              precision: 3
+            }
+          },
+          {
+            title: 'Link',
+            field: 'linkVal',
+            formatter: 'link',
+            formatterParams: {
+              labelField: 'linkVal',
+              url: (cell) => cell.getData().linkUrl,
+              target: '_blank',
+              download: (cell) => `dl-${cell.getData().id}`
+            }
+          },
+          {
+            title: 'Image',
+            field: 'imgBase',
+            formatter: 'image',
+            formatterParams: {
+              urlPrefix: '/images/',
+              urlSuffix: '?v=2',
+              height: '24px',
+              width: '24px'
+            }
+          },
+          {
+            title: 'EmptyTick',
+            field: 'emptyTick',
+            formatter: 'tickCross',
+            formatterParams: { allowEmpty: true }
+          },
+          {
+            title: 'TruthyTick',
+            field: 'truthyTick',
+            formatter: 'tickCross',
+            formatterParams: { allowTruthy: true }
+          },
+          {
+            title: 'TrueValTick',
+            field: 'trueValTick',
+            formatter: 'tickCross',
+            formatterParams: { trueValue: 'yes' }
+          },
+          {
+            title: 'FalseTick',
+            field: 'falseTick',
+            formatter: 'tickCross',
+            formatterParams: {
+              allowTruthy: true,
+              tickElement: '<span class="my-tick">OK</span>',
+              crossElement: '<span class="my-cross">X</span>'
+            }
+          },
+          {
+            title: 'TrafficStr',
+            field: 'trafficStr',
+            formatter: 'traffic',
+            formatterParams: { color: 'blue' }
+          },
+          {
+            title: 'TrafficFn',
+            field: 'trafficFn',
+            formatter: 'traffic',
+            formatterParams: { color: (val) => (val > 50 ? 'green' : 'red') }
+          },
+          {
+            title: 'TrafficArr',
+            field: 'trafficArr',
+            formatter: 'traffic',
+            formatterParams: { color: ['red', 'yellow', 'lime'], min: 0, max: 100 }
+          }
+        ]
+      })
+
+      const timeout = setTimeout(() => resolve(instance), 1500)
+      instance.on('tableBuilt', () => {
+        clearTimeout(timeout)
+        resolve(instance)
+      })
+    })
+
+    const getCell = (field) => holder.querySelector(`.tabulator-cell[tabulator-field="${field}"]`)
+
+    const negMoneyCell = getCell('negMoney')
+    const linkCell = getCell('linkVal')
+    const imgCell = getCell('imgBase')
+    const emptyTickCell = getCell('emptyTick')
+    const truthyTickCell = getCell('truthyTick')
+    const trueValTickCell = getCell('trueValTick')
+    const falseTickCell = getCell('falseTick')
+    const trafficStrCell = getCell('trafficStr')
+    const trafficFnCell = getCell('trafficFn')
+    const trafficArrCell = getCell('trafficArr')
+
+    const linkEl = linkCell?.querySelector('a')
+    const imgEl = imgCell?.querySelector('img')
+    const trafficStrEl = trafficStrCell?.querySelector('.tabulator-traffic-light')
+    const trafficFnEl = trafficFnCell?.querySelector('.tabulator-traffic-light')
+    const trafficArrEl = trafficArrCell?.querySelector('.tabulator-traffic-light')
+
+    return {
+      // money: negative with (, custom decimal, thousand, symbolAfter, precision 3
+      negMoneyText: negMoneyCell?.textContent || '',
+      // link: label from labelField, href from url fn, target, download
+      linkText: linkEl?.textContent || '',
+      linkHref: linkEl?.getAttribute('href') || '',
+      linkTarget: linkEl?.getAttribute('target') || '',
+      linkDownload: linkEl?.getAttribute('download') || '',
+      // image: src built with prefix+suffix, dimensions as strings
+      imgSrc: imgEl?.getAttribute('src') || '',
+      imgHeight: imgEl?.style.height || '',
+      imgWidth: imgEl?.style.width || '',
+      // tickCross: aria-checked is set on the cell element itself
+      emptyTickAriaChecked: emptyTickCell?.getAttribute('aria-checked') || '',
+      emptyTickContent: emptyTickCell?.innerHTML || '',
+      // tickCross allowTruthy: 1 → tick
+      truthyTickAriaChecked: truthyTickCell?.getAttribute('aria-checked') || '',
+      // tickCross trueValue: 'yes' → tick
+      trueValTickAriaChecked: trueValTickCell?.getAttribute('aria-checked') || '',
+      // tickCross allowTruthy: 0 → cross with custom elements
+      falseTickCustomCross: !!falseTickCell?.querySelector('.my-cross'),
+      falseTickCustomTick: falseTickCell?.querySelector('.my-tick') !== null,
+      // traffic: string color
+      trafficStrColor: trafficStrEl?.style.backgroundColor || '',
+      // traffic: function color
+      trafficFnColor: trafficFnEl?.style.backgroundColor || '',
+      // traffic: array color
+      trafficArrColor: trafficArrEl?.style.backgroundColor || ''
+    }
+  })
+
+  expect(pageErrors).toEqual([])
+  expect(consoleErrors).toEqual([])
+
+  // money negative with custom delimiters and symbolAfter
+  expect(result.negMoneyText).toContain('1.234,500')
+  expect(result.negMoneyText).toContain('€')
+  expect(result.negMoneyText).toContain('(')
+
+  // link: label from labelField, href from url function, target, download function
+  expect(result.linkText).toBe('visible-text')
+  expect(result.linkHref).toBe('https://linked.example.com')
+  expect(result.linkTarget).toBe('_blank')
+  expect(result.linkDownload).toBe('dl-1')
+
+  // image: prefix, suffix, string height/width
+  expect(result.imgSrc).toBe('/images/icon.png?v=2')
+  expect(result.imgHeight).toBe('24px')
+  expect(result.imgWidth).toBe('24px')
+
+  // tickCross: allowEmpty = null → empty content, aria-checked=mixed
+  expect(result.emptyTickAriaChecked).toBe('mixed')
+  // tickCross: allowTruthy=true with 1 → tick (aria-checked=true)
+  expect(result.truthyTickAriaChecked).toBe('true')
+  // tickCross: trueValue='yes' → tick
+  expect(result.trueValTickAriaChecked).toBe('true')
+  // tickCross: allowTruthy with 0 → cross, custom elements used
+  expect(result.falseTickCustomCross).toBe(true)
+  expect(result.falseTickCustomTick).toBe(false)
+
+  // traffic: string color
+  expect(result.trafficStrColor).toBe('blue')
+  // traffic: function color (80 > 50 → green)
+  expect(result.trafficFnColor).toBe('green')
+  // traffic: array color (75 out of 100 → lime, index 2 of ['red','yellow','lime'])
+  expect(result.trafficArrColor).toBe('lime')
+})

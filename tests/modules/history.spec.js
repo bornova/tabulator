@@ -194,6 +194,110 @@ test('history module', async ({ page }) => {
     expect(result.warnCount).toBeGreaterThanOrEqual(2)
   })
 
+  await test.step('row add and delete are tracked and can be undone and redone', async () => {
+    const result = await page.evaluate(async () => {
+      const table = window.tabulatorInstance
+      table.clearHistory()
+
+      const initialCount = table.getDataCount()
+
+      await table.addRow({ id: 99, name: 'NewRow', age: 25 })
+      const countAfterAdd = table.getDataCount()
+      const undoSizeAfterAdd = table.getHistoryUndoSize()
+
+      table.undo()
+      const countAfterUndoAdd = table.getDataCount()
+      const redoSizeAfterUndo = table.getHistoryRedoSize()
+
+      table.redo()
+      const countAfterRedoAdd = table.getDataCount()
+
+      table.clearHistory()
+
+      const rowToDelete = table.getRow(99)
+      await rowToDelete.delete()
+      const countAfterDelete = table.getDataCount()
+      const undoSizeAfterDelete = table.getHistoryUndoSize()
+
+      table.undo()
+      const countAfterUndoDelete = table.getDataCount()
+      const hasRestoredRow = !!table.getRow(99)
+
+      return {
+        initialCount,
+        countAfterAdd,
+        undoSizeAfterAdd,
+        countAfterUndoAdd,
+        redoSizeAfterUndo,
+        countAfterRedoAdd,
+        countAfterDelete,
+        undoSizeAfterDelete,
+        countAfterUndoDelete,
+        hasRestoredRow
+      }
+    })
+
+    expect(result.initialCount).toBe(2)
+    expect(result.countAfterAdd).toBe(3)
+    expect(result.undoSizeAfterAdd).toBe(1)
+    expect(result.countAfterUndoAdd).toBe(2)
+    expect(result.redoSizeAfterUndo).toBe(1)
+    expect(result.countAfterRedoAdd).toBe(3)
+    expect(result.countAfterDelete).toBe(2)
+    expect(result.undoSizeAfterDelete).toBe(1)
+    expect(result.countAfterUndoDelete).toBe(3)
+    expect(result.hasRestoredRow).toBe(true)
+  })
+
+  await test.step('row move via RowManager is tracked by history subscription', async () => {
+    const result = await page.evaluate(async () => {
+      const table = window.tabulatorInstance
+      table.clearHistory()
+
+      // Remove row 99 if still present from previous steps
+      const row99 = table.getRow(99)
+      if (row99) await row99.delete()
+      table.clearHistory()
+
+      const orderBefore = table.getRows().map((r) => r.getData().id)
+
+      // Call RowManager.moveRow directly to trigger the 'row-move' event
+      // (this is what the MoveRows drag module does internally)
+      const fromRow = table.rowManager.findRow(orderBefore[0])
+      const toRow = table.rowManager.findRow(orderBefore[1])
+
+      // Direct RowManager call dispatches 'row-move' → History records it
+      table.rowManager.moveRow(fromRow, toRow, true)
+
+      const orderAfterMove = table.getRows().map((r) => r.getData().id)
+      const undoSizeAfterMove = table.getHistoryUndoSize()
+
+      table.undo()
+      const orderAfterUndo = table.getRows().map((r) => r.getData().id)
+      const redoSizeAfterUndo = table.getHistoryRedoSize()
+
+      table.redo()
+      const orderAfterRedo = table.getRows().map((r) => r.getData().id)
+
+      return {
+        orderBefore,
+        orderAfterMove,
+        undoSizeAfterMove,
+        orderAfterUndo,
+        redoSizeAfterUndo,
+        orderAfterRedo
+      }
+    })
+
+    // After move: rows should be in different order
+    expect(result.undoSizeAfterMove).toBe(1)
+    // After undo: order restored to original
+    expect(result.orderAfterUndo).toEqual(result.orderBefore)
+    expect(result.redoSizeAfterUndo).toBe(1)
+    // After redo: move re-applied
+    expect(result.orderAfterRedo).toEqual(result.orderAfterMove)
+  })
+
   expect(pageErrors).toEqual([])
   expect(consoleErrors).toEqual([])
 })
