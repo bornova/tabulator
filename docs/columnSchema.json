@@ -1,0 +1,1867 @@
+﻿[
+  {
+    "category": "General",
+    "options": [
+      {
+        "option": "title",
+        "dataType": "string",
+        "defaultValue": "Required",
+        "description": "This is the title that will be displayed in the header for this column"
+      },
+      {
+        "option": "field",
+        "dataType": "string",
+        "defaultValue": "Required (not required in icon/button columns)",
+        "description": "this is the key for this column in the data array"
+      },
+      {
+        "option": "visible",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "determines if the column is visible. (see Column Visibility for more details)"
+      }
+    ]
+  },
+  {
+    "category": "Layout",
+    "options": [
+      {
+        "option": "hozAlign",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "sets the horizontal text alignment for this column (left|center|right)",
+        "enum": [
+          {
+            "value": "left",
+            "description": "Align cell content to the left"
+          },
+          {
+            "value": "center",
+            "description": "Align cell content to the center"
+          },
+          {
+            "value": "right",
+            "description": "Align cell content to the right"
+          }
+        ]
+      },
+      {
+        "option": "vertAlign",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "sets the vertical text alignment for this column (top|middle|bottom)",
+        "enum": [
+          {
+            "value": "top",
+            "description": "Align cell content to the top"
+          },
+          {
+            "value": "middle",
+            "description": "Align cell content to the middle"
+          },
+          {
+            "value": "bottom",
+            "description": "Align cell content to the bottom"
+          }
+        ]
+      },
+      {
+        "option": "headerHozAlign",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "sets the horizontal text alignment for this columns header title (left|center|right)",
+        "enum": [
+          {
+            "value": "left",
+            "description": "Align header title to the left"
+          },
+          {
+            "value": "center",
+            "description": "Align header title to the center"
+          },
+          {
+            "value": "right",
+            "description": "Align header title to the right"
+          }
+        ]
+      },
+      {
+        "option": "width",
+        "dataType": "string/integer",
+        "defaultValue": null,
+        "description": "sets the width of this column, this can be set in pixels or as a percentage of total table width (if not set the system will determine the best)"
+      },
+      {
+        "option": "minWidth",
+        "dataType": "integer",
+        "defaultValue": null,
+        "description": "sets the minimum width of this column, this should be set in pixels"
+      },
+      {
+        "option": "maxWidth",
+        "dataType": "integer",
+        "defaultValue": null,
+        "description": "sets the maximum width of this column, this should be set in pixels"
+      },
+      {
+        "option": "maxInitialWidth",
+        "dataType": "integer",
+        "defaultValue": null,
+        "description": "sets the maximum width of this column when it is first rendered, the user can then resize to above this (up to the maxWidth, if set) this should be set in pixels"
+      },
+      {
+        "option": "widthGrow",
+        "dataType": "integer",
+        "defaultValue": null,
+        "description": "when using fitColumns layout mode, determines how much the column should grow to fill available space (see Table Layout for more details)"
+      },
+      {
+        "option": "widthShrink",
+        "dataType": "integer",
+        "defaultValue": null,
+        "description": "when using fitColumns layout mode, determines how much the column should shrink to fit available space (see Table Layout for more details)"
+      },
+      {
+        "option": "resizable",
+        "dataType": "boolean/string",
+        "defaultValue": null,
+        "description": "set whether column can be resized by user dragging its edges (see Table Layout for more details)",
+        "enum": [
+          {
+            "value": true,
+            "description": "Column can be resized by dragging either the header or cell edges"
+          },
+          {
+            "value": false,
+            "description": "Column cannot be resized"
+          },
+          {
+            "value": "header",
+            "description": "Column can only be resized by dragging the header edge"
+          },
+          {
+            "value": "cell",
+            "description": "Column can only be resized by dragging the cell edges"
+          }
+        ]
+      },
+      {
+        "option": "frozen",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "freezes the column in place when scrolling (see Frozen Columns for more details)"
+      },
+      {
+        "option": "responsive",
+        "dataType": "integer",
+        "defaultValue": null,
+        "description": "an integer to determine when the column should be hidden in responsive mode (see Responsive Layout for more details)"
+      },
+      {
+        "option": "tooltip",
+        "dataType": "string/function/boolean",
+        "defaultValue": null,
+        "description": "sets the on hover tooltip for each cell in this column (see Formatting Data for more details)"
+      },
+      {
+        "option": "cssClass",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "sets css classes on header and cells in this column. (value should be a string containing space separated class names)"
+      },
+      {
+        "option": "rowHandle",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "sets the column as a row handle, allowing it to be used to drag movable rows. (see Movable Rows for more details)"
+      },
+      {
+        "option": "htmlOutput",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "show or hide column in the getHtml function output (see Retrieve Data as HTML Table for more details)"
+      },
+      {
+        "option": "print",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "show or hide column in the print output (see Printing for more details)"
+      },
+      {
+        "option": "clipboard",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "show or hide column in the clipboard output (see Clipboard for more details)"
+      }
+    ]
+  },
+  {
+    "category": "Data Manipulation",
+    "options": [
+      {
+        "option": "sorter",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "determines how to sort data in this column (see Sorting Data for more details)",
+        "enum": [
+          {
+            "value": "string",
+            "description": "Sorts column as a string of characters",
+            "params": {
+              "locale": {
+                "dataType": "string/boolean",
+                "description": "A BCP 47 language tag string for locale-aware sorting, or true to use the browser default locale"
+              },
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom of the column",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "number",
+            "description": "Sorts column as a number (integer or float)",
+            "params": {
+              "decimal": {
+                "dataType": "string",
+                "description": "Character used to represent the decimal point (default \u0027.\u0027)"
+              },
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "alphanum",
+            "description": "Sorts column as alphanumeric data (handles numbers within strings correctly)",
+            "params": {
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "boolean",
+            "description": "Sorts column as a boolean value",
+            "params": {
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "exists",
+            "description": "Sorts column by whether a value exists (non-empty) or not",
+            "params": {
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "date",
+            "description": "Sorts column as a date value",
+            "params": {
+              "format": {
+                "dataType": "string",
+                "description": "The date format string to use for parsing (default \u0027DD/MM/YYYY\u0027)"
+              },
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "time",
+            "description": "Sorts column as a time value",
+            "params": {
+              "format": {
+                "dataType": "string",
+                "description": "The time format string to use for parsing (default \u0027hh:mm\u0027)"
+              },
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "datetime",
+            "description": "Sorts column as a datetime value",
+            "params": {
+              "format": {
+                "dataType": "string",
+                "description": "The datetime format string to use for parsing"
+              },
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          },
+          {
+            "value": "array",
+            "description": "Sorts column by a value derived from a cell\u0027s array value",
+            "params": {
+              "type": {
+                "dataType": "string",
+                "description": "How to derive the sort value from the array",
+                "enum": ["length", "sum", "max", "min", "avg"]
+              },
+              "alignEmptyValues": {
+                "dataType": "string",
+                "description": "Whether to sort empty values to the top or bottom",
+                "enum": ["top", "bottom"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "option": "sorterParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the sorter(see Sorting Data for more details)"
+      },
+      {
+        "option": "formatter",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "set how you would like the data to be formatted (see Formatting Data for more details)",
+        "enum": [
+          {
+            "value": "plaintext",
+            "description": "Renders cell value as plain text, safe for user data"
+          },
+          {
+            "value": "textarea",
+            "description": "Renders cell value as multi-line text, adjusting row height to fit"
+          },
+          {
+            "value": "html",
+            "description": "Renders cell value as raw HTML â€” use only with trusted data"
+          },
+          {
+            "value": "money",
+            "description": "Formats a number as a monetary value with currency symbol, thousand separators and decimal places",
+            "params": {
+              "decimal": {
+                "dataType": "string",
+                "description": "Symbol to represent the decimal point (default \u0027.\u0027)"
+              },
+              "thousand": {
+                "dataType": "string",
+                "description": "Symbol to represent the thousand separator (default \u0027,\u0027)"
+              },
+              "symbol": {
+                "dataType": "string",
+                "description": "Currency symbol to place before or after the number"
+              },
+              "symbolAfter": {
+                "dataType": "boolean",
+                "description": "Place the currency symbol after the number instead of before"
+              },
+              "negativeSign": {
+                "dataType": "boolean",
+                "description": "Use a minus sign instead of parentheses for negative values"
+              },
+              "precision": {
+                "dataType": "integer/boolean",
+                "description": "Number of decimal places (default 2, or false to use value as-is)"
+              }
+            }
+          },
+          {
+            "value": "image",
+            "description": "Renders the cell value as an image element",
+            "params": {
+              "height": {
+                "dataType": "string",
+                "description": "CSS height for the image element"
+              },
+              "width": {
+                "dataType": "string",
+                "description": "CSS width for the image element"
+              },
+              "urlPrefix": {
+                "dataType": "string",
+                "description": "String to prepend to the cell value to form the image URL"
+              },
+              "urlSuffix": {
+                "dataType": "string",
+                "description": "String to append to the cell value to form the image URL"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of attributes to set on the img element"
+              }
+            }
+          },
+          {
+            "value": "link",
+            "description": "Renders the cell value as a clickable anchor tag",
+            "params": {
+              "labelField": {
+                "dataType": "string",
+                "description": "Row data field to use as the link label"
+              },
+              "label": {
+                "dataType": "string/function",
+                "description": "Fixed string or function returning the link label"
+              },
+              "urlPrefix": {
+                "dataType": "string",
+                "description": "String to prepend to the cell value to form the URL"
+              },
+              "urlField": {
+                "dataType": "string",
+                "description": "Row data field to use as the URL"
+              },
+              "url": {
+                "dataType": "string/function",
+                "description": "Fixed string or function returning the URL"
+              },
+              "target": {
+                "dataType": "string",
+                "description": "Value for the link\u0027s target attribute (e.g. \u0027_blank\u0027)"
+              },
+              "download": {
+                "dataType": "boolean/string",
+                "description": "Set the download attribute; true uses the filename from the URL, or provide a string filename"
+              }
+            }
+          },
+          {
+            "value": "datetime",
+            "description": "Transforms a date/time value from one format to another (requires luxon.js)",
+            "params": {
+              "inputFormat": {
+                "dataType": "string",
+                "description": "The luxon format string for parsing the input value (default 'yyyy-MM-dd HH:mm:ss'), or 'iso' for ISO 8601 strings"
+              },
+              "outputFormat": {
+                "dataType": "string",
+                "description": "The luxon format string for the displayed output (default 'dd/MM/yyyy HH:mm:ss')"
+              },
+              "invalidPlaceholder": {
+                "dataType": "string/boolean/function",
+                "description": "Value to display when the cell value cannot be parsed; true shows the original value"
+              },
+              "timezone": {
+                "dataType": "string",
+                "description": "IANA timezone string to use when parsing/displaying the date"
+              }
+            }
+          },
+          {
+            "value": "datetimediff",
+            "description": "Shows the difference between a cell date value and now (or a reference date) (requires luxon.js)",
+            "params": {
+              "inputFormat": {
+                "dataType": "string",
+                "description": "The luxon format string for parsing the cell value (default 'yyyy-MM-dd HH:mm:ss'), or 'iso' for ISO 8601 strings"
+              },
+              "humanize": {
+                "dataType": "boolean",
+                "description": "Display the difference in a humanized form (e.g. \u00272 days ago\u0027)"
+              },
+              "unit": {
+                "dataType": "string/array",
+                "description": "Time unit for the difference; when humanize is true an array of units can be passed (default 'seconds')",
+                "enum": ["years", "months", "weeks", "days", "hours", "minutes", "seconds"]
+              },
+              "suffix": {
+                "dataType": "boolean",
+                "description": "Append an \u0027ago\u0027 or \u0027from now\u0027 suffix to the output"
+              },
+              "date": {
+                "dataType": "object",
+                "description": "Reference date to compare against (luxon DateTime object, defaults to now)"
+              },
+              "invalidPlaceholder": {
+                "dataType": "string",
+                "description": "Placeholder to display when the cell value cannot be parsed"
+              },
+              "timezone": {
+                "dataType": "string",
+                "description": "IANA timezone string to use when parsing the date"
+              }
+            }
+          },
+          {
+            "value": "tickCross",
+            "description": "Displays a green tick if the value is truthy, and a red cross if not",
+            "params": {
+              "allowEmpty": {
+                "dataType": "boolean",
+                "description": "Show an empty cell instead of a cross for empty values (undefined, null, '') (default false)"
+              },
+              "allowTruthy": {
+                "dataType": "boolean",
+                "description": "Show a tick for any truthy value (default false)"
+              },
+              "tickElement": {
+                "dataType": "string/boolean",
+                "description": "Custom HTML for the tick element; set to false to hide ticks"
+              },
+              "crossElement": {
+                "dataType": "string/boolean",
+                "description": "Custom HTML for the cross element; set to false to hide crosses"
+              }
+            }
+          },
+          {
+            "value": "lookup",
+            "description": "Looks up the cell value in a supplied object and displays the matching value",
+            "params": {
+              "(key)": {
+                "dataType": "any",
+                "description": "Pass an object where keys are cell data values and values are the display strings"
+              }
+            }
+          },
+          {
+            "value": "array",
+            "description": "Joins array values into a string separated by a delimiter (default ',')",
+            "params": {
+              "delimiter": {
+                "dataType": "string",
+                "description": "Character used to join the array values (default '|')"
+              },
+              "valueMap": {
+                "dataType": "string/function",
+                "description": "Property path (dot notation) or map function to extract a value from each array item"
+              }
+            }
+          },
+          {
+            "value": "json",
+            "description": "Pretty-prints objects and arrays using JSON.stringify",
+            "params": {
+              "multiline": {
+                "dataType": "boolean",
+                "description": "Pretty print output across multiple lines (default true)"
+              },
+              "indent": {
+                "dataType": "string",
+                "description": "Indent character used for object properties (default '\\t')"
+              },
+              "replacer": {
+                "dataType": "array/function",
+                "description": "The replacer argument for JSON.stringify (see MDN docs)"
+              }
+            }
+          },
+          {
+            "value": "star",
+            "description": "Renders the cell value as a star rating",
+            "params": {
+              "stars": {
+                "dataType": "integer",
+                "description": "Maximum number of stars to display (default 5)"
+              }
+            }
+          },
+          {
+            "value": "traffic",
+            "description": "Renders the cell value as a traffic-light coloured circle",
+            "params": {
+              "min": {
+                "dataType": "integer",
+                "description": "Minimum value for the colour scale (default 0)"
+              },
+              "max": {
+                "dataType": "integer",
+                "description": "Maximum value for the colour scale (default 100)"
+              },
+              "color": {
+                "dataType": "string/array/function",
+                "description": "CSS colour string, array of colours, or function returning a colour"
+              }
+            }
+          },
+          {
+            "value": "progress",
+            "description": "Renders the cell value as a progress bar",
+            "params": {
+              "min": {
+                "dataType": "integer",
+                "description": "Minimum value for the progress bar (default 0)"
+              },
+              "max": {
+                "dataType": "integer",
+                "description": "Maximum value for the progress bar (default 100)"
+              },
+              "color": {
+                "dataType": "string/array/function",
+                "description": "CSS colour, array of colours, or function returning a colour for the bar fill"
+              },
+              "legend": {
+                "dataType": "string/boolean/function",
+                "description": "Text label on the bar; true shows the percentage, or a function can return a string"
+              },
+              "legendColor": {
+                "dataType": "string/array/function",
+                "description": "CSS colour for the legend text"
+              },
+              "legendAlign": {
+                "dataType": "string",
+                "description": "Horizontal alignment of the legend text",
+                "enum": ["left", "center", "right", "justify"]
+              }
+            }
+          },
+          {
+            "value": "color",
+            "description": "Sets the cell\u0027s background colour to the cell value (expected to be a valid CSS colour string)"
+          },
+          {
+            "value": "buttonTick",
+            "description": "Renders a green tick button element in the cell"
+          },
+          {
+            "value": "buttonCross",
+            "description": "Renders a red cross button element in the cell"
+          },
+          {
+            "value": "rownum",
+            "description": "Renders the row number (position in the current dataset) in the cell"
+          },
+          {
+            "value": "handle",
+            "description": "Renders a row move handle for use with movableRows"
+          },
+          {
+            "value": "rowSelection",
+            "description": "Renders a checkbox for selecting the row"
+          },
+          {
+            "value": "responsiveCollapse",
+            "description": "Renders the expand/collapse toggle for responsive layout hidden columns"
+          },
+          {
+            "value": "toggle",
+            "description": "Renders the cell value as a toggleable on/off switch",
+            "params": {
+              "size": {
+                "dataType": "integer",
+                "description": "Size of the switch in pixels (default 15)"
+              },
+              "onValue": {
+                "dataType": "any",
+                "description": "Cell value that represents the on state (default true)"
+              },
+              "offValue": {
+                "dataType": "any",
+                "description": "Cell value that represents the off state (default false)"
+              },
+              "onTruthy": {
+                "dataType": "boolean",
+                "description": "Treat any truthy value as the on state (default false)"
+              },
+              "onColor": {
+                "dataType": "string",
+                "description": "CSS colour of the switch when in the on state"
+              },
+              "offColor": {
+                "dataType": "string",
+                "description": "CSS colour of the switch when in the off state"
+              },
+              "clickable": {
+                "dataType": "boolean",
+                "description": "Allow the switch to be clicked to toggle the cell value"
+              }
+            }
+          },
+          {
+            "value": "adaptable",
+            "description": "Automatically picks a formatter based on the cell value type; can be customised with formatterLookup and paramsLookup",
+            "params": {
+              "formatterLookup": {
+                "dataType": "function",
+                "description": "Function passed the CellComponent; must return the formatter to use"
+              },
+              "paramsLookup": {
+                "dataType": "object/function",
+                "description": "Object keyed by formatter name with params values, or a function returning the params for the chosen formatter"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "option": "formatterParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the formatter(see Formatting Data for more details)"
+      },
+      {
+        "option": "formatterPrint",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "set how you would like the data to be formatted when the table is printed(see Formatting Data for more details)"
+      },
+      {
+        "option": "formatterPrintParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the print formatter(see Formatting Data for more details)"
+      },
+      {
+        "option": "formatterClipboard",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "set how you would like the data to be formatted when copied to the clipboard(see Formatting Data for more details)"
+      },
+      {
+        "option": "formatterClipboardParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the clipboard formatter(see Formatting Data for more details)"
+      },
+      {
+        "option": "formatterHtmlOutput",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "set how you would like the data to be formatted when the getHtml function is used(see Formatting Data for more details)"
+      },
+      {
+        "option": "formatterHtmlOutputParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the html output formatter(see Formatting Data for more details)"
+      },
+      {
+        "option": "variableHeight",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "alter the row height to fit the contents of the cell instead of hiding overflow"
+      },
+      {
+        "option": "editable",
+        "dataType": "boolean/function",
+        "defaultValue": null,
+        "description": "callback to check if the cell is editable (see Manipulating Data for more details)"
+      },
+      {
+        "option": "editor",
+        "dataType": "string/function/boolean",
+        "defaultValue": null,
+        "description": "set the editor to be used when editing the data. (see Manipulating Data for more details)",
+        "enum": [
+          {
+            "value": "input",
+            "description": "Single-line text input editor",
+            "params": {
+              "search": {
+                "dataType": "boolean",
+                "description": "Use a search-type input element instead of text"
+              },
+              "mask": {
+                "dataType": "string",
+                "description": "Input mask string â€” A=letter, 9=number, *=any character"
+              },
+              "maskAutoFill": {
+                "dataType": "boolean",
+                "description": "Auto-fill mask literal characters as the user types"
+              },
+              "maskLetterChar": {
+                "dataType": "string",
+                "description": "Character used to represent a letter in the mask (default \u0027A\u0027)"
+              },
+              "maskNumberChar": {
+                "dataType": "string",
+                "description": "Character used to represent a number in the mask (default \u00279\u0027)"
+              },
+              "maskWildcardChar": {
+                "dataType": "string",
+                "description": "Character used to represent a wildcard in the mask (default \u0027*\u0027)"
+              },
+              "selectContents": {
+                "dataType": "boolean",
+                "description": "Select the contents of the cell when the editor opens"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set directly on the input element (e.g. { maxlength: \u002710\u0027 })"
+              }
+            }
+          },
+          {
+            "value": "textarea",
+            "description": "Multi-line textarea editor that expands vertically to fit content",
+            "params": {
+              "mask": {
+                "dataType": "string",
+                "description": "Input mask string"
+              },
+              "maskAutoFill": {
+                "dataType": "boolean",
+                "description": "Auto-fill mask literal characters as the user types"
+              },
+              "selectContents": {
+                "dataType": "boolean",
+                "description": "Select the contents of the cell when the editor opens"
+              },
+              "verticalNavigation": {
+                "dataType": "string",
+                "description": "How the up/down arrow keys navigate",
+                "enum": ["hybrid", "editor", "table"]
+              },
+              "shiftEnterSubmit": {
+                "dataType": "boolean",
+                "description": "Submit the edit when Shift+Enter is pressed"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the textarea element"
+              }
+            }
+          },
+          {
+            "value": "number",
+            "description": "Numeric input editor for integer or float values",
+            "params": {
+              "min": {
+                "dataType": "number",
+                "description": "Minimum allowed value"
+              },
+              "max": {
+                "dataType": "number",
+                "description": "Maximum allowed value"
+              },
+              "step": {
+                "dataType": "number",
+                "description": "Increment step size (default 1)"
+              },
+              "mask": {
+                "dataType": "string",
+                "description": "Input mask string"
+              },
+              "maskAutoFill": {
+                "dataType": "boolean",
+                "description": "Auto-fill mask literal characters as the user types"
+              },
+              "selectContents": {
+                "dataType": "boolean",
+                "description": "Select the contents of the cell when the editor opens"
+              },
+              "verticalNavigation": {
+                "dataType": "string",
+                "description": "How the up/down arrow keys navigate",
+                "enum": ["hybrid", "editor", "table"]
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the input element"
+              }
+            }
+          },
+          {
+            "value": "range",
+            "description": "Range slider editor",
+            "params": {
+              "min": {
+                "dataType": "number",
+                "description": "Minimum value for the slider"
+              },
+              "max": {
+                "dataType": "number",
+                "description": "Maximum value for the slider"
+              },
+              "step": {
+                "dataType": "number",
+                "description": "Increment step size"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the range input element"
+              }
+            }
+          },
+          {
+            "value": "tickCross",
+            "description": "Boolean tick/cross toggle editor",
+            "params": {
+              "tristate": {
+                "dataType": "boolean",
+                "description": "Allow a third indeterminate null state"
+              },
+              "indeterminateValue": {
+                "dataType": "any",
+                "description": "The data value assigned to the indeterminate state (default null)"
+              },
+              "trueValue": {
+                "dataType": "any",
+                "description": "The data value assigned to the ticked state (default true)"
+              },
+              "falseValue": {
+                "dataType": "any",
+                "description": "The data value assigned to the crossed state (default false)"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the checkbox element"
+              }
+            }
+          },
+          {
+            "value": "star",
+            "description": "Star rating editor",
+            "params": {
+              "stars": {
+                "dataType": "integer",
+                "description": "Maximum number of stars to display (default 5)"
+              }
+            }
+          },
+          {
+            "value": "list",
+            "description": "Dropdown list editor with optional autocomplete and multi-select",
+            "params": {
+              "values": {
+                "dataType": "array/object/function",
+                "description": "List of values to display. Array of strings, array of {label, value} objects, or a function returning either"
+              },
+              "valuesURL": {
+                "dataType": "string",
+                "description": "URL to fetch list values from"
+              },
+              "valuesLookup": {
+                "dataType": "string/function",
+                "description": "Look up values from existing column data",
+                "enum": ["active", "all"]
+              },
+              "valuesLookupField": {
+                "dataType": "string",
+                "description": "Column field to use when performing a valuesLookup"
+              },
+              "clearable": {
+                "dataType": "boolean",
+                "description": "Allow the selected value to be cleared"
+              },
+              "itemFormatter": {
+                "dataType": "function",
+                "description": "Function to format individual list items"
+              },
+              "sort": {
+                "dataType": "string",
+                "description": "Sort order for the list items",
+                "enum": ["asc", "desc"]
+              },
+              "emptyValue": {
+                "dataType": "any",
+                "description": "The data value to use for an empty selection"
+              },
+              "multiselect": {
+                "dataType": "boolean/integer",
+                "description": "Allow multiple items to be selected; set to an integer to limit the count"
+              },
+              "autocomplete": {
+                "dataType": "boolean",
+                "description": "Enable autocomplete filtering of the list as the user types"
+              },
+              "filterFunc": {
+                "dataType": "function",
+                "description": "Custom function to filter the list items"
+              },
+              "filterDelay": {
+                "dataType": "number",
+                "description": "Milliseconds to wait after a keystroke before filtering the list"
+              },
+              "allowEmpty": {
+                "dataType": "boolean",
+                "description": "Allow an empty string to be a valid selection"
+              },
+              "listOnEmpty": {
+                "dataType": "boolean",
+                "description": "Show the full list when the autocomplete input is empty"
+              },
+              "freetext": {
+                "dataType": "boolean",
+                "description": "Allow the user to type a value not present in the list"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the input element"
+              },
+              "verticalNavigation": {
+                "dataType": "string",
+                "description": "How the up/down arrow keys navigate when the list is closed",
+                "enum": ["hybrid", "editor", "table"]
+              }
+            }
+          },
+          {
+            "value": "date",
+            "description": "Native HTML date picker editor",
+            "params": {
+              "min": {
+                "dataType": "string",
+                "description": "Minimum selectable date string in the format matching \u0027format\u0027"
+              },
+              "max": {
+                "dataType": "string",
+                "description": "Maximum selectable date string"
+              },
+              "format": {
+                "dataType": "string",
+                "description": "The luxon format string for parsing/formatting the date value (default \u0027yyyy-MM-dd\u0027)"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the date input element"
+              },
+              "verticalNavigation": {
+                "dataType": "string",
+                "description": "How the up/down arrow keys navigate",
+                "enum": ["hybrid", "editor", "table"]
+              }
+            }
+          },
+          {
+            "value": "time",
+            "description": "Native HTML time picker editor",
+            "params": {
+              "min": {
+                "dataType": "string",
+                "description": "Minimum selectable time string"
+              },
+              "max": {
+                "dataType": "string",
+                "description": "Maximum selectable time string"
+              },
+              "format": {
+                "dataType": "string",
+                "description": "The luxon format string for the time value (default \u0027HH:mm\u0027)"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the time input element"
+              },
+              "verticalNavigation": {
+                "dataType": "string",
+                "description": "How the up/down arrow keys navigate",
+                "enum": ["hybrid", "editor", "table"]
+              }
+            }
+          },
+          {
+            "value": "datetime",
+            "description": "Native HTML datetime-local picker editor",
+            "params": {
+              "min": {
+                "dataType": "string",
+                "description": "Minimum selectable datetime string"
+              },
+              "max": {
+                "dataType": "string",
+                "description": "Maximum selectable datetime string"
+              },
+              "format": {
+                "dataType": "string",
+                "description": "The luxon format string for the datetime value (default \u0027yyyy-MM-dd HH:mm:ss\u0027)"
+              },
+              "elementAttributes": {
+                "dataType": "object",
+                "description": "Object of HTML attributes to set on the datetime input element"
+              },
+              "verticalNavigation": {
+                "dataType": "string",
+                "description": "How the up/down arrow keys navigate",
+                "enum": ["hybrid", "editor", "table"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "option": "editorParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the editor (see Manipulating Data for more details)"
+      },
+      {
+        "option": "editorEmptyValue",
+        "dataType": "any",
+        "defaultValue": null,
+        "description": "Set the value assigned to an empty cell after edit (see Manipulating Data for more details)"
+      },
+      {
+        "option": "editorEmptyValueFunc",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "Determine what types of value are considered empty (see Manipulating Data for more details)"
+      },
+      {
+        "option": "validator",
+        "dataType": "string/function/array",
+        "defaultValue": null,
+        "description": "set the validator to be used to approve data when a user edits a cell. (see Manipulating Data for more details)",
+        "enum": [
+          {
+            "value": "required",
+            "description": "Value must not be empty"
+          },
+          {
+            "value": "unique",
+            "description": "Value must be unique across all rows in the column"
+          },
+          {
+            "value": "integer",
+            "description": "Value must be a valid integer"
+          },
+          {
+            "value": "float",
+            "description": "Value must be a valid float"
+          },
+          {
+            "value": "numeric",
+            "description": "Value must be numeric (integer or float)"
+          },
+          {
+            "value": "string",
+            "description": "Value must be a string"
+          },
+          {
+            "value": "alphanumeric",
+            "description": "Value must contain only alphanumeric characters"
+          },
+          {
+            "value": "email",
+            "description": "Value must be a valid email address format"
+          },
+          {
+            "value": "url",
+            "description": "Value must be a valid URL format"
+          },
+          {
+            "value": "date",
+            "description": "Value must be a valid date (use sorterParams format if needed)"
+          },
+          {
+            "value": "time",
+            "description": "Value must be a valid time"
+          },
+          {
+            "value": "datetime",
+            "description": "Value must be a valid datetime"
+          },
+          {
+            "value": "min:",
+            "description": "Value must be greater than or equal to the parameter (e.g. \u0027min:5\u0027)"
+          },
+          {
+            "value": "max:",
+            "description": "Value must be less than or equal to the parameter (e.g. \u0027max:100\u0027)"
+          },
+          {
+            "value": "minLength:",
+            "description": "String value must be at least N characters long (e.g. \u0027minLength:3\u0027)"
+          },
+          {
+            "value": "maxLength:",
+            "description": "String value must be no more than N characters long (e.g. \u0027maxLength:20\u0027)"
+          },
+          {
+            "value": "in:",
+            "description": "Value must be one of the pipe-separated values (e.g. \u0027in:yes|no|maybe\u0027)"
+          }
+        ]
+      },
+      {
+        "option": "contextMenu",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "add context menu to column cells (see Cell Menus for more details)"
+      },
+      {
+        "option": "clickMenu",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "add left click menu to column cells (see Cell Menus for more details)"
+      },
+      {
+        "option": "dblClickMenu",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "add double left click menu to column cells (see Cell Menus for more details)"
+      },
+      {
+        "option": "contextPopup",
+        "dataType": "string/DOM Element",
+        "defaultValue": null,
+        "description": "add context popup to column cells (see Cell Popups for more details)"
+      },
+      {
+        "option": "clickPopup",
+        "dataType": "string/DOM Element",
+        "defaultValue": null,
+        "description": "add left click popup to column cells (see Cell Popups for more details)"
+      },
+      {
+        "option": "dblClickPopup",
+        "dataType": "string/DOM Element",
+        "defaultValue": null,
+        "description": "add double left click popup to column cells (see Cell Popups for more details)"
+      },
+      {
+        "option": "mutator",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function for manipulating column values as they are parsed into the table (see Mutators for more details)"
+      },
+      {
+        "option": "mutatorParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the mutator(see Mutators for more details)"
+      },
+      {
+        "option": "mutatorData",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function for manipulating column values as they are parsed into the table by command (see Mutators for more details)"
+      },
+      {
+        "option": "mutatorDataParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the mutatorData(see Mutators for more details)"
+      },
+      {
+        "option": "mutatorEdit",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function for manipulating column values as they are edited by a user (see Mutators for more details)"
+      },
+      {
+        "option": "mutatorEditParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the mutatorEdit(see Mutators for more details)"
+      },
+      {
+        "option": "mutatorClipboard",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function for manipulating column values as they are pasted by a user (see Mutators for more details)"
+      },
+      {
+        "option": "mutatorClipboardParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the mutatorClipboard (see Mutators for more details)"
+      },
+      {
+        "option": "mutatorImport",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function for manipulating column values as they are imported from the file picker (see Mutators for more details)"
+      },
+      {
+        "option": "mutatorImportParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the mutatorImport (see Mutators for more details)"
+      },
+      {
+        "option": "mutateLink",
+        "dataType": "string/array",
+        "defaultValue": null,
+        "description": "trigger mutation on columns when this column is edited (see Mutators for more details)"
+      },
+      {
+        "option": "accessor",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function to alter column values before they are extracted from the table function (see Accessors for more details)"
+      },
+      {
+        "option": "accessorParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the accessor(see Accessors for more details)"
+      },
+      {
+        "option": "accessorData",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function to alter column values before they are extracted from the table using the getData function (see Accessors for more details)"
+      },
+      {
+        "option": "accessorDataParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the accessorData(see Accessors for more details)"
+      },
+      {
+        "option": "accessorDownload",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function to alter column values before they are included in a file download (see Accessors for more details)"
+      },
+      {
+        "option": "accessorDownloadParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the accessorDownload(see Accessors for more details)"
+      },
+      {
+        "option": "accessorClipboard",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function to alter column values before they are copied to the clipboard (see Accessors for more details)"
+      },
+      {
+        "option": "accessorClipboardParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the accessorClipboard(see Accessors for more details)"
+      },
+      {
+        "option": "download",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "show or hide column in downloaded data (see Downloading Table Data for more details)"
+      },
+      {
+        "option": "titleDownload",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "set custom title for column in download (see Downloading Table Data for more details)"
+      },
+      {
+        "option": "topCalc",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "the column calculation to be displayed at the top of this column(see Column Calculations for more details)",
+        "enum": [
+          {
+            "value": "avg",
+            "description": "Calculates the average of all numeric values in the column"
+          },
+          {
+            "value": "max",
+            "description": "Returns the maximum numeric value in the column"
+          },
+          {
+            "value": "min",
+            "description": "Returns the minimum numeric value in the column"
+          },
+          {
+            "value": "sum",
+            "description": "Calculates the sum of all numeric values in the column"
+          },
+          {
+            "value": "concat",
+            "description": "Concatenates all values in the column into a single string",
+            "params": {
+              "separator": {
+                "dataType": "string",
+                "description": "Separator string to use between concatenated values (default \u0027\u0027)"
+              }
+            }
+          },
+          {
+            "value": "count",
+            "description": "Counts the total number of rows"
+          },
+          {
+            "value": "unique",
+            "description": "Counts the number of unique values in the column"
+          }
+        ]
+      },
+      {
+        "option": "topCalcParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the topCalc calculation function (see Column Calculations for more details)"
+      },
+      {
+        "option": "topCalcFormatter",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "formatter for the topCalc calculation cell (see Column Calculations for more details)"
+      },
+      {
+        "option": "topCalcFormatterParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the topCalcFormatter function(see Column Calculations for more details)"
+      },
+      {
+        "option": "bottomCalc",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "the column calculation to be displayed at the bottom of this column(see Column Calculations for more details)",
+        "enum": [
+          {
+            "value": "avg",
+            "description": "Calculates the average of all numeric values in the column"
+          },
+          {
+            "value": "max",
+            "description": "Returns the maximum numeric value in the column"
+          },
+          {
+            "value": "min",
+            "description": "Returns the minimum numeric value in the column"
+          },
+          {
+            "value": "sum",
+            "description": "Calculates the sum of all numeric values in the column"
+          },
+          {
+            "value": "concat",
+            "description": "Concatenates all values in the column into a single string",
+            "params": {
+              "separator": {
+                "dataType": "string",
+                "description": "Separator string to use between concatenated values (default \u0027\u0027)"
+              }
+            }
+          },
+          {
+            "value": "count",
+            "description": "Counts the total number of rows"
+          },
+          {
+            "value": "unique",
+            "description": "Counts the number of unique values in the column"
+          }
+        ]
+      },
+      {
+        "option": "bottomCalcParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the bottomCalc calculation function(see Column Calculations for more details)"
+      },
+      {
+        "option": "bottomCalcFormatter",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "formatter for the bottomCalc calculation cell (see Column Calculations for more details)"
+      },
+      {
+        "option": "bottomCalcFormatterParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the bottomCalcFormatter function(see Column Calculations for more details)"
+      }
+    ]
+  },
+  {
+    "category": "Cell Events",
+    "options": [
+      {
+        "option": "cellClick",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user clicks on a cell in this column (see Callbacks for more details)"
+      },
+      {
+        "option": "cellDblClick",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user double clicks on a cell in this column (see Callbacks for more details)"
+      },
+      {
+        "option": "cellContext",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user right clicks on a cell in this column (see Callbacks for more details)"
+      },
+      {
+        "option": "cellTap",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user taps on a cell in this column, triggered in touch displays. (see Callbacks for more details)"
+      },
+      {
+        "option": "cellDblTap",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user double taps on a cell in this column, triggered in touch displays when a user taps the same cell twice in under 300ms. (see Callbacks for more details)"
+      },
+      {
+        "option": "cellTapHold",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user taps and holds on a cell in this column, triggered in touch displays when a user taps and holds the same cell for 1 second. (see Callbacks for more details)"
+      },
+      {
+        "option": "cellMouseEnter",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer enters a cell (see Callbacks for more details)"
+      },
+      {
+        "option": "cellMouseLeave",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer leaves a cell (see Callbacks for more details)"
+      },
+      {
+        "option": "cellMouseOver",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer enters a cell or one of its child elements(see Callbacks for more details)"
+      },
+      {
+        "option": "cellMouseOut",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer enters a cell or one of its child elements(see Callbacks for more details)"
+      },
+      {
+        "option": "cellMouseMove",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer moves over a cell (see Callbacks for more details)"
+      },
+      {
+        "option": "cellMouseDown",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for the left mouse button is pressed with the cursor over a cell (see Callbacks for more details)"
+      },
+      {
+        "option": "cellMouseUp",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for the left mouse button is released with the cursor over a cell (see Callbacks for more details)"
+      },
+      {
+        "option": "cellEditing",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when a cell in this column is being edited by the user (see Callbacks for more details)"
+      },
+      {
+        "option": "cellEdited",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when a cell in this column has been edited by the user (see Callbacks for more details)"
+      },
+      {
+        "option": "cellEditCancelled",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when an edit on a cell in this column is aborted by the user (see Callbacks for more details)"
+      }
+    ]
+  },
+  {
+    "category": "Column Headers",
+    "options": [
+      {
+        "option": "headerSort",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "user can sort by clicking on the header (see Sorting Data for more details)"
+      },
+      {
+        "option": "headerSortStartingDir",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "set the starting sort direction when a user first clicks on a header (see Sorting Data for more details)",
+        "enum": [
+          {
+            "value": "asc",
+            "description": "Sort ascending on first click"
+          },
+          {
+            "value": "desc",
+            "description": "Sort descending on first click"
+          }
+        ]
+      },
+      {
+        "option": "headerSortTristate",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "allow tristate toggling of column header sort direction (see Sorting Data for more details)"
+      },
+      {
+        "option": "headerClick",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user clicks on the header for this column (see Callbacks for more details)"
+      },
+      {
+        "option": "headerDblClick",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user double clicks on the header for this column (see Callbacks for more details)"
+      },
+      {
+        "option": "headerContext",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user right clicks on the header for this column (see Callbacks for more details)"
+      },
+      {
+        "option": "headerTap",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user taps on a header for this column, triggered in touch displays. (see Callbacks for more details)"
+      },
+      {
+        "option": "headerDblTap",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user double taps on a header for this column, triggered in touch displays when a user taps the same header twice in under 300ms. (see Callbacks for more details)"
+      },
+      {
+        "option": "headerTapHold",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when user taps and holds on a header for this column, triggered in touch displays when a user taps and holds the same header for 1 second. (see Callbacks for more details)"
+      },
+      {
+        "option": "headerMouseEnter",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer enters a column header (see Callbacks for more details)"
+      },
+      {
+        "option": "headerMouseLeave",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer leaves a column header (see Callbacks for more details)"
+      },
+      {
+        "option": "headerMouseOver",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer enters a column header or one of its child elements(see Callbacks for more details)"
+      },
+      {
+        "option": "headerMouseOut",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer enters a column header or one of its child elements(see Callbacks for more details)"
+      },
+      {
+        "option": "headerMouseMove",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for when the mouse pointer moves over a column header (see Callbacks for more details)"
+      },
+      {
+        "option": "headerMouseDown",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for the left mouse button is pressed with the cursor over a column header (see Callbacks for more details)"
+      },
+      {
+        "option": "headerMouseUp",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "callback for the left mouse button is released with the cursor over a column header (see Callbacks for more details)"
+      },
+      {
+        "option": "headerTooltip",
+        "dataType": "string/function/boolean",
+        "defaultValue": null,
+        "description": "sets the on hover tooltip for the column header (see Formatting Data for more details)"
+      },
+      {
+        "option": "headerVertical",
+        "dataType": "boolean/string",
+        "defaultValue": null,
+        "description": "change the orientation of the column header to vertical (see Vertical Column Headers for more details)",
+        "enum": [
+          {
+            "value": false,
+            "description": "Standard horizontal header (default)"
+          },
+          {
+            "value": true,
+            "description": "Header text rotated 90Â° counter-clockwise"
+          },
+          {
+            "value": "flip",
+            "description": "Header text rotated 90Â° clockwise"
+          }
+        ]
+      },
+      {
+        "option": "editableTitle",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "allows the user to edit the header titles. (see Editable Column Titles for more details)"
+      },
+      {
+        "option": "titleFormatter",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "formatter function for header title (see Formatting Data for more details)"
+      },
+      {
+        "option": "titleFormatterParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the header title formatter(see Formatting Data for more details)"
+      },
+      {
+        "option": "headerWordWrap",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "Allow word wrapping in the column header (see Header Text Wrapping for more details)"
+      },
+      {
+        "option": "headerFilter",
+        "dataType": "string/boolean/function",
+        "defaultValue": null,
+        "description": "filtering of columns from elements in the header (see Header Filtering for more details)"
+      },
+      {
+        "option": "headerFilterPlaceholder",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "placeholder text for the header filter (see Header Filtering for more details)"
+      },
+      {
+        "option": "headerFilterParams",
+        "dataType": "object/function",
+        "defaultValue": null,
+        "description": "additional parameters you can pass to the header filter (see Header Filtering for more details)"
+      },
+      {
+        "option": "headerFilterEmptyCheck",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "function to check when the header filter is empty (see Header Filtering for more details)"
+      },
+      {
+        "option": "headerFilterFunc",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "the filter function that should be used by the header filter (see Header Filtering for more details)",
+        "enum": [
+          {
+            "value": "=",
+            "description": "Exact match â€” value must equal the filter value"
+          },
+          {
+            "value": "!=",
+            "description": "Not equal â€” value must not equal the filter value"
+          },
+          {
+            "value": "like",
+            "description": "Case-insensitive substring match (value contains the filter string)"
+          },
+          {
+            "value": "\u003c",
+            "description": "Less than the filter value"
+          },
+          {
+            "value": "\u003c=",
+            "description": "Less than or equal to the filter value"
+          },
+          {
+            "value": "\u003e",
+            "description": "Greater than the filter value"
+          },
+          {
+            "value": "\u003e=",
+            "description": "Greater than or equal to the filter value"
+          },
+          {
+            "value": "in",
+            "description": "Value must be present in the filter array"
+          },
+          {
+            "value": "regex",
+            "description": "Value must match the regular expression provided as the filter value"
+          },
+          {
+            "value": "starts",
+            "description": "Value must start with the filter string"
+          },
+          {
+            "value": "ends",
+            "description": "Value must end with the filter string"
+          }
+        ]
+      },
+      {
+        "option": "headerFilterFuncParams",
+        "dataType": "object",
+        "defaultValue": null,
+        "description": "additional parameters object passed to the headerFilterFunc function (see Header Filtering for more details)"
+      },
+      {
+        "option": "headerFilterLiveFilter",
+        "dataType": "boolean",
+        "defaultValue": null,
+        "description": "disable live filtering of the table (see Header Filtering for more details)"
+      },
+      {
+        "option": "headerMenu",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "add menu button to column header (see Header Menus for more details)"
+      },
+      {
+        "option": "headerClickMenu",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "add click menu to column header (see Header Menus for more details)"
+      },
+      {
+        "option": "headerDblClickMenu",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "add double click menu to column header (see Header Menus for more details)"
+      },
+      {
+        "option": "headerContextMenu",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "add context menu to column header (see Header Menus for more details)"
+      },
+      {
+        "option": "headerPopup",
+        "dataType": "string/DOM Element",
+        "defaultValue": null,
+        "description": "add popup button to column header (see Column Header Popups for more details)"
+      },
+      {
+        "option": "headerClickPopup",
+        "dataType": "string/DOM Element",
+        "defaultValue": null,
+        "description": "add click popup to column header (see Column Header Popups for more details)"
+      },
+      {
+        "option": "headerContextPopup",
+        "dataType": "string/DOM Element",
+        "defaultValue": null,
+        "description": "add context popup to column header (see Column Header Popups for more details)"
+      },
+      {
+        "option": "headerDblClickPopup",
+        "dataType": "string/DOM Element",
+        "defaultValue": null,
+        "description": "add double left click popup to column header (see Column Header Popups for more details)"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1736 @@
+﻿[
+  {
+    "category": "General",
+    "options": [
+      {
+        "option": "height",
+        "dataType": "string/int",
+        "defaultValue": false,
+        "description": "Sets the height of the containing element, can be set to any valid height css value. If set to false (the default), the height of the table will resize to fit the table data."
+      },
+      {
+        "option": "minHeight",
+        "dataType": "string/int",
+        "defaultValue": false,
+        "description": "Sets the minimum height for the table, can be set to any valid height css value."
+      },
+      {
+        "option": "maxHeight",
+        "dataType": "string/int",
+        "defaultValue": false,
+        "description": "Sets the maximum height for the table, can be set to any valid height css value."
+      },
+      {
+        "option": "dependencies",
+        "dataType": "object",
+        "defaultValue": {},
+        "description": "Register external table dependencies"
+      },
+      {
+        "option": "renderVertical",
+        "dataType": "string",
+        "defaultValue": "virtual",
+        "description": "Set the tables vertical renderer",
+        "enum": [
+          {
+            "value": "virtual",
+            "description": "Only render rows that are visible in the viewport (default). Recommended for large datasets — dramatically improves performance."
+          },
+          {
+            "value": "basic",
+            "description": "Render all rows at once. Use for small datasets or when virtual rendering causes issues with certain CSS layouts."
+          }
+        ]
+      },
+      {
+        "option": "renderVerticalBuffer",
+        "dataType": "integer",
+        "defaultValue": false,
+        "description": "Manually set the size of the vertical renderer buffer"
+      },
+      {
+        "option": "renderHorizontal",
+        "dataType": "string",
+        "defaultValue": "basic",
+        "description": "Set the tables horizontal renderer",
+        "enum": [
+          {
+            "value": "basic",
+            "description": "Render all columns at once (default). Suitable for most use cases."
+          },
+          {
+            "value": "virtual",
+            "description": "Only render columns visible in the viewport. Use for tables with a very large number of columns to improve performance."
+          }
+        ]
+      },
+      {
+        "option": "tooltipDelay",
+        "dataType": "integer",
+        "defaultValue": 300,
+        "description": "Delay in milliseconds before a tooltip is displayed"
+      },
+      {
+        "option": "placeholder",
+        "dataType": "string/DOM Node",
+        "defaultValue": "",
+        "description": "placeholder element to display on empty table"
+      },
+      {
+        "option": "footerElement",
+        "dataType": "string/DOM Node",
+        "defaultValue": "(see documentation)",
+        "description": "Footer element for the table"
+      },
+      {
+        "option": "history",
+        "dataType": "boolean/function",
+        "defaultValue": false,
+        "description": "Enable user interaction history functionality"
+      },
+      {
+        "option": "keybindings",
+        "dataType": "boolean/function",
+        "defaultValue": false,
+        "description": "Keybinding configuration object"
+      },
+      {
+        "option": "locale",
+        "dataType": "string/boolean",
+        "defaultValue": false,
+        "description": "set the current localization language"
+      },
+      {
+        "option": "langs",
+        "dataType": "object",
+        "defaultValue": "(see documentation)",
+        "description": "hold localization templates"
+      },
+      {
+        "option": "downloadConfig",
+        "dataType": "object",
+        "defaultValue": {},
+        "description": "choose which parts of the table are included in downloaded files",
+        "subOptions": {
+          "columnHeaders": {
+            "dataType": "boolean",
+            "description": "Include column headers in the download output"
+          },
+          "columnGroups": {
+            "dataType": "boolean",
+            "description": "Include column groups in the download output"
+          },
+          "rowGroups": {
+            "dataType": "boolean",
+            "description": "Include row groups in the download output"
+          },
+          "columnCalcs": {
+            "dataType": "boolean",
+            "description": "Include column calculations in the download output"
+          },
+          "dataTree": {
+            "dataType": "boolean",
+            "description": "Include data tree child rows in the download output"
+          }
+        }
+      },
+      {
+        "option": "downloadRowRange",
+        "dataType": "string",
+        "defaultValue": "active",
+        "description": "set the range of rows to be included in the downloaded table output",
+        "enum": [
+          {
+            "value": "active",
+            "description": "Include all rows that pass the current filters (default)"
+          },
+          {
+            "value": "all",
+            "description": "Include every row regardless of filters or pagination"
+          },
+          {
+            "value": "selected",
+            "description": "Include only rows that are currently selected"
+          },
+          {
+            "value": "visible",
+            "description": "Include only rows visible in the current viewport"
+          }
+        ]
+      },
+      {
+        "option": "htmlOutputConfig",
+        "dataType": "object",
+        "defaultValue": {},
+        "description": "choose which parts of the table are included in getHtml function output",
+        "subOptions": {
+          "columnHeaders": {
+            "dataType": "boolean",
+            "description": "Include column headers in HTML output"
+          },
+          "columnGroups": {
+            "dataType": "boolean",
+            "description": "Include column groups in HTML output"
+          },
+          "rowGroups": {
+            "dataType": "boolean",
+            "description": "Include row groups in HTML output"
+          },
+          "columnCalcs": {
+            "dataType": "boolean",
+            "description": "Include column calculations in HTML output"
+          },
+          "dataTree": {
+            "dataType": "boolean",
+            "description": "Include data tree child rows in HTML output"
+          }
+        }
+      },
+      {
+        "option": "reactiveData",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "enable data reactivity"
+      },
+      {
+        "option": "tabEndNewRow",
+        "dataType": "boolean/object/function",
+        "defaultValue": false,
+        "description": "add new row when user tabs of the end of the table"
+      },
+      {
+        "option": "validationMode",
+        "dataType": "string",
+        "defaultValue": "blocking",
+        "description": "set validation mode of the table",
+        "enum": [
+          {
+            "value": "blocking",
+            "description": "Invalid edits are rejected and the cell reverts to its previous value (default)"
+          },
+          {
+            "value": "highlight",
+            "description": "Invalid values are accepted but the cell is highlighted; a CSS class is applied"
+          },
+          {
+            "value": "manual",
+            "description": "Validation is not triggered automatically; call validate() manually to run it"
+          }
+        ]
+      },
+      {
+        "option": "textDirection",
+        "dataType": "string",
+        "defaultValue": "auto",
+        "description": "set text direction for the table",
+        "enum": [
+          {
+            "value": "auto",
+            "description": "Use the browser/document default text direction (default)"
+          },
+          {
+            "value": "ltr",
+            "description": "Force left-to-right text direction"
+          },
+          {
+            "value": "rtl",
+            "description": "Force right-to-left text direction"
+          }
+        ]
+      },
+      {
+        "option": "debugInvalidOptions",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "show console warnings if invalid options are used"
+      },
+      {
+        "option": "popupContainer",
+        "dataType": "boolean, string, element",
+        "defaultValue": false,
+        "description": "containing element for popups"
+      }
+    ]
+  },
+  {
+    "category": "Columns",
+    "options": [
+      {
+        "option": "columns",
+        "dataType": "array",
+        "defaultValue": [],
+        "description": "Holder for column definition array"
+      },
+      {
+        "option": "columnDefaults",
+        "dataType": "object",
+        "defaultValue": {},
+        "description": "define any default options that should be applied to all columns"
+      },
+      {
+        "option": "autoColumns",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Automatically generate column definitions for the table based on the structure of the first row of data"
+      },
+      {
+        "option": "autoColumnsDefinitions",
+        "dataType": "function/array/object",
+        "defaultValue": false,
+        "description": "Manipulate the automatically generated column definitions"
+      },
+      {
+        "option": "layout",
+        "dataType": "string",
+        "defaultValue": "fitData",
+        "description": "Layout mode for the table columns",
+        "enum": [
+          {
+            "value": "fitData",
+            "description": "Each column width is set to fit its data. A horizontal scrollbar appears if all columns exceed the table width (default)."
+          },
+          {
+            "value": "fitColumns",
+            "description": "Columns are sized to fill the full width of the table. All column widths are equalised."
+          },
+          {
+            "value": "fitDataFill",
+            "description": "Same as fitData but the last column expands to fill any remaining space."
+          },
+          {
+            "value": "fitDataStretch",
+            "description": "Same as fitData but all columns are stretched equally to fill the table width."
+          },
+          {
+            "value": "fitDataTable",
+            "description": "Same as fitData but the table element itself resizes to match the total column width (no horizontal scrollbar)."
+          }
+        ]
+      },
+      {
+        "option": "layoutColumnsOnNewData",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Change column widths to match data when loaded into table"
+      },
+      {
+        "option": "responsiveLayout",
+        "dataType": "boolean/string",
+        "defaultValue": false,
+        "description": "Automatically hide/show columns to fit the width of the Tabulator element",
+        "enum": [
+          {
+            "value": false,
+            "description": "Responsive layout disabled (default)"
+          },
+          {
+            "value": "hide",
+            "description": "Columns are hidden when there is not enough space, prioritised by their responsive value"
+          },
+          {
+            "value": "collapse",
+            "description": "Columns are hidden and their content is shown in a collapsible list below each row"
+          }
+        ]
+      },
+      {
+        "option": "responsiveLayoutCollapseStartOpen",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "show collapsed column list"
+      },
+      {
+        "option": "responsiveLayoutCollapseUseFormatters",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "use formatters in collapsed column lists"
+      },
+      {
+        "option": "responsiveLayoutCollapseFormatter",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "create contents of collapsed column list"
+      },
+      {
+        "option": "movableColumns",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Allow users to move and reorder columns"
+      },
+      {
+        "option": "columnHeaderVertAlign",
+        "dataType": "string",
+        "defaultValue": "top",
+        "description": "Vertical alignment for contents of column header (used in column grouping)",
+        "enum": [
+          {
+            "value": "top",
+            "description": "Align header content to the top of the header cell (default)"
+          },
+          {
+            "value": "middle",
+            "description": "Align header content to the vertical middle of the header cell"
+          },
+          {
+            "value": "bottom",
+            "description": "Align header content to the bottom of the header cell"
+          }
+        ]
+      },
+      {
+        "option": "scrollToColumnPosition",
+        "dataType": "string",
+        "defaultValue": "left",
+        "description": "Default column position after scrollToColumn",
+        "enum": [
+          {
+            "value": "left",
+            "description": "Scroll so the column is aligned to the left edge of the table (default)"
+          },
+          {
+            "value": "center",
+            "description": "Scroll so the column is centered in the table"
+          },
+          {
+            "value": "right",
+            "description": "Scroll so the column is aligned to the right edge of the table"
+          }
+        ]
+      },
+      {
+        "option": "scrollToColumnIfVisible",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Allow currently visible columns to be scrolled to"
+      },
+      {
+        "option": "columnCalcs",
+        "dataType": "string/boolean",
+        "defaultValue": true,
+        "description": "Where to show column calcs in table",
+        "enum": [
+          {
+            "value": true,
+            "description": "Show calculations at the top/bottom of the table and within groups (default)"
+          },
+          {
+            "value": false,
+            "description": "Disable all column calculations"
+          },
+          {
+            "value": "both",
+            "description": "Show calculations both at the table level and within groups"
+          },
+          {
+            "value": "group",
+            "description": "Only show calculations within row groups"
+          },
+          {
+            "value": "table",
+            "description": "Only show calculations at the top/bottom of the table"
+          }
+        ]
+      },
+      {
+        "option": "nestedFieldSeparator",
+        "dataType": "string/boolean",
+        "defaultValue": ".",
+        "description": "Character used to separate nested fields in column definition"
+      },
+      {
+        "option": "headerVisible",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Disable column header bar"
+      },
+      {
+        "option": "resizableColumnGuide",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Show resize guides when resizing columns"
+      },
+      {
+        "option": "resizableColumnFit",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Maintain total column width when resizing a column"
+      }
+    ]
+  },
+  {
+    "category": "Rows",
+    "options": [
+      {
+        "option": "rowHeader",
+        "dataType": "boolean/object",
+        "defaultValue": false,
+        "description": "Pass column definition object for row header"
+      },
+      {
+        "option": "rowHeight",
+        "dataType": "integer",
+        "defaultValue": null,
+        "description": "Set fixed height for rows"
+      },
+      {
+        "option": "rowFormatter",
+        "dataType": "function/boolean",
+        "defaultValue": false,
+        "description": "Function to alter layout of rows"
+      },
+      {
+        "option": "rowFormatterPrint",
+        "dataType": "function/boolean",
+        "defaultValue": null,
+        "description": "Function to alter layout of rows when printed"
+      },
+      {
+        "option": "rowFormatterClipboard",
+        "dataType": "function/boolean",
+        "defaultValue": null,
+        "description": "Function to alter layout of rows when copied to the clipboard"
+      },
+      {
+        "option": "rowFormatterHtmlOutput",
+        "dataType": "function/boolean",
+        "defaultValue": null,
+        "description": "Function to alter layout of rows when the getHtml formatter is called"
+      },
+      {
+        "option": "addRowPos",
+        "dataType": "string",
+        "defaultValue": "bottom",
+        "description": "The position in the table for new rows to be added",
+        "enum": [
+          {
+            "value": "bottom",
+            "description": "Append new rows to the bottom of the table (default)"
+          },
+          {
+            "value": "top",
+            "description": "Prepend new rows to the top of the table"
+          }
+        ]
+      },
+      {
+        "option": "movableRows",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Allow users to move and reorder rows"
+      },
+      {
+        "option": "movableRowsConnectedTables",
+        "dataType": "string/DOM Node",
+        "defaultValue": false,
+        "description": "Connection selector for receiving tables"
+      },
+      {
+        "option": "movableRowsSender",
+        "dataType": "string/function/boolean",
+        "defaultValue": false,
+        "description": "Sender function to be executed when row has been sent"
+      },
+      {
+        "option": "movableRowsReceiver",
+        "dataType": "string/function",
+        "defaultValue": "insert",
+        "description": "Sender function to be executed when row has been received",
+        "enum": [
+          {
+            "value": "insert",
+            "description": "Insert the received row at its current position (default)"
+          },
+          {
+            "value": "add",
+            "description": "Add the received row to the bottom of the table"
+          },
+          {
+            "value": "update",
+            "description": "Update an existing row with matching index, or add if not found"
+          },
+          {
+            "value": "replace",
+            "description": "Replace an existing row with matching index, or add if not found"
+          }
+        ]
+      },
+      {
+        "option": "movableRowsConnectedElements",
+        "dataType": "string/DOM Node",
+        "defaultValue": false,
+        "description": "Connection selector for receiving elements"
+      },
+      {
+        "option": "movableRowsElementDrop",
+        "dataType": "function",
+        "defaultValue": false,
+        "description": "Callback executed when a table row is dropped on a non Tabulator DOM element"
+      },
+      {
+        "option": "resizableRows",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Allow user to resize rows (via handles on the top and bottom edges of the row)"
+      },
+      {
+        "option": "resizableRowGuide",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Show resize guides when resizing rows"
+      },
+      {
+        "option": "scrollToRowPosition",
+        "dataType": "string",
+        "defaultValue": "top",
+        "description": "Default row position after scrollToRow",
+        "enum": [
+          {
+            "value": "top",
+            "description": "Scroll so the row is aligned to the top of the table (default)"
+          },
+          {
+            "value": "center",
+            "description": "Scroll so the row is vertically centered in the table"
+          },
+          {
+            "value": "bottom",
+            "description": "Scroll so the row is aligned to the bottom of the table"
+          },
+          {
+            "value": "nearest",
+            "description": "Scroll the minimum distance needed to bring the row into view"
+          }
+        ]
+      },
+      {
+        "option": "scrollToRowIfVisible",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Allow currently visible rows to be scrolled to"
+      }
+    ]
+  },
+  {
+    "category": "Data",
+    "options": [
+      {
+        "option": "index",
+        "dataType": "string",
+        "defaultValue": "id",
+        "description": "The field to be used as the unique index for each row"
+      },
+      {
+        "option": "data",
+        "dataType": "array",
+        "defaultValue": [],
+        "description": "Array to hold data that should be loaded on table creation"
+      },
+      {
+        "option": "ajaxURL",
+        "dataType": "string/boolean",
+        "defaultValue": false,
+        "description": "URL for remote Ajax data loading"
+      },
+      {
+        "option": "ajaxParams",
+        "dataType": "object",
+        "defaultValue": {},
+        "description": "Parameters to be passed to remote Ajax data loading request"
+      },
+      {
+        "option": "ajaxConfig",
+        "dataType": "string/object",
+        "defaultValue": "GET",
+        "description": "The HTTP request type for Ajax requests or config object for the request",
+        "enum": [
+          {
+            "value": "GET",
+            "description": "Send parameters as URL query string (default)"
+          },
+          {
+            "value": "POST",
+            "description": "Send parameters in the request body"
+          }
+        ]
+      },
+      {
+        "option": "ajaxContentType",
+        "dataType": "string/object",
+        "defaultValue": "form",
+        "description": "set the content encoding for the json request",
+        "enum": [
+          {
+            "value": "form",
+            "description": "Encode parameters as application/x-www-form-urlencoded (default)"
+          },
+          {
+            "value": "json",
+            "description": "Encode parameters as application/json"
+          }
+        ]
+      },
+      {
+        "option": "ajaxURLGenerator",
+        "dataType": "function",
+        "defaultValue": false,
+        "description": "callback function to generate request URL"
+      },
+      {
+        "option": "ajaxRequestFunc",
+        "dataType": "function",
+        "defaultValue": false,
+        "description": "callback function to replace inbuilt ajax request functionality"
+      },
+      {
+        "option": "dataSendParams",
+        "dataType": "object",
+        "defaultValue": {
+          "page": "page",
+          "size": "size",
+          "sorters": "sorters",
+          "filters": "filters"
+        },
+        "description": "Lookup list to link fields expected by the server to their function",
+        "subOptions": {
+          "page": {
+            "dataType": "string",
+            "description": "Key name for the current page number parameter sent to the server"
+          },
+          "size": {
+            "dataType": "string",
+            "description": "Key name for the page size parameter sent to the server"
+          },
+          "sorters": {
+            "dataType": "string",
+            "description": "Key name for the sorters array parameter sent to the server"
+          },
+          "filters": {
+            "dataType": "string",
+            "description": "Key name for the filters array parameter sent to the server"
+          }
+        }
+      },
+      {
+        "option": "dataReceiveParams",
+        "dataType": "object",
+        "defaultValue": {
+          "current_page": "current_page",
+          "last_page": "last_page",
+          "data": "data"
+        },
+        "description": "Lookup list to link expected data fields from the server to their function",
+        "subOptions": {
+          "current_page": {
+            "dataType": "string",
+            "description": "Key name for the current page number field in the server response"
+          },
+          "last_page": {
+            "dataType": "string",
+            "description": "Key name for the last page number field in the server response"
+          },
+          "data": {
+            "dataType": "string",
+            "description": "Key name for the row data array field in the server response"
+          }
+        }
+      },
+      {
+        "option": "filterMode",
+        "dataType": "string",
+        "defaultValue": "local",
+        "description": "Send filter config to server instead of processing locally",
+        "enum": [
+          {
+            "value": "local",
+            "description": "Filtering is applied client-side (default)"
+          },
+          {
+            "value": "remote",
+            "description": "Filter parameters are sent to the server; the server is responsible for returning filtered data"
+          }
+        ]
+      },
+      {
+        "option": "sortMode",
+        "dataType": "string",
+        "defaultValue": "local",
+        "description": "Send sorter config to server instead of processing locally",
+        "enum": [
+          {
+            "value": "local",
+            "description": "Sorting is applied client-side (default)"
+          },
+          {
+            "value": "remote",
+            "description": "Sorter parameters are sent to the server; the server is responsible for returning sorted data"
+          }
+        ]
+      },
+      {
+        "option": "progressiveLoad",
+        "dataType": "boolean/string",
+        "defaultValue": false,
+        "description": "Progressively load data into the table in chunks",
+        "enum": [
+          {
+            "value": false,
+            "description": "Progressive loading disabled — all data is loaded at once (default)"
+          },
+          {
+            "value": "load",
+            "description": "Load a new page of data each time the user clicks a load-more button or the table requests more data"
+          },
+          {
+            "value": "scroll",
+            "description": "Automatically load a new page of data when the user scrolls near the bottom of the table"
+          }
+        ]
+      },
+      {
+        "option": "progressiveLoadDelay",
+        "dataType": "integer",
+        "defaultValue": 0,
+        "description": "Delay in milliseconds between each progressive load request"
+      },
+      {
+        "option": "progressiveLoadScrollMargin",
+        "dataType": "integer",
+        "defaultValue": false,
+        "description": "The remaining distance in pixels between the scroll bar and the bottom of the table before an ajax is triggered"
+      },
+      {
+        "option": "importFormat",
+        "dataType": "string/function",
+        "defaultValue": null,
+        "description": "The importer for the incoming table data",
+        "enum": [
+          {
+            "value": "csv",
+            "description": "Import data from a comma-separated values (CSV) file"
+          },
+          {
+            "value": "json",
+            "description": "Import data from a JSON file"
+          },
+          {
+            "value": "array",
+            "description": "Import data from a file containing a raw array (without column headers)"
+          }
+        ]
+      },
+      {
+        "option": "importReader",
+        "dataType": "string",
+        "defaultValue": "text",
+        "description": "The type of file reader to be used to import a dataset from a file",
+        "enum": [
+          {
+            "value": "text",
+            "description": "Read the file as a UTF-8 text string (default, suitable for CSV and JSON)"
+          },
+          {
+            "value": "binary",
+            "description": "Read the file as a binary string"
+          },
+          {
+            "value": "buffer",
+            "description": "Read the file as an ArrayBuffer"
+          },
+          {
+            "value": "url",
+            "description": "Read the file as a data URL (base64 encoded)"
+          }
+        ]
+      },
+      {
+        "option": "importFileValidator",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "validate a file before it is imported"
+      },
+      {
+        "option": "importDataValidator",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "validate the data parsed from a file before it is imported"
+      },
+      {
+        "option": "importHeaderTransform",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "Transform the value of imported header column titles"
+      },
+      {
+        "option": "importValueTransform",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "Transform the value of imported cell values"
+      },
+      {
+        "option": "dataLoader",
+        "dataType": "boolean/function",
+        "defaultValue": true,
+        "description": "Show loader while data is loading, can also take a function that must return a boolean"
+      },
+      {
+        "option": "dataLoaderLoading",
+        "dataType": "string",
+        "defaultValue": "html (see below)",
+        "description": "html for loader element"
+      },
+      {
+        "option": "dataLoaderError",
+        "dataType": "string",
+        "defaultValue": "html (see below)",
+        "description": "html for the loader element in the event of an error"
+      },
+      {
+        "option": "dataLoaderErrorTimeout",
+        "dataType": "integer",
+        "defaultValue": 3000,
+        "description": "The number of milliseconds to display the loader error message in the event of an error"
+      }
+    ]
+  },
+  {
+    "category": "Sorting",
+    "options": [
+      {
+        "option": "initialSort",
+        "dataType": "array",
+        "defaultValue": [],
+        "description": "Array of sorters to be applied on load."
+      },
+      {
+        "option": "sortOrderReverse",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Reverse the order that multiple sorters are applied to the table."
+      },
+      {
+        "option": "headerSortElement",
+        "dataType": "string",
+        "defaultValue": "\u003cdiv class=\u0027tabulator-arrow\u0027\u003e\u003c/div\u003e",
+        "description": "set the column header sort icon"
+      },
+      {
+        "option": "headerSortClickElement",
+        "dataType": "string",
+        "defaultValue": "header",
+        "description": "set which header element triggers a sort when clicked",
+        "enum": [
+          {
+            "value": "header",
+            "description": "Clicking anywhere in the column header cell triggers sorting (default)"
+          },
+          {
+            "value": "icon",
+            "description": "Only clicking the sort icon/arrow element triggers sorting"
+          }
+        ]
+      },
+      {
+        "option": "columnHeaderSortMulti",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Allow sorting by multiple columns simultaneously by holding Shift or Ctrl while clicking a column header"
+      }
+    ]
+  },
+  {
+    "category": "Filtering",
+    "options": [
+      {
+        "option": "initialFilter",
+        "dataType": "array",
+        "defaultValue": [],
+        "description": "Array of filters to be applied on load."
+      },
+      {
+        "option": "initialHeaderFilter",
+        "dataType": "array",
+        "defaultValue": [],
+        "description": "Array of initial values for header filters."
+      },
+      {
+        "option": "headerFilterLiveFilterDelay",
+        "dataType": "integer",
+        "defaultValue": 300,
+        "description": "Number of milliseconds to wait after a keystroke before triggering a header filter."
+      }
+    ]
+  },
+  {
+    "category": "Row Grouping",
+    "options": [
+      {
+        "option": "groupBy",
+        "dataType": "string/function/array",
+        "defaultValue": false,
+        "description": "String/function to select field to group rows by"
+      },
+      {
+        "option": "groupValues",
+        "dataType": "array",
+        "defaultValue": false,
+        "description": "Array of values for groups"
+      },
+      {
+        "option": "groupHeader",
+        "dataType": "function/array",
+        "defaultValue": "(see documentation)",
+        "description": "function to layout group header row"
+      },
+      {
+        "option": "groupHeaderPrint",
+        "dataType": "function/array",
+        "defaultValue": null,
+        "description": "Function to alter layout of group header rows when printed"
+      },
+      {
+        "option": "groupHeaderClipboard",
+        "dataType": "function/array",
+        "defaultValue": null,
+        "description": "Function to alter layout of group header rows when copied to the clipboard"
+      },
+      {
+        "option": "groupHeaderDownload",
+        "dataType": "function/array",
+        "defaultValue": null,
+        "description": "Function to alter layout of group header rows when downloaded"
+      },
+      {
+        "option": "groupHeaderHtmlOutput",
+        "dataType": "function/array",
+        "defaultValue": null,
+        "description": "Function to alter layout of group header rows when the getHtml formatter is called"
+      },
+      {
+        "option": "groupStartOpen",
+        "dataType": "boolean/function/array",
+        "defaultValue": true,
+        "description": "Boolean/function to set the open/closed state of groups when they are first created"
+      },
+      {
+        "option": "groupToggleElement",
+        "dataType": "string/boolean",
+        "defaultValue": "arrow",
+        "description": "Set which element triggers a group visibility toggle",
+        "enum": [
+          {
+            "value": "arrow",
+            "description": "Clicking the arrow icon toggles the group open/closed (default)"
+          },
+          {
+            "value": "header",
+            "description": "Clicking anywhere in the group header row toggles the group"
+          },
+          {
+            "value": false,
+            "description": "Disable toggle interaction; groups can only be opened/closed programmatically"
+          }
+        ]
+      },
+      {
+        "option": "groupUpdateOnCellEdit",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Re-evaluate row grouping when a cell is edited"
+      },
+      {
+        "option": "groupClosedShowCalcs",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "show/hide column calculations when group is closed"
+      }
+    ]
+  },
+  {
+    "category": "Pagination",
+    "options": [
+      {
+        "option": "pagination",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "enable pagination"
+      },
+      {
+        "option": "paginationMode",
+        "dataType": "string",
+        "defaultValue": "local",
+        "description": "Send pagination config to server instead of processing locally",
+        "enum": [
+          {
+            "value": "local",
+            "description": "Pagination is handled client-side (default)"
+          },
+          {
+            "value": "remote",
+            "description": "Page number and size are sent to the server; the server returns only the requested page of data"
+          }
+        ]
+      },
+      {
+        "option": "paginationSize",
+        "dataType": "integer",
+        "defaultValue": 10,
+        "description": "Set the number of rows in each page"
+      },
+      {
+        "option": "paginationSizeSelector",
+        "dataType": "boolean/array",
+        "defaultValue": false,
+        "description": "Add page size selection select element to the table footer"
+      },
+      {
+        "option": "paginationElement",
+        "dataType": "DOM Node",
+        "defaultValue": "(generated tabulator footer)",
+        "description": "The element to contain the pagination selectors"
+      },
+      {
+        "option": "paginationAddRow",
+        "dataType": "string",
+        "defaultValue": "page",
+        "description": "Set where rows should be added to the table when using pagination",
+        "enum": [
+          {
+            "value": "page",
+            "description": "New rows are added to the current page (default)"
+          },
+          {
+            "value": "table",
+            "description": "New rows are added to the end of the full dataset, potentially on a different page"
+          }
+        ]
+      },
+      {
+        "option": "paginationButtonCount",
+        "dataType": "integer",
+        "defaultValue": 5,
+        "description": "set the number of pagination buttons in the footer element"
+      },
+      {
+        "option": "paginationCounterElement",
+        "dataType": "boolean/string/DOM Element",
+        "defaultValue": false,
+        "description": "Alternate element to render the pagination counter into"
+      },
+      {
+        "option": "paginationCounter",
+        "dataType": "string/function",
+        "defaultValue": false,
+        "description": "Display a row counter in the pagination footer",
+        "enum": [
+          {
+            "value": false,
+            "description": "No row counter displayed (default)"
+          },
+          {
+            "value": "rows",
+            "description": "Display the current row range and total row count (e.g. \u00271-10 of 50\u0027)"
+          },
+          {
+            "value": "pages",
+            "description": "Display the current page and total page count (e.g. \u0027Page 1 of 5\u0027)"
+          }
+        ]
+      },
+      {
+        "option": "paginationInitialPage",
+        "dataType": "integer",
+        "defaultValue": 1,
+        "description": "Set the initial page when the table loads"
+      },
+      {
+        "option": "paginationOutOfRange",
+        "dataType": "integer/string/function",
+        "defaultValue": null,
+        "description": "set the behaviour if a page is loaded outside the max range"
+      }
+    ]
+  },
+  {
+    "category": "Spreadsheet",
+    "options": [
+      {
+        "option": "spreadsheet",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Enable spreadsheet functionality"
+      },
+      {
+        "option": "spreadsheetRows",
+        "dataType": "integer",
+        "defaultValue": 50,
+        "description": "The number of rows to include in a blank spreadsheet"
+      },
+      {
+        "option": "spreadsheetColumns",
+        "dataType": "integer",
+        "defaultValue": 50,
+        "description": "The number of columns to include in a blank spreadsheet"
+      },
+      {
+        "option": "spreadsheetColumnDefinition",
+        "dataType": "object",
+        "defaultValue": {},
+        "description": "The column definition used for all columns in the sheet"
+      },
+      {
+        "option": "spreadsheetOutputFull",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Include all data in export, including undefined rows and columns"
+      },
+      {
+        "option": "spreadsheetData",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "Array of sheet data"
+      },
+      {
+        "option": "spreadsheetSheets",
+        "dataType": "array",
+        "defaultValue": null,
+        "description": "Array of sheet definition objects"
+      },
+      {
+        "option": "spreadsheetSheetTabs",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Show sheet tabs in footer"
+      },
+      {
+        "option": "spreadsheetSheetTabsElement",
+        "dataType": "string/object",
+        "defaultValue": null,
+        "description": "Alternate container for sheet tabs element if not using table footer"
+      }
+    ]
+  },
+  {
+    "category": "Persistent Configuration",
+    "options": [
+      {
+        "option": "persistence",
+        "dataType": "boolean/object",
+        "defaultValue": false,
+        "description": "Define which table data should be persisted",
+        "subOptions": {
+          "sort": {
+            "dataType": "boolean",
+            "description": "Persist the current column sort"
+          },
+          "filter": {
+            "dataType": "boolean",
+            "description": "Persist the current column filters"
+          },
+          "group": {
+            "dataType": "boolean",
+            "description": "Persist the current row grouping"
+          },
+          "page": {
+            "dataType": "boolean",
+            "description": "Persist the current pagination page and page size"
+          },
+          "columns": {
+            "dataType": "boolean/array",
+            "description": "Persist column width, visibility, and order. Pass an array of column property names to restrict which properties are persisted."
+          }
+        }
+      },
+      {
+        "option": "persistenceID",
+        "dataType": "string",
+        "defaultValue": null,
+        "description": "ID tag used to identify persistent storage information"
+      },
+      {
+        "option": "persistenceMode",
+        "dataType": "boolean/string",
+        "defaultValue": true,
+        "description": "Store persistence information in a cookie or localStorage",
+        "enum": [
+          {
+            "value": true,
+            "description": "Automatically choose localStorage if available, falling back to cookie (default)"
+          },
+          {
+            "value": "local",
+            "description": "Always use localStorage"
+          },
+          {
+            "value": "cookie",
+            "description": "Always use a browser cookie"
+          }
+        ]
+      },
+      {
+        "option": "persistenceReaderFunc",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "Override persistence reader functionality to read from custom package"
+      },
+      {
+        "option": "persistenceWriterFunc",
+        "dataType": "function",
+        "defaultValue": null,
+        "description": "Override persistence writer functionality to write to custom package"
+      }
+    ]
+  },
+  {
+    "category": "Editing",
+    "options": [
+      {
+        "option": "editTriggerEvent",
+        "dataType": "string",
+        "defaultValue": "focus",
+        "description": "Set which event triggers a cell edit",
+        "enum": [
+          {
+            "value": "focus",
+            "description": "Cell enters edit mode when it receives focus (single click or tab navigation) (default)"
+          },
+          {
+            "value": "dblclick",
+            "description": "Cell enters edit mode only on a double-click"
+          }
+        ]
+      },
+      {
+        "option": "editorEmptyValue",
+        "dataType": "any",
+        "defaultValue": null,
+        "description": "Set the value assigned to an empty cell after edit"
+      },
+      {
+        "option": "editorEmptyValueFunc",
+        "dataType": "function",
+        "defaultValue": "(see documentation)",
+        "description": "Determine what values are considered empty"
+      }
+    ]
+  },
+  {
+    "category": "Selection",
+    "options": [
+      {
+        "option": "selectableRows",
+        "dataType": "boolean/integer/string",
+        "defaultValue": "highlight",
+        "description": "Enable/Disable row selection. Set to true to allow unlimited row selection, an integer to set the maximum number of selectable rows, \u0027highlight\u0027 to highlight rows on hover without selecting, or false to disable.",
+        "enum": [
+          {
+            "value": "highlight",
+            "description": "Rows are highlighted on hover but not persistently selected (default)"
+          },
+          {
+            "value": true,
+            "description": "Enable unlimited row selection"
+          },
+          {
+            "value": false,
+            "description": "Disable all row selection"
+          }
+        ]
+      },
+      {
+        "option": "selectableRowsRollingSelection",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Allow rolling selection — when the max selectable rows is reached, the first selected row is deselected to allow the new row to be selected"
+      },
+      {
+        "option": "selectableRowsRangeMode",
+        "dataType": "string",
+        "defaultValue": "drag",
+        "description": "Method for selecting multiple rows",
+        "enum": [
+          {
+            "value": "drag",
+            "description": "Click and drag across rows to select a range (default)"
+          },
+          {
+            "value": "click",
+            "description": "Hold Shift and click to select a range between two rows"
+          }
+        ]
+      },
+      {
+        "option": "selectableRowsPersistence",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Maintain selected rows on filter or sort"
+      },
+      {
+        "option": "selectableRowsCheck",
+        "dataType": "function",
+        "defaultValue": "(see documentation)",
+        "description": "Check if row should be selectable or unselectable"
+      },
+      {
+        "option": "selectableRange",
+        "dataType": "boolean/integer",
+        "defaultValue": false,
+        "description": "Enable/Disable range selection"
+      },
+      {
+        "option": "selectableRangeColumns",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Enable/Disable range column header selection"
+      },
+      {
+        "option": "selectableRangeClearCells",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Enable clearing of all values in a range"
+      },
+      {
+        "option": "selectableRangeClearCellsValue",
+        "dataType": "any",
+        "defaultValue": "undefined",
+        "description": "The value that cleared range cells should be set to"
+      },
+      {
+        "option": "selectableRangeAutoFocus",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Auto focus on a cell if the range selection is only one cell"
+      },
+      {
+        "option": "selectableRangeRows",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Enable/Disable range row header selection"
+      }
+    ]
+  },
+  {
+    "category": "Clipboard",
+    "options": [
+      {
+        "option": "clipboard",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Enable clipboard module"
+      },
+      {
+        "option": "clipboardCopyRowRange",
+        "dataType": "string/function",
+        "defaultValue": "active",
+        "description": "Set which rows are included in clipboard copy output",
+        "enum": [
+          {
+            "value": "active",
+            "description": "Copy all rows that pass the current filters (default)"
+          },
+          {
+            "value": "all",
+            "description": "Copy every row regardless of filters"
+          },
+          {
+            "value": "selected",
+            "description": "Copy only currently selected rows"
+          },
+          {
+            "value": "visible",
+            "description": "Copy only rows visible in the current viewport"
+          }
+        ]
+      },
+      {
+        "option": "clipboardCopyFormatter",
+        "dataType": "function",
+        "defaultValue": false,
+        "description": "Format clipboard output before it is inserted in the clipboard"
+      },
+      {
+        "option": "clipboardCopyStyled",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Include table styling in clipboard copy output"
+      },
+      {
+        "option": "clipboardCopyConfig",
+        "dataType": "boolean/object",
+        "defaultValue": false,
+        "description": "Choose which parts of the table are included in clipboard copy output"
+      },
+      {
+        "option": "clipboardPasteParser",
+        "dataType": "string/function",
+        "defaultValue": "table",
+        "description": "Clipboard paste parser function"
+      },
+      {
+        "option": "clipboardPasteAction",
+        "dataType": "string/function",
+        "defaultValue": "insert",
+        "description": "Action to perform when pasting clipboard data into the table",
+        "enum": [
+          {
+            "value": "insert",
+            "description": "Add pasted rows as new rows at the end of the table (default)"
+          },
+          {
+            "value": "update",
+            "description": "Update existing rows with matching index values; non-matching rows are ignored"
+          },
+          {
+            "value": "replace",
+            "description": "Clear all existing table data and replace it with the pasted rows"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "category": "Data Tree",
+    "options": [
+      {
+        "option": "dataTree",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Enable tree layout"
+      },
+      {
+        "option": "dataTreeFilter",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Enable filtering of child rows"
+      },
+      {
+        "option": "dataTreeSort",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Enable sorting of child rows"
+      },
+      {
+        "option": "dataTreeElementColumn",
+        "dataType": "string/boolean",
+        "defaultValue": false,
+        "description": "Choose which column to display the toggle element in"
+      },
+      {
+        "option": "dataTreeBranchElement",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Show tree branch icon"
+      },
+      {
+        "option": "dataTreeChildIndent",
+        "dataType": "integer",
+        "defaultValue": 9,
+        "description": "Tree level indent in pixels"
+      },
+      {
+        "option": "dataTreeChildField",
+        "dataType": "string",
+        "defaultValue": "_children",
+        "description": "The data field to look for child rows"
+      },
+      {
+        "option": "dataTreeCollapseElement",
+        "dataType": "boolean/string/DOM Element",
+        "defaultValue": false,
+        "description": "The element to be used for the collapse toggle button"
+      },
+      {
+        "option": "dataTreeExpandElement",
+        "dataType": "boolean/string/DOM Element",
+        "defaultValue": false,
+        "description": "The element to be used for the expand toggle button"
+      },
+      {
+        "option": "dataTreeStartExpanded",
+        "dataType": "boolean/array/function",
+        "defaultValue": false,
+        "description": "The default expansion state for tree nodes"
+      },
+      {
+        "option": "dataTreeSelectPropagate",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Allow selection of a row to propagate to its children"
+      },
+      {
+        "option": "dataTreeChildColumnCalcs",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Include visible child rows in column calculations"
+      }
+    ]
+  },
+  {
+    "category": "Printing",
+    "options": [
+      {
+        "option": "printAsHtml",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Enable HTML table printing"
+      },
+      {
+        "option": "printStyled",
+        "dataType": "boolean",
+        "defaultValue": true,
+        "description": "Copy table style to html print table"
+      },
+      {
+        "option": "printRowRange",
+        "dataType": "string",
+        "defaultValue": "visible",
+        "description": "set the range of rows to be included in the printed table output",
+        "enum": [
+          {
+            "value": "visible",
+            "description": "Print only rows currently visible in the viewport (default)"
+          },
+          {
+            "value": "active",
+            "description": "Print all rows that pass the current filters"
+          },
+          {
+            "value": "all",
+            "description": "Print every row regardless of filters"
+          },
+          {
+            "value": "selected",
+            "description": "Print only currently selected rows"
+          }
+        ]
+      },
+      {
+        "option": "printConfig",
+        "dataType": "object",
+        "defaultValue": {},
+        "description": "Choose which parts of the table are included in print table",
+        "subOptions": {
+          "columnHeaders": {
+            "dataType": "boolean",
+            "description": "Include column headers in the print output"
+          },
+          "columnGroups": {
+            "dataType": "boolean",
+            "description": "Include column groups in the print output"
+          },
+          "rowGroups": {
+            "dataType": "boolean",
+            "description": "Include row groups in the print output"
+          },
+          "columnCalcs": {
+            "dataType": "boolean",
+            "description": "Include column calculations in the print output"
+          },
+          "dataTree": {
+            "dataType": "boolean",
+            "description": "Include data tree child rows in the print output"
+          }
+        }
+      },
+      {
+        "option": "printHeader",
+        "dataType": "boolean/string/DOM Element/function",
+        "defaultValue": false,
+        "description": "Add header to printed table"
+      },
+      {
+        "option": "printFooter",
+        "dataType": "boolean/string/DOM Element/function",
+        "defaultValue": false,
+        "description": "Add footer to printed table"
+      },
+      {
+        "option": "printFormatter",
+        "dataType": "function/boolean",
+        "defaultValue": false,
+        "description": "Alter layout of print elements"
+      }
+    ]
+  },
+  {
+    "category": "Menus",
+    "options": [
+      {
+        "option": "rowContextMenu",
+        "dataType": "array",
+        "defaultValue": false,
+        "description": "Add context menu to rows"
+      },
+      {
+        "option": "rowClickMenu",
+        "dataType": "array",
+        "defaultValue": false,
+        "description": "Add left click menu to rows"
+      },
+      {
+        "option": "rowDblClickMenu",
+        "dataType": "array",
+        "defaultValue": false,
+        "description": "Add double left click menu to rows"
+      },
+      {
+        "option": "groupContextMenu",
+        "dataType": "array",
+        "defaultValue": false,
+        "description": "Add context menu to group headers"
+      },
+      {
+        "option": "groupClickMenu",
+        "dataType": "array",
+        "defaultValue": false,
+        "description": "Add left click menu to group headers"
+      },
+      {
+        "option": "groupDblClickMenu",
+        "dataType": "array",
+        "defaultValue": false,
+        "description": "Add double left click menu to group headers"
+      }
+    ]
+  },
+  {
+    "category": "Popups",
+    "options": [
+      {
+        "option": "rowContextPopup",
+        "dataType": "string, DOM Element",
+        "defaultValue": null,
+        "description": "Add context popup to rows"
+      },
+      {
+        "option": "rowClickPopup",
+        "dataType": "string, DOM Element",
+        "defaultValue": null,
+        "description": "Add left click popup to rows"
+      },
+      {
+        "option": "rowDblClickPopup",
+        "dataType": "string, DOM Element",
+        "defaultValue": null,
+        "description": "Add left click popup to rows"
+      },
+      {
+        "option": "groupContextPopup",
+        "dataType": "string, DOM Element",
+        "defaultValue": null,
+        "description": "Add context popup to group headers"
+      },
+      {
+        "option": "groupClickPopup",
+        "dataType": "string, DOM Element",
+        "defaultValue": null,
+        "description": "Add left click popup to group headers"
+      },
+      {
+        "option": "groupDblClickPopup",
+        "dataType": "string, DOM Element",
+        "defaultValue": null,
+        "description": "Add double left click popup to group headers"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1860 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Options Playground — @bornova/tabulator-tables</title>
+    <link rel="stylesheet" href="../examples/_examples.css" />
+    <style>
+      /* ── Page header ── */
+      #page-header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        z-index: 100;
+        border-bottom: 1px solid light-dark(#d0d7de, #30363d);
+        background: light-dark(#f6f8fa, #161b22);
+        padding: 0 20px;
+        height: 52px;
+      }
+
+      #page-header-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: light-dark(#24292f, #e6edf3);
+        text-decoration: none;
+      }
+
+      #page-header-brand svg {
+        flex-shrink: 0;
+        stroke: light-dark(#24292f, #e6edf3);
+      }
+
+      #github-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        border: 1px solid light-dark(#d0d7de, #30363d);
+        border-radius: 6px;
+        background: light-dark(#f6f8fa, #21262d);
+        padding: 5px 12px;
+        color: light-dark(#24292f, #e6edf3);
+        font-weight: 500;
+        font-size: 12px;
+        font-family: inherit;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      #github-btn:hover {
+        background: light-dark(#eaeef2, #30363d);
+      }
+
+      #github-btn svg {
+        flex-shrink: 0;
+        fill: light-dark(#24292f, #e6edf3);
+      }
+
+      #page-header-title {
+        color: light-dark(#24292f, #e6edf3);
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: -0.01em;
+      }
+
+      #page-header-subtitle {
+        margin-left: 2px;
+        color: light-dark(#57606a, #8b949e);
+        font-weight: 400;
+        font-size: 12px;
+      }
+
+      #page-header-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      #theme-toggle-header {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        border: 1px solid light-dark(#d0d7de, #30363d);
+        border-radius: 6px;
+        background: light-dark(#eaeef2, #21262d);
+        padding: 3px;
+      }
+
+      .theme-btn {
+        transition:
+          background 0.1s,
+          color 0.1s;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        background: transparent;
+        padding: 3px 10px;
+        color: light-dark(#57606a, #8b949e);
+        font-size: 12px;
+        font-family: inherit;
+      }
+
+      .theme-btn:hover {
+        background: light-dark(#d0d7de, #30363d);
+        color: light-dark(#24292f, #e6edf3);
+      }
+
+      .theme-btn.active {
+        background: light-dark(#0969da, #388bfd);
+        color: #fff;
+      }
+
+      /* ── Page body ── */
+      body {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      #playground {
+        display: flex;
+        flex: 1;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px;
+      }
+
+      /* ── Sidebar ── */
+      #options-sidebar {
+        position: sticky;
+        top: 12px;
+        flex-shrink: 0;
+        border: 1px solid light-dark(#d0d7de, #444);
+        border-radius: 5px;
+        background: light-dark(#f6f8fa, #1c1c1c);
+        padding-bottom: 60px;
+        width: 320px;
+        min-width: 280px;
+        max-height: 100vh;
+        overflow-y: auto;
+      }
+
+      .sidebar-heading {
+        display: flex;
+        position: sticky;
+        top: 0;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 5;
+        border-bottom: 1px solid light-dark(#d0d7de, #333);
+        background: light-dark(#f6f8fa, #1c1c1c);
+        padding: 10px 12px 4px;
+        color: light-dark(#57606a, #8b949e);
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .reset-btn {
+        cursor: pointer;
+        border: 1px solid light-dark(#d0d7de, #555);
+        border-radius: 4px;
+        background: none;
+        padding: 2px 7px;
+        color: light-dark(#57606a, #8b949e);
+        font-weight: 600;
+        font-size: 10px;
+        font-family: inherit;
+        letter-spacing: 0;
+        text-transform: none;
+        white-space: nowrap;
+      }
+
+      .reset-btn:hover {
+        border-color: light-dark(#0969da, #58a6ff);
+        color: light-dark(#0969da, #58a6ff);
+      }
+
+      /* Accordion groups */
+      .opt-group {
+        border-bottom: 1px solid light-dark(#e8ecf0, #2d2d2d);
+      }
+
+      .opt-group > summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        padding: 7px 12px;
+        color: light-dark(#24292f, #e6edf3);
+        font-weight: 600;
+        font-size: 12px;
+        list-style: none;
+        user-select: none;
+      }
+
+      .opt-group > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .opt-group > summary::after {
+        transition: transform 0.15s;
+        content: '›';
+        color: light-dark(#8c959f, #8b949e);
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      .opt-group[open] > summary::after {
+        transform: rotate(90deg);
+      }
+
+      .opt-group > summary:hover {
+        background: light-dark(#eaeef2, #252525);
+      }
+
+      .opt-group-body {
+        padding: 4px 8px 8px;
+      }
+
+      /* Individual option rows */
+      .opt-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+        border-radius: 3px;
+        padding: 3px 4px;
+      }
+
+      .opt-row:hover {
+        background: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.04));
+      }
+
+      .opt-row.disabled {
+        opacity: 0.38;
+        pointer-events: none;
+      }
+
+      .opt-row.disabled .opt-label {
+        font-style: italic;
+      }
+
+      .opt-label {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        color: light-dark(#1f2328, #e6edf3);
+        font-size: 11px;
+        font-family: 'Courier New', monospace;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .opt-input {
+        flex-shrink: 0;
+      }
+
+      .opt-input input[type='text'],
+      .opt-input input[type='number'],
+      .opt-input select {
+        border: 1px solid light-dark(#ccc, #555);
+        border-radius: 4px;
+        background: light-dark(#fff, #2d2d2d);
+        padding: 2px 5px;
+        width: 110px;
+        color: light-dark(#24292f, #e6edf3);
+        font-size: 11px;
+      }
+
+      .opt-input input[type='checkbox'] {
+        cursor: pointer;
+        width: 14px;
+        height: 14px;
+        accent-color: #0969da;
+      }
+
+      /* ── Main area ── */
+      #table-area {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      #rebuild-indicator {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        opacity: 0;
+        z-index: 9999;
+        transition: opacity 0.4s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        border-radius: 6px;
+        background: light-dark(#1a7f37, #2ea043);
+        padding: 6px 14px;
+        pointer-events: none;
+        color: #fff;
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      #rebuild-indicator.show {
+        opacity: 1;
+        transition: none;
+      }
+
+      #example-table-wrap {
+        overflow: hidden;
+      }
+
+      /* ── Column options ── */
+      #col-options-section {
+        border: 1px solid light-dark(#d0d7de, #444);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      #col-options-header {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        border-bottom: 1px solid light-dark(#d0d7de, #444);
+        background: light-dark(#f6f8fa, #1c1c1c);
+        padding: 0 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      #col-options-header-label {
+        margin-right: 4px;
+        border-right: 1px solid light-dark(#d0d7de, #444);
+        padding: 6px 8px 6px 4px;
+        color: light-dark(#57606a, #8b949e);
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .col-tab {
+        cursor: pointer;
+        margin-bottom: -1px;
+        border: none;
+        border-bottom: 2px solid transparent;
+        background: none;
+        padding: 6px 12px;
+        color: light-dark(#57606a, #8b949e);
+        font-size: 11px;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+
+      .col-tab:hover {
+        color: light-dark(#24292f, #e6edf3);
+      }
+
+      .col-tab.active {
+        border-bottom-color: #0969da;
+        color: #0969da;
+        font-weight: 600;
+      }
+
+      #add-col-btn {
+        cursor: pointer;
+        margin-left: 4px;
+        border: 1px dashed light-dark(#aaa, #555);
+        border-radius: 4px;
+        background: none;
+        padding: 4px 8px;
+        color: light-dark(#57606a, #8b949e);
+        font-size: 11px;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+
+      #add-col-btn:hover {
+        background: light-dark(#f0f0f0, #2d2d2d);
+      }
+
+      #col-options-body {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 4px 16px;
+        padding: 10px 12px;
+      }
+
+      .col-opt-group {
+        grid-column: 1 / -1;
+        margin: 8px 0 2px;
+        border-bottom: 1px solid light-dark(#d0d7de, #30363d);
+        padding: 3px 4px;
+        color: light-dark(#0550ae, #9cdcfe);
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .col-opt-group:first-child {
+        margin-top: 0;
+      }
+
+      .col-opt-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 3px;
+        padding: 2px 4px;
+      }
+
+      .col-opt-row:hover {
+        background: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.04));
+      }
+
+      .col-opt-label {
+        min-width: 130px;
+        overflow: hidden;
+        color: light-dark(#1f2328, #e6edf3);
+        font-size: 11px;
+        font-family: 'Courier New', monospace;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .col-opt-input input[type='text'],
+      .col-opt-input input[type='number'],
+      .col-opt-input select {
+        border: 1px solid light-dark(#ccc, #555);
+        border-radius: 4px;
+        background: light-dark(#fff, #2d2d2d);
+        padding: 2px 4px;
+        width: 100px;
+        color: light-dark(#24292f, #e6edf3);
+        font-size: 11px;
+      }
+
+      .col-opt-input input[type='checkbox'] {
+        cursor: pointer;
+        width: 14px;
+        height: 14px;
+        accent-color: #0969da;
+      }
+
+      .editor-params-section {
+        grid-column: 1 / -1;
+        margin-top: 4px;
+        border-top: 1px solid light-dark(#e8ecf0, #2d2d2d);
+        padding-top: 6px;
+      }
+
+      .editor-params-heading {
+        margin-bottom: 4px;
+        color: light-dark(#57606a, #8b949e);
+        font-weight: 700;
+        font-size: 10px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .editor-params-empty {
+        color: light-dark(#999, #666);
+        font-style: italic;
+        font-size: 11px;
+      }
+
+      .editor-params-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 2px 16px;
+      }
+
+      #col-opts-btn-row {
+        display: flex;
+        grid-column: 1 / -1;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+
+      #remove-col-btn {
+        display: block;
+        flex: 1;
+        cursor: pointer;
+        border: 1px solid light-dark(#fca5a5, #7f1d1d);
+        border-radius: 4px;
+        background: light-dark(#fff5f5, #2c0f0f);
+        padding: 4px;
+        color: light-dark(#b91c1c, #fca5a5);
+        font-size: 11px;
+        font-family: inherit;
+      }
+
+      #remove-col-btn:hover {
+        background: light-dark(#fee2e2, #3d1515);
+      }
+
+      #reset-col-opts-btn {
+        display: block;
+        cursor: pointer;
+        border: 1px solid light-dark(#d0d7de, #555);
+        border-radius: 4px;
+        background: none;
+        padding: 4px 10px;
+        color: light-dark(#57606a, #8b949e);
+        font-size: 11px;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+
+      #reset-col-opts-btn:hover {
+        border-color: light-dark(#0969da, #58a6ff);
+        color: light-dark(#0969da, #58a6ff);
+      }
+
+      /* ── Config preview ── */
+      #config-section {
+        border: 1px solid light-dark(#d0d7de, #444);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      #config-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        border: none;
+        background: light-dark(#f6f8fa, #1c1c1c);
+        padding: 7px 12px;
+        width: 100%;
+        color: light-dark(#57606a, #8b949e);
+        font-weight: 700;
+        font-size: 11px;
+        font-family: inherit;
+        letter-spacing: 0.05em;
+        text-align: left;
+        text-transform: uppercase;
+      }
+
+      #config-toggle > span:first-of-type {
+        flex: 1;
+      }
+
+      #config-toggle:hover {
+        background: light-dark(#eaeef2, #252525);
+      }
+
+      #config-body {
+        display: none;
+        background: light-dark(#f6f8fa, #0d1117);
+        max-height: 200px;
+        overflow: auto;
+      }
+
+      #config-body.open {
+        display: block;
+      }
+
+      #config-json {
+        margin: 0;
+        padding: 12px;
+        color: light-dark(#0550ae, #9cdcfe);
+        font-size: 11px;
+        font-family: 'Courier New', monospace;
+        white-space: pre;
+      }
+
+      #config-copy-wrap {
+        display: flex;
+        justify-content: flex-end;
+        padding: 6px 10px 2px;
+      }
+
+      #config-copy-btn {
+        cursor: pointer;
+        border: 1px solid light-dark(#d0d7de, #555);
+        border-radius: 4px;
+        background: none;
+        padding: 2px 8px;
+        color: light-dark(#57606a, #8b949e);
+        font-weight: 600;
+        font-size: 10px;
+        font-family: inherit;
+        letter-spacing: 0;
+        text-transform: none;
+        white-space: nowrap;
+      }
+
+      #config-copy-btn:hover {
+        border-color: light-dark(#0969da, #58a6ff);
+        color: light-dark(#0969da, #58a6ff);
+      }
+    </style>
+  </head>
+  <body>
+    <span id="rebuild-indicator">✓ Table rebuilt</span>
+    <header id="page-header">
+      <span id="page-header-brand">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M3 9h18M3 15h18M9 9v10M15 9v10" />
+        </svg>
+        <span id="page-header-title">@bornova/tabulator-tables</span>
+        <span id="page-header-subtitle">Options Playground</span>
+      </span>
+      <div id="page-header-controls">
+        <a
+          id="github-btn"
+          href="https://github.com/bornova/tabulator"
+          target="_blank"
+          rel="noopener"
+          aria-label="View on GitHub"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.607.069-.607 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+            />
+          </svg>
+        </a>
+        <div id="theme-toggle-header" role="group" aria-label="Theme">
+          <button class="theme-btn" data-theme="light dark">Auto</button>
+          <button class="theme-btn" data-theme="light">Light</button>
+          <button class="theme-btn" data-theme="dark">Dark</button>
+        </div>
+      </div>
+    </header>
+    <div id="playground">
+      <aside id="options-sidebar">
+        <div class="sidebar-heading">
+          <span>Table Options</span>
+          <button id="reset-table-btn" class="reset-btn" title="Reset all table options to defaults">↺ Reset</button>
+        </div>
+        <!-- accordion groups injected by JS -->
+      </aside>
+
+      <div id="table-area">
+        <div id="example-table-wrap">
+          <div id="example-table"></div>
+        </div>
+
+        <div id="col-options-section">
+          <div id="col-options-header">
+            <span id="col-options-header-label">Column Options</span>
+            <!-- tabs injected by JS -->
+          </div>
+          <div id="col-options-body">
+            <!-- column option rows injected by JS -->
+          </div>
+        </div>
+
+        <div id="config-section">
+          <button id="config-toggle"><span>Generated Config</span> <span>▼</span></button>
+          <div id="config-body">
+            <div id="config-copy-wrap"><button id="config-copy-btn">Copy</button></div>
+            <pre id="config-json"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { generateData, generateNestedData } from '../examples/_exampleData.js'
+
+      // Theme switcher
+      ;(() => {
+        let meta = document.querySelector('meta[name="color-scheme"]')
+        if (!meta) {
+          meta = document.createElement('meta')
+          meta.name = 'color-scheme'
+          document.head.appendChild(meta)
+        }
+        const applyTheme = (theme) => {
+          meta.content = theme
+          localStorage.setItem('tabulator-theme', theme)
+          document.querySelectorAll('#theme-toggle-header .theme-btn').forEach((btn) => {
+            const active = btn.dataset.theme === theme
+            btn.classList.toggle('active', active)
+            btn.setAttribute('aria-pressed', active ? 'true' : 'false')
+          })
+        }
+        applyTheme(localStorage.getItem('tabulator-theme') || 'light dark')
+        document.getElementById('theme-toggle-header').addEventListener('click', (e) => {
+          const btn = e.target.closest('.theme-btn')
+          if (btn) applyTheme(btn.dataset.theme)
+        })
+      })()
+
+      // Load IIFE stylesheet
+      await new Promise((resolve) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = './../dist/css/themes/default/tabulator.min.css'
+        link.addEventListener('load', resolve, { once: true })
+        link.addEventListener('error', resolve, { once: true })
+        document.head.insertBefore(link, document.head.firstChild)
+      })
+
+      // Load IIFE script
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = './../dist/js/browser/tabulator.min.js'
+        script.async = true
+        script.addEventListener('load', resolve, { once: true })
+        script.addEventListener('error', () => reject(new Error('Failed to load Tabulator IIFE bundle')), {
+          once: true
+        })
+        document.head.appendChild(script)
+      })
+
+      const Tabulator = window.Tabulator
+
+      // Load option schemas
+      const [tableSchema, columnSchema] = await Promise.all([
+        fetch('./tableSchema.json').then((r) => r.json()),
+        fetch('./columnSchema.json').then((r) => r.json())
+      ])
+
+      // ═══════════════════════════════════════════
+      // Persistence helpers
+      // ═══════════════════════════════════════════
+
+      const STORAGE_KEY = 'tabulator-playground-config'
+
+      function saveConfig() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ tableOpts, columnDefs, activeColId, nextColId }))
+        } catch (_) {}
+      }
+
+      function loadConfig() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY)
+          if (!raw) return null
+          return JSON.parse(raw)
+        } catch (_) {
+          return null
+        }
+      }
+
+      // ═══════════════════════════════════════════
+      // State
+      // ═══════════════════════════════════════════
+
+      const tableData = generateData(100)
+      const tableDataTree = generateNestedData(5, 4, 2)
+
+      // Table-level options (primitives only — no callbacks)
+      const tableOpts = {
+        // General
+        height: 400,
+        minHeight: false,
+        maxHeight: false,
+        tooltipDelay: 300,
+        renderVertical: 'virtual',
+        renderVerticalBuffer: 0,
+        renderHorizontal: 'basic',
+        placeholder: 'No data available',
+        history: false,
+        locale: false,
+        downloadRowRange: 'active',
+        textDirection: 'auto',
+        tabEndNewRow: false,
+        validationMode: 'blocking',
+        debugInvalidOptions: true,
+        reactiveData: false,
+        // Columns
+        autoColumns: false,
+        layout: 'fitData',
+        layoutColumnsOnNewData: false,
+        responsiveLayout: false,
+        responsiveLayoutCollapseStartOpen: true,
+        responsiveLayoutCollapseUseFormatters: true,
+        movableColumns: false,
+        columnHeaderVertAlign: 'top',
+        scrollToColumnPosition: 'left',
+        scrollToColumnIfVisible: true,
+        columnCalcs: true,
+        nestedFieldSeparator: '.',
+        headerVisible: true,
+        resizableColumnGuide: false,
+        resizableColumnFit: false,
+        // Rows
+        rowHeight: null,
+        addRowPos: 'bottom',
+        movableRows: false,
+        movableRowsReceiver: 'insert',
+        resizableRows: false,
+        resizableRowGuide: false,
+        scrollToRowPosition: 'top',
+        scrollToRowIfVisible: true,
+        // Data
+        index: 'id',
+        ajaxURL: false,
+        ajaxConfig: 'GET',
+        ajaxContentType: 'form',
+        progressiveLoad: false,
+        progressiveLoadDelay: 0,
+        progressiveLoadScrollMargin: false,
+        importFormat: null,
+        importReader: 'text',
+        filterMode: 'local',
+        sortMode: 'local',
+        // Sorting
+        columnHeaderSortMulti: true,
+        sortOrderReverse: false,
+        headerSortClickElement: 'header',
+        // Filtering
+        headerFilterLiveFilterDelay: 300,
+        // Row Grouping
+        groupBy: false,
+        groupStartOpen: true,
+        groupToggleElement: 'arrow',
+        groupUpdateOnCellEdit: false,
+        groupClosedShowCalcs: false,
+        // Pagination
+        pagination: false,
+        paginationMode: 'local',
+        paginationSize: 10,
+        paginationSizeSelector: false,
+        paginationAddRow: 'page',
+        paginationButtonCount: 5,
+        paginationCounter: false,
+        paginationInitialPage: 1,
+        // Spreadsheet
+        spreadsheet: false,
+        spreadsheetRows: 50,
+        spreadsheetColumns: 50,
+        spreadsheetOutputFull: false,
+        spreadsheetSheetTabs: false,
+        // Persistent Configuration
+        persistence: false,
+        persistenceID: null,
+        persistenceMode: true,
+        // Editing
+        editTriggerEvent: 'focus',
+        // Selection
+        selectableRows: 'highlight',
+        selectableRowsRollingSelection: true,
+        selectableRowsRangeMode: 'drag',
+        selectableRowsPersistence: true,
+        selectableRange: false,
+        selectableRangeColumns: false,
+        selectableRangeClearCells: false,
+        selectableRangeAutoFocus: true,
+        selectableRangeRows: false,
+        // Clipboard
+        clipboard: false,
+        clipboardCopyStyled: true,
+        clipboardCopyConfig: false,
+        clipboardCopyRowRange: 'active',
+        clipboardPasteAction: 'insert',
+        // Data Tree
+        dataTree: false,
+        dataTreeFilter: true,
+        dataTreeSort: true,
+        dataTreeElementColumn: false,
+        dataTreeBranchElement: true,
+        dataTreeChildIndent: 9,
+        dataTreeChildField: '_children',
+        dataTreeStartExpanded: false,
+        dataTreeSelectPropagate: false,
+        dataTreeChildColumnCalcs: false,
+        // Printing
+        printAsHtml: false,
+        printStyled: true,
+        printRowRange: 'visible'
+      }
+
+      // Snapshot of initial defaults for reset
+      const DEFAULT_TABLE_OPTS = JSON.parse(JSON.stringify(tableOpts))
+
+      // Column definitions (includes internal _id for tab tracking)
+      let nextColId = 10
+      let activeColId
+      let columnDefs = [
+        {
+          _id: 1,
+          title: 'Id',
+          field: 'id',
+          sorter: 'number',
+          headerSort: true,
+          resizable: true,
+          hozAlign: 'right',
+          headerHozAlign: 'right'
+        },
+        { _id: 2, title: 'Name', field: 'name', sorter: 'string', headerSort: true, resizable: true },
+        {
+          _id: 3,
+          title: 'Age',
+          field: 'age',
+          sorter: 'number',
+          hozAlign: 'right',
+          headerHozAlign: 'right',
+          headerSort: true,
+          resizable: true
+        },
+        { _id: 4, title: 'Gender', field: 'gender', sorter: 'string', headerSort: true, resizable: true },
+        {
+          _id: 5,
+          title: 'Rating',
+          field: 'rating',
+          sorter: 'number',
+          formatter: 'star',
+          hozAlign: 'center',
+          headerHozAlign: 'center',
+          headerSort: true,
+          resizable: true
+        },
+        { _id: 6, title: 'Color', field: 'col', sorter: 'string', headerSort: true, resizable: true },
+        {
+          _id: 7,
+          title: 'Salary',
+          field: 'salary',
+          sorter: 'number',
+          hozAlign: 'right',
+          headerHozAlign: 'right',
+          headerSort: true,
+          resizable: true
+        },
+        {
+          _id: 8,
+          title: 'Progress',
+          field: 'progress',
+          sorter: 'number',
+          formatter: 'progress',
+          hozAlign: 'center',
+          headerSort: true,
+          resizable: true
+        },
+        {
+          _id: 9,
+          title: 'Completed',
+          field: 'completed',
+          formatter: 'tickCross',
+          sorter: 'boolean',
+          hozAlign: 'center',
+          headerSort: true,
+          resizable: true
+        }
+      ]
+
+      // ═══════════════════════════════════════════
+      // Restore persisted config (overrides defaults)
+      // ═══════════════════════════════════════════
+
+      ;(() => {
+        const saved = loadConfig()
+        if (!saved) return
+        if (saved.tableOpts && typeof saved.tableOpts === 'object') {
+          Object.assign(tableOpts, saved.tableOpts)
+        }
+        if (Array.isArray(saved.columnDefs) && saved.columnDefs.length) {
+          columnDefs = saved.columnDefs
+        }
+        if (typeof saved.nextColId === 'number') nextColId = saved.nextColId
+        if (typeof saved.activeColId === 'number') activeColId = saved.activeColId
+      })()
+
+      // Default activeColId if not restored
+      if (!activeColId) activeColId = columnDefs[0]._id
+
+      // ═══════════════════════════════════════════
+      // Option schemas (generated from tableSchema.json / columnSchema.json)
+      // ═══════════════════════════════════════════
+
+      // Helpers
+      function enumValStr(v) {
+        if (v === true) return 'true'
+        if (v === false) return 'false'
+        return String(v)
+      }
+
+      // ── Table options ────────────────────────────────────────────
+
+      // Options to skip in the sidebar (function-only, complex objects, or handled elsewhere)
+      const TABLE_OPT_SKIP = new Set([
+        'columns',
+        'data',
+        'columnDefaults',
+        'autoColumnsDefinitions',
+        'rowFormatter',
+        'rowFormatterPrint',
+        'rowFormatterClipboard',
+        'rowFormatterHtmlOutput',
+        'movableRowsConnectedTables',
+        'movableRowsSender',
+        'movableRowsConnectedElements',
+        'movableRowsElementDrop',
+        'ajaxParams',
+        'ajaxURLGenerator',
+        'ajaxRequestFunc',
+        'dataSendParams',
+        'dataReceiveParams',
+        'importFileValidator',
+        'importDataValidator',
+        'importHeaderTransform',
+        'importValueTransform',
+        'dataLoader',
+        'dataLoaderLoading',
+        'dataLoaderError',
+        'dataLoaderErrorTimeout',
+        'initialSort',
+        'initialFilter',
+        'initialHeaderFilter',
+        'headerSortElement',
+        'groupValues',
+        'groupHeader',
+        'groupHeaderPrint',
+        'groupHeaderClipboard',
+        'groupHeaderDownload',
+        'groupHeaderHtmlOutput',
+        'paginationElement',
+        'paginationOutOfRange',
+        'spreadsheetColumnDefinition',
+        'spreadsheetData',
+        'spreadsheetSheets',
+        'spreadsheetSheetTabsElement',
+        'persistenceReaderFunc',
+        'persistenceWriterFunc',
+        'editorEmptyValue',
+        'editorEmptyValueFunc',
+        'selectableRowsCheck',
+        'selectableRangeClearCellsValue',
+        'clipboardCopyFormatter',
+        'clipboardPasteParser',
+        'dataTreeCollapseElement',
+        'dataTreeExpandElement',
+        'printConfig',
+        'printHeader',
+        'printFooter',
+        'printFormatter',
+        'rowContextMenu',
+        'rowClickMenu',
+        'rowDblClickMenu',
+        'groupContextMenu',
+        'groupClickMenu',
+        'groupDblClickMenu',
+        'rowContextPopup',
+        'rowClickPopup',
+        'rowDblClickPopup',
+        'groupContextPopup',
+        'groupClickPopup',
+        'groupDblClickPopup',
+        'paginationCounterElement',
+        'dependencies',
+        'downloadConfig',
+        'htmlOutputConfig',
+        'langs',
+        'footerElement',
+        'popupContainer',
+        'keybindings',
+        'responsiveLayoutCollapseFormatter',
+        'rowHeader'
+      ])
+
+      // Manual extras not present in schema but valid Tabulator options
+      const TABLE_OPT_EXTRAS = {}
+
+      // Per-option overrides (custom select values, etc.)
+      const TABLE_OPT_OVERRIDES = {
+        groupBy: { type: 'select', opts: ['false', 'gender', 'col', 'completed'] },
+        selectableRows: { type: 'select', opts: ['highlight', 'true', 'false', '1', '2', '3', '5', '10'] }
+      }
+
+      function inferTableOpt(opt) {
+        if (TABLE_OPT_SKIP.has(opt.option)) return { key: opt.option, label: opt.option, disabled: true }
+        if (TABLE_OPT_OVERRIDES[opt.option])
+          return { key: opt.option, label: opt.option, ...TABLE_OPT_OVERRIDES[opt.option] }
+
+        const dt = (opt.dataType || '').toLowerCase()
+
+        if (opt.enum?.length) {
+          return {
+            key: opt.option,
+            type: 'select',
+            label: opt.option,
+            opts: ['', ...opt.enum.map((e) => enumValStr(e.value))]
+          }
+        }
+        if (dt === 'function' || dt.startsWith('function')) return null
+        if (dt === 'boolean') return { key: opt.option, type: 'boolean', label: opt.option }
+        if (dt.startsWith('boolean') && !dt.includes('string'))
+          return { key: opt.option, type: 'boolean', label: opt.option }
+        if (dt.includes('integer')) return { key: opt.option, type: 'number', label: opt.option, min: 0 }
+        if (dt.includes('boolean')) return { key: opt.option, type: 'boolean', label: opt.option }
+        if (dt === 'string' || (dt.includes('string') && !dt.includes('function')))
+          return { key: opt.option, type: 'text', label: opt.option }
+        return null
+      }
+
+      const tableOptionGroups = tableSchema
+        .map((cat) => ({
+          label: cat.category,
+          open: cat.category === 'General' || cat.category === 'Columns',
+          opts: [...cat.options.map(inferTableOpt).filter(Boolean), ...(TABLE_OPT_EXTRAS[cat.category] || [])]
+        }))
+        .filter((g) => g.opts.length > 0)
+
+      // ── Column options ───────────────────────────────────────────
+
+      // Derive formatter and calc-formatter value lists from schema
+      const SYSTEM_FORMATTERS = new Set(['rownum', 'handle', 'rowSelection', 'responsiveCollapse'])
+      const FORMATTER_VALUES = (
+        columnSchema.flatMap((c) => c.options).find((o) => o.option === 'formatter')?.enum || []
+      )
+        .map((e) => String(e.value))
+        .filter((v) => !SYSTEM_FORMATTERS.has(v))
+      const CALC_FORMATTER_VALUES = ['plaintext', 'money', 'datetime', 'tickCross', 'star', 'progress', 'color']
+
+      const COL_OPT_SKIP = new Set([
+        // Cell event callbacks
+        'cellClick',
+        'cellDblClick',
+        'cellContext',
+        'cellTap',
+        'cellDblTap',
+        'cellTapHold',
+        'cellMouseEnter',
+        'cellMouseLeave',
+        'cellMouseOver',
+        'cellMouseOut',
+        'cellMouseMove',
+        'cellMouseDown',
+        'cellMouseUp',
+        'cellEditing',
+        'cellEdited',
+        'cellEditCancelled',
+        // Header event callbacks
+        'headerClick',
+        'headerDblClick',
+        'headerContext',
+        'headerTap',
+        'headerDblTap',
+        'headerTapHold',
+        'headerMouseEnter',
+        'headerMouseLeave',
+        'headerMouseOver',
+        'headerMouseOut',
+        'headerMouseMove',
+        'headerMouseDown',
+        'headerMouseUp',
+        // Menus / popups
+        'contextMenu',
+        'clickMenu',
+        'dblClickMenu',
+        'contextPopup',
+        'clickPopup',
+        'dblClickPopup',
+        'headerMenu',
+        'headerClickMenu',
+        'headerDblClickMenu',
+        'headerContextMenu',
+        'headerPopup',
+        'headerClickPopup',
+        'headerContextPopup',
+        'headerDblClickPopup',
+        // Mutators / accessors (function-only)
+        'mutator',
+        'mutatorParams',
+        'mutatorData',
+        'mutatorDataParams',
+        'mutatorEdit',
+        'mutatorEditParams',
+        'mutatorClipboard',
+        'mutatorClipboardParams',
+        'mutatorImport',
+        'mutatorImportParams',
+        'mutateLink',
+        'accessor',
+        'accessorParams',
+        'accessorData',
+        'accessorDataParams',
+        'accessorDownload',
+        'accessorDownloadParams',
+        'accessorClipboard',
+        'accessorClipboardParams',
+        // Other function-only
+        'headerFilterEmptyCheck',
+        'headerFilterFuncParams',
+        'editorEmptyValueFunc'
+      ])
+
+      // Column options that need special/overridden handling
+      const COL_OPT_OVERRIDES = {
+        editorParams: {
+          key: 'editorParams',
+          type: 'editorParams',
+          label: 'editorParams',
+          showWhen: (def) => !!def.editor
+        },
+        editorEmptyValue: {
+          key: 'editorEmptyValue',
+          type: 'text',
+          label: 'editorEmptyValue',
+          showWhen: (def) => !!def.editor
+        },
+        editable: { key: 'editable', type: 'boolean', label: 'editable', default: true },
+        tooltip: { key: 'tooltip', type: 'boolean', label: 'tooltip' },
+        headerTooltip: { key: 'headerTooltip', type: 'text', label: 'headerTooltip' },
+        headerFilter: { key: 'headerFilter', type: 'boolean', label: 'headerFilter' },
+        sorterParams: { key: 'sorterParams', type: 'json', label: 'sorterParams' },
+        formatterParams: { key: 'formatterParams', type: 'json', label: 'formatterParams' },
+        formatterPrint: {
+          key: 'formatterPrint',
+          type: 'select',
+          label: 'formatterPrint',
+          opts: ['', ...FORMATTER_VALUES]
+        },
+        formatterPrintParams: { key: 'formatterPrintParams', type: 'json', label: 'formatterPrintParams' },
+        formatterClipboard: {
+          key: 'formatterClipboard',
+          type: 'select',
+          label: 'formatterClipboard',
+          opts: ['', ...FORMATTER_VALUES]
+        },
+        formatterClipboardParams: { key: 'formatterClipboardParams', type: 'json', label: 'formatterClipboardParams' },
+        formatterHtmlOutput: {
+          key: 'formatterHtmlOutput',
+          type: 'select',
+          label: 'formatterHtmlOutput',
+          opts: ['', ...FORMATTER_VALUES]
+        },
+        formatterHtmlOutputParams: {
+          key: 'formatterHtmlOutputParams',
+          type: 'json',
+          label: 'formatterHtmlOutputParams'
+        },
+        titleFormatter: {
+          key: 'titleFormatter',
+          type: 'select',
+          label: 'titleFormatter',
+          opts: ['', ...FORMATTER_VALUES]
+        },
+        titleFormatterParams: { key: 'titleFormatterParams', type: 'json', label: 'titleFormatterParams' },
+        topCalcFormatter: {
+          key: 'topCalcFormatter',
+          type: 'select',
+          label: 'topCalcFormatter',
+          opts: ['', ...CALC_FORMATTER_VALUES]
+        },
+        topCalcFormatterParams: { key: 'topCalcFormatterParams', type: 'json', label: 'topCalcFormatterParams' },
+        bottomCalcFormatter: {
+          key: 'bottomCalcFormatter',
+          type: 'select',
+          label: 'bottomCalcFormatter',
+          opts: ['', ...CALC_FORMATTER_VALUES]
+        },
+        bottomCalcFormatterParams: {
+          key: 'bottomCalcFormatterParams',
+          type: 'json',
+          label: 'bottomCalcFormatterParams'
+        },
+        headerFilterPlaceholder: { key: 'headerFilterPlaceholder', type: 'text', label: 'headerFilterPlaceholder' },
+        headerFilterParams: { key: 'headerFilterParams', type: 'json', label: 'headerFilterParams' },
+        headerFilterLiveFilter: {
+          key: 'headerFilterLiveFilter',
+          type: 'boolean',
+          label: 'headerFilterLiveFilter',
+          default: true
+        }
+      }
+
+      function inferColOpt(opt) {
+        if (COL_OPT_SKIP.has(opt.option)) return null
+        if (COL_OPT_OVERRIDES[opt.option]) return COL_OPT_OVERRIDES[opt.option]
+
+        const dt = (opt.dataType || '').toLowerCase()
+
+        if (opt.enum?.length) {
+          return {
+            key: opt.option,
+            type: 'select',
+            label: opt.option,
+            opts: ['', ...opt.enum.map((e) => enumValStr(e.value))]
+          }
+        }
+        if (dt === 'function' || dt.startsWith('function')) return null
+        if (dt === 'boolean') return { key: opt.option, type: 'boolean', label: opt.option }
+        if (dt.startsWith('boolean') && !dt.includes('string'))
+          return { key: opt.option, type: 'boolean', label: opt.option }
+        if (dt.includes('integer')) return { key: opt.option, type: 'number', label: opt.option, min: 0 }
+        if (dt.includes('boolean')) return { key: opt.option, type: 'boolean', label: opt.option }
+        if (dt === 'string' || (dt.includes('string') && !dt.includes('function')))
+          return { key: opt.option, type: 'text', label: opt.option }
+        if (dt === 'object' || dt.startsWith('object')) return { key: opt.option, type: 'json', label: opt.option }
+        return null
+      }
+
+      const rawColSchema = columnSchema.flatMap((cat) => [
+        { type: 'group', label: cat.category },
+        ...cat.options.map(inferColOpt).filter(Boolean)
+      ])
+      // Remove group headers that have no items after them (all options skipped)
+      const columnOptionSchema = rawColSchema.filter((item, i) => {
+        if (item.type !== 'group') return true
+        for (let j = i + 1; j < rawColSchema.length; j++) {
+          if (rawColSchema[j].type === 'group') return false
+          return true
+        }
+        return false
+      })
+
+      // ═══════════════════════════════════════════
+      // Table build / rebuild
+      // ═══════════════════════════════════════════
+
+      let table = null
+      let rebuildTimer = null
+
+      function resolveOpts() {
+        const out = {}
+        for (const [k, v] of Object.entries(tableOpts)) {
+          if (v === null || v === undefined || v === '') continue
+          // Coerce string 'true'/'false' to booleans (used in select opts for boolean+string mixed options)
+          if (v === 'true') {
+            out[k] = true
+            continue
+          }
+          if (v === 'false') {
+            out[k] = false
+            continue
+          }
+          out[k] = v
+        }
+        // selectableRows: number strings → numbers
+        if (typeof out.selectableRows === 'string' && /^\d+$/.test(out.selectableRows)) {
+          out.selectableRows = parseInt(out.selectableRows, 10)
+        }
+        // rowHeader: omit when false/undefined
+        if (out.rowHeader === false || out.rowHeader === undefined) delete out.rowHeader
+        return out
+      }
+
+      function resolveColumns() {
+        return columnDefs.map((def) => {
+          const col = {}
+          for (const [k, v] of Object.entries(def)) {
+            if (k === '_id') continue
+            if (v === '' || v === null || v === undefined) continue
+            col[k] = v
+          }
+          return col
+        })
+      }
+
+      function rebuildTable() {
+        if (table) {
+          try {
+            table.destroy()
+          } catch (_) {}
+          table = null
+        }
+
+        const el = document.getElementById('example-table')
+
+        try {
+          const opts = resolveOpts()
+          table = new Tabulator(el, {
+            data: opts.dataTree ? tableDataTree : tableData,
+            columns: resolveColumns(),
+            ...opts
+          })
+        } catch (err) {
+          console.error('Tabulator build error:', err)
+        }
+
+        updateConfigPreview()
+        flashRebuildIndicator()
+      }
+
+      function scheduleRebuild() {
+        clearTimeout(rebuildTimer)
+        rebuildTimer = setTimeout(() => {
+          saveConfig()
+          rebuildTable()
+        }, 450)
+      }
+
+      function flashRebuildIndicator() {
+        const el = document.getElementById('rebuild-indicator')
+        el.classList.add('show')
+        clearTimeout(el._t)
+        el._t = setTimeout(() => el.classList.remove('show'), 1600)
+      }
+
+      // ═══════════════════════════════════════════
+      // editorParams schemas (keyed by editor type)
+      // ═══════════════════════════════════════════
+
+      const editorParamsSchemas = {
+        input: [
+          { key: 'search', type: 'boolean', label: 'search' },
+          { key: 'mask', type: 'text', label: 'mask' },
+          { key: 'selectContents', type: 'boolean', label: 'selectContents' }
+        ],
+        textarea: [
+          { key: 'mask', type: 'text', label: 'mask' },
+          { key: 'selectContents', type: 'boolean', label: 'selectContents' },
+          {
+            key: 'verticalNavigation',
+            type: 'select',
+            label: 'verticalNavigation',
+            opts: ['hybrid', 'editor', 'table']
+          },
+          { key: 'shiftEnterSubmit', type: 'boolean', label: 'shiftEnterSubmit' }
+        ],
+        number: [
+          { key: 'min', type: 'number', label: 'min' },
+          { key: 'max', type: 'number', label: 'max' },
+          { key: 'step', type: 'number', label: 'step', min: 0 },
+          { key: 'mask', type: 'text', label: 'mask' },
+          { key: 'selectContents', type: 'boolean', label: 'selectContents' },
+          { key: 'verticalNavigation', type: 'select', label: 'verticalNavigation', opts: ['editor', 'table'] }
+        ],
+        range: [
+          { key: 'min', type: 'number', label: 'min' },
+          { key: 'max', type: 'number', label: 'max' },
+          { key: 'step', type: 'number', label: 'step', min: 0 }
+        ],
+        tickCross: [
+          { key: 'trueValue', type: 'text', label: 'trueValue' },
+          { key: 'falseValue', type: 'text', label: 'falseValue' },
+          { key: 'tristate', type: 'boolean', label: 'tristate' },
+          { key: 'indeterminateValue', type: 'text', label: 'indeterminateValue' }
+        ],
+        star: [],
+        progress: [
+          { key: 'min', type: 'number', label: 'min' },
+          { key: 'max', type: 'number', label: 'max' }
+        ],
+        list: [
+          { key: 'values', type: 'json', label: 'values' },
+          { key: 'valuesURL', type: 'text', label: 'valuesURL' },
+          { key: 'valuesLookup', type: 'text', label: 'valuesLookup' },
+          { key: 'valuesLookupField', type: 'text', label: 'valuesLookupField' },
+          { key: 'clearable', type: 'boolean', label: 'clearable' },
+          {
+            key: 'verticalNavigation',
+            type: 'select',
+            label: 'verticalNavigation',
+            opts: ['hybrid', 'editor', 'table']
+          },
+          { key: 'sort', type: 'select', label: 'sort', opts: ['', 'asc', 'desc'] },
+          { key: 'defaultValue', type: 'text', label: 'defaultValue' },
+          { key: 'emptyValue', type: 'text', label: 'emptyValue' },
+          { key: 'maxWidth', type: 'boolean', label: 'maxWidth' },
+          { key: 'placeholderLoading', type: 'text', label: 'placeholderLoading' },
+          { key: 'placeholderEmpty', type: 'text', label: 'placeholderEmpty' },
+          { key: 'multiselect', type: 'boolean', label: 'multiselect' },
+          { key: 'autocomplete', type: 'boolean', label: 'autocomplete' },
+          { key: 'filterRemote', type: 'boolean', label: 'filterRemote' },
+          { key: 'filterDelay', type: 'number', label: 'filterDelay', min: 0 },
+          { key: 'allowEmpty', type: 'boolean', label: 'allowEmpty' },
+          { key: 'listOnEmpty', type: 'boolean', label: 'listOnEmpty' },
+          { key: 'mask', type: 'text', label: 'mask' },
+          { key: 'freetext', type: 'boolean', label: 'freetext' }
+        ],
+        date: [
+          { key: 'min', type: 'text', label: 'min' },
+          { key: 'max', type: 'text', label: 'max' },
+          { key: 'format', type: 'text', label: 'format' },
+          { key: 'verticalNavigation', type: 'select', label: 'verticalNavigation', opts: ['editor', 'table'] }
+        ],
+        time: [
+          { key: 'format', type: 'text', label: 'format' },
+          { key: 'verticalNavigation', type: 'select', label: 'verticalNavigation', opts: ['editor', 'table'] }
+        ],
+        datetime: [
+          { key: 'format', type: 'text', label: 'format' },
+          { key: 'verticalNavigation', type: 'select', label: 'verticalNavigation', opts: ['editor', 'table'] }
+        ]
+      }
+
+      // ═══════════════════════════════════════════
+      // Input factory
+      // ═══════════════════════════════════════════
+
+      function buildInput(schema, currentVal, onChange) {
+        if (schema.type === 'boolean') {
+          const el = document.createElement('input')
+          el.type = 'checkbox'
+          const resolvedVal = currentVal !== undefined ? currentVal : (schema.default ?? false)
+          el.checked = !!resolvedVal
+          el.addEventListener('change', () => onChange(el.checked))
+          return el
+        }
+
+        if (schema.type === 'select') {
+          const el = document.createElement('select')
+          schema.opts.forEach((o) => {
+            const opt = document.createElement('option')
+            opt.value = o
+            opt.textContent = o === '' ? '(none)' : o
+            const cur = currentVal === false ? 'false' : currentVal === true ? 'true' : String(currentVal ?? '')
+            if (cur === o) opt.selected = true
+            el.appendChild(opt)
+          })
+          el.addEventListener('change', () => {
+            let v = el.value
+            if (v === 'true') v = true
+            else if (v === 'false') v = false
+            onChange(v)
+          })
+          return el
+        }
+
+        if (schema.type === 'number') {
+          const el = document.createElement('input')
+          el.type = 'number'
+          if (schema.min !== undefined) el.min = schema.min
+          el.value = currentVal ?? ''
+          el.placeholder = '(default)'
+          el.addEventListener('change', () => {
+            onChange(el.value === '' ? undefined : Number(el.value))
+          })
+          return el
+        }
+
+        // text
+        if (schema.type === 'json') {
+          const el = document.createElement('input')
+          el.type = 'text'
+          el.value = currentVal !== undefined && currentVal !== false ? JSON.stringify(currentVal) : ''
+          el.placeholder = '(default)'
+          el.addEventListener('change', () => {
+            const raw = el.value.trim()
+            if (raw === '') {
+              onChange(undefined)
+              return
+            }
+            try {
+              onChange(JSON.parse(raw))
+            } catch (_) {
+              try {
+                // Accept JS object literal syntax (e.g. unquoted keys)
+                onChange(Function('return (' + raw + ')')())
+              } catch (_2) {
+                el.style.outlineColor = '#dc2626'
+                el.title = 'Invalid value'
+              }
+            }
+          })
+          el.addEventListener('input', () => {
+            el.style.outlineColor = ''
+            el.title = ''
+          })
+          return el
+        }
+
+        // text
+        const el = document.createElement('input')
+        el.type = 'text'
+        el.value = currentVal ?? ''
+        el.placeholder = '(default)'
+        el.addEventListener('change', () => onChange(el.value))
+        return el
+      }
+
+      // ═══════════════════════════════════════════
+      // Sidebar: table options
+      // ═══════════════════════════════════════════
+
+      function buildSidebar() {
+        const sidebar = document.getElementById('options-sidebar')
+        sidebar.querySelectorAll('.opt-group').forEach((el) => el.remove())
+
+        tableOptionGroups.forEach((group) => {
+          const details = document.createElement('details')
+          details.className = 'opt-group'
+          if (group.open) details.open = true
+
+          const summary = document.createElement('summary')
+          summary.textContent = group.label
+          details.appendChild(summary)
+
+          const body = document.createElement('div')
+          body.className = 'opt-group-body'
+
+          group.opts.forEach((schema) => {
+            const row = document.createElement('div')
+            row.className = 'opt-row' + (schema.disabled ? ' disabled' : '')
+
+            const label = document.createElement('span')
+            label.className = 'opt-label'
+            label.textContent = schema.label ?? schema.key
+            label.title = schema.key
+            row.appendChild(label)
+
+            if (!schema.disabled) {
+              const wrap = document.createElement('span')
+              wrap.className = 'opt-input'
+              wrap.appendChild(
+                buildInput(schema, tableOpts[schema.key], (val) => {
+                  tableOpts[schema.key] = val
+                  scheduleRebuild()
+                })
+              )
+              row.appendChild(wrap)
+            }
+
+            body.appendChild(row)
+          })
+
+          details.appendChild(body)
+          sidebar.appendChild(details)
+        })
+      }
+
+      // ═══════════════════════════════════════════
+      // Column option tabs + panel
+      // ═══════════════════════════════════════════
+
+      function renderColumnTabs() {
+        const header = document.getElementById('col-options-header')
+
+        // Remove existing tabs (keep the label span and any non-tab children)
+        header.querySelectorAll('.col-tab, #add-col-btn').forEach((el) => el.remove())
+
+        columnDefs.forEach((def) => {
+          const tab = document.createElement('button')
+          tab.className = 'col-tab' + (def._id === activeColId ? ' active' : '')
+          tab.textContent = def.title || def.field || `Col ${def._id}`
+          tab.addEventListener('click', () => {
+            activeColId = def._id
+            saveConfig()
+            renderColumnTabs()
+            renderColumnOptionsBody()
+          })
+          header.appendChild(tab)
+        })
+
+        const addBtn = document.createElement('button')
+        addBtn.id = 'add-col-btn'
+        addBtn.textContent = '+ Add Column'
+        addBtn.addEventListener('click', addColumn)
+        header.appendChild(addBtn)
+      }
+
+      function renderColumnOptionsBody() {
+        const body = document.getElementById('col-options-body')
+        body.innerHTML = ''
+
+        const def = columnDefs.find((d) => d._id === activeColId)
+        if (!def) return
+
+        // Button row (spans full width)
+        const btnRow = document.createElement('div')
+        btnRow.id = 'col-opts-btn-row'
+        btnRow.style.gridColumn = '1 / -1'
+
+        const resetColBtn = document.createElement('button')
+        resetColBtn.id = 'reset-col-opts-btn'
+        resetColBtn.textContent = '↺ Reset column'
+        resetColBtn.title = 'Reset all column options to defaults'
+        resetColBtn.addEventListener('click', () => {
+          const preserve = new Set(['_id', 'title', 'field'])
+          const schemaKeys = new Set(columnOptionSchema.map((s) => s.key))
+          Object.keys(def).forEach((k) => {
+            if (schemaKeys.has(k) && !preserve.has(k)) delete def[k]
+          })
+          renderColumnOptionsBody()
+          scheduleRebuild()
+        })
+        btnRow.appendChild(resetColBtn)
+
+        const removeBtn = document.createElement('button')
+        removeBtn.id = 'remove-col-btn'
+        removeBtn.textContent = '✕ Remove this column'
+        removeBtn.addEventListener('click', () => {
+          const idx = columnDefs.findIndex((d) => d._id === activeColId)
+          if (idx !== -1) columnDefs.splice(idx, 1)
+          activeColId = columnDefs[0]?._id
+          renderColumnTabs()
+          renderColumnOptionsBody()
+          scheduleRebuild()
+        })
+        btnRow.appendChild(removeBtn)
+
+        body.appendChild(btnRow)
+
+        columnOptionSchema.forEach((schema) => {
+          if (schema.type === 'group') {
+            const hdr = document.createElement('div')
+            hdr.className = 'col-opt-group'
+            hdr.textContent = schema.label
+            body.appendChild(hdr)
+            return
+          }
+
+          if (schema.showWhen && !schema.showWhen(def)) return
+
+          if (schema.key === 'editorParams') {
+            const section = document.createElement('div')
+            section.className = 'editor-params-section'
+
+            const heading = document.createElement('div')
+            heading.className = 'editor-params-heading'
+            heading.textContent = 'editorParams'
+            section.appendChild(heading)
+
+            const editorType = def.editor || ''
+            const paramSchemas = editorParamsSchemas[editorType]
+
+            if (!editorType || !paramSchemas) {
+              const empty = document.createElement('span')
+              empty.className = 'editor-params-empty'
+              empty.textContent = editorType ? 'No params for this editor' : 'Select an editor to configure params'
+              section.appendChild(empty)
+            } else if (paramSchemas.length === 0) {
+              const empty = document.createElement('span')
+              empty.className = 'editor-params-empty'
+              empty.textContent = 'No configurable params for this editor'
+              section.appendChild(empty)
+            } else {
+              const grid = document.createElement('div')
+              grid.className = 'editor-params-grid'
+              paramSchemas.forEach((paramSchema) => {
+                const row = document.createElement('div')
+                row.className = 'col-opt-row'
+                const label = document.createElement('span')
+                label.className = 'col-opt-label'
+                label.textContent = paramSchema.label ?? paramSchema.key
+                label.title = paramSchema.key
+                row.appendChild(label)
+                const wrap = document.createElement('span')
+                wrap.className = 'col-opt-input'
+                const currentParamVal = (def.editorParams || {})[paramSchema.key]
+                wrap.appendChild(
+                  buildInput(paramSchema, currentParamVal, (val) => {
+                    if (!def.editorParams) def.editorParams = {}
+                    if (val === undefined || val === '') {
+                      delete def.editorParams[paramSchema.key]
+                      if (Object.keys(def.editorParams).length === 0) delete def.editorParams
+                    } else {
+                      def.editorParams[paramSchema.key] = val
+                    }
+                    scheduleRebuild()
+                  })
+                )
+                row.appendChild(wrap)
+                grid.appendChild(row)
+              })
+              section.appendChild(grid)
+            }
+
+            body.appendChild(section)
+            return
+          }
+
+          const row = document.createElement('div')
+          row.className = 'col-opt-row'
+
+          const label = document.createElement('span')
+          label.className = 'col-opt-label'
+          label.textContent = schema.label ?? schema.key
+          label.title = schema.key
+          row.appendChild(label)
+
+          const wrap = document.createElement('span')
+          wrap.className = 'col-opt-input'
+          const currentVal = def[schema.key] !== undefined ? def[schema.key] : schema.default
+          wrap.appendChild(
+            buildInput(schema, currentVal, (val) => {
+              def[schema.key] = val
+              if (schema.key === 'title') renderColumnTabs()
+              if (schema.key === 'editor') {
+                delete def.editorParams
+                renderColumnOptionsBody()
+              }
+              scheduleRebuild()
+            })
+          )
+          row.appendChild(wrap)
+          body.appendChild(row)
+        })
+      }
+
+      function addColumn() {
+        const id = ++nextColId
+        columnDefs.push({
+          _id: id,
+          title: `New Column ${id}`,
+          field: '',
+          sorter: 'string',
+          resizable: true,
+          headerSort: true
+        })
+        activeColId = id
+        renderColumnTabs()
+        renderColumnOptionsBody()
+        scheduleRebuild()
+      }
+
+      // ═══════════════════════════════════════════
+      // Config preview
+      // ═══════════════════════════════════════════
+
+      function updateConfigPreview() {
+        const body = document.getElementById('config-body')
+        if (!body.classList.contains('open')) return
+        const cfg = { ...resolveOpts(), columns: resolveColumns() }
+        document.getElementById('config-json').textContent = JSON.stringify(cfg, null, 2)
+      }
+
+      document.getElementById('config-copy-btn').addEventListener('click', () => {
+        const text = document.getElementById('config-json').textContent
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById('config-copy-btn')
+          btn.textContent = 'Copied!'
+          setTimeout(() => {
+            btn.textContent = 'Copy'
+          }, 1500)
+        })
+      })
+
+      document.getElementById('config-toggle').addEventListener('click', function (e) {
+        if (e.target.closest('#config-copy-btn')) return
+        const body = document.getElementById('config-body')
+        const open = body.classList.toggle('open')
+        this.querySelector('span:last-of-type').textContent = open ? '▲' : '▼'
+        if (open) updateConfigPreview()
+      })
+
+      // ═══════════════════════════════════════════
+      // ═══════════════════════════════════════════
+      // Init
+      // ═══════════════════════════════════════════
+
+      buildSidebar()
+      renderColumnTabs()
+      renderColumnOptionsBody()
+      rebuildTable()
+
+      document.getElementById('reset-table-btn').addEventListener('click', () => {
+        Object.keys(tableOpts).forEach((k) => delete tableOpts[k])
+        Object.assign(tableOpts, DEFAULT_TABLE_OPTS)
+        localStorage.removeItem(STORAGE_KEY)
+        buildSidebar()
+        scheduleRebuild()
+      })
+    </script>
+  </body>
+</html>
