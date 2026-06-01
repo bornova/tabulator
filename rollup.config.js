@@ -30,7 +30,7 @@ for (const inputFile of globbySync(['src/scss/themes/*/{,*/}[!_]*.scss'])) {
 }
 process.stdout.write('done.\n')
 
-const browserInput = 'src/js/builds/browser.js'
+const browserInput = 'src/js/core/TabulatorFull.js'
 const browserOutput = { format: 'iife', name: 'Tabulator', exports: 'default', banner }
 
 const esmInput = 'src/js/index.js'
