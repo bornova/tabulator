@@ -1283,8 +1283,12 @@
           if (k in TABULATOR_DEFAULTS && JSON.stringify(v) === JSON.stringify(TABULATOR_DEFAULTS[k])) continue
           cfg[k] = v
         }
+        if (presetExtraOpts) {
+          Object.assign(cfg, presetExtraOpts)
+        }
         cfg.columns = resolveColumns()
-        document.getElementById('config-json').textContent = JSON.stringify(cfg, null, 2)
+        const fnReplacer = (_key, val) => (typeof val === 'function' ? val.toString() : val)
+        document.getElementById('config-json').textContent = JSON.stringify(cfg, fnReplacer, 2)
       }
 
       document.getElementById('config-copy-btn').addEventListener('click', () => {
@@ -1315,7 +1319,7 @@
       const EXAMPLES = {
         basic: {
           label: 'Basic table',
-          tableOpts: { height: 400, layout: 'fitData', movableColumns: true },
+          tableOpts: { height: 300, layout: 'fitData', movableColumns: true },
           columnDefs: BASE_COLUMNS
         },
         pagination: {
@@ -1333,7 +1337,7 @@
         },
         'header-filters': {
           label: 'Header filters',
-          tableOpts: { height: 400, layout: 'fitData' },
+          tableOpts: { height: 300, layout: 'fitData' },
           columnDefs: BASE_COLUMNS.map((c) => {
             const col = { ...c }
             if (c.field === 'name' || c.field === 'address') col.headerFilter = 'input'
@@ -1346,12 +1350,12 @@
         },
         grouping: {
           label: 'Grouping',
-          tableOpts: { height: 400, groupBy: 'gender', groupStartOpen: true },
+          tableOpts: { height: 300, groupBy: 'gender', groupStartOpen: true },
           columnDefs: BASE_COLUMNS
         },
         editable: {
           label: 'Editable data',
-          tableOpts: { height: 400, history: true },
+          tableOpts: { height: 300, history: true },
           columnDefs: BASE_COLUMNS.map((c) => {
             const col = { ...c }
             if (c.field === 'name') col.editor = 'input'
@@ -1368,17 +1372,17 @@
         },
         'frozen-cols': {
           label: 'Frozen columns',
-          tableOpts: { height: 400, layout: 'fitData' },
+          tableOpts: { height: 300, layout: 'fitData' },
           columnDefs: BASE_COLUMNS.map((c, i) => ({ ...c, frozen: i < 2 }))
         },
         'frozen-rows': {
           label: 'Frozen rows',
-          tableOpts: { height: 400, frozenRows: 3 },
+          tableOpts: { height: 300, frozenRows: 3 },
           columnDefs: BASE_COLUMNS
         },
         responsive: {
           label: 'Responsive layout',
-          tableOpts: { height: 400, layout: 'fitColumns', responsiveLayout: 'hide' },
+          tableOpts: { height: 300, layout: 'fitColumns', responsiveLayout: 'hide' },
           columnDefs: (() => {
             const widths = {
               id: 80,
@@ -1400,14 +1404,14 @@
         },
         'data-tree': {
           label: 'Data tree',
-          tableOpts: { height: 400, dataTree: true, dataTreeStartExpanded: false },
+          tableOpts: { height: 300, dataTree: true, dataTreeStartExpanded: false },
           columnDefs: BASE_COLUMNS.map((c) =>
             c.field === 'id' ? { ...c, hozAlign: 'left', headerHozAlign: 'left' } : c
           )
         },
         selectable: {
           label: 'Selectable rows (tickbox)',
-          tableOpts: { height: 400, selectableRows: true },
+          tableOpts: { height: 300, selectableRows: true },
           extraOpts: {
             rowHeader: {
               headerSort: false,
@@ -1424,12 +1428,12 @@
         },
         'movable-rows': {
           label: 'Movable rows',
-          tableOpts: { height: 400, movableRows: true, selectableRows: true },
+          tableOpts: { height: 300, movableRows: true, selectableRows: true },
           columnDefs: BASE_COLUMNS
         },
         'column-groups': {
           label: 'Column groups',
-          tableOpts: { height: 400, columnHeaderVertAlign: 'bottom' },
+          tableOpts: { height: 300, columnHeaderVertAlign: 'bottom' },
           rawColumns: [
             {
               title: 'Name',
@@ -1491,7 +1495,7 @@
         'column-calcs': {
           label: 'Column calculations',
           tableOpts: {
-            height: 400,
+            height: 300,
             layout: 'fitDataFill',
             renderHorizontal: 'virtual',
             pagination: true,
@@ -1518,7 +1522,7 @@
         spreadsheet: {
           label: 'Spreadsheet',
           tableOpts: {
-            height: 400,
+            height: 300,
             spreadsheet: true,
             spreadsheetRows: 20,
             spreadsheetColumns: 9,
