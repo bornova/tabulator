@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "category": "General",
     "options": [
@@ -74,7 +74,7 @@
         "option": "placeholder",
         "dataType": "string/DOM Node",
         "defaultValue": "",
-        "description": "placeholder element to display on empty table"
+        "description": "Placeholder element to display on empty table"
       },
       {
         "option": "footerElement",
@@ -98,19 +98,19 @@
         "option": "locale",
         "dataType": "string/boolean",
         "defaultValue": false,
-        "description": "set the current localization language"
+        "description": "Set the current localization language"
       },
       {
         "option": "langs",
         "dataType": "object",
         "defaultValue": "(see documentation)",
-        "description": "hold localization templates"
+        "description": "Hold localization templates"
       },
       {
         "option": "downloadConfig",
         "dataType": "object",
         "defaultValue": {},
-        "description": "choose which parts of the table are included in downloaded files",
+        "description": "Choose which parts of the table are included in downloaded files",
         "subOptions": {
           "columnHeaders": {
             "dataType": "boolean",
@@ -138,7 +138,7 @@
         "option": "downloadRowRange",
         "dataType": "string",
         "defaultValue": "active",
-        "description": "set the range of rows to be included in the downloaded table output",
+        "description": "Set the range of rows to be included in the downloaded table output",
         "enum": [
           {
             "value": "active",
@@ -162,7 +162,7 @@
         "option": "htmlOutputConfig",
         "dataType": "object",
         "defaultValue": {},
-        "description": "choose which parts of the table are included in getHtml function output",
+        "description": "Choose which parts of the table are included in getHtml function output",
         "subOptions": {
           "columnHeaders": {
             "dataType": "boolean",
@@ -190,19 +190,19 @@
         "option": "reactiveData",
         "dataType": "boolean",
         "defaultValue": false,
-        "description": "enable data reactivity"
+        "description": "Enable data reactivity"
       },
       {
         "option": "tabEndNewRow",
         "dataType": "boolean/object/function",
         "defaultValue": false,
-        "description": "add new row when user tabs of the end of the table"
+        "description": "Add new row when user tabs of the end of the table"
       },
       {
         "option": "validationMode",
         "dataType": "string",
         "defaultValue": "blocking",
-        "description": "set validation mode of the table",
+        "description": "Set validation mode of the table",
         "enum": [
           {
             "value": "blocking",
@@ -222,7 +222,7 @@
         "option": "textDirection",
         "dataType": "string",
         "defaultValue": "auto",
-        "description": "set text direction for the table",
+        "description": "Set text direction for the table",
         "enum": [
           {
             "value": "auto",
@@ -242,13 +242,13 @@
         "option": "debugInvalidOptions",
         "dataType": "boolean",
         "defaultValue": true,
-        "description": "show console warnings if invalid options are used"
+        "description": "Show console warnings if invalid options are used"
       },
       {
         "option": "popupContainer",
         "dataType": "boolean, string, element",
         "defaultValue": false,
-        "description": "containing element for popups"
+        "description": "Containing element for popups"
       }
     ]
   },
@@ -265,7 +265,7 @@
         "option": "columnDefaults",
         "dataType": "object",
         "defaultValue": {},
-        "description": "define any default options that should be applied to all columns"
+        "description": "Define any default options that should be applied to all columns"
       },
       {
         "option": "autoColumns",
@@ -337,19 +337,19 @@
         "option": "responsiveLayoutCollapseStartOpen",
         "dataType": "boolean",
         "defaultValue": true,
-        "description": "show collapsed column list"
+        "description": "Show collapsed column list"
       },
       {
         "option": "responsiveLayoutCollapseUseFormatters",
         "dataType": "boolean",
         "defaultValue": true,
-        "description": "use formatters in collapsed column lists"
+        "description": "Use formatters in collapsed column lists"
       },
       {
         "option": "responsiveLayoutCollapseFormatter",
         "dataType": "function",
         "defaultValue": null,
-        "description": "create contents of collapsed column list"
+        "description": "Create contents of collapsed column list"
       },
       {
         "option": "movableColumns",
@@ -657,7 +657,7 @@
         "option": "ajaxContentType",
         "dataType": "string/object",
         "defaultValue": "form",
-        "description": "set the content encoding for the json request",
+        "description": "Set the content encoding for the json request",
         "enum": [
           {
             "value": "form",
@@ -673,13 +673,13 @@
         "option": "ajaxURLGenerator",
         "dataType": "function",
         "defaultValue": false,
-        "description": "callback function to generate request URL"
+        "description": "Callback function to generate request URL"
       },
       {
         "option": "ajaxRequestFunc",
         "dataType": "function",
         "defaultValue": false,
-        "description": "callback function to replace inbuilt ajax request functionality"
+        "description": "Callback function to replace inbuilt ajax request functionality"
       },
       {
         "option": "dataSendParams",
@@ -846,13 +846,13 @@
         "option": "importFileValidator",
         "dataType": "function",
         "defaultValue": null,
-        "description": "validate a file before it is imported"
+        "description": "Validate a file before it is imported"
       },
       {
         "option": "importDataValidator",
         "dataType": "function",
         "defaultValue": null,
-        "description": "validate the data parsed from a file before it is imported"
+        "description": "Validate the data parsed from a file before it is imported"
       },
       {
         "option": "importHeaderTransform",
@@ -876,13 +876,13 @@
         "option": "dataLoaderLoading",
         "dataType": "string",
         "defaultValue": "html (see below)",
-        "description": "html for loader element"
+        "description": "Html for loader element"
       },
       {
         "option": "dataLoaderError",
         "dataType": "string",
         "defaultValue": "html (see below)",
-        "description": "html for the loader element in the event of an error"
+        "description": "Html for the loader element in the event of an error"
       },
       {
         "option": "dataLoaderErrorTimeout",
@@ -911,13 +911,13 @@
         "option": "headerSortElement",
         "dataType": "string",
         "defaultValue": "<div class='tabulator-arrow'></div>",
-        "description": "set the column header sort icon"
+        "description": "Set the column header sort icon"
       },
       {
         "option": "headerSortClickElement",
         "dataType": "string",
         "defaultValue": "header",
-        "description": "set which header element triggers a sort when clicked",
+        "description": "Set which header element triggers a sort when clicked",
         "enum": [
           {
             "value": "header",
@@ -979,7 +979,7 @@
         "option": "groupHeader",
         "dataType": "function/array",
         "defaultValue": "(see documentation)",
-        "description": "function to layout group header row"
+        "description": "Function to layout group header row"
       },
       {
         "option": "groupHeaderPrint",
@@ -1041,7 +1041,7 @@
         "option": "groupClosedShowCalcs",
         "dataType": "boolean",
         "defaultValue": false,
-        "description": "show/hide column calculations when group is closed"
+        "description": "Show/hide column calculations when group is closed"
       }
     ]
   },
@@ -1052,7 +1052,7 @@
         "option": "pagination",
         "dataType": "boolean",
         "defaultValue": false,
-        "description": "enable pagination"
+        "description": "Enable pagination"
       },
       {
         "option": "paginationMode",
@@ -1108,7 +1108,7 @@
         "option": "paginationButtonCount",
         "dataType": "integer",
         "defaultValue": 5,
-        "description": "set the number of pagination buttons in the footer element"
+        "description": "Set the number of pagination buttons in the footer element"
       },
       {
         "option": "paginationCounterElement",
@@ -1146,7 +1146,7 @@
         "option": "paginationOutOfRange",
         "dataType": "integer/string/function",
         "defaultValue": null,
-        "description": "set the behaviour if a page is loaded outside the max range"
+        "description": "Set the behaviour if a page is loaded outside the max range"
       }
     ]
   },
@@ -1583,7 +1583,7 @@
         "option": "printRowRange",
         "dataType": "string",
         "defaultValue": "visible",
-        "description": "set the range of rows to be included in the printed table output",
+        "description": "Set the range of rows to be included in the printed table output",
         "enum": [
           {
             "value": "visible",

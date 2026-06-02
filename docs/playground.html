@@ -733,6 +733,24 @@
       ])
 
       // ═══════════════════════════════════════════
+      // Description lookup maps (for tooltips)
+      // ═══════════════════════════════════════════
+
+      const tableDescriptions = {}
+      for (const cat of tableSchema) {
+        for (const opt of cat.options) {
+          if (opt.description) tableDescriptions[opt.option] = opt.description
+        }
+      }
+
+      const colDescriptions = {}
+      for (const cat of columnSchema) {
+        for (const opt of cat.options) {
+          if (opt.description) colDescriptions[opt.option] = opt.description
+        }
+      }
+
+      // ═══════════════════════════════════════════
       // Persistence helpers
       // ═══════════════════════════════════════════
 
@@ -1619,7 +1637,7 @@
             const label = document.createElement('span')
             label.className = 'opt-label'
             label.textContent = schema.label ?? schema.key
-            label.title = schema.key
+            label.title = tableDescriptions[schema.key] || schema.key
             row.appendChild(label)
 
             if (!schema.disabled) {
@@ -1760,7 +1778,7 @@
                 const label = document.createElement('span')
                 label.className = 'col-opt-label'
                 label.textContent = paramSchema.label ?? paramSchema.key
-                label.title = paramSchema.key
+                label.title = colDescriptions[paramSchema.key] || paramSchema.key
                 row.appendChild(label)
                 const wrap = document.createElement('span')
                 wrap.className = 'col-opt-input'
@@ -1793,7 +1811,7 @@
           const label = document.createElement('span')
           label.className = 'col-opt-label'
           label.textContent = schema.label ?? schema.key
-          label.title = schema.key
+          label.title = colDescriptions[schema.key] || schema.key
           row.appendChild(label)
 
           const wrap = document.createElement('span')

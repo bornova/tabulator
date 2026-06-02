@@ -12,13 +12,13 @@
         "option": "field",
         "dataType": "string",
         "defaultValue": "Required (not required in icon/button columns)",
-        "description": "this is the key for this column in the data array"
+        "description": "This is the key for this column in the data array"
       },
       {
         "option": "visible",
         "dataType": "boolean",
         "defaultValue": true,
-        "description": "determines if the column is visible. (see Column Visibility for more details)"
+        "description": "Determines if the column is visible. (see Column Visibility for more details)"
       }
     ]
   },
@@ -29,7 +29,7 @@
         "option": "hozAlign",
         "dataType": "string",
         "defaultValue": null,
-        "description": "sets the horizontal text alignment for this column (left|center|right)",
+        "description": "Sets the horizontal text alignment for this column (left|center|right)",
         "enum": [
           {
             "value": "left",
@@ -49,7 +49,7 @@
         "option": "vertAlign",
         "dataType": "string",
         "defaultValue": null,
-        "description": "sets the vertical text alignment for this column (top|middle|bottom)",
+        "description": "Sets the vertical text alignment for this column (top|middle|bottom)",
         "enum": [
           {
             "value": "top",
@@ -69,7 +69,7 @@
         "option": "headerHozAlign",
         "dataType": "string",
         "defaultValue": null,
-        "description": "sets the horizontal text alignment for this columns header title (left|center|right)",
+        "description": "Sets the horizontal text alignment for this columns header title (left|center|right)",
         "enum": [
           {
             "value": "left",
@@ -89,43 +89,43 @@
         "option": "width",
         "dataType": "string/integer",
         "defaultValue": null,
-        "description": "sets the width of this column, this can be set in pixels or as a percentage of total table width (if not set the system will determine the best)"
+        "description": "Sets the width of this column, this can be set in pixels or as a percentage of total table width (if not set the system will determine the best)"
       },
       {
         "option": "minWidth",
         "dataType": "integer",
         "defaultValue": null,
-        "description": "sets the minimum width of this column, this should be set in pixels"
+        "description": "Sets the minimum width of this column, this should be set in pixels"
       },
       {
         "option": "maxWidth",
         "dataType": "integer",
         "defaultValue": null,
-        "description": "sets the maximum width of this column, this should be set in pixels"
+        "description": "Sets the maximum width of this column, this should be set in pixels"
       },
       {
         "option": "maxInitialWidth",
         "dataType": "integer",
         "defaultValue": null,
-        "description": "sets the maximum width of this column when it is first rendered, the user can then resize to above this (up to the maxWidth, if set) this should be set in pixels"
+        "description": "Sets the maximum width of this column when it is first rendered, the user can then resize to above this (up to the maxWidth, if set) this should be set in pixels"
       },
       {
         "option": "widthGrow",
         "dataType": "integer",
         "defaultValue": null,
-        "description": "when using fitColumns layout mode, determines how much the column should grow to fill available space (see Table Layout for more details)"
+        "description": "When using fitColumns layout mode, determines how much the column should grow to fill available space (see Table Layout for more details)"
       },
       {
         "option": "widthShrink",
         "dataType": "integer",
         "defaultValue": null,
-        "description": "when using fitColumns layout mode, determines how much the column should shrink to fit available space (see Table Layout for more details)"
+        "description": "When using fitColumns layout mode, determines how much the column should shrink to fit available space (see Table Layout for more details)"
       },
       {
         "option": "resizable",
         "dataType": "boolean/string",
         "defaultValue": null,
-        "description": "set whether column can be resized by user dragging its edges (see Table Layout for more details)",
+        "description": "Set whether column can be resized by user dragging its edges (see Table Layout for more details)",
         "enum": [
           {
             "value": true,
@@ -149,67 +149,67 @@
         "option": "frozen",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "freezes the column in place when scrolling (see Frozen Columns for more details)"
+        "description": "Freezes the column in place when scrolling (see Frozen Columns for more details)"
       },
       {
         "option": "responsive",
         "dataType": "integer",
         "defaultValue": null,
-        "description": "an integer to determine when the column should be hidden in responsive mode (see Responsive Layout for more details)"
+        "description": "An integer to determine when the column should be hidden in responsive mode (see Responsive Layout for more details)"
       },
       {
         "option": "tooltip",
         "dataType": "string/function/boolean",
         "defaultValue": null,
-        "description": "sets the on hover tooltip for each cell in this column (see Formatting Data for more details)"
+        "description": "Sets the on hover tooltip for each cell in this column (see Formatting Data for more details)"
       },
       {
         "option": "cssClass",
         "dataType": "string",
         "defaultValue": null,
-        "description": "sets css classes on header and cells in this column. (value should be a string containing space separated class names)"
+        "description": "Sets css classes on header and cells in this column. (value should be a string containing space separated class names)"
       },
       {
         "option": "rowHandle",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "sets the column as a row handle, allowing it to be used to drag movable rows. (see Movable Rows for more details)"
+        "description": "Sets the column as a row handle, allowing it to be used to drag movable rows. (see Movable Rows for more details)"
       },
       {
         "option": "htmlOutput",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "show or hide column in the getHtml function output (see Retrieve Data as HTML Table for more details)"
+        "description": "Show or hide column in the getHtml function output (see Retrieve Data as HTML Table for more details)"
       },
       {
         "option": "print",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "show or hide column in the print output (see Printing for more details)"
+        "description": "Show or hide column in the print output (see Printing for more details)"
       },
       {
         "option": "download",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "show or hide column in downloaded data (see Downloading Table Data for more details)"
+        "description": "Show or hide column in downloaded data (see Downloading Table Data for more details)"
       },
       {
         "option": "titleDownload",
         "dataType": "string",
         "defaultValue": null,
-        "description": "set custom title for column in download (see Downloading Table Data for more details)"
+        "description": "Set custom title for column in download (see Downloading Table Data for more details)"
       },
       {
         "option": "clipboard",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "show or hide column in the clipboard output (see Clipboard for more details)"
+        "description": "Show or hide column in the clipboard output (see Clipboard for more details)"
       },
       {
         "option": "variableHeight",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "alter the row height to fit the contents of the cell instead of hiding overflow"
+        "description": "Alter the row height to fit the contents of the cell instead of hiding overflow"
       }
     ]
   },
@@ -220,7 +220,7 @@
         "option": "sorter",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "determines how to sort data in this column (see Sorting Data for more details)",
+        "description": "Determines how to sort data in this column (see Sorting Data for more details)",
         "enum": [
           {
             "value": "string",
@@ -352,13 +352,13 @@
         "option": "sorterParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the sorter(see Sorting Data for more details)"
+        "description": "Additional parameters you can pass to the sorter(see Sorting Data for more details)"
       },
       {
         "option": "formatter",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "set how you would like the data to be formatted (see Formatting Data for more details)",
+        "description": "Set how you would like the data to be formatted (see Formatting Data for more details)",
         "enum": [
           {
             "value": "plaintext",
@@ -724,55 +724,55 @@
         "option": "formatterParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the formatter(see Formatting Data for more details)"
+        "description": "Additional parameters you can pass to the formatter(see Formatting Data for more details)"
       },
       {
         "option": "formatterPrint",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "set how you would like the data to be formatted when the table is printed(see Formatting Data for more details)"
+        "description": "Set how you would like the data to be formatted when the table is printed(see Formatting Data for more details)"
       },
       {
         "option": "formatterPrintParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the print formatter(see Formatting Data for more details)"
+        "description": "Additional parameters you can pass to the print formatter(see Formatting Data for more details)"
       },
       {
         "option": "formatterClipboard",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "set how you would like the data to be formatted when copied to the clipboard(see Formatting Data for more details)"
+        "description": "Set how you would like the data to be formatted when copied to the clipboard(see Formatting Data for more details)"
       },
       {
         "option": "formatterClipboardParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the clipboard formatter(see Formatting Data for more details)"
+        "description": "Additional parameters you can pass to the clipboard formatter(see Formatting Data for more details)"
       },
       {
         "option": "formatterHtmlOutput",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "set how you would like the data to be formatted when the getHtml function is used(see Formatting Data for more details)"
+        "description": "Set how you would like the data to be formatted when the getHtml function is used(see Formatting Data for more details)"
       },
       {
         "option": "formatterHtmlOutputParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the html output formatter(see Formatting Data for more details)"
+        "description": "Additional parameters you can pass to the html output formatter(see Formatting Data for more details)"
       },
       {
         "option": "editable",
         "dataType": "boolean/function",
         "defaultValue": null,
-        "description": "callback to check if the cell is editable (see Manipulating Data for more details)"
+        "description": "Callback to check if the cell is editable (see Manipulating Data for more details)"
       },
       {
         "option": "editor",
         "dataType": "string/function/boolean",
         "defaultValue": null,
-        "description": "set the editor to be used when editing the data. (see Manipulating Data for more details)",
+        "description": "Set the editor to be used when editing the data. (see Manipulating Data for more details)",
         "enum": [
           {
             "value": "input",
@@ -1104,7 +1104,7 @@
         "option": "editorParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the editor (see Manipulating Data for more details)"
+        "description": "Additional parameters you can pass to the editor (see Manipulating Data for more details)"
       },
       {
         "option": "editorEmptyValue",
@@ -1122,7 +1122,7 @@
         "option": "validator",
         "dataType": "string/function/array",
         "defaultValue": null,
-        "description": "set the validator to be used to approve data when a user edits a cell. (see Manipulating Data for more details)",
+        "description": "Set the validator to be used to approve data when a user edits a cell. (see Manipulating Data for more details)",
         "enum": [
           {
             "value": "required",
@@ -1198,151 +1198,151 @@
         "option": "contextMenu",
         "dataType": "array",
         "defaultValue": null,
-        "description": "add context menu to column cells (see Cell Menus for more details)"
+        "description": "Add context menu to column cells (see Cell Menus for more details)"
       },
       {
         "option": "clickMenu",
         "dataType": "array",
         "defaultValue": null,
-        "description": "add left click menu to column cells (see Cell Menus for more details)"
+        "description": "Add left click menu to column cells (see Cell Menus for more details)"
       },
       {
         "option": "dblClickMenu",
         "dataType": "array",
         "defaultValue": null,
-        "description": "add double left click menu to column cells (see Cell Menus for more details)"
+        "description": "Add double left click menu to column cells (see Cell Menus for more details)"
       },
       {
         "option": "contextPopup",
         "dataType": "string/DOM Element",
         "defaultValue": null,
-        "description": "add context popup to column cells (see Cell Popups for more details)"
+        "description": "Add context popup to column cells (see Cell Popups for more details)"
       },
       {
         "option": "clickPopup",
         "dataType": "string/DOM Element",
         "defaultValue": null,
-        "description": "add left click popup to column cells (see Cell Popups for more details)"
+        "description": "Add left click popup to column cells (see Cell Popups for more details)"
       },
       {
         "option": "dblClickPopup",
         "dataType": "string/DOM Element",
         "defaultValue": null,
-        "description": "add double left click popup to column cells (see Cell Popups for more details)"
+        "description": "Add double left click popup to column cells (see Cell Popups for more details)"
       },
       {
         "option": "mutator",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function for manipulating column values as they are parsed into the table (see Mutators for more details)"
+        "description": "Function for manipulating column values as they are parsed into the table (see Mutators for more details)"
       },
       {
         "option": "mutatorParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the mutator(see Mutators for more details)"
+        "description": "Additional parameters you can pass to the mutator(see Mutators for more details)"
       },
       {
         "option": "mutatorData",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function for manipulating column values as they are parsed into the table by command (see Mutators for more details)"
+        "description": "Function for manipulating column values as they are parsed into the table by command (see Mutators for more details)"
       },
       {
         "option": "mutatorDataParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the mutatorData(see Mutators for more details)"
+        "description": "Additional parameters you can pass to the mutatorData(see Mutators for more details)"
       },
       {
         "option": "mutatorEdit",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function for manipulating column values as they are edited by a user (see Mutators for more details)"
+        "description": "Function for manipulating column values as they are edited by a user (see Mutators for more details)"
       },
       {
         "option": "mutatorEditParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the mutatorEdit(see Mutators for more details)"
+        "description": "Additional parameters you can pass to the mutatorEdit(see Mutators for more details)"
       },
       {
         "option": "mutatorClipboard",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function for manipulating column values as they are pasted by a user (see Mutators for more details)"
+        "description": "Function for manipulating column values as they are pasted by a user (see Mutators for more details)"
       },
       {
         "option": "mutatorClipboardParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the mutatorClipboard (see Mutators for more details)"
+        "description": "Additional parameters you can pass to the mutatorClipboard (see Mutators for more details)"
       },
       {
         "option": "mutatorImport",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function for manipulating column values as they are imported from the file picker (see Mutators for more details)"
+        "description": "Function for manipulating column values as they are imported from the file picker (see Mutators for more details)"
       },
       {
         "option": "mutatorImportParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the mutatorImport (see Mutators for more details)"
+        "description": "Additional parameters you can pass to the mutatorImport (see Mutators for more details)"
       },
       {
         "option": "mutateLink",
         "dataType": "string/array",
         "defaultValue": null,
-        "description": "trigger mutation on columns when this column is edited (see Mutators for more details)"
+        "description": "Trigger mutation on columns when this column is edited (see Mutators for more details)"
       },
       {
         "option": "accessor",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function to alter column values before they are extracted from the table function (see Accessors for more details)"
+        "description": "Function to alter column values before they are extracted from the table function (see Accessors for more details)"
       },
       {
         "option": "accessorParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the accessor(see Accessors for more details)"
+        "description": "Additional parameters you can pass to the accessor(see Accessors for more details)"
       },
       {
         "option": "accessorData",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function to alter column values before they are extracted from the table using the getData function (see Accessors for more details)"
+        "description": "Function to alter column values before they are extracted from the table using the getData function (see Accessors for more details)"
       },
       {
         "option": "accessorDataParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the accessorData(see Accessors for more details)"
+        "description": "Additional parameters you can pass to the accessorData(see Accessors for more details)"
       },
       {
         "option": "accessorDownload",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function to alter column values before they are included in a file download (see Accessors for more details)"
+        "description": "Function to alter column values before they are included in a file download (see Accessors for more details)"
       },
       {
         "option": "accessorDownloadParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the accessorDownload(see Accessors for more details)"
+        "description": "Additional parameters you can pass to the accessorDownload(see Accessors for more details)"
       },
       {
         "option": "accessorClipboard",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function to alter column values before they are copied to the clipboard (see Accessors for more details)"
+        "description": "Function to alter column values before they are copied to the clipboard (see Accessors for more details)"
       },
       {
         "option": "accessorClipboardParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the accessorClipboard(see Accessors for more details)"
+        "description": "Additional parameters you can pass to the accessorClipboard(see Accessors for more details)"
       }
     ]
   },
@@ -1353,7 +1353,7 @@
         "option": "topCalc",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "the column calculation to be displayed at the top of this column(see Column Calculations for more details)",
+        "description": "The column calculation to be displayed at the top of this column(see Column Calculations for more details)",
         "enum": [
           {
             "value": "avg",
@@ -1395,25 +1395,25 @@
         "option": "topCalcParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the topCalc calculation function (see Column Calculations for more details)"
+        "description": "Additional parameters you can pass to the topCalc calculation function (see Column Calculations for more details)"
       },
       {
         "option": "topCalcFormatter",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "formatter for the topCalc calculation cell (see Column Calculations for more details)"
+        "description": "Formatter for the topCalc calculation cell (see Column Calculations for more details)"
       },
       {
         "option": "topCalcFormatterParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the topCalcFormatter function(see Column Calculations for more details)"
+        "description": "Additional parameters you can pass to the topCalcFormatter function(see Column Calculations for more details)"
       },
       {
         "option": "bottomCalc",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "the column calculation to be displayed at the bottom of this column(see Column Calculations for more details)",
+        "description": "The column calculation to be displayed at the bottom of this column(see Column Calculations for more details)",
         "enum": [
           {
             "value": "avg",
@@ -1455,19 +1455,19 @@
         "option": "bottomCalcParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the bottomCalc calculation function(see Column Calculations for more details)"
+        "description": "Additional parameters you can pass to the bottomCalc calculation function(see Column Calculations for more details)"
       },
       {
         "option": "bottomCalcFormatter",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "formatter for the bottomCalc calculation cell (see Column Calculations for more details)"
+        "description": "Formatter for the bottomCalc calculation cell (see Column Calculations for more details)"
       },
       {
         "option": "bottomCalcFormatterParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the bottomCalcFormatter function(see Column Calculations for more details)"
+        "description": "Additional parameters you can pass to the bottomCalcFormatter function(see Column Calculations for more details)"
       }
     ]
   },
@@ -1478,97 +1478,97 @@
         "option": "cellClick",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user clicks on a cell in this column (see Callbacks for more details)"
+        "description": "Callback for when user clicks on a cell in this column (see Callbacks for more details)"
       },
       {
         "option": "cellDblClick",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user double clicks on a cell in this column (see Callbacks for more details)"
+        "description": "Callback for when user double clicks on a cell in this column (see Callbacks for more details)"
       },
       {
         "option": "cellContext",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user right clicks on a cell in this column (see Callbacks for more details)"
+        "description": "Callback for when user right clicks on a cell in this column (see Callbacks for more details)"
       },
       {
         "option": "cellTap",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user taps on a cell in this column, triggered in touch displays. (see Callbacks for more details)"
+        "description": "Callback for when user taps on a cell in this column, triggered in touch displays. (see Callbacks for more details)"
       },
       {
         "option": "cellDblTap",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user double taps on a cell in this column, triggered in touch displays when a user taps the same cell twice in under 300ms. (see Callbacks for more details)"
+        "description": "Callback for when user double taps on a cell in this column, triggered in touch displays when a user taps the same cell twice in under 300ms. (see Callbacks for more details)"
       },
       {
         "option": "cellTapHold",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user taps and holds on a cell in this column, triggered in touch displays when a user taps and holds the same cell for 1 second. (see Callbacks for more details)"
+        "description": "Callback for when user taps and holds on a cell in this column, triggered in touch displays when a user taps and holds the same cell for 1 second. (see Callbacks for more details)"
       },
       {
         "option": "cellMouseEnter",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer enters a cell (see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer enters a cell (see Callbacks for more details)"
       },
       {
         "option": "cellMouseLeave",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer leaves a cell (see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer leaves a cell (see Callbacks for more details)"
       },
       {
         "option": "cellMouseOver",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer enters a cell or one of its child elements(see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer enters a cell or one of its child elements(see Callbacks for more details)"
       },
       {
         "option": "cellMouseOut",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer enters a cell or one of its child elements(see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer enters a cell or one of its child elements(see Callbacks for more details)"
       },
       {
         "option": "cellMouseMove",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer moves over a cell (see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer moves over a cell (see Callbacks for more details)"
       },
       {
         "option": "cellMouseDown",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for the left mouse button is pressed with the cursor over a cell (see Callbacks for more details)"
+        "description": "Callback for the left mouse button is pressed with the cursor over a cell (see Callbacks for more details)"
       },
       {
         "option": "cellMouseUp",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for the left mouse button is released with the cursor over a cell (see Callbacks for more details)"
+        "description": "Callback for the left mouse button is released with the cursor over a cell (see Callbacks for more details)"
       },
       {
         "option": "cellEditing",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when a cell in this column is being edited by the user (see Callbacks for more details)"
+        "description": "Callback for when a cell in this column is being edited by the user (see Callbacks for more details)"
       },
       {
         "option": "cellEdited",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when a cell in this column has been edited by the user (see Callbacks for more details)"
+        "description": "Callback for when a cell in this column has been edited by the user (see Callbacks for more details)"
       },
       {
         "option": "cellEditCancelled",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when an edit on a cell in this column is aborted by the user (see Callbacks for more details)"
+        "description": "Callback for when an edit on a cell in this column is aborted by the user (see Callbacks for more details)"
       }
     ]
   },
@@ -1579,13 +1579,13 @@
         "option": "headerSort",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "user can sort by clicking on the header (see Sorting Data for more details)"
+        "description": "User can sort by clicking on the header (see Sorting Data for more details)"
       },
       {
         "option": "headerSortStartingDir",
         "dataType": "string",
         "defaultValue": null,
-        "description": "set the starting sort direction when a user first clicks on a header (see Sorting Data for more details)",
+        "description": "Set the starting sort direction when a user first clicks on a header (see Sorting Data for more details)",
         "enum": [
           {
             "value": "asc",
@@ -1601,97 +1601,97 @@
         "option": "headerSortTristate",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "allow tristate toggling of column header sort direction (see Sorting Data for more details)"
+        "description": "Allow tristate toggling of column header sort direction (see Sorting Data for more details)"
       },
       {
         "option": "headerClick",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user clicks on the header for this column (see Callbacks for more details)"
+        "description": "Callback for when user clicks on the header for this column (see Callbacks for more details)"
       },
       {
         "option": "headerDblClick",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user double clicks on the header for this column (see Callbacks for more details)"
+        "description": "Callback for when user double clicks on the header for this column (see Callbacks for more details)"
       },
       {
         "option": "headerContext",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user right clicks on the header for this column (see Callbacks for more details)"
+        "description": "Callback for when user right clicks on the header for this column (see Callbacks for more details)"
       },
       {
         "option": "headerTap",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user taps on a header for this column, triggered in touch displays. (see Callbacks for more details)"
+        "description": "Callback for when user taps on a header for this column, triggered in touch displays. (see Callbacks for more details)"
       },
       {
         "option": "headerDblTap",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user double taps on a header for this column, triggered in touch displays when a user taps the same header twice in under 300ms. (see Callbacks for more details)"
+        "description": "Callback for when user double taps on a header for this column, triggered in touch displays when a user taps the same header twice in under 300ms. (see Callbacks for more details)"
       },
       {
         "option": "headerTapHold",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when user taps and holds on a header for this column, triggered in touch displays when a user taps and holds the same header for 1 second. (see Callbacks for more details)"
+        "description": "Callback for when user taps and holds on a header for this column, triggered in touch displays when a user taps and holds the same header for 1 second. (see Callbacks for more details)"
       },
       {
         "option": "headerMouseEnter",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer enters a column header (see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer enters a column header (see Callbacks for more details)"
       },
       {
         "option": "headerMouseLeave",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer leaves a column header (see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer leaves a column header (see Callbacks for more details)"
       },
       {
         "option": "headerMouseOver",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer enters a column header or one of its child elements(see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer enters a column header or one of its child elements(see Callbacks for more details)"
       },
       {
         "option": "headerMouseOut",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer enters a column header or one of its child elements(see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer enters a column header or one of its child elements(see Callbacks for more details)"
       },
       {
         "option": "headerMouseMove",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for when the mouse pointer moves over a column header (see Callbacks for more details)"
+        "description": "Callback for when the mouse pointer moves over a column header (see Callbacks for more details)"
       },
       {
         "option": "headerMouseDown",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for the left mouse button is pressed with the cursor over a column header (see Callbacks for more details)"
+        "description": "Callback for the left mouse button is pressed with the cursor over a column header (see Callbacks for more details)"
       },
       {
         "option": "headerMouseUp",
         "dataType": "function",
         "defaultValue": null,
-        "description": "callback for the left mouse button is released with the cursor over a column header (see Callbacks for more details)"
+        "description": "Callback for the left mouse button is released with the cursor over a column header (see Callbacks for more details)"
       },
       {
         "option": "headerTooltip",
         "dataType": "string/function/boolean",
         "defaultValue": null,
-        "description": "sets the on hover tooltip for the column header (see Formatting Data for more details)"
+        "description": "Sets the on hover tooltip for the column header (see Formatting Data for more details)"
       },
       {
         "option": "headerVertical",
         "dataType": "boolean/string",
         "defaultValue": null,
-        "description": "change the orientation of the column header to vertical (see Vertical Column Headers for more details)",
+        "description": "Change the orientation of the column header to vertical (see Vertical Column Headers for more details)",
         "enum": [
           {
             "value": false,
@@ -1711,19 +1711,19 @@
         "option": "editableTitle",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "allows the user to edit the header titles. (see Editable Column Titles for more details)"
+        "description": "Allows the user to edit the header titles. (see Editable Column Titles for more details)"
       },
       {
         "option": "titleFormatter",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "formatter function for header title (see Formatting Data for more details)"
+        "description": "Formatter function for header title (see Formatting Data for more details)"
       },
       {
         "option": "titleFormatterParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the header title formatter(see Formatting Data for more details)"
+        "description": "Additional parameters you can pass to the header title formatter(see Formatting Data for more details)"
       },
       {
         "option": "headerWordWrap",
@@ -1735,31 +1735,31 @@
         "option": "headerFilter",
         "dataType": "string/boolean/function",
         "defaultValue": null,
-        "description": "filtering of columns from elements in the header (see Header Filtering for more details)"
+        "description": "Filtering of columns from elements in the header (see Header Filtering for more details)"
       },
       {
         "option": "headerFilterPlaceholder",
         "dataType": "string",
         "defaultValue": null,
-        "description": "placeholder text for the header filter (see Header Filtering for more details)"
+        "description": "Placeholder text for the header filter (see Header Filtering for more details)"
       },
       {
         "option": "headerFilterParams",
         "dataType": "object/function",
         "defaultValue": null,
-        "description": "additional parameters you can pass to the header filter (see Header Filtering for more details)"
+        "description": "Additional parameters you can pass to the header filter (see Header Filtering for more details)"
       },
       {
         "option": "headerFilterEmptyCheck",
         "dataType": "function",
         "defaultValue": null,
-        "description": "function to check when the header filter is empty (see Header Filtering for more details)"
+        "description": "Function to check when the header filter is empty (see Header Filtering for more details)"
       },
       {
         "option": "headerFilterFunc",
         "dataType": "string/function",
         "defaultValue": null,
-        "description": "the filter function that should be used by the header filter (see Header Filtering for more details)",
+        "description": "The filter function that should be used by the header filter (see Header Filtering for more details)",
         "enum": [
           {
             "value": "=",
@@ -1811,61 +1811,61 @@
         "option": "headerFilterFuncParams",
         "dataType": "object",
         "defaultValue": null,
-        "description": "additional parameters object passed to the headerFilterFunc function (see Header Filtering for more details)"
+        "description": "Additional parameters object passed to the headerFilterFunc function (see Header Filtering for more details)"
       },
       {
         "option": "headerFilterLiveFilter",
         "dataType": "boolean",
         "defaultValue": null,
-        "description": "disable live filtering of the table (see Header Filtering for more details)"
+        "description": "Disable live filtering of the table (see Header Filtering for more details)"
       },
       {
         "option": "headerMenu",
         "dataType": "array",
         "defaultValue": null,
-        "description": "add menu button to column header (see Header Menus for more details)"
+        "description": "Add menu button to column header (see Header Menus for more details)"
       },
       {
         "option": "headerClickMenu",
         "dataType": "array",
         "defaultValue": null,
-        "description": "add click menu to column header (see Header Menus for more details)"
+        "description": "Add click menu to column header (see Header Menus for more details)"
       },
       {
         "option": "headerDblClickMenu",
         "dataType": "array",
         "defaultValue": null,
-        "description": "add double click menu to column header (see Header Menus for more details)"
+        "description": "Add double click menu to column header (see Header Menus for more details)"
       },
       {
         "option": "headerContextMenu",
         "dataType": "array",
         "defaultValue": null,
-        "description": "add context menu to column header (see Header Menus for more details)"
+        "description": "Add context menu to column header (see Header Menus for more details)"
       },
       {
         "option": "headerPopup",
         "dataType": "string/DOM Element",
         "defaultValue": null,
-        "description": "add popup button to column header (see Column Header Popups for more details)"
+        "description": "Add popup button to column header (see Column Header Popups for more details)"
       },
       {
         "option": "headerClickPopup",
         "dataType": "string/DOM Element",
         "defaultValue": null,
-        "description": "add click popup to column header (see Column Header Popups for more details)"
+        "description": "Add click popup to column header (see Column Header Popups for more details)"
       },
       {
         "option": "headerDblClickPopup",
         "dataType": "string/DOM Element",
         "defaultValue": null,
-        "description": "add double left click popup to column header (see Column Header Popups for more details)"
+        "description": "Add double left click popup to column header (see Column Header Popups for more details)"
       },
       {
         "option": "headerContextPopup",
         "dataType": "string/DOM Element",
         "defaultValue": null,
-        "description": "add context popup to column header (see Column Header Popups for more details)"
+        "description": "Add context popup to column header (see Column Header Popups for more details)"
       }
     ]
   }
