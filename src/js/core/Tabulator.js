@@ -27,6 +27,41 @@ import AutoScroller from './tools/AutoScroller'
 /** @typedef {import('./column/ColumnComponent').ColumnDefinition} ColumnDefinition */
 
 /**
+ * Controls which parts of the table are included in export/output operations
+ * (used by downloadConfig, htmlOutputConfig, clipboardCopyConfig, and printConfig).
+ * @typedef {object} ExportConfig
+ * @property {boolean} [columnHeaders] Include column headers (default true).
+ * @property {boolean} [columnGroups] Include column group headers (default true).
+ * @property {boolean} [rowHeaders] Include row header columns (default true).
+ * @property {boolean} [rowGroups] Include row group header rows (default true).
+ * @property {boolean} [columnCalcs] Include column calculation rows (default true).
+ * @property {boolean} [dataTree] Include child rows from data tree (default true).
+ * @property {boolean} [formatCells] Apply cell formatters in the output (default true).
+ */
+
+/**
+ * Selectively enable persistence for specific table state.
+ * @typedef {object} PersistenceConfig
+ * @property {boolean} [sort] Persist column sort state.
+ * @property {boolean} [filter] Persist active data filters.
+ * @property {boolean} [headerFilter] Persist header filter input values.
+ * @property {boolean} [group] Persist row grouping state.
+ * @property {boolean} [page] Persist the current page and page size.
+ * @property {boolean|string[]} [columns] Persist column layout; pass an array of property names to limit which column properties are saved.
+ */
+
+/**
+ * Ajax request configuration object (passed to the underlying fetch call).
+ * @typedef {object} AjaxConfig
+ * @property {string} [method] HTTP method (default 'GET').
+ * @property {object} [headers] Request headers object.
+ * @property {string} [credentials] Credentials mode ('omit', 'same-origin', 'include').
+ * @property {string} [mode] Request mode ('cors', 'no-cors', 'same-origin').
+ * @property {string} [cache] Cache mode ('default', 'no-cache', 'reload', 'force-cache', 'only-if-cached').
+ * @property {string} [redirect] Redirect mode ('follow', 'error', 'manual').
+ */
+
+/**
  * @typedef {object} Options
  *
  * --- General Table Configuration ---
@@ -43,10 +78,10 @@ import AutoScroller from './tools/AutoScroller'
  * @property {boolean|object} [keybindings] Keybinding configuration object or false to disable.
  * @property {string|boolean} [locale] Set the current localisation language; false uses the default.
  * @property {object} [langs] Localisation templates keyed by locale string.
- * @property {object} [downloadConfig] Choose which parts of the table are included in downloaded files.
+ * @property {ExportConfig} [downloadConfig] Choose which parts of the table are included in downloaded files.
  * @property {string} [downloadRowRange] Set the range of rows included in downloads ("active", "visible", "selected", or "all").
  * @property {Function} [downloadEncoder] Override the default file encoder for downloads.
- * @property {object} [htmlOutputConfig] Choose which parts of the table are included in getHtml output.
+ * @property {ExportConfig} [htmlOutputConfig] Choose which parts of the table are included in getHtml output.
  * @property {boolean} [reactiveData] Enable reactive data so the table automatically updates when the data array is mutated.
  * @property {boolean|object|Function} [tabEndNewRow] Add a new row when the user tabs off the end of the table.
  * @property {"blocking"|"highlight"} [validationMode] Set the validation mode; "blocking" (default) prevents invalid input, "highlight" marks it.
@@ -110,7 +145,7 @@ import AutoScroller from './tools/AutoScroller'
  * @property {any[]} [data] Initial data array to load into the table.
  * @property {string|boolean} [ajaxURL] URL for remote Ajax data loading.
  * @property {object} [ajaxParams] Parameters sent with every Ajax request.
- * @property {string|object} [ajaxConfig] HTTP method or config object for Ajax requests. Defaults to "get".
+ * @property {string|AjaxConfig} [ajaxConfig] HTTP method string or config object for Ajax requests. Defaults to "get".
  * @property {string|object} [ajaxContentType] Content-type encoding for Ajax POST requests. Defaults to "form".
  * @property {Function|boolean} [ajaxURLGenerator] Callback to dynamically generate the Ajax request URL.
  * @property {Function|boolean} [ajaxRequestFunc] Callback that replaces the built-in Ajax request handler.
@@ -184,7 +219,7 @@ import AutoScroller from './tools/AutoScroller'
  * @property {string|HTMLElement|boolean} [spreadsheetSheetTabsElement] Alternate container element for the sheet tabs.
  *
  * --- Persistent Configuration ---
- * @property {boolean|object} [persistence] Define which table state should be persisted across page loads.
+ * @property {boolean|PersistenceConfig} [persistence] Define which table state should be persisted across page loads; true persists everything.
  * @property {string} [persistenceID] Unique ID used to identify this table's persisted data.
  * @property {boolean|"local"|"cookie"} [persistenceMode] Storage mechanism for persistence. Defaults to true (localStorage).
  * @property {Function|boolean} [persistenceReaderFunc] Custom function to read persisted data.
@@ -213,7 +248,7 @@ import AutoScroller from './tools/AutoScroller'
  * --- Clipboard ---
  * @property {boolean} [clipboard] Enable clipboard copy/paste functionality.
  * @property {boolean} [clipboardCopyStyled] Include cell formatting when copying to the clipboard. Defaults to true.
- * @property {object|boolean} [clipboardCopyConfig] Configuration for what is included in clipboard copies.
+ * @property {ExportConfig|boolean} [clipboardCopyConfig] Configuration for what is included in clipboard copies.
  * @property {string|Function|boolean} [clipboardCopyRowRange] Range of rows included in clipboard copies. Defaults to "active".
  * @property {string|Function|boolean} [clipboardPasteParser] Parser used to convert pasted clipboard text into row data. Defaults to "table".
  * @property {string|Function|boolean} [clipboardPasteAction] Action to perform after parsing pasted data. Defaults to "insert".
@@ -236,7 +271,7 @@ import AutoScroller from './tools/AutoScroller'
  * @property {boolean} [printAsHtml] Render the table as an HTML table when printing.
  * @property {boolean} [printStyled] Copy table styles to the printed HTML table. Defaults to true.
  * @property {string} [printRowRange] Range of rows included in the printed output. Defaults to "visible".
- * @property {object} [printConfig] Choose which parts of the table are included when printing.
+ * @property {ExportConfig} [printConfig] Choose which parts of the table are included when printing.
  * @property {boolean|string|HTMLElement|Function} [printHeader] Content to add as a header above the printed table.
  * @property {boolean|string|HTMLElement|Function} [printFooter] Content to add as a footer below the printed table.
  * @property {Function|boolean} [printFormatter] Callback to customise the print layout before printing.
