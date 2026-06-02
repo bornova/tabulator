@@ -80,6 +80,22 @@ body {
   gap: 8px;
 }
 
+#example-select {
+  cursor: pointer;
+  border: 1px solid light-dark(#d0d7de, #30363d);
+  border-radius: 6px;
+  background: light-dark(#f6f8fa, #21262d);
+  padding: 5px 10px;
+  color: light-dark(#24292f, #e6edf3);
+  font-size: 12px;
+  font-family: inherit;
+  height: 28px;
+}
+
+#example-select:hover {
+  background: light-dark(#eaeef2, #30363d);
+}
+
 #theme-toggle-header {
   display: flex;
   align-items: center;

@@ -1,8 +1,11 @@
 ﻿<!doctype html>
 <html>
   <head>
+    <meta charset="utf-8" />
     <title>Options Playground — @bornova/tabulator-tables</title>
     <link rel="stylesheet" href="./playground.css" />
+    <link rel="stylesheet" href="./tabulator.min.css" />
+    <script src="./tabulator.min.js"></script>
   </head>
   <body>
     <span id="rebuild-indicator">✓ Table rebuilt</span>
@@ -25,6 +28,23 @@
         <span id="page-header-subtitle">Playground</span>
       </span>
       <div id="page-header-controls">
+        <select id="example-select" aria-label="Load example">
+          <option value="">Load example…</option>
+          <option value="basic">Basic table</option>
+          <option value="pagination">Pagination</option>
+          <option value="header-filters">Header filters</option>
+          <option value="grouping">Grouping</option>
+          <option value="editable">Editable data</option>
+          <option value="frozen-cols">Frozen columns</option>
+          <option value="frozen-rows">Frozen rows</option>
+          <option value="responsive">Responsive layout</option>
+          <option value="data-tree">Data tree</option>
+          <option value="selectable">Selectable rows</option>
+          <option value="movable-rows">Movable rows</option>
+          <option value="column-groups">Column groups</option>
+          <option value="column-calcs">Column calculations</option>
+          <option value="spreadsheet">Spreadsheet</option>
+        </select>
         <a
           id="github-btn"
           href="https://github.com/bornova/tabulator"
@@ -80,7 +100,7 @@
     </div>
 
     <script type="module">
-      import { generateData, generateNestedData } from '../examples/_exampleData.js'
+      import { generateData, generateNestedData } from './exampleData.js'
 
       // Theme switcher
       ;(() => {
@@ -105,28 +125,6 @@
           if (btn) applyTheme(btn.dataset.theme)
         })
       })()
-
-      // Load IIFE stylesheet
-      await new Promise((resolve) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = './tabulator.min.css'
-        link.addEventListener('load', resolve, { once: true })
-        link.addEventListener('error', resolve, { once: true })
-        document.head.insertBefore(link, document.head.firstChild)
-      })
-
-      // Load IIFE script
-      await new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = './tabulator.min.js'
-        script.async = true
-        script.addEventListener('load', resolve, { once: true })
-        script.addEventListener('error', () => reject(new Error('Failed to load Tabulator IIFE bundle')), {
-          once: true
-        })
-        document.head.appendChild(script)
-      })
 
       const Tabulator = window.Tabulator
 
@@ -159,6 +157,7 @@
       // ═══════════════════════════════════════════
 
       const STORAGE_KEY = 'tabulator-playground-config'
+      const PRESET_KEY = 'tabulator-playground-preset'
 
       function saveConfig() {
         try {
@@ -182,6 +181,17 @@
 
       const tableData = generateData(100)
       const tableDataTree = generateNestedData(5, 4, 2)
+      const spreadsheetData = [
+        [9937, '', '', 7749, 9816, 4355, 8279, '', ''],
+        [2380, '', 6977, 8896, 4012, 3803, 5408, 3415, 3056],
+        [9180, '', 39, 9445, 3917, '', 18, 5239, 2516],
+        [1924, 8734, 1819, 1838, 2330, 7921, 9219, '', 3537],
+        ['', 8665, 5875, 9732, 1926, '', 9743, 8388, ''],
+        [7040, 4861, 2988, 5584, 2344, 9749, 8872, 9177, 6246],
+        [6334, 1674, 2967, '', 9353, 396, 6006, 8572, ''],
+        [6359, '', 2580, 5723, 9801, 554, 1044, 5266, 8532],
+        [7278, 6971, 2232, 5720, 5665, 7231, 1165, '', 168]
+      ]
 
       // Table-level options (primitives only — no callbacks)
       const tableOpts = {
@@ -317,20 +327,21 @@
       }
 
       // Column definitions (includes internal _id for tab tracking)
-      let nextColId = 10
+      let nextColId = 14
       let activeColId
+      let rawColumns = null // when set, bypasses resolveColumns() (e.g. column groups)
+      let presetExtraOpts = null // non-serialisable options (callbacks) applied directly
       let columnDefs = [
         {
           _id: 1,
           title: 'Id',
           field: 'id',
           sorter: 'number',
-          headerSort: true,
-          resizable: true,
           hozAlign: 'right',
-          headerHozAlign: 'right'
+          headerHozAlign: 'right',
+          resizable: true
         },
-        { _id: 2, title: 'Name', field: 'name', sorter: 'string', headerSort: true, resizable: true },
+        { _id: 2, title: 'Name', field: 'name', sorter: 'string', resizable: true },
         {
           _id: 3,
           title: 'Age',
@@ -338,10 +349,9 @@
           sorter: 'number',
           hozAlign: 'right',
           headerHozAlign: 'right',
-          headerSort: true,
           resizable: true
         },
-        { _id: 4, title: 'Gender', field: 'gender', sorter: 'string', headerSort: true, resizable: true },
+        { _id: 4, title: 'Gender', field: 'gender', sorter: 'string', resizable: true },
         {
           _id: 5,
           title: 'Rating',
@@ -350,40 +360,32 @@
           formatter: 'star',
           hozAlign: 'center',
           headerHozAlign: 'center',
-          headerSort: true,
           resizable: true
         },
-        { _id: 6, title: 'Color', field: 'col', sorter: 'string', headerSort: true, resizable: true },
+        { _id: 6, title: 'Color', field: 'col', sorter: 'string', resizable: true },
+        { _id: 7, title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center', resizable: true },
         {
-          _id: 7,
+          _id: 8,
           title: 'Salary',
           field: 'salary',
           sorter: 'number',
           hozAlign: 'right',
           headerHozAlign: 'right',
-          headerSort: true,
-          resizable: true,
           formatter: 'money',
-          formatterParams: { decimal: '.', thousand: ',', symbol: '$' }
-        },
-        {
-          _id: 8,
-          title: 'Progress',
-          field: 'progress',
-          sorter: 'number',
-          formatter: 'progress',
-          hozAlign: 'center',
-          headerSort: true,
+          formatterParams: { decimal: '.', thousand: ',', symbol: '$' },
           resizable: true
         },
+        { _id: 9, title: 'Address', field: 'address', sorter: 'string', resizable: true },
+        { _id: 10, title: 'State', field: 'state', sorter: 'string', resizable: true },
+        { _id: 11, title: 'Zip', field: 'zip', sorter: 'number', resizable: true },
+        { _id: 12, title: 'Progress', field: 'progress', sorter: 'number', formatter: 'progress', resizable: true },
         {
-          _id: 9,
-          title: 'Completed',
+          _id: 13,
+          title: 'Done',
           field: 'completed',
-          formatter: 'tickCross',
           sorter: 'boolean',
+          formatter: 'tickCross',
           hozAlign: 'center',
-          headerSort: true,
           resizable: true
         }
       ]
@@ -416,6 +418,9 @@
 
       // Default activeColId if not restored
       if (!activeColId) activeColId = columnDefs[0]._id
+
+      // Restore last-used preset key into the dropdown (after DOM ready)
+      const _savedPreset = localStorage.getItem(PRESET_KEY) || ''
 
       // ═══════════════════════════════════════════
       // Option schemas (generated from tableSchema.json / columnSchema.json)
@@ -810,12 +815,24 @@
         }
 
         const el = document.getElementById('example-table')
+        document.getElementById('col-options-section').style.display = rawColumns ? 'none' : ''
 
         try {
           const opts = resolveOpts()
+          const isSpreadsheet = !!opts.spreadsheet
           table = new Tabulator(el, {
-            data: opts.dataTree ? tableDataTree : tableData,
-            columns: resolveColumns(),
+            ...(isSpreadsheet
+              ? {
+                  spreadsheetData,
+                  spreadsheetColumnDefinition: { editor: 'input' },
+                  rowHeader: { field: '_id', hozAlign: 'center', headerSort: false, frozen: true },
+                  editorEmptyValue: undefined
+                }
+              : {
+                  data: opts.dataTree ? tableDataTree : tableData,
+                  columns: rawColumns ?? resolveColumns()
+                }),
+            ...(presetExtraOpts ?? {}),
             ...opts
           })
         } catch (err) {
@@ -1290,22 +1307,297 @@
       })
 
       // ═══════════════════════════════════════════
+      // Example presets
+      // ═══════════════════════════════════════════
+
+      const BASE_COLUMNS = DEFAULT_COLUMN_DEFS
+
+      const EXAMPLES = {
+        basic: {
+          label: 'Basic table',
+          tableOpts: { height: 400, layout: 'fitData', movableColumns: true },
+          columnDefs: BASE_COLUMNS
+        },
+        pagination: {
+          label: 'Pagination',
+          tableOpts: {
+            height: false,
+            pagination: true,
+            paginationMode: 'local',
+            paginationSize: 25,
+            paginationSizeSelector: true,
+            paginationCounter: 'rows',
+            movableColumns: true
+          },
+          columnDefs: BASE_COLUMNS
+        },
+        'header-filters': {
+          label: 'Header filters',
+          tableOpts: { height: 400, layout: 'fitData' },
+          columnDefs: BASE_COLUMNS.map((c) => {
+            const col = { ...c }
+            if (c.field === 'name' || c.field === 'address') col.headerFilter = 'input'
+            if (c.field === 'gender') {
+              col.headerFilter = 'list'
+              col.headerFilterParams = { valuesLookup: 'active' }
+            }
+            return col
+          })
+        },
+        grouping: {
+          label: 'Grouping',
+          tableOpts: { height: 400, groupBy: 'gender', groupStartOpen: true },
+          columnDefs: BASE_COLUMNS
+        },
+        editable: {
+          label: 'Editable data',
+          tableOpts: { height: 400, history: true },
+          columnDefs: BASE_COLUMNS.map((c) => {
+            const col = { ...c }
+            if (c.field === 'name') col.editor = 'input'
+            if (c.field === 'age') col.editor = 'number'
+            if (c.field === 'gender') {
+              col.editor = 'list'
+              col.editorParams = { valuesLookup: 'active' }
+            }
+            if (c.field === 'rating') col.editor = true
+            if (c.field === 'progress') col.editor = true
+            if (c.field === 'completed') col.editor = true
+            return col
+          })
+        },
+        'frozen-cols': {
+          label: 'Frozen columns',
+          tableOpts: { height: 400, layout: 'fitData' },
+          columnDefs: BASE_COLUMNS.map((c, i) => ({ ...c, frozen: i < 2 }))
+        },
+        'frozen-rows': {
+          label: 'Frozen rows',
+          tableOpts: { height: 400, frozenRows: 3 },
+          columnDefs: BASE_COLUMNS
+        },
+        responsive: {
+          label: 'Responsive layout',
+          tableOpts: { height: 400, layout: 'fitColumns', responsiveLayout: 'hide' },
+          columnDefs: (() => {
+            const widths = {
+              id: 80,
+              name: 170,
+              age: 110,
+              gender: 130,
+              rating: 130,
+              col: 130,
+              dob: 130,
+              salary: 160,
+              address: 220,
+              state: 130,
+              zip: 100,
+              progress: 160,
+              completed: 110
+            }
+            return BASE_COLUMNS.map((c, i) => ({ ...c, width: widths[c.field] ?? 120, responsive: i === 0 ? 0 : i }))
+          })()
+        },
+        'data-tree': {
+          label: 'Data tree',
+          tableOpts: { height: 400, dataTree: true, dataTreeStartExpanded: false },
+          columnDefs: BASE_COLUMNS.map((c) =>
+            c.field === 'id' ? { ...c, hozAlign: 'left', headerHozAlign: 'left' } : c
+          )
+        },
+        selectable: {
+          label: 'Selectable rows (tickbox)',
+          tableOpts: { height: 400, selectableRows: true },
+          extraOpts: {
+            rowHeader: {
+              headerSort: false,
+              resizable: false,
+              frozen: true,
+              headerHozAlign: 'center',
+              hozAlign: 'center',
+              formatter: 'rowSelection',
+              titleFormatter: 'rowSelection',
+              cellClick: (e, cell) => cell.getRow().toggleSelect()
+            }
+          },
+          columnDefs: BASE_COLUMNS
+        },
+        'movable-rows': {
+          label: 'Movable rows',
+          tableOpts: { height: 400, movableRows: true, selectableRows: true },
+          columnDefs: BASE_COLUMNS
+        },
+        'column-groups': {
+          label: 'Column groups',
+          tableOpts: { height: 400, columnHeaderVertAlign: 'bottom' },
+          rawColumns: [
+            {
+              title: 'Name',
+              columns: [
+                { title: 'Id', field: 'id', sorter: 'number', resizable: true },
+                { title: 'Name', field: 'name', sorter: 'string', resizable: true }
+              ]
+            },
+            {
+              title: 'Demographics',
+              columns: [
+                { title: 'Age', field: 'age', sorter: 'number', hozAlign: 'right', resizable: true },
+                { title: 'Gender', field: 'gender', sorter: 'string', resizable: true },
+                {
+                  title: 'Rating',
+                  field: 'rating',
+                  sorter: 'number',
+                  formatter: 'star',
+                  hozAlign: 'center',
+                  resizable: true
+                },
+                { title: 'Color', field: 'col', sorter: 'string', resizable: true },
+                { title: 'DoB', field: 'dob', sorter: 'date', hozAlign: 'center', resizable: true },
+                {
+                  title: 'Salary',
+                  field: 'salary',
+                  sorter: 'number',
+                  hozAlign: 'right',
+                  formatter: 'money',
+                  formatterParams: { decimal: '.', thousand: ',', symbol: '$' },
+                  resizable: true
+                }
+              ]
+            },
+            {
+              title: 'Location',
+              columns: [
+                { title: 'Address', field: 'address', sorter: 'string', resizable: true },
+                { title: 'State', field: 'state', sorter: 'string', resizable: true },
+                { title: 'Zip', field: 'zip', sorter: 'number', resizable: true }
+              ]
+            },
+            {
+              title: 'Status',
+              columns: [
+                { title: 'Progress', field: 'progress', sorter: 'number', formatter: 'progress', resizable: true },
+                {
+                  title: 'Done',
+                  field: 'completed',
+                  sorter: 'boolean',
+                  formatter: 'tickCross',
+                  hozAlign: 'center',
+                  resizable: true
+                }
+              ]
+            }
+          ]
+        },
+        'column-calcs': {
+          label: 'Column calculations',
+          tableOpts: {
+            height: 400,
+            layout: 'fitDataFill',
+            renderHorizontal: 'virtual',
+            pagination: true,
+            paginationMode: 'local',
+            paginationSize: 25,
+            paginationSizeSelector: true,
+            paginationCounter: 'rows',
+            movableColumns: true
+          },
+          columnDefs: BASE_COLUMNS.map((c) => {
+            const col = { ...c }
+            if (c.field === 'age') {
+              col.bottomCalc = 'min'
+              col.topCalc = 'max'
+            }
+            if (c.field === 'salary') {
+              col.bottomCalc = 'avg'
+              col.bottomCalcFormatter = 'money'
+              col.bottomCalcFormatterParams = { decimal: '.', thousand: ',', symbol: '$' }
+            }
+            return col
+          })
+        },
+        spreadsheet: {
+          label: 'Spreadsheet',
+          tableOpts: {
+            height: 400,
+            spreadsheet: true,
+            spreadsheetRows: 20,
+            spreadsheetColumns: 9,
+            spreadsheetSheetTabs: false
+          },
+          columnDefs: null // spreadsheet mode uses its own data
+        }
+      }
+
+      function loadPreset(key) {
+        const preset = EXAMPLES[key]
+        if (!preset) return
+
+        // Reset table options to defaults then apply preset overrides
+        Object.keys(tableOpts).forEach((k) => delete tableOpts[k])
+        Object.assign(tableOpts, DEFAULT_TABLE_OPTS, preset.tableOpts)
+
+        // Handle raw column groups (bypasses column editor)
+        if (preset.rawColumns) {
+          rawColumns = preset.rawColumns
+          columnDefs = JSON.parse(JSON.stringify(DEFAULT_COLUMN_DEFS))
+          nextColId = 14
+          activeColId = columnDefs[0]._id
+        } else {
+          rawColumns = null
+          // Reset column defs
+          if (preset.columnDefs) {
+            columnDefs = JSON.parse(JSON.stringify(preset.columnDefs))
+            nextColId = columnDefs.reduce((max, c) => Math.max(max, c._id), 0) + 1
+            activeColId = columnDefs[0]._id
+          } else {
+            columnDefs = JSON.parse(JSON.stringify(DEFAULT_COLUMN_DEFS))
+            nextColId = 14
+            activeColId = columnDefs[0]._id
+          }
+        }
+
+        presetExtraOpts = preset.extraOpts ?? null
+
+        localStorage.removeItem(STORAGE_KEY)
+        buildSidebar()
+        renderColumnTabs()
+        renderColumnOptionsBody()
+        rebuildTable()
+
+        localStorage.setItem(PRESET_KEY, key)
+        document.getElementById('example-select').value = key
+      }
+
+      document.getElementById('example-select').addEventListener('change', (e) => {
+        if (e.target.value) loadPreset(e.target.value)
+      })
+
       // ═══════════════════════════════════════════
       // Init
       // ═══════════════════════════════════════════
 
-      buildSidebar()
-      renderColumnTabs()
-      renderColumnOptionsBody()
-      rebuildTable()
-
       document.getElementById('reset-table-btn').addEventListener('click', () => {
         Object.keys(tableOpts).forEach((k) => delete tableOpts[k])
         Object.assign(tableOpts, DEFAULT_TABLE_OPTS)
+        rawColumns = null
+        presetExtraOpts = null
         localStorage.removeItem(STORAGE_KEY)
+        localStorage.removeItem(PRESET_KEY)
+        document.getElementById('example-select').value = ''
         buildSidebar()
+        renderColumnTabs()
+        renderColumnOptionsBody()
         scheduleRebuild()
       })
+
+      if (_savedPreset && _savedPreset in EXAMPLES) {
+        loadPreset(_savedPreset)
+      } else {
+        buildSidebar()
+        renderColumnTabs()
+        renderColumnOptionsBody()
+        rebuildTable()
+      }
     </script>
   </body>
 </html>

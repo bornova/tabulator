@@ -1365,6 +1365,12 @@
         "description": "Maintain selected rows on filter or sort"
       },
       {
+        "option": "selectableRowsDeselectOnBlur",
+        "dataType": "boolean",
+        "defaultValue": false,
+        "description": "Deselect all rows when clicking outside the table"
+      },
+      {
         "option": "selectableRowsCheck",
         "dataType": "function",
         "defaultValue": "(see documentation)",

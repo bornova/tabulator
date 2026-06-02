@@ -19,42 +19,42 @@
       html,
       body {
         margin: 0;
+        background: light-dark(#ffffff, #0d1117);
         padding: 0;
         min-height: 100vh;
+        color: light-dark(#24292f, #e6edf3);
         font-size: 0.9375em;
         font-family: 'Google Sans', sans-serif;
-        background: light-dark(#ffffff, #0d1117);
-        color: light-dark(#24292f, #e6edf3);
       }
 
       /* ── Header ── */
       header {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 0 32px;
-        height: 56px;
-        border-bottom: 1px solid light-dark(#d0d7de, #30363d);
-        background: light-dark(#f6f8fa, #161b22);
         position: sticky;
         top: 0;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
         z-index: 10;
+        border-bottom: 1px solid light-dark(#d0d7de, #30363d);
+        background: light-dark(#f6f8fa, #161b22);
+        padding: 0 32px;
+        height: 56px;
       }
 
       .header-brand {
         display: flex;
         align-items: center;
         gap: 10px;
+        color: inherit;
         font-weight: 700;
         font-size: 15px;
-        color: inherit;
         text-decoration: none;
       }
 
       .header-brand svg {
-        stroke: light-dark(#24292f, #e6edf3);
         flex-shrink: 0;
+        stroke: light-dark(#24292f, #e6edf3);
       }
 
       .header-links {
@@ -67,6 +67,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        transition: background 0.15s;
         border: 1px solid light-dark(#d0d7de, #30363d);
         border-radius: 6px;
         background: light-dark(#f6f8fa, #21262d);
@@ -76,7 +77,6 @@
         font-size: 12px;
         font-family: inherit;
         text-decoration: none;
-        transition: background 0.15s;
       }
 
       .gh-btn:hover {
@@ -84,8 +84,8 @@
       }
 
       .gh-btn svg {
-        fill: light-dark(#24292f, #e6edf3);
         flex-shrink: 0;
+        fill: light-dark(#24292f, #e6edf3);
       }
 
       /* ── Hero ── */
@@ -93,35 +93,35 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        text-align: center;
+        margin: 0 auto;
         padding: 80px 32px 64px;
         max-width: 720px;
-        margin: 0 auto;
+        text-align: center;
       }
 
       .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        margin-bottom: 24px;
         border: 1px solid light-dark(#d0d7de, #30363d);
         border-radius: 20px;
         background: light-dark(#f6f8fa, #161b22);
         padding: 4px 12px;
-        font-size: 11.5px;
         color: light-dark(#57606a, #8b949e);
-        margin-bottom: 24px;
+        font-weight: 500;
+        font-size: 11.5px;
         letter-spacing: 0.03em;
         text-transform: uppercase;
-        font-weight: 500;
       }
 
       .hero h1 {
-        font-size: 2.8rem;
-        font-weight: 700;
-        line-height: 1.1;
-        letter-spacing: -0.03em;
         margin: 0 0 16px;
         color: light-dark(#1f2328, #e6edf3);
+        font-weight: 700;
+        font-size: 2.8rem;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
       }
 
       .hero h1 span {
@@ -129,35 +129,35 @@
       }
 
       .hero p {
-        font-size: 1.05rem;
-        line-height: 1.65;
-        color: light-dark(#57606a, #8b949e);
         margin: 0 0 36px;
         max-width: 540px;
+        color: light-dark(#57606a, #8b949e);
+        font-size: 1.05rem;
+        line-height: 1.65;
       }
 
       .hero-actions {
         display: flex;
-        gap: 12px;
         flex-wrap: wrap;
         justify-content: center;
+        gap: 12px;
       }
 
       .btn-primary {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: light-dark(#0969da, #388bfd);
-        color: #fff;
+        transition: background 0.15s;
+        cursor: pointer;
         border: none;
         border-radius: 8px;
+        background: light-dark(#0969da, #388bfd);
         padding: 11px 22px;
-        font-size: 14px;
+        color: #fff;
         font-weight: 600;
+        font-size: 14px;
         font-family: inherit;
         text-decoration: none;
-        cursor: pointer;
-        transition: background 0.15s;
       }
 
       .btn-primary:hover {
@@ -168,17 +168,17 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: transparent;
-        color: light-dark(#24292f, #e6edf3);
+        transition: background 0.15s;
+        cursor: pointer;
         border: 1px solid light-dark(#d0d7de, #30363d);
         border-radius: 8px;
+        background: transparent;
         padding: 11px 22px;
-        font-size: 14px;
+        color: light-dark(#24292f, #e6edf3);
         font-weight: 600;
+        font-size: 14px;
         font-family: inherit;
         text-decoration: none;
-        cursor: pointer;
-        transition: background 0.15s;
       }
 
       .btn-secondary:hover {
@@ -187,18 +187,18 @@
 
       /* ── Cards ── */
       .cards-section {
+        margin: 0 auto;
         padding: 0 32px 80px;
         max-width: 960px;
-        margin: 0 auto;
       }
 
       .section-label {
-        font-size: 11px;
+        margin: 0 0 20px;
+        color: light-dark(#57606a, #8b949e);
         font-weight: 600;
+        font-size: 11px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: light-dark(#57606a, #8b949e);
-        margin: 0 0 20px;
       }
 
       .cards {
@@ -211,30 +211,30 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-        border: 1px solid light-dark(#d0d7de, #30363d);
-        border-radius: 10px;
-        padding: 22px 24px;
-        background: light-dark(#ffffff, #161b22);
-        text-decoration: none;
-        color: inherit;
         transition:
           border-color 0.15s,
           box-shadow 0.15s;
+        border: 1px solid light-dark(#d0d7de, #30363d);
+        border-radius: 10px;
+        background: light-dark(#ffffff, #161b22);
+        padding: 22px 24px;
+        color: inherit;
+        text-decoration: none;
       }
 
       .card:hover {
-        border-color: light-dark(#0969da, #388bfd);
         box-shadow: 0 0 0 3px light-dark(rgba(9, 105, 218, 0.1), rgba(56, 139, 253, 0.1));
+        border-color: light-dark(#0969da, #388bfd);
       }
 
       .card-icon {
-        width: 36px;
-        height: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border-radius: 8px;
         background: light-dark(#dbeafe, #1e3a5f);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 36px;
+        height: 36px;
       }
 
       .card-icon svg {
@@ -242,43 +242,43 @@
       }
 
       .card-title {
-        font-size: 14px;
-        font-weight: 600;
         color: light-dark(#1f2328, #e6edf3);
+        font-weight: 600;
+        font-size: 14px;
       }
 
       .card-desc {
+        color: light-dark(#57606a, #8b949e);
         font-size: 12.5px;
         line-height: 1.6;
-        color: light-dark(#57606a, #8b949e);
       }
 
       .card-arrow {
         margin-top: auto;
-        font-size: 12px;
         color: light-dark(#0969da, #388bfd);
         font-weight: 500;
+        font-size: 12px;
       }
 
       /* ── Divider ── */
       hr {
+        margin: 0 0 56px;
         border: none;
         border-top: 1px solid light-dark(#d0d7de, #30363d);
-        margin: 0 0 56px;
       }
 
       /* ── Footer ── */
       footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
         border-top: 1px solid light-dark(#d0d7de, #30363d);
         background: light-dark(#f6f8fa, #161b22);
         padding: 20px 32px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        font-size: 12px;
         color: light-dark(#57606a, #8b949e);
-        flex-wrap: wrap;
+        font-size: 12px;
       }
 
       footer a {
@@ -396,7 +396,7 @@
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
             </div>
-            <div class="card-title">Options Playground</div>
+            <div class="card-title">Playground</div>
             <div class="card-desc">
               Interactively explore every table and column option. Tweak settings live and copy the generated config.
             </div>
@@ -455,28 +455,6 @@
               Setup instructions, installation guide, and usage examples to get started quickly.
             </div>
             <div class="card-arrow">Read the docs →</div>
-          </a>
-
-          <a class="card" href="https://github.com/bornova/tabulator/releases" target="_blank" rel="noopener">
-            <div class="card-icon">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg>
-            </div>
-            <div class="card-title">Releases</div>
-            <div class="card-desc">
-              See what's changed in each version. Changelog, release notes, and downloadable assets.
-            </div>
-            <div class="card-arrow">View releases →</div>
           </a>
         </div>
       </div>
