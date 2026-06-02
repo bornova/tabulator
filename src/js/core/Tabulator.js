@@ -235,6 +235,7 @@ import AutoScroller from './tools/AutoScroller'
  * @property {boolean} [selectableRowsRollingSelection] Roll the selection window once the max selectable count is reached. Defaults to true.
  * @property {"drag"|"click"} [selectableRowsRangeMode] Method used to select a range of rows. Defaults to "drag".
  * @property {boolean} [selectableRowsPersistence] Maintain row selection when data is filtered or sorted. Defaults to true.
+ * @property {boolean} [selectableRowsDeselectOnBlur] Deselect all rows when the user clicks outside the table. Defaults to false.
  * @property {Function} [selectableRowsCheck] Callback that determines whether a row can be selected.
  *
  * --- Range Selection ---
