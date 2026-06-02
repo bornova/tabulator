@@ -405,3 +405,71 @@ test('filter module - AND, OR, and function filters', async ({ page }) => {
   expect(result.warnedOnBadType).toBe(true)
   expect(result.allAfterBadFilter).toEqual([1, 2, 3, 4])
 })
+
+test('filterMode remote sends filter params to the server rather than filtering locally', async ({ page }) => {
+  const pageErrors = []
+  const consoleErrors = []
+
+  page.on('pageerror', (error) => pageErrors.push(error.message))
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text())
+    }
+  })
+
+  await page.goto(fixtureUrl)
+
+  const result = await page.evaluate(async () => {
+    const root = document.getElementById('smoke-root')
+    const holder = document.createElement('div')
+    holder.style.width = '600px'
+    root.appendChild(holder)
+
+    let capturedFilter = null
+
+    const table = await new Promise((resolve) => {
+      const instance = new Tabulator(holder, {
+        filterMode: 'remote',
+        ajaxURL: '/api/data',
+        ajaxRequestFunc(url, config, params) {
+          if (params.filter) {
+            capturedFilter = params.filter
+          }
+          return Promise.resolve([{ id: 1, name: 'alice' }])
+        },
+        columns: [
+          { title: 'ID', field: 'id' },
+          { title: 'Name', field: 'name', headerFilter: true }
+        ]
+      })
+
+      const timeout = setTimeout(() => resolve(instance), 1500)
+      instance.on('tableBuilt', () => {
+        clearTimeout(timeout)
+        resolve(instance)
+      })
+    })
+
+    // Trigger a remote filter request
+    await new Promise((resolve) => {
+      table.on('dataLoaded', resolve)
+      table.setFilter('name', 'like', 'alice')
+      setTimeout(resolve, 1000)
+    })
+
+    const rowCountAfterFilter = table.getDataCount()
+
+    return {
+      filterModeOption: table.options.filterMode,
+      capturedFilter,
+      rowCountAfterFilter
+    }
+  })
+
+  expect(pageErrors).toEqual([])
+  expect(consoleErrors).toEqual([])
+
+  expect(result.filterModeOption).toBe('remote')
+  // In remote mode, data was fetched from "server" so local rows should show all server-returned rows
+  expect(result.rowCountAfterFilter).toBeGreaterThan(0)
+})

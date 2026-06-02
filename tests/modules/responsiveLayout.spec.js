@@ -363,5 +363,60 @@ test('responsiveLayout module', async ({ page }) => {
     expect(result.markerText).toBe(`items:${result.hiddenCount}`)
   })
 
+  await test.step('responsiveLayoutCollapseFormatter uses a custom function for collapse list output', async () => {
+    await page.goto(fixtureUrl)
+
+    const result = await page.evaluate(async () => {
+      const root = document.getElementById('smoke-root')
+      const holder = document.createElement('div')
+      holder.style.width = '120px'
+      root.appendChild(holder)
+
+      await new Promise((resolve) => {
+        const instance = new Tabulator(holder, {
+          responsiveLayout: 'collapse',
+          responsiveLayoutCollapseStartOpen: true,
+          responsiveLayoutCollapseFormatter(data) {
+            const container = document.createElement('div')
+            container.className = 'custom-collapse-output'
+            data.forEach(({ title, value }) => {
+              const item = document.createElement('span')
+              item.textContent = `${title}=${value}`
+              item.className = 'custom-collapse-item'
+              container.appendChild(item)
+            })
+            return container
+          },
+          data: [{ id: 1, name: 'alice', age: 30, city: 'Boston' }],
+          columns: [
+            { title: 'ID', field: 'id', responsive: 0 },
+            { title: 'Name', field: 'name', responsive: 1 },
+            { title: 'Age', field: 'age', responsive: 2 },
+            { title: 'City', field: 'city', responsive: 3 }
+          ]
+        })
+
+        const timeout = setTimeout(() => resolve(instance), 1500)
+        instance.on('tableBuilt', () => {
+          clearTimeout(timeout)
+          resolve(instance)
+        })
+      })
+
+      const collapseRow = holder.querySelector('.tabulator-responsive-collapse')
+      const customOutput = collapseRow ? collapseRow.querySelector('.custom-collapse-output') : null
+
+      return {
+        collapseRowExists: !!collapseRow,
+        customOutputExists: !!customOutput,
+        itemCount: customOutput ? customOutput.querySelectorAll('.custom-collapse-item').length : 0
+      }
+    })
+
+    expect(result.collapseRowExists).toBe(true)
+    expect(result.customOutputExists).toBe(true)
+    expect(result.itemCount).toBeGreaterThan(0)
+  })
+
   expectNoBrowserErrors(pageErrors, consoleErrors)
 })
