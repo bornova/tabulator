@@ -771,7 +771,7 @@
         renderVertical: 'virtual',
         renderVerticalBuffer: 0,
         renderHorizontal: 'basic',
-        placeholder: 'No data available',
+        placeholder: '',
         history: false,
         locale: false,
         downloadRowRange: 'active',
@@ -886,6 +886,14 @@
       // Snapshot of initial defaults for reset
       const DEFAULT_TABLE_OPTS = JSON.parse(JSON.stringify(tableOpts))
 
+      // Tabulator's own default values (from tableSchema.json) — used to filter the generated config
+      const TABULATOR_DEFAULTS = {}
+      for (const cat of tableSchema) {
+        for (const opt of cat.options) {
+          if (opt.defaultValue !== undefined) TABULATOR_DEFAULTS[opt.option] = opt.defaultValue
+        }
+      }
+
       // Column definitions (includes internal _id for tab tracking)
       let nextColId = 10
       let activeColId
@@ -932,7 +940,9 @@
           hozAlign: 'right',
           headerHozAlign: 'right',
           headerSort: true,
-          resizable: true
+          resizable: true,
+          formatter: 'money',
+          formatterParams: { decimal: '.', thousand: ',', symbol: '$' }
         },
         {
           _id: 8,
@@ -956,6 +966,9 @@
         }
       ]
 
+      // Snapshot of initial column defaults for reset
+      const DEFAULT_COLUMN_DEFS = JSON.parse(JSON.stringify(columnDefs))
+
       // ═══════════════════════════════════════════
       // Restore persisted config (overrides defaults)
       // ═══════════════════════════════════════════
@@ -967,7 +980,13 @@
           Object.assign(tableOpts, saved.tableOpts)
         }
         if (Array.isArray(saved.columnDefs) && saved.columnDefs.length) {
-          columnDefs = saved.columnDefs
+          // Merge default column properties into saved columns so newly-added
+          // defaults (e.g. formatter, formatterParams) are picked up on reload
+          const defaultById = Object.fromEntries(columnDefs.map((d) => [d._id, d]))
+          columnDefs = saved.columnDefs.map((saved) => {
+            const defaults = defaultById[saved._id]
+            return defaults ? Object.assign({}, defaults, saved) : saved
+          })
         }
         if (typeof saved.nextColId === 'number') nextColId = saved.nextColId
         if (typeof saved.activeColId === 'number') activeColId = saved.activeColId
@@ -1670,11 +1689,15 @@
         resetColBtn.textContent = '↺ Reset column'
         resetColBtn.title = 'Reset all column options to defaults'
         resetColBtn.addEventListener('click', () => {
-          const preserve = new Set(['_id', 'title', 'field'])
-          const schemaKeys = new Set(columnOptionSchema.map((s) => s.key))
+          const original = DEFAULT_COLUMN_DEFS.find((d) => d._id === def._id)
+          // Remove all keys then restore from original default (or just keep _id/title/field)
           Object.keys(def).forEach((k) => {
-            if (schemaKeys.has(k) && !preserve.has(k)) delete def[k]
+            if (k !== '_id') delete def[k]
           })
+          const base = original
+            ? JSON.parse(JSON.stringify(original))
+            : { _id: def._id, title: def.title, field: def.field }
+          Object.assign(def, base)
           renderColumnOptionsBody()
           scheduleRebuild()
         })
@@ -1815,7 +1838,13 @@
       function updateConfigPreview() {
         const body = document.getElementById('config-body')
         if (!body.classList.contains('open')) return
-        const cfg = { ...resolveOpts(), columns: resolveColumns() }
+        const resolved = resolveOpts()
+        const cfg = {}
+        for (const [k, v] of Object.entries(resolved)) {
+          if (k in TABULATOR_DEFAULTS && JSON.stringify(v) === JSON.stringify(TABULATOR_DEFAULTS[k])) continue
+          cfg[k] = v
+        }
+        cfg.columns = resolveColumns()
         document.getElementById('config-json').textContent = JSON.stringify(cfg, null, 2)
       }
 

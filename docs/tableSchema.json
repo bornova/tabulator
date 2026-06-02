@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "category": "General",
     "options": [
@@ -45,7 +45,7 @@
       {
         "option": "renderVerticalBuffer",
         "dataType": "integer",
-        "defaultValue": false,
+        "defaultValue": 0,
         "description": "Manually set the size of the vertical renderer buffer"
       },
       {
@@ -400,7 +400,7 @@
       {
         "option": "scrollToColumnIfVisible",
         "dataType": "boolean",
-        "defaultValue": false,
+        "defaultValue": true,
         "description": "Allow currently visible columns to be scrolled to"
       },
       {
@@ -605,7 +605,7 @@
       {
         "option": "scrollToRowIfVisible",
         "dataType": "boolean",
-        "defaultValue": false,
+        "defaultValue": true,
         "description": "Allow currently visible rows to be scrolled to"
       }
     ]
@@ -910,7 +910,7 @@
       {
         "option": "headerSortElement",
         "dataType": "string",
-        "defaultValue": "\u003cdiv class=\u0027tabulator-arrow\u0027\u003e\u003c/div\u003e",
+        "defaultValue": "<div class='tabulator-arrow'></div>",
         "description": "set the column header sort icon"
       },
       {
@@ -1128,11 +1128,11 @@
           },
           {
             "value": "rows",
-            "description": "Display the current row range and total row count (e.g. \u00271-10 of 50\u0027)"
+            "description": "Display the current row range and total row count (e.g. '1-10 of 50')"
           },
           {
             "value": "pages",
-            "description": "Display the current page and total page count (e.g. \u0027Page 1 of 5\u0027)"
+            "description": "Display the current page and total page count (e.g. 'Page 1 of 5')"
           }
         ]
       },
@@ -1320,7 +1320,7 @@
         "option": "selectableRows",
         "dataType": "boolean/integer/string",
         "defaultValue": "highlight",
-        "description": "Enable/Disable row selection. Set to true to allow unlimited row selection, an integer to set the maximum number of selectable rows, \u0027highlight\u0027 to highlight rows on hover without selecting, or false to disable.",
+        "description": "Enable/Disable row selection. Set to true to allow unlimited row selection, an integer to set the maximum number of selectable rows, 'highlight' to highlight rows on hover without selecting, or false to disable.",
         "enum": [
           {
             "value": "highlight",
