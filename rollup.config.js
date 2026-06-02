@@ -12,6 +12,15 @@ const banner = `
 
 fs.rmSync('dist', { recursive: true, force: true })
 
+// Copy built assets to docs/ for the playground
+function copyDocsAssets() {
+  const jsSrc = 'dist/js/browser/tabulator.min.js'
+  const cssSrc = 'dist/css/themes/default/tabulator.min.css'
+  if (fs.existsSync(jsSrc)) fs.copyFileSync(jsSrc, 'docs/tabulator.min.js')
+  if (fs.existsSync(cssSrc)) fs.copyFileSync(cssSrc, 'docs/tabulator.min.css')
+  process.stdout.write('Assets copied to docs/.\n')
+}
+
 process.stdout.write('Compiling SCSS files...')
 for (const inputFile of globbySync(['src/scss/themes/*/{,*/}[!_]*.scss'])) {
   const relativeFile = inputFile.replace('src/scss/', '')
@@ -49,7 +58,15 @@ export default [
   {
     input: browserInput,
     output: { ...browserOutput, file: 'dist/js/browser/tabulator.min.js', sourcemap: true },
-    plugins: [terser({ format: { comments: false } })]
+    plugins: [
+      terser({ format: { comments: false } }),
+      {
+        name: 'copy-docs-assets',
+        closeBundle() {
+          copyDocsAssets()
+        }
+      }
+    ]
   },
   // ESM — tree-shakable (one file per module)
   {
