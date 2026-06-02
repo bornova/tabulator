@@ -1,3 +1,6 @@
 node_modules/
 dist/
 test-results/
+
+docs/tabulator.min.js
+docs/tabulator.min.css
