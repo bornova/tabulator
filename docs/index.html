@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>@bornova/tabulator-tables</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        font-size: 0.9375em;
+        font-family: 'Google Sans', sans-serif;
+        background: light-dark(#ffffff, #0d1117);
+        color: light-dark(#24292f, #e6edf3);
+      }
+
+      /* ── Header ── */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 0 32px;
+        height: 56px;
+        border-bottom: 1px solid light-dark(#d0d7de, #30363d);
+        background: light-dark(#f6f8fa, #161b22);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 15px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .header-brand svg {
+        stroke: light-dark(#24292f, #e6edf3);
+        flex-shrink: 0;
+      }
+
+      .header-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .gh-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid light-dark(#d0d7de, #30363d);
+        border-radius: 6px;
+        background: light-dark(#f6f8fa, #21262d);
+        padding: 5px 14px;
+        color: light-dark(#24292f, #e6edf3);
+        font-weight: 500;
+        font-size: 12px;
+        font-family: inherit;
+        text-decoration: none;
+        transition: background 0.15s;
+      }
+
+      .gh-btn:hover {
+        background: light-dark(#eaeef2, #30363d);
+      }
+
+      .gh-btn svg {
+        fill: light-dark(#24292f, #e6edf3);
+        flex-shrink: 0;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 80px 32px 64px;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid light-dark(#d0d7de, #30363d);
+        border-radius: 20px;
+        background: light-dark(#f6f8fa, #161b22);
+        padding: 4px 12px;
+        font-size: 11.5px;
+        color: light-dark(#57606a, #8b949e);
+        margin-bottom: 24px;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      .hero h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        margin: 0 0 16px;
+        color: light-dark(#1f2328, #e6edf3);
+      }
+
+      .hero h1 span {
+        color: light-dark(#0969da, #388bfd);
+      }
+
+      .hero p {
+        font-size: 1.05rem;
+        line-height: 1.65;
+        color: light-dark(#57606a, #8b949e);
+        margin: 0 0 36px;
+        max-width: 540px;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: light-dark(#0969da, #388bfd);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 11px 22px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .btn-primary:hover {
+        background: light-dark(#0860ca, #58a6ff);
+      }
+
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: light-dark(#24292f, #e6edf3);
+        border: 1px solid light-dark(#d0d7de, #30363d);
+        border-radius: 8px;
+        padding: 11px 22px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .btn-secondary:hover {
+        background: light-dark(#f3f4f6, #21262d);
+      }
+
+      /* ── Cards ── */
+      .cards-section {
+        padding: 0 32px 80px;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: light-dark(#57606a, #8b949e);
+        margin: 0 0 20px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border: 1px solid light-dark(#d0d7de, #30363d);
+        border-radius: 10px;
+        padding: 22px 24px;
+        background: light-dark(#ffffff, #161b22);
+        text-decoration: none;
+        color: inherit;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+
+      .card:hover {
+        border-color: light-dark(#0969da, #388bfd);
+        box-shadow: 0 0 0 3px light-dark(rgba(9, 105, 218, 0.1), rgba(56, 139, 253, 0.1));
+      }
+
+      .card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: light-dark(#dbeafe, #1e3a5f);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .card-icon svg {
+        stroke: light-dark(#0969da, #388bfd);
+      }
+
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: light-dark(#1f2328, #e6edf3);
+      }
+
+      .card-desc {
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: light-dark(#57606a, #8b949e);
+      }
+
+      .card-arrow {
+        margin-top: auto;
+        font-size: 12px;
+        color: light-dark(#0969da, #388bfd);
+        font-weight: 500;
+      }
+
+      /* ── Divider ── */
+      hr {
+        border: none;
+        border-top: 1px solid light-dark(#d0d7de, #30363d);
+        margin: 0 0 56px;
+      }
+
+      /* ── Footer ── */
+      footer {
+        border-top: 1px solid light-dark(#d0d7de, #30363d);
+        background: light-dark(#f6f8fa, #161b22);
+        padding: 20px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 12px;
+        color: light-dark(#57606a, #8b949e);
+        flex-wrap: wrap;
+      }
+
+      footer a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        color: light-dark(#0969da, #388bfd);
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="header-brand" href="./index.html" aria-label="@bornova/tabulator-tables home">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M3 9h18M3 15h18M9 9v10M15 9v10" />
+        </svg>
+        @bornova/tabulator-tables
+      </a>
+      <div class="header-links">
+        <a
+          class="gh-btn"
+          href="https://github.com/bornova/tabulator"
+          target="_blank"
+          rel="noopener"
+          aria-label="View on GitHub"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.607.069-.607 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+            />
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-badge">
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
+          </svg>
+          Interactive JavaScript Tables
+        </div>
+        <h1>Build powerful tables<br />with <span>Tabulator</span></h1>
+        <p>
+          A lightweight, feature-rich JavaScript table library. Sort, filter, edit, paginate, and group your data — all
+          with a simple API and zero dependencies.
+        </p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="./playground.html">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            Open Playground
+          </a>
+          <a class="btn-secondary" href="https://github.com/bornova/tabulator" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path
+                d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.603-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.607.069-.607 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+              />
+            </svg>
+            View on GitHub
+          </a>
+        </div>
+      </section>
+
+      <div class="cards-section">
+        <hr />
+        <p class="section-label">Quick links</p>
+        <div class="cards">
+          <a class="card" href="./playground.html">
+            <div class="card-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+            </div>
+            <div class="card-title">Options Playground</div>
+            <div class="card-desc">
+              Interactively explore every table and column option. Tweak settings live and copy the generated config.
+            </div>
+            <div class="card-arrow">Open playground →</div>
+          </a>
+
+          <a class="card" href="https://github.com/bornova/tabulator" target="_blank" rel="noopener">
+            <div class="card-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v4l3 3" />
+              </svg>
+            </div>
+            <div class="card-title">Repository</div>
+            <div class="card-desc">
+              Browse the source code, open issues, submit pull requests, and track releases on GitHub.
+            </div>
+            <div class="card-arrow">Go to GitHub →</div>
+          </a>
+
+          <a
+            class="card"
+            href="https://github.com/bornova/tabulator/blob/master/README.md"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="card-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+            </div>
+            <div class="card-title">README</div>
+            <div class="card-desc">
+              Setup instructions, installation guide, and usage examples to get started quickly.
+            </div>
+            <div class="card-arrow">Read the docs →</div>
+          </a>
+
+          <a class="card" href="https://github.com/bornova/tabulator/releases" target="_blank" rel="noopener">
+            <div class="card-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+            </div>
+            <div class="card-title">Releases</div>
+            <div class="card-desc">
+              See what's changed in each version. Changelog, release notes, and downloadable assets.
+            </div>
+            <div class="card-arrow">View releases →</div>
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span>
+        <a href="https://github.com/bornova/tabulator" target="_blank" rel="noopener">@bornova/tabulator-tables</a>
+        — a fork of
+        <a href="https://github.com/olifolkerd/tabulator" target="_blank" rel="noopener">tabulator-tables</a>
+        by olifolkerd
+      </span>
+      <span>
+        <a href="https://github.com/bornova/tabulator/blob/master/LICENSE" target="_blank" rel="noopener"
+          >MIT License</a
+        >
+      </span>
+    </footer>
+  </body>
+</html>
