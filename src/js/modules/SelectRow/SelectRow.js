@@ -27,9 +27,12 @@ export default class SelectRow extends Module {
     this.registerTableOption('selectableRowsRangeMode', 'drag') // highlight rows on hover
     this.registerTableOption('selectableRowsRollingSelection', true) // roll selection once maximum number of selectable rows is reached
     this.registerTableOption('selectableRowsPersistence', true) // maintain selection when table view is updated
+    this.registerTableOption('selectableRowsDeselectOnBlur', false) // deselect all rows when clicking outside the table
     this.registerTableOption('selectableRowsCheck', function () {
       return true
     }) // check whether row is selectable
+
+    this._deselectOnBlurHandler = null // bound handler reference for removal
 
     this.registerTableFunction('selectRow', this.selectRows.bind(this))
     this.registerTableFunction('deselectRow', this.deselectRows.bind(this))
@@ -62,6 +65,10 @@ export default class SelectRow extends Module {
 
       if (this.table.options.selectableRows && !this.table.options.selectableRowsPersistence) {
         this.subscribe('data-refreshing', this.deselectRows.bind(this))
+      }
+
+      if (this.table.options.selectableRows && this.table.options.selectableRowsDeselectOnBlur) {
+        this.subscribe('table-built', this.bindDeselectOnBlur.bind(this))
       }
     }
   }
@@ -625,9 +632,28 @@ export default class SelectRow extends Module {
   }
 
   /**
+   * Attach a document-level click listener that deselects all rows when the
+   * user clicks outside the table element.
+   */
+  bindDeselectOnBlur() {
+    this._deselectOnBlurHandler = (e) => {
+      if (!this.table.element.contains(e.target)) {
+        this.deselectRows()
+      }
+    }
+
+    document.addEventListener('click', this._deselectOnBlurHandler)
+  }
+
+  /**
    * Deinitialize module lifecycle hook.
    */
   destroy() {
+    if (this._deselectOnBlurHandler) {
+      document.removeEventListener('click', this._deselectOnBlurHandler)
+      this._deselectOnBlurHandler = null
+    }
+
     this.clearSelectionData(true)
   }
 }
