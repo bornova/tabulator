@@ -11,7 +11,6 @@ import DataLoader from './tools/DataLoader'
 import ExternalEventBus from './tools/ExternalEventBus'
 import InternalEventBus from './tools/InternalEventBus'
 
-import DeprecationAdvisor from './tools/DeprecationAdvisor'
 import DependencyRegistry from './tools/DependencyRegistry'
 
 import ModuleBinder from './tools/ModuleBinder'
@@ -350,7 +349,6 @@ class Tabulator extends ModuleBinder {
     this.modulesRegular = [] // hold regular modules bound to this table (for initialization purposes)
 
     this.logger = null // hold logger
-    this.deprecationAdvisor = new DeprecationAdvisor(this)
     this.optionsList = new OptionsList(this, 'table constructor')
 
     this.dependencyRegistry = new DependencyRegistry(this)
@@ -419,8 +417,6 @@ class Tabulator extends ModuleBinder {
     this.options = this.optionsList.generate(Tabulator.defaultOptions, options)
 
     this._clearObjectPointers()
-
-    this._mapDeprecatedFunctionality()
 
     this.externalEvents = new ExternalEventBus(this, this.options, this.options.debugEventsExternal)
     this.eventBus = new InternalEventBus(this.options.debugEventsInternal)
@@ -491,14 +487,6 @@ class Tabulator extends ModuleBinder {
     }
 
     return fontSet.ready.catch(() => {})
-  }
-
-  // convert deprecated functionality to new functions
-  /**
-   * Map deprecated functionality to modern APIs.
-   */
-  _mapDeprecatedFunctionality() {
-    // all previously deprecated functionality removed in the 6.0 release
   }
 
   /**
