@@ -115,7 +115,7 @@ export default class Format extends Module {
    * @param {object} cell Internal cell.
    */
   cellRendered(cell) {
-    if (cell.modules.format && cell.modules.format.renderedCallback && !cell.modules.format.rendered) {
+    if (cell.modules.format?.renderedCallback && !cell.modules.format.rendered) {
       cell.modules.format.renderedCallback()
       cell.modules.format.rendered = true
     }
