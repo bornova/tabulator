@@ -9,8 +9,8 @@ For more information, please visit https://github.com/olifolkerd/tabulator.
 Include the library and the css:
 
 ```html
-<link href="dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
-<script type="text/javascript" src="dist/js/browser/tabulator.min.js"></script>
+<link href="dist/themes/default/tabulator.min.css" rel="stylesheet" />
+<script type="text/javascript" src="dist/browser/tabulator.min.js"></script>
 ```
 
 Create an element to hold the table:
@@ -38,9 +38,6 @@ npm install @bornova/tabulator-tables
 To access Tabulator directly from the UNPKG CDN servers, include the following two lines at the start of your project, instead of the locally hosted versions:
 
 ```html
-<link href="https://unpkg.com/@bornova/tabulator-tables/dist/css/themes/default/tabulator.min.css" rel="stylesheet" />
-<script
-  type="text/javascript"
-  src="https://unpkg.com/@bornova/tabulator-tables/dist/js/browser/tabulator.min.js"
-></script>
+<link href="https://unpkg.com/@bornova/tabulator-tables/dist/themes/default/tabulator.min.css" rel="stylesheet" />
+<script type="text/javascript" src="https://unpkg.com/@bornova/tabulator-tables/dist/browser/tabulator.min.js"></script>
 ```
