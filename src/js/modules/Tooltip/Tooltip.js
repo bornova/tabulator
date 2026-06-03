@@ -15,7 +15,6 @@ export default class Tooltip extends Module {
     this.timeout = null
     this.popupInstance = null
 
-    // this.registerTableOption("tooltipGenerationMode", undefined);  //deprecated
     this.registerTableOption('tooltipDelay', 300)
 
     this.registerColumnOption('tooltip')
