@@ -126,7 +126,7 @@ export default class Mutator extends Module {
    */
   transformRow(data, type, updatedData) {
     const key = `${Mutator.keyPrefix}${type.charAt(0).toUpperCase()}${type.slice(1)}`
-    const sourceData = updatedData !== undefined ? updatedData : data
+    const sourceData = updatedData ?? data
 
     if (!this.enabled) {
       return data
