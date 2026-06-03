@@ -6,16 +6,16 @@ import terser from '@rollup/plugin-terser'
 
 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 const banner = `
-/* @bornova/tabulator-tables v${pkg.version}
- * Copyright (c) 2015-2026 Oli Folkerd, ${new Date().getFullYear()} Timur Atalay 
+/*! @bornova/tabulator-tables v${pkg.version}
+ *  Copyright (c) 2015-2026 Oli Folkerd, ${new Date().getFullYear()} Timur Atalay 
  */`
 
 fs.rmSync('dist', { recursive: true, force: true })
 
 // Copy built assets to docs/ for the playground
 function copyDocsAssets() {
-  const jsSrc = 'dist/js/browser/tabulator.min.js'
-  const cssSrc = 'dist/css/themes/default/tabulator.min.css'
+  const jsSrc = 'dist/browser/tabulator.min.js'
+  const cssSrc = 'dist/themes/default/tabulator.min.css'
   if (fs.existsSync(jsSrc)) fs.copyFileSync(jsSrc, 'docs/tabulator.min.js')
   if (fs.existsSync(cssSrc)) fs.copyFileSync(cssSrc, 'docs/tabulator.min.css')
   process.stdout.write('Assets copied to docs/.\n')
@@ -24,9 +24,9 @@ function copyDocsAssets() {
 process.stdout.write('Compiling SCSS files...')
 for (const inputFile of globbySync(['src/scss/themes/*/{,*/}[!_]*.scss'])) {
   const relativeFile = inputFile.replace('src/scss/', '')
-  const outputCss = `dist/css/${relativeFile.replace('.scss', '.css')}`
-  const outputMinCss = `dist/css/${relativeFile.replace('.scss', '.min.css')}`
-  const outputMap = `dist/css/${relativeFile.replace('.scss', '.min.css.map')}`
+  const outputCss = `dist/${relativeFile.replace('.scss', '.css')}`
+  const outputMinCss = `dist/${relativeFile.replace('.scss', '.min.css')}`
+  const outputMap = `dist/${relativeFile.replace('.scss', '.min.css.map')}`
   const sourceMapFile = path.basename(outputMap)
   const fullResult = compile(inputFile, { style: 'expanded' })
   const minResult = compile(inputFile, { style: 'compressed', sourceMap: true })
@@ -45,21 +45,21 @@ const browserOutput = { format: 'iife', name: 'Tabulator', exports: 'default', b
 const esmInput = 'src/js/index.js'
 const esmOutput = { format: 'esm', banner }
 
-const stripComments = terser({ compress: false, mangle: false, format: { comments: false } })
+const stripComments = terser({ compress: false, mangle: false, format: { comments: 'some' } })
 
 export default [
   // Browser IIFE — unminified
   {
     input: browserInput,
-    output: { ...browserOutput, file: 'dist/js/browser/tabulator.js' },
+    output: { ...browserOutput, file: 'dist/browser/tabulator.js' },
     plugins: [stripComments]
   },
   // Browser IIFE — minified with source map
   {
     input: browserInput,
-    output: { ...browserOutput, file: 'dist/js/browser/tabulator.min.js', sourcemap: true },
+    output: { ...browserOutput, file: 'dist/browser/tabulator.min.js', sourcemap: true },
     plugins: [
-      terser({ format: { comments: false } }),
+      terser({ format: { comments: 'some' } }),
       {
         name: 'copy-docs-assets',
         closeBundle() {
@@ -73,7 +73,7 @@ export default [
     input: esmInput,
     output: {
       ...esmOutput,
-      dir: 'dist/js/esm',
+      dir: 'dist/esm',
       preserveModules: true,
       preserveModulesRoot: 'src/js'
     },
