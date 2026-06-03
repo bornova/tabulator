@@ -533,8 +533,8 @@ export default class Sort extends Module {
     a = column.getFieldValue(el1.getData())
     b = column.getFieldValue(el2.getData())
 
-    a = a !== undefined ? a : ''
-    b = b !== undefined ? b : ''
+    a = a ?? ''
+    b = b ?? ''
 
     el1Comp = el1.getComponent()
     el2Comp = el2.getComponent()
