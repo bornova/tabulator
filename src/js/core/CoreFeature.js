@@ -224,38 +224,6 @@ export default class CoreFeature {
   }
 
   /// ///////////////////////////////////////
-  /// //////// Deprecation Checks ///////////
-  /// ///////////////////////////////////////
-
-  /**
-   * Run standard deprecation option check.
-   * @param {string} oldOption Deprecated option name.
-   * @param {string} newOption Replacement option name.
-   * @param {boolean} [convert] Convert value when possible.
-   * @returns {boolean}
-   */
-  deprecationCheck(oldOption, newOption, convert) {
-    return this.table.deprecationAdvisor.check(oldOption, newOption, convert)
-  }
-
-  /**
-   * Report custom deprecation message for an option.
-   * @param {string} oldOption Deprecated option name.
-   * @param {string} msg Deprecation message.
-   * @returns {boolean}
-   */
-  deprecationCheckMsg(oldOption, msg) {
-    return this.table.deprecationAdvisor.checkMsg(oldOption, msg)
-  }
-
-  /**
-   * Emit deprecation message without option lookup.
-   * @param {string} msg Deprecation message.
-   */
-  deprecationMsg(msg) {
-    return this.table.deprecationAdvisor.msg(msg)
-  }
-  /// ///////////////////////////////////////
   /// ///////////// Modules /////////////////
   /// ///////////////////////////////////////
 
