@@ -180,9 +180,7 @@
       // State
       // ═══════════════════════════════════════════
 
-      const tableData = generateData(100)
-      const tableDataTree = generateNestedData(5, 4, 2)
-      const spreadsheetData = [
+      const INITIAL_SPREADSHEET_DATA = [
         [9937, '', '', 7749, 9816, 4355, 8279, '', ''],
         [2380, '', 6977, 8896, 4012, 3803, 5408, 3415, 3056],
         [9180, '', 39, 9445, 3917, '', 18, 5239, 2516],
@@ -193,6 +191,10 @@
         [6359, '', 2580, 5723, 9801, 554, 1044, 5266, 8532],
         [7278, 6971, 2232, 5720, 5665, 7231, 1165, '', 168]
       ]
+
+      let tableData = generateData(100)
+      let tableDataTree = generateNestedData(5, 4, 2)
+      let spreadsheetData = JSON.parse(JSON.stringify(INITIAL_SPREADSHEET_DATA))
 
       // Table-level options (primitives only — no callbacks)
       const tableOpts = {
@@ -1548,6 +1550,11 @@
         Object.keys(tableOpts).forEach((k) => delete tableOpts[k])
         Object.assign(tableOpts, DEFAULT_TABLE_OPTS, preset.tableOpts)
 
+        // Reset data arrays to standard unedited states
+        tableData = generateData(100)
+        tableDataTree = generateNestedData(5, 4, 2)
+        spreadsheetData = JSON.parse(JSON.stringify(INITIAL_SPREADSHEET_DATA))
+
         // Handle raw column groups (bypasses column editor)
         if (preset.rawColumns) {
           rawColumns = preset.rawColumns
@@ -1593,6 +1600,12 @@
         Object.assign(tableOpts, DEFAULT_TABLE_OPTS)
         rawColumns = null
         presetExtraOpts = null
+        columnDefs = JSON.parse(JSON.stringify(DEFAULT_COLUMN_DEFS))
+        nextColId = 14
+        activeColId = columnDefs[0]._id
+        tableData = generateData(100)
+        tableDataTree = generateNestedData(5, 4, 2)
+        spreadsheetData = JSON.parse(JSON.stringify(INITIAL_SPREADSHEET_DATA))
         localStorage.removeItem(STORAGE_KEY)
         localStorage.removeItem(PRESET_KEY)
         document.getElementById('example-select').value = ''
