@@ -350,6 +350,30 @@ body {
   overflow-y: hidden;
 }
 
+#col-options-section.collapsed #col-options-header {
+  border-bottom: none;
+}
+
+#col-options-section.collapsed #col-options-body {
+  display: none;
+}
+
+#col-options-toggle {
+  cursor: pointer;
+  margin-left: auto;
+  border: none;
+  background: none;
+  padding: 4px 6px;
+  color: light-dark(#57606a, #8b949e);
+  font-size: 11px;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+#col-options-toggle:hover {
+  color: light-dark(#24292f, #e6edf3);
+}
+
 #col-options-header-label {
   margin-right: 4px;
   border-right: 1px solid light-dark(#d0d7de, #444);
