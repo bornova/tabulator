@@ -50,27 +50,9 @@ export default class Helpers {
    * @param {object} data Source object.
    */
   static retrieveNestedData(separator, field, data) {
+    if (data == null) return data
     const structure = separator ? field.split(separator) : [field]
-    const length = structure.length
-
-    let output
-
-    for (let i = 0; i < length; i++) {
-      if (data == null) {
-        output = data
-        break
-      }
-
-      data = data[structure[i]]
-
-      output = data
-
-      if (!data) {
-        break
-      }
-    }
-
-    return output
+    return structure.reduce((acc, part) => (acc != null ? acc[part] : undefined), data)
   }
 
   /**
