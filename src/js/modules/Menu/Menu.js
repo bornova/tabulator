@@ -15,8 +15,6 @@ export default class Menu extends Module {
     this.rootPopup = null
     this.columnSubscribers = {}
 
-    // this.registerTableOption("menuContainer", undefined); //deprecated
-
     this.registerTableOption('rowContextMenu', false)
     this.registerTableOption('rowClickMenu', false)
     this.registerTableOption('rowDblClickMenu', false)
