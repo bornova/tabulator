@@ -608,16 +608,17 @@ export default class Edit {
   /**
    * Rebuild options and show list popup.
    */
-  rebuildOptionsList() {
-    this._generateOptions()
-      .then((options) => this._sortOptions(options))
-      .then((options) => this._buildList(options))
-      .then(() => this._showList())
-      .catch((e) => {
-        if (!Number.isInteger(e)) {
-          console.error('List generation error', e)
-        }
-      })
+  async rebuildOptionsList() {
+    try {
+      const options = await this._generateOptions()
+      const sortedOptions = this._sortOptions(options)
+      this._buildList(sortedOptions)
+      this._showList()
+    } catch (e) {
+      if (!Number.isInteger(e)) {
+        console.error('List generation error', e)
+      }
+    }
   }
   /**
    * Apply filtering to visible list items.
@@ -704,22 +705,23 @@ export default class Edit {
     const params = this.params.filterRemote ? { term } : {}
     url = urlBuilder(url, {}, params)
 
-    return fetch(url)
-      .then((response) => {
-        if (response.ok) {
-          return response.json().catch((error) => {
-            console.warn('List Ajax Load Error - Invalid JSON returned', error)
-            return Promise.reject(error)
-          })
-        } else {
-          console.error('List Ajax Load Error - Connection Error: ' + response.status, response.statusText)
-          return Promise.reject(response)
+    try {
+      const response = await fetch(url)
+      if (response.ok) {
+        try {
+          return await response.json()
+        } catch (error) {
+          console.warn('List Ajax Load Error - Invalid JSON returned', error)
+          throw error
         }
-      })
-      .catch((error) => {
-        console.error('List Ajax Load Error - Connection Error: ', error)
-        return Promise.reject(error)
-      })
+      } else {
+        console.error('List Ajax Load Error - Connection Error: ' + response.status, response.statusText)
+        throw response
+      }
+    } catch (error) {
+      console.error('List Ajax Load Error - Connection Error: ', error)
+      throw error
+    }
   }
 
   /**

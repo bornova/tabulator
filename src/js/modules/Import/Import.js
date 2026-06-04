@@ -78,13 +78,14 @@ export default class Import extends Module {
    * @param {*} data Raw data.
    * @returns {Promise<*>}
    */
-  loadData(data) {
-    return this.importData(this.lookupImporter(), data)
-      .then(this.structureData.bind(this))
-      .catch((err) => {
-        this.logImportError('Import Error:', err || 'Unable to import data')
-        return Promise.reject(err)
-      })
+  async loadData(data) {
+    try {
+      const importedData = await this.importData(this.lookupImporter(), data)
+      return await this.structureData(importedData)
+    } catch (err) {
+      this.logImportError('Import Error:', err || 'Unable to import data')
+      throw err
+    }
   }
 
   /**
@@ -110,30 +111,31 @@ export default class Import extends Module {
    * @param {'text'|'buffer'|'binary'|'url'} [importReader] FileReader mode.
    * @returns {Promise<*>|undefined}
    */
-  importFromFile(importFormat, extension, importReader) {
+  async importFromFile(importFormat, extension, importReader) {
     const importer = this.lookupImporter(importFormat)
 
     if (!importer) {
       return
     }
 
-    return this.pickFile(extension, importReader)
-      .then(this.importData.bind(this, importer))
-      .then(this.structureData.bind(this))
-      .then(this.mutateData.bind(this))
-      .then(this.validateData.bind(this))
-      .then(this.setData.bind(this))
-      .catch((err) => {
-        this.logImportError('Import Error:', err || 'Unable to import file')
+    try {
+      const file = await this.pickFile(extension, importReader)
+      const imported = await this.importData(importer, file)
+      const structured = await this.structureData(imported)
+      const mutated = await this.mutateData(structured)
+      const validated = await this.validateData(mutated)
+      return await this.setData(validated)
+    } catch (err) {
+      this.logImportError('Import Error:', err || 'Unable to import file')
 
-        this.table.dataLoader.alertError()
+      this.table.dataLoader.alertError()
 
-        setTimeout(() => {
-          this.table.dataLoader.clearAlert()
-        }, 3000)
+      setTimeout(() => {
+        this.table.dataLoader.clearAlert()
+      }, 3000)
 
-        return Promise.reject(err)
-      })
+      throw err
+    }
   }
 
   /**

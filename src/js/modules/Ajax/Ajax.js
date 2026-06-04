@@ -183,15 +183,15 @@ export default class Ajax extends Module {
    */
   async sendRequest(url, params, config) {
     if (this.table.options.ajaxRequesting.call(this.table, url, params) !== false) {
-      return this.loaderPromise(url, config, params).then((data) => {
-        if (this.table.options.ajaxResponse) {
-          data = this.table.options.ajaxResponse.call(this.table, url, params, data)
-        }
+      let data = await this.loaderPromise(url, config, params)
 
-        return data
-      })
+      if (this.table.options.ajaxResponse) {
+        data = this.table.options.ajaxResponse.call(this.table, url, params, data)
+      }
+
+      return data
     } else {
-      return Promise.reject(new Error('Ajax request was cancelled by ajaxRequesting callback'))
+      throw new Error('Ajax request was cancelled by ajaxRequesting callback')
     }
   }
 }

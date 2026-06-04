@@ -30,7 +30,7 @@ export default class DataLoader extends CoreFeature {
     const requestNo = ++this.requestOrder
 
     if (this.table.destroyed) {
-      return Promise.resolve()
+      return
     }
 
     this.dispatchExternal('dataLoading', data)
@@ -51,7 +51,7 @@ export default class DataLoader extends CoreFeature {
           this.clearAlert()
         }, this.table.options.dataLoaderErrorTimeout)
 
-        return Promise.reject(error)
+        throw error
       }
     }
 
@@ -69,50 +69,45 @@ export default class DataLoader extends CoreFeature {
 
       const result = this.chain('data-load', [data, params, config, silent], false, Promise.resolve([]))
 
-      return result
-        .then((response) => {
-          if (!this.table.destroyed) {
-            if (!Array.isArray(response) && typeof response === 'object') {
-              response = this.mapParams(response, this.objectInvert(this.table.options.dataReceiveParams))
-            }
+      try {
+        let response = await result
 
-            const rowData = this.chain('data-loaded', [response], null, response)
+        if (!this.table.destroyed) {
+          if (!Array.isArray(response) && typeof response === 'object') {
+            response = this.mapParams(response, this.objectInvert(this.table.options.dataReceiveParams))
+          }
 
-            if (requestNo === this.requestOrder) {
-              this.clearAlert()
+          const rowData = this.chain('data-loaded', [response], null, response)
 
-              if (rowData !== false) {
-                this.dispatchExternal('dataLoaded', rowData)
-                this.table.rowManager.setData(
-                  rowData,
-                  replace,
-                  columnsChanged === undefined ? !replace : columnsChanged
-                )
-              }
-            } else {
-              console.warn(
-                'Data Load Response Blocked - An active data load request was blocked by an attempt to change table data while the request was being made'
-              )
+          if (requestNo === this.requestOrder) {
+            this.clearAlert()
+
+            if (rowData !== false) {
+              this.dispatchExternal('dataLoaded', rowData)
+              this.table.rowManager.setData(rowData, replace, columnsChanged === undefined ? !replace : columnsChanged)
             }
           } else {
-            console.warn('Data Load Response Blocked - Table has been destroyed')
+            console.warn(
+              'Data Load Response Blocked - An active data load request was blocked by an attempt to change table data while the request was being made'
+            )
           }
-        })
-        .catch((error) => {
-          console.error('Data Load Error: ', error)
-          this.dispatchExternal('dataLoadError', error)
+        } else {
+          console.warn('Data Load Response Blocked - Table has been destroyed')
+        }
+      } catch (error) {
+        console.error('Data Load Error: ', error)
+        this.dispatchExternal('dataLoadError', error)
 
-          if (!silent) {
-            this.alertError()
-          }
+        if (!silent) {
+          this.alertError()
+        }
 
-          setTimeout(() => {
-            this.clearAlert()
-          }, this.table.options.dataLoaderErrorTimeout)
-        })
-        .finally(() => {
-          this.loading = false
-        })
+        setTimeout(() => {
+          this.clearAlert()
+        }, this.table.options.dataLoaderErrorTimeout)
+      } finally {
+        this.loading = false
+      }
     } else {
       this.dispatchExternal('dataLoaded', data)
 
@@ -121,7 +116,6 @@ export default class DataLoader extends CoreFeature {
       }
 
       this.table.rowManager.setData(data, replace, columnsChanged === undefined ? !replace : columnsChanged)
-      return Promise.resolve()
     }
   }
 

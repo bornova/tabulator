@@ -1138,24 +1138,20 @@ export default class Column extends CoreFeature {
           ...updates
         }
 
-        return this.table.columnManager.addColumn(definition, false, this).then((column) => {
-          if (definition.field === this.field) {
-            this.field = false // clear field name to prevent deletion of duplicate column from arrays
-          }
+        const column = await this.table.columnManager.addColumn(definition, false, this)
+        if (definition.field === this.field) {
+          this.field = false // clear field name to prevent deletion of duplicate column from arrays
+        }
 
-          return this.delete().then(() => column.getComponent())
-        })
+        await this.delete()
+        return column.getComponent()
       } else {
         console.error('Column Update Error - The updateDefinition function is only available on ungrouped columns')
-        return Promise.reject(
-          'Column Update Error - The updateDefinition function is only available on columns, not column groups'
-        )
+        throw 'Column Update Error - The updateDefinition function is only available on columns, not column groups'
       }
     } else {
       console.error('Column Update Error - The updateDefinition function is only available on ungrouped columns')
-      return Promise.reject(
-        'Column Update Error - The updateDefinition function is only available on columns, not column groups'
-      )
+      throw 'Column Update Error - The updateDefinition function is only available on columns, not column groups'
     }
   }
 

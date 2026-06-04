@@ -325,38 +325,47 @@ class Tabulator extends ModuleBinder {
 
     Tabulator.initializeModuleBinder(modules)
 
-    this.options = {}
-
-    this.columnManager = null // hold Column Manager
-    this.rowManager = null // hold Row Manager
-    this.footerManager = null // holder Footer Manager
-    this.alertManager = null // hold Alert Manager
-    this.vdomHoz = null // holder horizontal virtual dom
-    this.externalEvents = null // handle external event messaging
-    this.eventBus = null // handle internal event messaging
-    this.interactionMonitor = false // track user interaction
-    this.browser = '' // hold current browser type
-    this.browserSlow = false // handle reduced functionality for slower browsers
-    this.browserMobile = false // check if running on mobile, prevent resize cancelling edit on keyboard appearance
-    this.rtl = false // check if the table is in RTL mode
+    // Lifecycle & State
+    this.options = {} // hold table options
+    this.initialized = false // track if the table has been fully initialized
+    this.destroyed = false // track if the table has been destroyed
     this.originalElement = null // hold original table element if it has been replaced
 
-    this.componentFunctionBinder = new ComponentFunctionBinder(this) // bind component functions
-    this.dataLoader = false // bind component functions
+    // Core Managers
+    this.columnManager = null // hold Column Manager
+    this.rowManager = null // hold Row Manager
+    this.footerManager = null // hold Footer Manager
+    this.alertManager = null // hold Alert Manager
+    this.dataLoader = false // hold DataLoader helper
 
+    // Modules & Extensions
     this.modules = {} // hold all modules bound to this table
     this.modulesCore = [] // hold core modules bound to this table (for initialization purposes)
     this.modulesRegular = [] // hold regular modules bound to this table (for initialization purposes)
+    this.dependencyRegistry = new DependencyRegistry(this) // hold registered dependencies
+    this.componentFunctionBinder = new ComponentFunctionBinder(this) // bind component functions
 
+    // Messaging & Events
+    this.externalEvents = null // handle external event messaging
+    this.eventBus = null // handle internal event messaging
+
+    // DOM & Rendering
+    this.vdomHoz = null // hold horizontal virtual DOM
+    this.rtl = false // track if the table is in RTL mode
+    this.interactionMonitor = false // track user interaction
+
+    // Browser & Environment
+    this.browser = '' // hold current browser type
+    this.browserSlow = false // handle reduced functionality for slower browsers
+    this.browserMobile = false // check if running on mobile, prevent resize cancelling edit on keyboard appearance
+
+    // Utilities & Helpers
     this.logger = null // hold logger
-    this.optionsList = new OptionsList(this, 'table constructor')
+    this.optionsList = new OptionsList(this, 'table constructor') // hold options list helper
 
-    this.dependencyRegistry = new DependencyRegistry(this)
-
-    this.initialized = false
-    this.destroyed = false
-    this.createTimeout = null
-    this.windowLoadHandler = null
+    // Deferred Creation & Initialization Handlers
+    this.createTimeout = null // hold setTimeout id for deferred creation
+    this.windowLoadHandler = null // hold window load event listener reference
 
     if (this.initializeElement(element)) {
       this.initializeCoreSystems(options)
@@ -432,19 +441,19 @@ class Tabulator extends ModuleBinder {
   /**
    * Defer table creation until the page and fonts are ready.
    */
-  _queueTableCreation() {
-    this._waitForPageResources().then(() => {
-      if (this.destroyed || this.initialized) {
-        return
+  async _queueTableCreation() {
+    await this._waitForPageResources()
+
+    if (this.destroyed || this.initialized) {
+      return
+    }
+
+    this.createTimeout = setTimeout(() => {
+      this.createTimeout = null
+
+      if (!this.destroyed && !this.initialized) {
+        this._create()
       }
-
-      this.createTimeout = setTimeout(() => {
-        this.createTimeout = null
-
-        if (!this.destroyed && !this.initialized) {
-          this._create()
-        }
-      })
     })
   }
 
@@ -452,8 +461,9 @@ class Tabulator extends ModuleBinder {
    * Wait for the document load event and any pending web fonts.
    * @returns {Promise<void>}
    */
-  _waitForPageResources() {
-    return this._waitForWindowLoad().then(() => this._waitForFonts())
+  async _waitForPageResources() {
+    await this._waitForWindowLoad()
+    await this._waitForFonts()
   }
 
   /**
@@ -479,14 +489,18 @@ class Tabulator extends ModuleBinder {
    * Wait for web fonts to finish loading when supported.
    * @returns {Promise<void>}
    */
-  _waitForFonts() {
+  async _waitForFonts() {
     const fontSet = typeof document !== 'undefined' ? document.fonts : null
 
     if (!fontSet?.ready) {
-      return Promise.resolve()
+      return
     }
 
-    return fontSet.ready.catch(() => {})
+    try {
+      await fontSet.ready
+    } catch {
+      // Ignore font loading errors to prevent blocking table creation
+    }
   }
 
   /**
@@ -901,46 +915,35 @@ class Tabulator extends ModuleBinder {
    * @param {Array<object>|string} data Row updates.
    * @returns {Promise<void>}
    */
-  updateData(data) {
-    let responses = 0
-
+  async updateData(data) {
     this.initGuard()
 
-    return new Promise((resolve, reject) => {
-      this.dataLoader.blockActiveLoad()
+    this.dataLoader.blockActiveLoad()
 
-      if (typeof data === 'string') {
-        data = JSON.parse(data)
-      }
+    if (typeof data === 'string') {
+      data = JSON.parse(data)
+    }
 
-      if (data && data.length > 0) {
-        data.forEach((item) => {
-          const row = this.rowManager.findRow(item[this.options.index])
+    if (data && data.length > 0) {
+      const promises = data.map(async (item) => {
+        const row = this.rowManager.findRow(item[this.options.index])
 
-          if (row) {
-            responses++
-
-            row
-              .updateData(item)
-              .then(() => {
-                responses--
-
-                if (!responses) {
-                  resolve()
-                }
-              })
-              .catch((e) => {
-                reject('Update Error - Unable to update row', item, e)
-              })
-          } else {
-            reject('Update Error - Unable to find row', item)
+        if (row) {
+          try {
+            await row.updateData(item)
+          } catch {
+            throw 'Update Error - Unable to update row'
           }
-        })
-      } else {
-        console.warn('Update Error - No data provided')
-        reject('Update Error - No data provided')
-      }
-    })
+        } else {
+          throw 'Update Error - Unable to find row'
+        }
+      })
+
+      await Promise.all(promises)
+    } else {
+      console.warn('Update Error - No data provided')
+      throw 'Update Error - No data provided'
+    }
   }
 
   /**
@@ -950,27 +953,22 @@ class Tabulator extends ModuleBinder {
    * @param {*} [index] Index reference.
    * @returns {Promise<Array<RowComponent>>}
    */
-  addData(data, pos, index) {
+  async addData(data, pos, index) {
     this.initGuard()
 
-    return new Promise((resolve, reject) => {
-      this.dataLoader.blockActiveLoad()
+    this.dataLoader.blockActiveLoad()
 
-      if (typeof data === 'string') {
-        data = JSON.parse(data)
-      }
+    if (typeof data === 'string') {
+      data = JSON.parse(data)
+    }
 
-      if (data) {
-        this.rowManager.addRows(data, pos, index).then((rows) => {
-          const output = rows.map((row) => row.getComponent())
-
-          resolve(output)
-        })
-      } else {
-        console.warn('Update Error - No data provided')
-        reject('Update Error - No data provided')
-      }
-    })
+    if (data) {
+      const rows = await this.rowManager.addRows(data, pos, index)
+      return rows.map((row) => row.getComponent())
+    } else {
+      console.warn('Update Error - No data provided')
+      throw 'Update Error - No data provided'
+    }
   }
 
   // update table data
@@ -979,51 +977,33 @@ class Tabulator extends ModuleBinder {
    * @param {Array<object>|string} data Row data.
    * @returns {Promise<Array<RowComponent>>}
    */
-  updateOrAddData(data) {
-    const rows = []
-
-    let responses = 0
-
+  async updateOrAddData(data) {
     this.initGuard()
 
-    return new Promise((resolve, reject) => {
-      this.dataLoader.blockActiveLoad()
+    this.dataLoader.blockActiveLoad()
 
-      if (typeof data === 'string') {
-        data = JSON.parse(data)
-      }
+    if (typeof data === 'string') {
+      data = JSON.parse(data)
+    }
 
-      if (data && data.length > 0) {
-        data.forEach((item) => {
-          const row = this.rowManager.findRow(item[this.options.index])
+    if (data && data.length > 0) {
+      const promises = data.map(async (item) => {
+        const row = this.rowManager.findRow(item[this.options.index])
 
-          responses++
+        if (row) {
+          await row.updateData(item)
+          return row.getComponent()
+        } else {
+          const newRows = await this.rowManager.addRows(item)
+          return newRows[0].getComponent()
+        }
+      })
 
-          if (row) {
-            row.updateData(item).then(() => {
-              responses--
-              rows.push(row.getComponent())
-
-              if (!responses) {
-                resolve(rows)
-              }
-            })
-          } else {
-            this.rowManager.addRows(item).then((newRows) => {
-              responses--
-              rows.push(newRows[0].getComponent())
-
-              if (!responses) {
-                resolve(rows)
-              }
-            })
-          }
-        })
-      } else {
-        console.warn('Update Error - No data provided')
-        reject('Update Error - No data provided')
-      }
-    })
+      return Promise.all(promises)
+    } else {
+      console.warn('Update Error - No data provided')
+      throw 'Update Error - No data provided'
+    }
   }
 
   // get row object
@@ -1136,13 +1116,11 @@ class Tabulator extends ModuleBinder {
     }
 
     if (row) {
-      return row.updateData(data).then(() => {
-        return row.getComponent()
-      })
+      await row.updateData(data)
+      return row.getComponent()
     } else {
-      return this.rowManager.addRows(data).then((rows) => {
-        return rows[0].getComponent()
-      })
+      const rows = await this.rowManager.addRows(data)
+      return rows[0].getComponent()
     }
   }
 
@@ -1163,12 +1141,11 @@ class Tabulator extends ModuleBinder {
     }
 
     if (row) {
-      return row.updateData(data).then(() => {
-        return Promise.resolve(row.getComponent())
-      })
+      await row.updateData(data)
+      return row.getComponent()
     } else {
       console.warn('Update Error - No matching row found:', index)
-      return Promise.reject('Update Error - No matching row found')
+      throw 'Update Error - No matching row found'
     }
   }
 
