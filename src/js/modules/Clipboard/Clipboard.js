@@ -149,7 +149,7 @@ export default class Clipboard extends Module {
    * @param {string|Function} [range] Row range selector.
    * @param {boolean} [internal] Preserve user selection if present.
    */
-  copy(range, internal) {
+  async copy(range, internal) {
     let sel
     this.blocked = false
     this.customSelection = false
@@ -172,16 +172,15 @@ export default class Clipboard extends Module {
         }
       }
 
-      this.copyWithClipboardApi().then((copied) => {
-        if (!copied) {
-          // Compatibility fallback for browsers/contexts where async Clipboard API is unavailable or blocked.
-          document.execCommand('copy')
-        }
+      const copied = await this.copyWithClipboardApi()
+      if (!copied) {
+        // Compatibility fallback for browsers/contexts where async Clipboard API is unavailable or blocked.
+        document.execCommand('copy')
+      }
 
-        if (sel && sel.removeAllRanges) {
-          sel.removeAllRanges()
-        }
-      })
+      if (sel && sel.removeAllRanges) {
+        sel.removeAllRanges()
+      }
     }
   }
 

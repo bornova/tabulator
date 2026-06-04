@@ -111,7 +111,7 @@ export default class Edit extends Module {
    * Handle keyboard navigate-next behavior and optional new-row creation.
    * @param {KeyboardEvent} e Keyboard event.
    */
-  keybindingNavigateNext(e) {
+  async keybindingNavigateNext(e) {
     const cell = this.currentCell
 
     let newRow = this.options('tabEndNewRow')
@@ -132,10 +132,9 @@ export default class Edit extends Module {
               }
             }
 
-            newRow.then(() => {
-              setTimeout(() => {
-                cell.getComponent().navigateNext()
-              })
+            await newRow
+            setTimeout(() => {
+              cell.getComponent().navigateNext()
             })
           }
         }
